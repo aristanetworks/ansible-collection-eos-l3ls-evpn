@@ -7,16 +7,12 @@
 {% if ntp is arista.avd.defined %}
 !
 {%     for authentication_key in ntp.authentication_keys | arista.avd.natural_sort('id') %}
-{%         if authentication_key.id is arista.avd.defined and
-              authentication_key.key is arista.avd.defined and
-              authentication_key.hash_algorithm is arista.avd.defined %}
-{%             set ntp_auth_key_cli = "ntp authentication-key " ~ authentication_key.id ~ " " ~ authentication_key.hash_algorithm %}
-{%             if authentication_key.key_type is arista.avd.defined %}
-{%                 set ntp_auth_key_cli = ntp_auth_key_cli ~ " " ~ authentication_key.key_type %}
-{%             endif %}
-{%             set ntp_auth_key_cli = ntp_auth_key_cli ~ " " ~ authentication_key.key | arista.avd.hide_passwords(hide_passwords) %}
-{{ ntp_auth_key_cli }}
+{%         set ntp_auth_key_cli = "ntp authentication-key " ~ authentication_key.id ~ " " ~ authentication_key.hash_algorithm %}
+{%         if authentication_key.key_type is arista.avd.defined %}
+{%             set ntp_auth_key_cli = ntp_auth_key_cli ~ " " ~ authentication_key.key_type %}
 {%         endif %}
+{%         set ntp_auth_key_cli = ntp_auth_key_cli ~ " " ~ authentication_key.key | arista.avd.hide_passwords(hide_passwords) %}
+{{ ntp_auth_key_cli }}
 {%     endfor %}
 {%     if ntp.trusted_keys is arista.avd.defined %}
 ntp trusted-key {{ ntp.trusted_keys }}
@@ -35,37 +31,35 @@ ntp authenticate
 {{ ntp_int_cli }}
 {%     endif %}
 {%     for server in ntp.servers | arista.avd.natural_sort('name') %}
-{%         if server.name is arista.avd.defined %}
-{%             set ntp_server_cli = "ntp server" %}
-{%             if server.vrf is arista.avd.defined and server.vrf != 'default' %}
-{%                 set ntp_server_cli = ntp_server_cli ~ " vrf " ~ server.vrf %}
-{%             endif %}
-{%             set ntp_server_cli = ntp_server_cli ~ " " ~ server.name %}
-{%             if server.preferred is arista.avd.defined(true) %}
-{%                 set ntp_server_cli = ntp_server_cli ~ " prefer" %}
-{%             endif %}
-{%             if server.burst is arista.avd.defined(true) %}
-{%                 set ntp_server_cli = ntp_server_cli ~ " burst" %}
-{%             endif %}
-{%             if server.iburst is arista.avd.defined(true) %}
-{%                 set ntp_server_cli = ntp_server_cli ~ " iburst" %}
-{%             endif %}
-{%             if server.version is arista.avd.defined %}
-{%                 set ntp_server_cli = ntp_server_cli ~ " version " ~ server.version %}
-{%             endif %}
-{%             if server.minpoll is arista.avd.defined %}
-{%                 set ntp_server_cli = ntp_server_cli ~ " minpoll " ~ server.minpoll %}
-{%             endif %}
-{%             if server.maxpoll is arista.avd.defined %}
-{%                 set ntp_server_cli = ntp_server_cli ~ " maxpoll " ~ server.maxpoll %}
-{%             endif %}
-{%             if server.local_interface is arista.avd.defined %}
-{%                 set ntp_server_cli = ntp_server_cli ~ " local-interface " ~ server.local_interface %}
-{%             endif %}
-{%             if server.key is arista.avd.defined %}
-{%                 set ntp_server_cli = ntp_server_cli ~ " key " ~ server.key | arista.avd.hide_passwords(hide_passwords) %}
-{%             endif %}
-{{ ntp_server_cli }}
+{%         set ntp_server_cli = "ntp server" %}
+{%         if server.vrf is arista.avd.defined and server.vrf != 'default' %}
+{%             set ntp_server_cli = ntp_server_cli ~ " vrf " ~ server.vrf %}
 {%         endif %}
+{%         set ntp_server_cli = ntp_server_cli ~ " " ~ server.name %}
+{%         if server.preferred is arista.avd.defined(true) %}
+{%             set ntp_server_cli = ntp_server_cli ~ " prefer" %}
+{%         endif %}
+{%         if server.burst is arista.avd.defined(true) %}
+{%             set ntp_server_cli = ntp_server_cli ~ " burst" %}
+{%         endif %}
+{%         if server.iburst is arista.avd.defined(true) %}
+{%             set ntp_server_cli = ntp_server_cli ~ " iburst" %}
+{%         endif %}
+{%         if server.version is arista.avd.defined %}
+{%             set ntp_server_cli = ntp_server_cli ~ " version " ~ server.version %}
+{%         endif %}
+{%         if server.minpoll is arista.avd.defined %}
+{%             set ntp_server_cli = ntp_server_cli ~ " minpoll " ~ server.minpoll %}
+{%         endif %}
+{%         if server.maxpoll is arista.avd.defined %}
+{%             set ntp_server_cli = ntp_server_cli ~ " maxpoll " ~ server.maxpoll %}
+{%         endif %}
+{%         if server.local_interface is arista.avd.defined %}
+{%             set ntp_server_cli = ntp_server_cli ~ " local-interface " ~ server.local_interface %}
+{%         endif %}
+{%         if server.key is arista.avd.defined %}
+{%             set ntp_server_cli = ntp_server_cli ~ " key " ~ server.key | arista.avd.hide_passwords(hide_passwords) %}
+{%         endif %}
+{{ ntp_server_cli }}
 {%     endfor %}
 {% endif %}

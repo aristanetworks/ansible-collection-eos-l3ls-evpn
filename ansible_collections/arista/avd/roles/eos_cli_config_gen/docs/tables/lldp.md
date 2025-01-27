@@ -9,7 +9,7 @@
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
     | [<samp>lldp</samp>](## "lldp") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;timer</samp>](## "lldp.timer") | Integer |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;timer_reinitialization</samp>](## "lldp.timer_reinitialization") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;timer_reinitialization</samp>](## "lldp.timer_reinitialization") | Integer |  |  | Min: 1<br>Max: 10 |  |
     | [<samp>&nbsp;&nbsp;holdtime</samp>](## "lldp.holdtime") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;management_address</samp>](## "lldp.management_address") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;vrf</samp>](## "lldp.vrf") | String |  |  |  |  |
@@ -24,7 +24,7 @@
     ```yaml
     lldp:
       timer: <int>
-      timer_reinitialization: <str>
+      timer_reinitialization: <int; 1-10>
       holdtime: <int>
       management_address: <str>
       vrf: <str>

@@ -168,6 +168,9 @@
                                 "ipv6_cidr",
                                 "ip",
                                 "cidr",
+                                "ip_pool",
+                                "ipv4_pool",
+                                "ipv6_pool",
                                 "mac"
                             ]
                         },

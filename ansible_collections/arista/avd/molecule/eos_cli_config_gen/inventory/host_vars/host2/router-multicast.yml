@@ -1,0 +1,5 @@
+---
+router_multicast:
+  ipv4:
+    multipath: deterministic color
+    software_forwarding: kernel

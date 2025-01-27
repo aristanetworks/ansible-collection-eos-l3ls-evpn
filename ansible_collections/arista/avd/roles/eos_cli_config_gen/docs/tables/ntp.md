@@ -12,7 +12,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "ntp.local_interface.name") | String |  |  |  | Source interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;vrf</samp>](## "ntp.local_interface.vrf") | String |  |  |  | VRF name. |
     | [<samp>&nbsp;&nbsp;servers</samp>](## "ntp.servers") | List, items: Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "ntp.servers.[].name") | String |  |  |  | IP or hostname e.g., 2.2.2.55, 2001:db8::55, ie.pool.ntp.org. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "ntp.servers.[].name") | String | Required, Unique |  |  | IP or hostname e.g., 2.2.2.55, 2001:db8::55, ie.pool.ntp.org. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;burst</samp>](## "ntp.servers.[].burst") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;iburst</samp>](## "ntp.servers.[].iburst") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key</samp>](## "ntp.servers.[].key") | Integer |  |  | Min: 1<br>Max: 65535 |  |
@@ -26,8 +26,8 @@
     | [<samp>&nbsp;&nbsp;authenticate_servers_only</samp>](## "ntp.authenticate_servers_only") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;authentication_keys</samp>](## "ntp.authentication_keys") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id</samp>](## "ntp.authentication_keys.[].id") | Integer | Required, Unique |  | Min: 1<br>Max: 65534 | Key identifier. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hash_algorithm</samp>](## "ntp.authentication_keys.[].hash_algorithm") | String |  |  | Valid Values:<br>- <code>md5</code><br>- <code>sha1</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key</samp>](## "ntp.authentication_keys.[].key") | String |  |  |  | Obfuscated key. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hash_algorithm</samp>](## "ntp.authentication_keys.[].hash_algorithm") | String | Required |  | Valid Values:<br>- <code>md5</code><br>- <code>sha1</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key</samp>](## "ntp.authentication_keys.[].key") | String | Required |  |  | Obfuscated key. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;key_type</samp>](## "ntp.authentication_keys.[].key_type") | String |  |  | Valid Values:<br>- <code>0</code><br>- <code>7</code><br>- <code>8a</code> |  |
     | [<samp>&nbsp;&nbsp;trusted_keys</samp>](## "ntp.trusted_keys") | String |  |  |  | List of trusted-keys as string ex. 10-12,15. |
 
@@ -45,7 +45,7 @@
       servers:
 
           # IP or hostname e.g., 2.2.2.55, 2001:db8::55, ie.pool.ntp.org.
-        - name: <str>
+        - name: <str; required; unique>
           burst: <bool>
           iburst: <bool>
           key: <int; 1-65535>
@@ -69,10 +69,10 @@
 
           # Key identifier.
         - id: <int; 1-65534; required; unique>
-          hash_algorithm: <str; "md5" | "sha1">
+          hash_algorithm: <str; "md5" | "sha1"; required>
 
           # Obfuscated key.
-          key: <str>
+          key: <str; required>
           key_type: <str; "0" | "7" | "8a">
 
       # List of trusted-keys as string ex. 10-12,15.

@@ -8,6 +8,11 @@ from typing import Any, Literal, NoReturn
 
 from pyavd._errors import AvdValidationError
 from pyavd._utils import get_all, get_all_with_path, get_indices_of_duplicate_items
+from pyavd._utils.get_ip_from_pool import (
+    FULLMATCH_IP_POOLS_AND_RANGES_PATTERN,
+    FULLMATCH_IPV4_POOLS_AND_RANGES_PATTERN,
+    FULLMATCH_IPV6_POOLS_AND_RANGES_PATTERN,
+)
 
 from .utils import get_instance_with_defaults
 
@@ -213,9 +218,39 @@ class AvdValidator:
             case "cidr":
                 # TODO: Figure out how to do this efficiently since ipaddress is slow
                 return
+            case "ip_pool":
+                # These IP matches are lazy for performance.
+                # Only validating that it is four times one to three numbers with a dot between them. So 999.999.999.999 is also valid.
+                # This is validated further in the ip addressing logic.
+                if fullmatch(FULLMATCH_IP_POOLS_AND_RANGES_PATTERN, instance) is None:
+                    yield AvdValidationError(
+                        (
+                            f"The value '{instance}' is not a valid IP pool (Expecting one or more comma separated prefixes "
+                            "(like 10.10.10.0/24 or 2001:db8::/64) or ranges (like 10.10.10.10-10.10.10.20 or 2001:db8::-2001:db8::ffff)."
+                        ),
+                        path=path,
+                    )
+            case "ipv4_pool":
+                if fullmatch(FULLMATCH_IPV4_POOLS_AND_RANGES_PATTERN, instance) is None:
+                    yield AvdValidationError(
+                        (
+                            f"The value '{instance}' is not a valid IPv4 pool (Expecting one or more comma separated prefixes "
+                            "(like 10.10.10.0/24) or ranges (like 10.10.10.10-10.10.10.20)."
+                        ),
+                        path=path,
+                    )
+            case "ipv6_pool":
+                if fullmatch(FULLMATCH_IPV6_POOLS_AND_RANGES_PATTERN, instance) is None:
+                    yield AvdValidationError(
+                        (
+                            f"The value '{instance}' is not a valid IPv6 pool (Expecting one or more comma separated prefixes "
+                            "(like 2001:db8::/64) or ranges (like 2001:db8::-2001:db8::ffff)."
+                        ),
+                        path=path,
+                    )
             case "mac":
-                # Matching for format 01:23:45:67:89:AB
-                if fullmatch(r"([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}|([0-9a-fA-F]{4}.){2}[0-9a-fA-F]{4}", instance) is None:
+                # Matching for format 01:23:45:67:89:AB or 0123.4567.89ab or 0123:4567:89ab
+                if fullmatch(r"([0-9a-fA-F]{2}:){5}[0-9a-fA-F]{2}|([0-9a-fA-F]{4}[:\.]){2}[0-9a-fA-F]{4}", instance) is None:
                     yield AvdValidationError(
                         f"The value '{instance}' is not a valid MAC address (Expecting bytes separated by colons like 01:23:45:67:89:AB).", path=path
                     )

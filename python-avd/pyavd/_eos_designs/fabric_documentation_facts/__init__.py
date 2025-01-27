@@ -1,15 +1,23 @@
 # Copyright (c) 2024-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
+from __future__ import annotations
+
 from functools import cached_property
-from ipaddress import IPv4Network, IPv6Network, ip_network
+from ipaddress import IPv4Network, IPv6Network
 from math import ceil
+from typing import TYPE_CHECKING
 
 from pyavd._eos_designs.avdfacts import AvdFacts
-from pyavd._utils import default, get, get_item
+from pyavd._utils import default, get, get_item, get_networks_from_pool
 from pyavd.j2filters import natural_sort
 
 from .topology import Topology
+
+if TYPE_CHECKING:
+    from typing import TypeVar
+
+    T_Network = TypeVar("T_Network", IPv4Network, IPv6Network)
 
 
 class FabricDocumentationFacts(AvdFacts):
@@ -166,70 +174,70 @@ class FabricDocumentationFacts(AvdFacts):
         )
 
     @cached_property
-    def uplink_ipv4_pools(self) -> list[dict]:
-        """List of unique uplink_ipv4_pools containing information about size and usage."""
+    def uplink_ipv4_networks(self) -> list[dict]:
+        """List of unique networks from uplink_ipv4_pools containing information about size and usage."""
         # Build set of loopback_ipv4_pool for all devices
         pools_set = {f"{pool}" for switch in self.avd_switch_facts.values() if (pool := get(switch, "uplink_ipv4_pool"))}
-        pools = [ip_network(pool, strict=False) for pool in pools_set]
+        networks = [network for pool in pools_set for network in get_networks_from_pool(pool) if network.version == 4]
 
         # Build list of ip addresses found in topology
-        ip_addresses = [ip_network(data[2], strict=False) for edge in self._topology.get_edges() for _, data in edge.node_data if data[2] is not None]
+        ip_addresses = [IPv4Network(data[2], strict=False) for edge in self._topology.get_edges() for _, data in edge.node_data if data[2] is not None]
 
-        return self.render_pools_as_list(pools, ip_addresses)
+        return self.render_networks_as_list(networks, ip_addresses)
 
     @cached_property
-    def loopback_ipv4_pools(self) -> list[dict]:
-        """List of unique loopback_ipv4_pools containing information about size and usage."""
+    def loopback_ipv4_networks(self) -> list[dict]:
+        """List of unique networks from loopback_ipv4_pools containing information about size and usage."""
         # Build set of loopback_ipv4_pool for all devices
         pools_set = {f"{pool}" for switch in self.avd_switch_facts.values() if (pool := get(switch, "loopback_ipv4_pool"))}
-        pools = [ip_network(pool, strict=False) for pool in pools_set]
+        networks = [network for pool in pools_set for network in get_networks_from_pool(pool) if network.version == 4]
 
         # Build list of ip addresses found in fabric switches
         ip_addresses = [
-            ip_network(fabric_switch["loopback0_ip_address"], strict=False)
+            IPv4Network(fabric_switch["loopback0_ip_address"], strict=False)
             for fabric_switch in self.fabric_switches
             if fabric_switch["loopback0_ip_address"] is not None
         ]
-        return self.render_pools_as_list(pools, ip_addresses)
+        return self.render_networks_as_list(networks, ip_addresses)
 
     @cached_property
-    def vtep_loopback_ipv4_pools(self) -> list[dict]:
-        """List of unique vtep_loopback_ipv4_pools containing information about size and usage."""
+    def vtep_loopback_ipv4_networks(self) -> list[dict]:
+        """List of unique networks from vtep_loopback_ipv4_pools containing information about size and usage."""
         # Build set of vtep_loopback_ipv4_pool from all devices
         pools_set = {f"{pool}" for switch in self.avd_switch_facts.values() if (pool := get(switch, "vtep_loopback_ipv4_pool"))}
-        pools = [ip_network(pool, strict=False) for pool in pools_set]
+        networks = [network for pool in pools_set for network in get_networks_from_pool(pool) if network.version == 4]
 
         # Build list of ip addresses found in fabric switches
         ip_addresses = [
-            ip_network(fabric_switch["vtep_loopback_ip_address"], strict=False)
+            IPv4Network(fabric_switch["vtep_loopback_ip_address"], strict=False)
             for fabric_switch in self.fabric_switches
             if fabric_switch["vtep_loopback_ip_address"] is not None
         ]
-        return self.render_pools_as_list(pools, ip_addresses)
+        return self.render_networks_as_list(networks, ip_addresses)
 
-    def render_pools_as_list(self, pools: list[ip_network], addresses: list[ip_network]) -> list:
+    def render_networks_as_list(self, networks: list[T_Network], addresses: list[T_Network]) -> list:
         """Helper function to build IP pool data for a list of pools."""
-        return natural_sort([self.get_pool_data(pool, addresses) for pool in pools], sort_key="pool")
+        return natural_sort([self.get_network_data(network, addresses) for network in networks], sort_key="network")
 
-    def get_pool_data(self, pool: IPv4Network | IPv6Network, addresses: list[IPv4Network | IPv6Network]) -> dict:
+    def get_network_data(self, network: T_Network, addresses: list[T_Network]) -> dict:
         """Helper function to build IP pool data for one IP pool."""
-        size = self.get_pool_size(pool)
-        used = self.count_addresses_in_pool(pool, addresses)
+        size = self.get_network_size(network)
+        used = self.count_addresses_in_network(network, addresses)
         # rounding up on 100 * percent and then divide by 100 to give 11.22% rounded up on last decimal.
-        return {"pool": pool, "size": size, "used": used, "used_percent": (ceil((100 * used / size) * 100) / 100)}
+        return {"network": network, "size": size, "used": used, "used_percent": (ceil((100 * used / size) * 100) / 100)}
 
-    def get_pool_size(self, pool: IPv4Network | IPv6Network) -> int:
+    def get_network_size(self, network: IPv4Network | IPv6Network) -> int:
         """
         Helper function returning the size of one IP pool.
 
         Ignores hosts, broadcast etc since this is a pool of subnets, not one subnet.
         """
-        max_prefixlen = 128 if pool.version == 6 else 32
-        return 2 ** (max_prefixlen - pool.prefixlen)
+        max_prefixlen = 128 if network.version == 6 else 32
+        return 2 ** (max_prefixlen - network.prefixlen)
 
-    def count_addresses_in_pool(self, pool: IPv4Network | IPv6Network, addresses: list[IPv4Network | IPv6Network]) -> int:
+    def count_addresses_in_network(self, network: T_Network, addresses: list[T_Network]) -> int:
         """Helper function to count the number of addresses that fall within the given IP pool."""
-        return len([True for address in addresses if address.subnet_of(pool)])
+        return len([True for address in addresses if address.subnet_of(network)])
 
     @cached_property
     def all_connected_endpoints(self) -> dict[str, list]:

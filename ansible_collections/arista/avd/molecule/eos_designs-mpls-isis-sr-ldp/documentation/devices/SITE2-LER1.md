@@ -734,9 +734,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
-| ---------- | -------- | ------------ | ------------- | ------------- |
-| MPLS-OVERLAY-PEERS | True |  - | - | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| ---------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| MPLS-OVERLAY-PEERS | True |  - | - | default | - |
 
 ##### EVPN Neighbor Default Encapsulation
 

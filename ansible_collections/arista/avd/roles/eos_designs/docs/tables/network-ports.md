@@ -10,7 +10,9 @@
     | [<samp>network_ports</samp>](## "network_ports") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;-&nbsp;switches</samp>](## "network_ports.[].switches") | List, items: String |  |  |  | Regex matching the full hostname of one or more switches.<br>The regular expression must match the full hostname.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "network_ports.[].switches.[]") | String |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;switch_ports</samp>](## "network_ports.[].switch_ports") | List, items: String |  |  |  | List of ranges using AVD range_expand syntax.<br>For example:<br><br>switch_ports:<br>  - Ethernet1<br>  - Ethernet2-48<br><br>All switch_ports ranges are expanded into individual port configurations.<br><br>For more details and examples of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../docs/plugins/Filter_plugins/range_expand.md).<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;platforms</samp>](## "network_ports.[].platforms") | List, items: String |  |  | Min Length: 1 | Regex matching the full platform name of one or more switches. If used in combination with switch hostname matching, both criteria must match for configuration.<br>If you need to add custom platforms to match specific port quantities, create them under `custom_platform_settings`. Entries under `custom_platform_settings` should<br>match the platform match criteria.<br><br>For example, `720XP-48Y6` would require a custom platform type:<br><br>platforms:<br>  - 720XP<br>  - 720XP-48Y6 |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "network_ports.[].platforms.[]") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;switch_ports</samp>](## "network_ports.[].switch_ports") | List, items: String |  |  |  | List of ranges using AVD range_expand syntax.<br>For example:<br><br>switch_ports:<br>  - Ethernet1<br>  - Ethernet2-48<br><br>All switch_ports ranges are expanded into individual port configurations.<br><br>For more details and examples of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../../../../docs/plugins/Filter_plugins/range_expand.md).<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "network_ports.[].switch_ports.[]") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;description</samp>](## "network_ports.[].description") | String |  |  |  | Description or description template to be used on all ports.<br>This can be a template using the AVD string formatter syntax: https://avd.arista.com/devel/roles/eos_designs/docs/how-to/custom-descriptions-names.html#avd-string-formatter-syntax.<br>The available template fields are:<br>  - `endpoint_type` - always set to `network_port`.<br>  - `endpoint` - content of the `endpoint` key if set.<br>  - `port_channel_id`: The port-channel number for the switch.<br><br>The default description is set by `default_network_ports_description`.<br>By default the description is templated from the `endpoint` key if set. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;endpoint</samp>](## "network_ports.[].endpoint") | String |  |  |  | Name or description of the endpoints connected to these ports. |
@@ -192,6 +194,18 @@
       - switches:
           - <str>
 
+        # Regex matching the full platform name of one or more switches. If used in combination with switch hostname matching, both criteria must match for configuration.
+        # If you need to add custom platforms to match specific port quantities, create them under `custom_platform_settings`. Entries under `custom_platform_settings` should
+        # match the platform match criteria.
+        #
+        # For example, `720XP-48Y6` would require a custom platform type:
+        #
+        # platforms:
+        #   - 720XP
+        #   - 720XP-48Y6
+        platforms: # >=1 items
+          - <str>
+
         # List of ranges using AVD range_expand syntax.
         # For example:
         #
@@ -201,7 +215,7 @@
         #
         # All switch_ports ranges are expanded into individual port configurations.
         #
-        # For more details and examples of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../docs/plugins/Filter_plugins/range_expand.md).
+        # For more details and examples of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../../../../docs/plugins/Filter_plugins/range_expand.md).
         switch_ports:
           - <str>
 

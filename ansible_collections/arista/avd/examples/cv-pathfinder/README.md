@@ -34,7 +34,7 @@ This example will go over the following:
 ## Installation
 
 --8<--
-examples/common/installation.md
+ansible_collections/arista/avd/examples/common/example-installation.md
 --8<--
 
 ```shell
@@ -172,7 +172,7 @@ In this example, we consider that no DNS entry is available to reach the devices
 
 ```yaml title="inventory.yml"
 --8<--
-examples/cv-pathfinder/inventory.yml
+ansible_collections/arista/avd/examples/cv-pathfinder/inventory.yml
 --8<--
 ```
 
@@ -182,7 +182,7 @@ when required to decrypt files or inline variables.
 
 ```yaml title="ansible.cfg"
 --8<--
-examples/cv-pathfinder/ansible.cfg
+ansible_collections/arista/avd/examples/cv-pathfinder/ansible.cfg
 --8<--
 ```
 
@@ -201,7 +201,7 @@ As discussed in the single DC example, basic connectivity between the Ansible ho
 
 ```eos title="site1-border1-basic-configuration.txt"
 --8<--
-examples/cv-pathfinder/switch-basic-configurations/site1-border1-basic-configuration.txt
+ansible_collections/arista/avd/examples/cv-pathfinder/switch-basic-configurations/site1-border1-basic-configuration.txt
 --8<--
 ```
 
@@ -214,7 +214,7 @@ To define device types, required by AVD, this example leverages the `default_nod
 
 ```yaml title="groups_vars/all.yml"
 --8<--
-examples/cv-pathfinder/group_vars/all.yml:19:
+ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/all.yml:19:
 --8<--
 ```
 
@@ -266,7 +266,7 @@ The `management.yml` file contains the configuration for:
 
 ```yaml title="group_vars/WAN/management.yml"
 --8<--
-examples/cv-pathfinder/group_vars/WAN//management.yml
+ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/WAN//management.yml
 --8<--
 ```
 
@@ -276,7 +276,7 @@ The `ansible-avd-examples/cv-pathfinder/group_vars/WAN/cv_pathfinder_settings.ym
 
 ```yaml title="group_vars/WAN/cv_pathfinder_settings.yml"
 --8<--
-examples/cv-pathfinder/group_vars/WAN//cv_pathfinder_settings.yml
+ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/WAN//cv_pathfinder_settings.yml
 --8<--
 ```
 
@@ -369,7 +369,7 @@ apply common configurations.
 
 ```yaml title="group_vars/WAN/l3_interface_profiles.yml"
 --8<--
-examples/cv-pathfinder/group_vars/WAN//l3_interface_profiles.yml
+ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/WAN//l3_interface_profiles.yml
 --8<--
 ```
 
@@ -385,7 +385,7 @@ used for DPS.
 
 ```yaml title="group_vars/WAN/tenants.yml"
 --8<--
-examples/cv-pathfinder/group_vars/WAN//tenants.yml
+ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/WAN//tenants.yml
 --8<--
 ```
 
@@ -395,7 +395,7 @@ The pathfinder configuration can be found in `group_vars/PATHFINDERS.yml`:
 
 ```yaml title="group_vars/PATHFINDERS.yml"
 --8<--
-examples/cv-pathfinder/group_vars/PATHFINDERS.yml
+ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/PATHFINDERS.yml
 --8<--
 ```
 
@@ -433,7 +433,7 @@ The following diagrams describe the connectivity of Site 1's physical, LAN, and 
 
 ```yaml title="group_vars/SITE1.yml"
 --8<--
-examples/cv-pathfinder/group_vars/SITE1.yml
+ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/SITE1.yml
 --8<--
 ```
 
@@ -460,7 +460,7 @@ The following diagrams describe the Site2 physical, LAN and HA tunnels connectiv
 
 ```yaml title="group_vars/SITE2.yml"
 --8<--
-examples/cv-pathfinder/group_vars/SITE2.yml
+ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/SITE2.yml
 --8<--
 ```
 
@@ -478,7 +478,7 @@ The following diagrams describe the Site3 physical and LAN connectivity.
 
 ```yaml title="group_vars/SITE3.yml"
 --8<--
-examples/cv-pathfinder/group_vars/SITE3.yml
+ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/SITE3.yml
 --8<--
 ```
 
@@ -494,7 +494,7 @@ Example of using this playbook without devices (local tasks):
 
     ```yaml
     --8<--
-    examples/cv-pathfinder/build.yml
+    ansible_collections/arista/avd/examples/cv-pathfinder/build.yml
     --8<--
     ```
 
@@ -523,7 +523,7 @@ To build and deploy the configurations to CVaaS, run first the `build.yml` playb
 
     ```yaml
     --8<--
-    examples/cv-pathfinder/deploy.yml
+    ansible_collections/arista/avd/examples/cv-pathfinder/deploy.yml
     --8<--
     ```
 

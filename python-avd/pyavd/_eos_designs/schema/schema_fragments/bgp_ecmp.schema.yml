@@ -13,5 +13,7 @@ keys:
       Maximum ECMP for BGP multi-path.
       The default value is 4 except for WAN Routers where the default value is unset (falls back to EOS default).
     type: int
+    min: 1
+    max: 600
     convert_types:
       - str

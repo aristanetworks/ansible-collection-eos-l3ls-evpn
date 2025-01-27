@@ -20,7 +20,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vrf_id</samp>](## "<network_services_keys.name>.[].vrfs.[].vrf_id") | Integer |  |  |  | Required if "vrf_vni" is not set.<br>"vrf_id" is used as default value for "vrf_vni" and "ospf.process_id" unless those are set.<br>"vrf_id" may also be used for VRF RD/RT ID. See "overlay_rd_type" and "overlay_rt_type" for details.<br>"vrf_id" is preferred over "vrf_vni" for MLAG iBGP peering vlan, see "mlag_ibgp_peering_vrfs.base_vlan" for details.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rd_override</samp>](## "<network_services_keys.name>.[].vrfs.[].rd_override") | String |  |  |  | By default, the VRF RD will be derived from the pattern defined in `overlay_rd_type`.<br>The rd_override allows us to override this value and statically define it.<br><br>rd_override supports two formats:<br>  - A single number will be used in the RD assigned number subfield (second part of the RD).<br>  - A full RD string with colon separator which will override the full RD.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt_override</samp>](## "<network_services_keys.name>.[].vrfs.[].rt_override") | String |  |  |  | By default, the VRF RT will be derived from the pattern defined in `overlay_rt_type`.<br>The rt_override allows us to override this value and statically define it.<br><br>rt_override supports two formats:<br>  - A single number will be used in the RT assigned number subfield (second part of the RT).<br>  - A full RT string with colon separator which will override the full RT.<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag_ibgp_peering_ipv4_pool</samp>](## "<network_services_keys.name>.[].vrfs.[].mlag_ibgp_peering_ipv4_pool") | String |  |  |  | IPv4_address/Mask<br>The subnet used for iBGP peering in the VRF.<br>Each MLAG pair will be assigned a subnet based on the ID of the primary MLAG switch.<br>If not set, "mlag_peer_l3_ipv4_pool" or "mlag_peer_ipv4_pool" will be used.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mlag_ibgp_peering_ipv4_pool</samp>](## "<network_services_keys.name>.[].vrfs.[].mlag_ibgp_peering_ipv4_pool") | String |  |  | Format: ipv4_pool | Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).<br>The subnet used for the iBGP peering in the VRF is derived from this pool based on the ID of the first MLAG switch.<br>If not set, "mlag_peer_l3_ipv4_pool" or "mlag_peer_ipv4_pool" will be used. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip_helpers</samp>](## "<network_services_keys.name>.[].vrfs.[].ip_helpers") | List, items: Dictionary |  |  |  | IP helper for DHCP relay. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;ip_helper</samp>](## "<network_services_keys.name>.[].vrfs.[].ip_helpers.[].ip_helper") | String | Required, Unique |  |  | IPv4 DHCP server IP. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source_interface</samp>](## "<network_services_keys.name>.[].vrfs.[].ip_helpers.[].source_interface") | String |  |  |  | Interface name. |
@@ -35,8 +35,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loopback_ipv6_range</samp>](## "<network_services_keys.name>.[].vrfs.[].vtep_diagnostic.loopback_ipv6_range") | String |  |  |  | IPv6_address/Mask.<br>Loopback IPv6 range, a unique IPv6 address is derived from this range and assigned to each L3 leaf based on it's unique ID.<br>Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range` or `loopback_ip_pools` are set.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;loopback_ip_pools</samp>](## "<network_services_keys.name>.[].vrfs.[].vtep_diagnostic.loopback_ip_pools") | List, items: Dictionary |  |  |  | For inventories with multiple PODs a loopback range can be set per POD to avoid overlaps.<br>`loopback_ip_range` takes precedence for IPv4 and `loopback_ipv6_range` takes precedence for IPV6.<br>Loopback is not created unless `loopback_ip_range`, `loopback_ipv6_range` or `loopback_ip_pools` are set.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;pod</samp>](## "<network_services_keys.name>.[].vrfs.[].vtep_diagnostic.loopback_ip_pools.[].pod") | String | Required, Unique |  |  | POD name. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4_pool</samp>](## "<network_services_keys.name>.[].vrfs.[].vtep_diagnostic.loopback_ip_pools.[].ipv4_pool") | String |  |  |  | IPv4_address/Mask. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6_pool</samp>](## "<network_services_keys.name>.[].vrfs.[].vtep_diagnostic.loopback_ip_pools.[].ipv6_pool") | String |  |  |  | IPv6_address/Mask. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv4_pool</samp>](## "<network_services_keys.name>.[].vrfs.[].vtep_diagnostic.loopback_ip_pools.[].ipv4_pool") | String |  |  | Format: ipv4_pool | Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address). |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ipv6_pool</samp>](## "<network_services_keys.name>.[].vrfs.[].vtep_diagnostic.loopback_ip_pools.[].ipv6_pool") | String |  |  | Format: ipv6_pool | Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_l2_multi_domain</samp>](## "<network_services_keys.name>.[].vrfs.[].evpn_l2_multi_domain") | Boolean |  |  |  | Explicitly extend all VLANs/VLAN-Aware Bundles inside the VRF to remote EVPN domains.<br>Overrides `<network_services_key>[].evpn_l2_multi_domain`.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;static_routes</samp>](## "<network_services_keys.name>.[].vrfs.[].static_routes") | List, items: Dictionary |  |  |  | List of static routes for v4 and/or v6.<br>This will create static routes inside the tenant VRF.<br>If nodes are not specified, all l3leafs that carry the VRF will also be applied the static routes.<br>If a node has a static route in the VRF, redistribute static will be automatically enabled in that VRF.<br>This automatic behavior can be overridden non-selectively with the redistribute_static knob for the VRF.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;destination_address_prefix</samp>](## "<network_services_keys.name>.[].vrfs.[].static_routes.[].destination_address_prefix") | String |  |  |  | IPv4_address. |
@@ -145,9 +145,8 @@
             #   - A full RT string with colon separator which will override the full RT.
             rt_override: <str>
 
-            # IPv4_address/Mask
-            # The subnet used for iBGP peering in the VRF.
-            # Each MLAG pair will be assigned a subnet based on the ID of the primary MLAG switch.
+            # Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
+            # The subnet used for the iBGP peering in the VRF is derived from this pool based on the ID of the first MLAG switch.
             # If not set, "mlag_peer_l3_ipv4_pool" or "mlag_peer_ipv4_pool" will be used.
             mlag_ibgp_peering_ipv4_pool: <str>
 
@@ -213,10 +212,10 @@
                   # POD name.
                 - pod: <str; required; unique>
 
-                  # IPv4_address/Mask.
+                  # Comma separated list of prefixes (IPv4 address/Mask) or ranges (IPv4_address-IPv4_address).
                   ipv4_pool: <str>
 
-                  # IPv6_address/Mask.
+                  # Comma separated list of prefixes (IPv6 address/Mask) or ranges (IPv6_address-IPv6_address).
                   ipv6_pool: <str>
 
             # Explicitly extend all VLANs/VLAN-Aware Bundles inside the VRF to remote EVPN domains.
