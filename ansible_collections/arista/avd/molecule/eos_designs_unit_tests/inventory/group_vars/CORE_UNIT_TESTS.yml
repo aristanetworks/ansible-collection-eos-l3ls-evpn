@@ -61,7 +61,8 @@ core_router:
 core_interfaces:
   p2p_links_ip_pools:
     - name: underlay_pool
-      ipv4_pool: 100.64.48.0/24
+      # Testing multiple pools and ranges to represent 100.64.48.0/24.
+      ipv4_pool: 100.64.48.0-100.64.48.3, 100.64.48.4/30, 100.64.48.8-100.64.48.255
     - name: some_other_pool
       ipv4_pool: 100.123.123.0/24
   p2p_links_profiles:

@@ -3,7 +3,10 @@
 ## Table of Contents
 
 - [Management](#management)
+  - [Banner](#banner)
   - [Management Interfaces](#management-interfaces)
+  - [NTP](#ntp)
+  - [PTP](#ptp)
   - [Management SSH](#management-ssh)
   - [Management API gNMI](#management-api-gnmi)
   - [Management CVX Summary](#management-cvx-summary)
@@ -30,23 +33,43 @@
 - [Monitoring](#monitoring)
   - [TerminAttr Daemon](#terminattr-daemon)
   - [Logging](#logging)
+  - [MCS Client Summary](#mcs-client-summary)
   - [SNMP](#snmp)
+  - [Tap Aggregation](#tap-aggregation)
+  - [SFlow](#sflow)
   - [Flow Tracking](#flow-tracking)
+  - [Monitor Telemetry Postcard Policy](#monitor-telemetry-postcard-policy)
   - [Monitor Server Radius Summary](#monitor-server-radius-summary)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
   - [Monitor Connectivity Device Configuration](#monitor-connectivity-device-configuration)
+- [Monitor Layer 1 Logging](#monitor-layer-1-logging)
+  - [Monitor Layer 1 Device Configuration](#monitor-layer-1-device-configuration)
+- [Hardware TCAM Profile](#hardware-tcam-profile)
+  - [Custom TCAM Profiles](#custom-tcam-profiles)
+  - [Hardware TCAM Device Configuration](#hardware-tcam-device-configuration)
+- [LLDP](#lldp)
+  - [LLDP Summary](#lldp-summary)
+  - [LLDP Device Configuration](#lldp-device-configuration)
 - [LACP](#lacp)
   - [LACP Summary](#lacp-summary)
   - [LACP Device Configuration](#lacp-device-configuration)
 - [Spanning Tree](#spanning-tree)
   - [Spanning Tree Summary](#spanning-tree-summary)
   - [Spanning Tree Device Configuration](#spanning-tree-device-configuration)
+- [MAC Address Table](#mac-address-table)
+  - [MAC Address Table Summary](#mac-address-table-summary)
+  - [MAC Address Table Device Configuration](#mac-address-table-device-configuration)
 - [Interfaces](#interfaces)
   - [Switchport Default](#switchport-default)
+  - [Interface Defaults](#interface-defaults)
   - [DPS Interfaces](#dps-interfaces)
   - [VXLAN Interface](#vxlan-interface)
+- [Switchport Port-security](#switchport-port-security)
+  - [Switchport Port-security Summary](#switchport-port-security-summary)
+  - [Switchport Port-security Device Configuration](#switchport-port-security-device-configuration)
 - [Routing](#routing)
+  - [Service Routing Configuration BGP](#service-routing-configuration-bgp)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
   - [IP Routing](#ip-routing)
   - [ARP](#arp)
@@ -62,9 +85,11 @@
   - [MPLS Device Configuration](#mpls-device-configuration)
 - [Queue Monitor](#queue-monitor)
   - [Queue Monitor Length](#queue-monitor-length)
+  - [Queue Monitor Streaming](#queue-monitor-streaming)
   - [Queue Monitor Configuration](#queue-monitor-configuration)
 - [Multicast](#multicast)
   - [IP IGMP Snooping](#ip-igmp-snooping)
+  - [Router Multicast](#router-multicast)
   - [PIM Sparse Mode](#pim-sparse-mode)
 - [Filters](#filters)
   - [AS Path Lists](#as-path-lists)
@@ -73,19 +98,52 @@
 - [Application Traffic Recognition](#application-traffic-recognition)
   - [Applications](#applications)
   - [Router Application-Traffic-Recognition Device Configuration](#router-application-traffic-recognition-device-configuration)
+- [Router L2 VPN](#router-l2-vpn)
+  - [Router L2 VPN Summary](#router-l2-vpn-summary)
+  - [Router L2 VPN Device Configuration](#router-l2-vpn-device-configuration)
 - [IP DHCP Relay](#ip-dhcp-relay)
   - [IP DHCP Relay Summary](#ip-dhcp-relay-summary)
   - [IP DHCP Relay Device Configuration](#ip-dhcp-relay-device-configuration)
+- [IPv6 DHCP Relay](#ipv6-dhcp-relay)
+  - [IPv6 DHCP Relay Summary](#ipv6-dhcp-relay-summary)
+  - [IPv6 DHCP Relay Device Configuration](#ipv6-dhcp-relay-device-configuration)
 - [IP DHCP Snooping](#ip-dhcp-snooping)
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
+- [MACsec](#macsec)
+  - [MACsec Summary](#macsec-summary)
+  - [MACsec Device Configuration](#macsec-device-configuration)
   - [Traffic Policies information](#traffic-policies-information)
+- [Quality Of Service](#quality-of-service)
+  - [QOS](#qos)
+  - [Priority Flow Control](#priority-flow-control)
 - [STUN](#stun)
   - [STUN Server](#stun-server)
   - [STUN Device Configuration](#stun-device-configuration)
 
 ## Management
+
+### Banner
+
+#### Login Banner
+
+```text
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!***!!!Unauthorized access prohibited!!!***!
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+EOF
+```
+
+#### MOTD Banner
+
+```text
+.         Switch       : $(hostname)                            .
+.         Site         : DC1                      .
+.         Type info for information about the device            .
+.         Type help for information about the aliases           .
+EOF
+```
 
 ### Management Interfaces
 
@@ -113,7 +171,43 @@ interface Management1
    ip address 10.73.255.122/24
 ```
 
+### NTP
+
+#### NTP Summary
+
+##### NTP Authentication
+
+- Authentication enabled
+
+#### NTP Device Configuration
+
+```eos
+!
+ntp authenticate
+```
+
+### PTP
+
+#### PTP Summary
+
+| Clock ID | Source IP | Priority 1 | Priority 2 | TTL | Domain | Mode | Forward Unicast |
+| -------- | --------- | ---------- | ---------- | --- | ------ | ---- | --------------- |
+| - | - | - | - | - | - | - | - |
+
+#### PTP Device Configuration
+
+```eos
+!
+no ptp monitor sequence-id
+```
+
 ### Management SSH
+
+#### Authentication Settings
+
+| Authentication protocols | Empty passwords |
+| ------------------------ | --------------- |
+| keyboard-interactive, public-key | permit |
 
 #### IPv4 ACL
 
@@ -126,7 +220,7 @@ interface Management1
 
 | Idle Timeout | SSH Management |
 | ------------ | -------------- |
-| 15 | Enabled |
+| 15 | Disabled |
 
 #### Max number of SSH sessions limit and per-host limit
 
@@ -159,7 +253,8 @@ management ssh
    mac hmac-sha2-512 hmac-sha2-512-etm@openssh.com
    hostkey server ecdsa-nistp256 ecdsa-nistp521
    connection limit 55
-   no shutdown
+   authentication empty-passwords permit
+   shutdown
    hostkey server cert sshkey.cert
    !
    vrf mgt
@@ -335,9 +430,9 @@ aaa accounting exec default none
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- |
-| cipher-v1.0-v1.3 | - | - | - | v1.0 to v1.2: SHA256:SHA384<br>v1.3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256 | - |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs | FIPS restrictions enabled |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- | ------------------------- |
+| cipher-v1.0-v1.3 | - | - | - | v1.0 to v1.2: SHA256:SHA384<br>v1.3: TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256 | - | - |
 
 ### Management Security Device Configuration
 
@@ -395,17 +490,20 @@ dhcp relay
 
 | CV Compression | CloudVision Servers | VRF | Authentication | Smash Excludes | Ingest Exclude | Bypass AAA |
 | -------------- | ------------------- | --- | -------------- | -------------- | -------------- | ---------- |
-| gzip | 10.20.20.1:9910 | mgt | certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key,/persist/secure/ssl/terminattr/DC1/certs/ca.crt | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
-| gzip | 10.30.30.1:9910 | mgt | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
-| gzip | 10.40.40.1:9910 | mgt | token,/tmp/tokenDC3 | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
-| gzip | apiserver.arista.io:443 | - | key,<removed> | ale,flexCounter,hardware,kni,pulse,strata | /Sysdb/cell/1/agent,/Sysdb/cell/2/agent | False |
+| gzip | 10.20.20.1:9910 | mgt | certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key,/persist/secure/ssl/terminattr/DC1/certs/ca.crt | - | - | False |
+| gzip | 10.30.30.1:9910 | mgt | key,<removed> | - | - | False |
+| gzip | 10.40.40.1:9910 | mgt | token,/tmp/tokenDC3 | - | - | False |
+| gzip | 10.40.40.1:9910 | mgt | token-secure,/tmp/tokenDC4 | - | - | False |
+| gzip | 10.20.20.2:9910 | mgt | certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key | - | - | False |
+| gzip | 10.20.20.3:9910 | - | - | - | - | False |
+| gzip | apiserver.arista.io:443 | - | key,<removed> | - | - | False |
 
 #### TerminAttr Daemon Device Configuration
 
 ```eos
 !
 daemon TerminAttr
-   exec /usr/bin/TerminAttr -cvopt DC1.addr=10.20.20.1:9910 -cvopt DC1.auth=certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key,/persist/secure/ssl/terminattr/DC1/certs/ca.crt -cvopt DC1.vrf=mgt -cvopt DC1.sourceintf=Loopback10 -cvopt DC2.addr=10.30.30.1:9910 -cvopt DC2.auth=key,<removed> -cvopt DC2.vrf=mgt -cvopt DC2.sourceintf=Vlan500 -cvopt DC3.addr=10.40.40.1:9910 -cvopt DC3.auth=token,/tmp/tokenDC3 -cvopt DC3.vrf=mgt -cvopt DC3.sourceintf=Vlan500 -cvaddr=apiserver.arista.io:443 -cvauth=key,<removed> -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
+   exec /usr/bin/TerminAttr -cvopt DC1.addr=10.20.20.1:9910 -cvopt DC1.auth=certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key,/persist/secure/ssl/terminattr/DC1/certs/ca.crt -cvopt DC1.vrf=mgt -cvopt DC1.sourceintf=Loopback10 -cvopt DC2.addr=10.30.30.1:9910 -cvopt DC2.auth=key,<removed> -cvopt DC2.vrf=mgt -cvopt DC2.sourceintf=Vlan500 -cvopt DC3.addr=10.40.40.1:9910 -cvopt DC3.auth=token,/tmp/tokenDC3 -cvopt DC3.vrf=mgt -cvopt DC3.sourceintf=Vlan500 -cvopt DC4.addr=10.40.40.1:9910 -cvopt DC4.auth=token-secure,/tmp/tokenDC4 -cvopt DC4.vrf=mgt -cvopt DC4.sourceip=10.10.10.10 -cvopt DC4.proxy=http://arista:arista@10.10.10.1:3128 -cvopt DC4.obscurekeyfile=True -cvopt DC4.sourceintf=Vlan500 -cvopt DC5.addr=10.20.20.2:9910 -cvopt DC5.auth=certs,/persist/secure/ssl/terminattr/DC1/certs/client.crt,/persist/secure/ssl/terminattr/DC1/keys/client.key -cvopt DC5.vrf=mgt -cvopt DC5.sourceintf=Loopback11 -cvopt DC6.addr=10.20.20.3:9910 -cvaddr=apiserver.arista.io:443 -cvauth=key,<removed> -taillogs -ipfix=false -sflow=false
    no shutdown
 ```
 
@@ -415,9 +513,17 @@ daemon TerminAttr
 
 | Type | Level |
 | -----| ----- |
-| Console | informational |
+| Console | disabled |
 | Monitor | debugging |
-| Buffer | - |
+| Buffer | disabled |
+| Trap | alerts |
+| Synchronous | disabled |
+
+| Format Type | Setting |
+| ----------- | ------- |
+| Hostname | ipv4 |
+| Sequence-numbers | false |
+| RFC5424 | False |
 
 **Syslog facility value:** syslog
 
@@ -426,12 +532,34 @@ daemon TerminAttr
 ```eos
 !
 no logging repeat-messages
-logging buffered 64000
-logging console informational
+no logging buffered
+logging trap alerts
+no logging console
 logging monitor debugging
+no logging synchronous
+logging format hostname ipv4
 logging facility syslog
 !
 logging event link-status global
+```
+
+### MCS Client Summary
+
+MCS client is shutdown
+
+| Secondary CVX cluster | Server Hosts | Enabled |
+| --------------------- | ------------ | ------- |
+| default | - | False |
+
+#### MCS Client Device Configuration
+
+```eos
+!
+mcs client
+   shutdown
+   !
+   cvx secondary default
+      shutdown
 ```
 
 ### SNMP
@@ -447,6 +575,46 @@ logging event link-status global
 ```eos
 !
 no snmp-server enable traps
+```
+
+### Tap Aggregation
+
+#### Tap Aggregation Summary
+
+| Settings | Values |
+| -------- | ------ |
+| Mode Exclusive | True |
+| Mode Exclusive No-Errdisable | Ethernet1/1, Ethetnet 42/1, Port-Channel200 |
+| Mac Timestamp | Replace Source-Mac |
+| Mac FCS Append | True |
+
+#### Tap Aggregation Device Configuration
+
+```eos
+!
+tap aggregation
+   mode exclusive
+   mode exclusive no-errdisable Ethernet1/1
+   mode exclusive no-errdisable Ethetnet 42/1
+   mode exclusive no-errdisable Port-Channel200
+   mac timestamp replace source-mac
+   mac fcs append
+```
+
+### SFlow
+
+#### SFlow Summary
+
+sFlow is disabled.
+
+Egress sFlow is enabled on all interfaces by default.
+
+#### SFlow Device Configuration
+
+```eos
+!
+sflow source 1.1.1.1
+sflow interface egress enable default
 ```
 
 ### Flow Tracking
@@ -479,6 +647,19 @@ flow tracking sampled
       record export on inactive timeout 3666
       record export on interval 5666
       record export mpls
+```
+
+### Monitor Telemetry Postcard Policy
+
+#### Monitor Telemetry Postcard Policy Configuration
+
+```eos
+!
+monitor telemetry postcard policy
+   disabled
+   ingress sample tcp-udp-checksum value 65000 mask 0xffff
+   marker vxlan
+   ingress collection gre source 10.3.3.3 destination 10.3.3.4
 ```
 
 ### Monitor Server Radius Summary
@@ -524,6 +705,55 @@ monitor connectivity
    local-interfaces HOST_SET2 default
 ```
 
+## Monitor Layer 1 Logging
+
+| Layer 1 Event | Logging |
+| ------------- | ------- |
+
+### Monitor Layer 1 Device Configuration
+
+```eos
+!
+monitor layer1
+```
+
+## Hardware TCAM Profile
+
+TCAM profile **`default`** is active
+
+### Custom TCAM Profiles
+
+Following TCAM profiles are configured on device:
+
+- Profile Name: `MY_TCAM_PROFILE`
+
+### Hardware TCAM Device Configuration
+
+```eos
+!
+hardware tcam
+   profile MY_TCAM_PROFILE
+Thisisnotaidealinput
+   !
+```
+
+## LLDP
+
+### LLDP Summary
+
+#### LLDP Global Settings
+
+| Enabled | Management Address | Management VRF | Timer | Hold-Time | Re-initialization Timer | Drop Received Tagged Packets |
+| ------- | ------------------ | -------------- | ----- | --------- | ----------------------- | ---------------------------- |
+| False | - | Default | 30 | 120 | 2 | - |
+
+### LLDP Device Configuration
+
+```eos
+!
+no lldp run
+```
+
 ## LACP
 
 ### LACP Summary
@@ -562,6 +792,19 @@ no spanning-tree bpduguard rate-limit default
 spanning-tree priority 8192
 ```
 
+## MAC Address Table
+
+### MAC Address Table Summary
+
+- Logging MAC address interface flapping is Disabled
+
+### MAC Address Table Device Configuration
+
+```eos
+!
+no mac address-table notification host-flap logging
+```
+
 ## Interfaces
 
 ### Switchport Default
@@ -575,6 +818,21 @@ spanning-tree priority 8192
 ```eos
 !
 switchport default mode routed
+```
+
+### Interface Defaults
+
+#### Interface Defaults Summary
+
+- Default Ethernet Interface Shutdown: False
+
+#### Interface Defaults Device Configuration
+
+```eos
+!
+interface defaults
+   ethernet
+      no shutdown
 ```
 
 ### DPS Interfaces
@@ -618,7 +876,29 @@ interface Vxlan1
    no vxlan qos map dscp to traffic-class decapsulation
 ```
 
+## Switchport Port-security
+
+### Switchport Port-security Summary
+
+| Settings | Value |
+| -------- | ----- |
+| Mac-address Aging | True |
+
+### Switchport Port-security Device Configuration
+
+```eos
+!
+switchport port-security mac-address aging
+```
+
 ## Routing
+
+### Service Routing Configuration BGP
+
+BGP no equals default disabled
+
+```eos
+```
 
 ### Service Routing Protocols Model
 
@@ -768,10 +1048,10 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
-| ---------- | -------- | ------------ | ------------- | ------------- |
-| EVPN-OVERLAY-PEERS | True |  - | - | default |
-| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| ---------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| EVPN-OVERLAY-PEERS | True |  - | - | default | - |
+| MLAG-IPv4-UNDERLAY-PEER | False |  - | - | default | - |
 
 ##### EVPN Neighbor Default Encapsulation
 
@@ -798,6 +1078,7 @@ ASN Notation: asplain
 
 | Settings | Value |
 | -------- | ----- |
+| Graceful-restart | Enabled |
 
 #### Router BGP Path-Selection Address Family
 
@@ -813,6 +1094,7 @@ router bgp 65101
    bgp route-reflector preserve-attributes
    no bgp additional-paths receive
    no bgp additional-paths send
+   neighbor default send-community large
    bgp redistribute-internal
    redistribute connected include leaked route-map RM-CONN-2-BGP
    redistribute isis level-2 include leaked rcf RCF_CONN_2_BGP()
@@ -846,8 +1128,10 @@ router bgp 65101
    !
    address-family ipv4 labeled-unicast
       bgp additional-paths send any
+      graceful-restart
    !
    address-family ipv4 multicast
+      redistribute ospf match internal route-map AFIPV4M_OSPF_INTERNAL
       redistribute ospfv3 route-map AFIPV4M_OSPFV3
       redistribute ospf match external route-map AFIPV4M_OSPF_EXTERNAL
    !
@@ -991,6 +1275,12 @@ mpls rsvp
 | ------- | ---------------- | ----------------------- | ---------------------- | --------- | ---------- | ------------------- | ------------------ |
 | True | - | 100 | - | disabled | disabled | - | - |
 
+### Queue Monitor Streaming
+
+| Enabled | IP Access Group | IPv6 Access Group | Max Connections | VRF |
+| ------- | --------------- | ----------------- | --------------- | --- |
+| False | - | - | - | - |
+
 ### Queue Monitor Configuration
 
 ```eos
@@ -998,6 +1288,9 @@ mpls rsvp
 queue-monitor length
 no queue-monitor length notifying
 queue-monitor length default threshold 100
+!
+queue-monitor streaming
+   shutdown
 ```
 
 ## Multicast
@@ -1030,6 +1323,23 @@ no ip igmp snooping fast-leave
 no ip igmp snooping vlan 20
 no ip igmp snooping vlan 30
 no ip igmp snooping querier
+```
+
+### Router Multicast
+
+#### IP Router Multicast Summary
+
+- Multipathing deterministically by selecting the same-colored upstream routers.
+- Software forwarding by the Linux kernel
+
+#### Router Multicast Device Configuration
+
+```eos
+!
+router multicast
+   ipv4
+      multipath deterministic color
+      software-forwarding kernel
 ```
 
 ### PIM Sparse Mode
@@ -1127,6 +1437,20 @@ application traffic recognition
       protocol udp
 ```
 
+## Router L2 VPN
+
+### Router L2 VPN Summary
+
+- VXLAN ARP Proxying is disabled for IPv4 addresses defined in the prefix-list pl-router-l2-vpn.
+
+### Router L2 VPN Device Configuration
+
+```eos
+!
+router l2-vpn
+   arp proxy prefix-list pl-router-l2-vpn
+```
+
 ## IP DHCP Relay
 
 ### IP DHCP Relay Summary
@@ -1138,6 +1462,19 @@ IP DHCP Relay Option 82 is enabled.
 ```eos
 !
 ip dhcp relay information option
+```
+
+## IPv6 DHCP Relay
+
+### IPv6 DHCP Relay Summary
+
+Add RemoteID option 37 in format MAC address and interface name.
+
+### IPv6 DHCP Relay Device Configuration
+
+```eos
+!
+ipv6 dhcp relay option remote-id format %m:%p
 ```
 
 ## IP DHCP Snooping
@@ -1161,6 +1498,22 @@ ip dhcp snooping
 ip nat synchronization
 ```
 
+## MACsec
+
+### MACsec Summary
+
+License is not installed.
+
+FIPS restrictions enabled.
+
+### MACsec Device Configuration
+
+```eos
+!
+mac security
+   fips restrictions
+```
+
 ### Traffic Policies information
 
 #### IPv6 Field Sets
@@ -1179,6 +1532,44 @@ traffic-policies
       11:22:33:44:55:66:77:88
    !
    field-set ipv6 prefix IPv6-DEMO-2
+```
+
+## Quality Of Service
+
+### QOS
+
+#### QOS Summary
+
+QOS rewrite DSCP: **disabled**
+
+##### QOS Mappings
+
+| COS to Traffic Class mappings |
+| ----------------------------- |
+| 1 2 3 4 to traffic-class 2 |
+| 3 to traffic-class 3 |
+
+#### QOS Device Configuration
+
+```eos
+!
+qos map cos 1 2 3 4 to traffic-class 2
+qos map cos 3 to traffic-class 3
+```
+
+### Priority Flow Control
+
+#### Global Settings
+
+##### Priority Flow Control Watchdog Settings
+
+| Action | Timeout | Recovery | Polling | Override Action Drop |
+| ------ | ------- | -------- | ------- |
+| errdisable | - | - | - | True |
+
+```eos
+!
+priority-flow-control pause watchdog override action drop
 ```
 
 ## STUN

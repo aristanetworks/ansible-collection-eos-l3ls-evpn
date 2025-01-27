@@ -75,7 +75,7 @@ repos:
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
     # Ruff version.
-    rev: v0.8.5
+    rev: v0.9.2
     hooks:
       # Run the linter.
       - id: ruff
@@ -139,7 +139,7 @@ repos:
             python-avd/pyavd/.*/schema/.*schema\.yml| # Exclude YAML schemas file
             python-avd/pyavd/_cv/api/.*| # Exclude auto generated files for CV API
             python-avd/pyavd/_cv/extra_cv_protos/.*| # Exclude extra CV proto files
-            ansible-avd/ansible_collections/arista/avd/docs/plugins/.* | # Excluded auto generated doc for Ansible plugins
+            docs/plugins/.* | # Excluded auto generated doc for Ansible plugins
           )$
 
   - repo: local
@@ -148,52 +148,52 @@ repos:
       - id: docs-plugin-modules
         name: Build documentation for collection modules and action plugins.
         entry: >-
-          ansible-doc-extractor --template ansible_collections/arista/avd/docs/templates/plugin-docs.j2
-          --markdown "ansible_collections/arista/avd/docs/plugins/Modules_and_action_plugins/"
+          ansible-doc-extractor --template docs/templates/plugin-docs.j2
+          --markdown "docs/plugins/Modules_and_action_plugins/"
         language: python
         types: [python]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/modules/
 
       - id: docs-plugin-filter
         name: Build documentation for collection filter plugins.
         entry: >-
-          ansible-doc-extractor --template ansible_collections/arista/avd/docs/templates/plugin-docs.j2
-          --markdown "ansible_collections/arista/avd/docs/plugins/Filter_plugins/"
+          ansible-doc-extractor --template docs/templates/plugin-docs.j2
+          --markdown "docs/plugins/Filter_plugins/"
         language: python
         types_or: [python, yaml]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/filter/
         exclude: ^(ansible_collections/arista/avd/plugins/filter/deprecated_filters.py)$
 
       - id: docs-plugin-lookup
         name: Build documentation for collection lookup plugins.
         entry: >-
-          ansible-doc-extractor --template ansible_collections/arista/avd/docs/templates/plugin-docs.j2
-          --markdown "ansible_collections/arista/avd/docs/plugins/Lookup_plugins/"
+          ansible-doc-extractor --template docs/templates/plugin-docs.j2
+          --markdown "docs/plugins/Lookup_plugins/"
         language: python
         types: [python]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/lookup/
 
       - id: docs-plugin-test
         name: Build documentation for collection test plugins.
         entry: >-
-          ansible-doc-extractor --template ansible_collections/arista/avd/docs/templates/plugin-docs.j2
-          --markdown "ansible_collections/arista/avd/docs/plugins/Test_plugins/"
+          ansible-doc-extractor --template docs/templates/plugin-docs.j2
+          --markdown "docs/plugins/Test_plugins/"
         language: python
         types: [python]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/test/
 
       - id: docs-plugin-vars
         name: Build documentation for collection var plugins.
         entry: >-
-          ansible-doc-extractor --template ansible_collections/arista/avd/docs/templates/plugin-docs.j2
-          --markdown "ansible_collections/arista/avd/docs/plugins/Vars_plugins/"
+          ansible-doc-extractor --template docs/templates/plugin-docs.j2
+          --markdown "docs/plugins/Vars_plugins/"
         language: python
         types: [python]
-        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.15.0,<2.18.0']
+        additional_dependencies: ['ansible-doc-extractor>=0.1.10', 'ansible-core>=2.16.0,<2.19.0']
         files: ansible_collections/arista/avd/plugins/vars/
 
       - id: schemas

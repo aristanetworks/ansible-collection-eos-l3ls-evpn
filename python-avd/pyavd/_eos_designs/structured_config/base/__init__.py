@@ -339,10 +339,8 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
 
     @cached_property
     def event_monitor(self) -> dict | None:
-        """event_monitor set based on event_monitor data-model. TODO: add to schema."""
-        if get(self._hostvars, "event_monitor") is True:
-            return {"enabled": "true"}
-        return None
+        """event_monitor set based on event_monitor data-model."""
+        return self.inputs.event_monitor._as_dict() or None
 
     @cached_property
     def event_handlers(self) -> list | None:
@@ -351,10 +349,8 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
 
     @cached_property
     def load_interval(self) -> dict | None:
-        """load_interval set based on load_interval_default variable. TODO: add to schema."""
-        if (load_interval_default := get(self._hostvars, "load_interval_default")) is not None:
-            return {"default": load_interval_default}
-        return None
+        """load_interval set based on load_interval_default variable."""
+        return self.inputs.load_interval._as_dict() or None
 
     @cached_property
     def queue_monitor_length(self) -> dict | None:
@@ -426,11 +422,8 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
 
     @cached_property
     def service_unsupported_transceiver(self) -> dict | None:
-        """service_unsupported_transceiver based on unsupported_transceiver data-model. TODO: Add to schema - maybe as hidden."""
-        if (unsupported_transceiver := get(self._hostvars, "unsupported_transceiver")) is not None:
-            return {"license_name": unsupported_transceiver.get("license_name"), "license_key": unsupported_transceiver.get("license_key")}
-
-        return None
+        """service_unsupported_transceiver based on unsupported_transceiver data-model."""
+        return self.inputs.unsupported_transceiver._as_dict() or None
 
     @cached_property
     def local_users(self) -> list | None:
@@ -540,20 +533,8 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
 
     @cached_property
     def queue_monitor_streaming(self) -> dict | None:
-        """queue_monitor_streaming set based on queue_monitor_streaming data-model. TODO: Add to schema."""
-        enable = get(self._hostvars, "queue_monitor_streaming.enable")
-        vrf = get(self._hostvars, "queue_monitor_streaming.vrf")
-        if enable is not True or vrf is None:
-            # TODO: Fix bug where queue monitor enable without VRF will not return any config.
-            return None
-
-        queue_monitor = {}
-        if enable is True:
-            queue_monitor["enable"] = enable
-
-        queue_monitor["vrf"] = vrf
-
-        return queue_monitor
+        """queue_monitor_streaming set based on queue_monitor_streaming data-model."""
+        return self.inputs.queue_monitor_streaming._as_dict() or None
 
     @cached_property
     def management_api_http(self) -> dict:

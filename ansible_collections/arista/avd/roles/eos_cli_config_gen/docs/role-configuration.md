@@ -18,7 +18,7 @@ Default output directories can be updated by modifying the default role variable
 
 ``` yaml
 --8<--
-roles/eos_cli_config_gen/defaults/main/output_directories.yml
+ansible_collections/arista/avd/roles/eos_cli_config_gen/defaults/main/output_directories.yml
 --8<--
 ```
 
@@ -40,7 +40,7 @@ This behavior can be adjusted by setting the variable described below.
     If the validation mode is set to `warning`, execution will continue with invalid data, which can lead to hard-to-read errors or incorrect behavior.
 
 --8<--
-roles/eos_cli_config_gen/docs/tables/role-input-validation.md
+ansible_collections/arista/avd/roles/eos_cli_config_gen/docs/tables/role-input-validation.md
 --8<--
 
 ## Extensibility with Custom Templates
@@ -62,7 +62,7 @@ roles/eos_cli_config_gen/docs/tables/role-input-validation.md
     If adding custom keys to an existing AVD data model, start the key with an underscore `_`, so it will be ignored by schema validation.
 
 --8<--
-roles/eos_cli_config_gen/docs/tables/custom-templates.md
+ansible_collections/arista/avd/roles/eos_cli_config_gen/docs/tables/custom-templates.md
 --8<--
 
 ## Generation of device configuration and documentation
@@ -70,7 +70,7 @@ roles/eos_cli_config_gen/docs/tables/custom-templates.md
 The following settings can be leveraged to control generation of device configuration and documentation.
 
 --8<--
-roles/eos_cli_config_gen/docs/tables/role-settings.md
+ansible_collections/arista/avd/roles/eos_cli_config_gen/docs/tables/role-settings.md
 --8<--
 
 ### Generate default config
@@ -90,5 +90,5 @@ The following commands will be generated when `generate_default_config` is set t
 - End of configuration delimiter
 
 --8<--
-roles/eos_cli_config_gen/docs/tables/generate-default-config.md
+ansible_collections/arista/avd/roles/eos_cli_config_gen/docs/tables/generate-default-config.md
 --8<--

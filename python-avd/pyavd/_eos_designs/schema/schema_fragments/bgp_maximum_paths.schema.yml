@@ -16,4 +16,4 @@ keys:
     convert_types:
       - str
     min: 1
-    max: 512
+    max: 600
