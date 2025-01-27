@@ -116,9 +116,9 @@ ntp server vrf MGMT time.google.com prefer
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | - |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | - | - |
 
 #### Management API VRF Access
 

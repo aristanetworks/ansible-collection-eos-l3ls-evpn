@@ -5609,6 +5609,42 @@ keys:
                 per-vlan.
 
                 '
+  ip_name_server_groups:
+    type: list
+    primary_key: name
+    items:
+      type: dict
+      keys:
+        name:
+          type: str
+        name_servers:
+          type: list
+          primary_key: ip_address
+          allow_duplicate_primary_key: true
+          items:
+            type: dict
+            keys:
+              ip_address:
+                type: str
+                description: IPv4 or IPv6 address for DNS server.
+              vrf:
+                description: VRF Name.
+                type: str
+                required: true
+                convert_types:
+                - int
+              priority:
+                description: Priority value (lower is first).
+                type: int
+                convert_types:
+                - str
+                min: 0
+                max: 15
+        dns_domain:
+          type: str
+        ip_domain_list:
+          type: str
+          description: Set domain names to complete unqualified host names.
   ip_name_servers:
     type: list
     items:
@@ -6449,7 +6485,11 @@ keys:
       timer:
         type: int
       timer_reinitialization:
-        type: str
+        type: int
+        min: 1
+        max: 10
+        convert_types:
+        - str
       holdtime:
         type: int
       management_address:
@@ -6722,6 +6762,7 @@ keys:
                     valid_values:
                     - tcp
                     - udp
+                    - tls
                     default: udp
                   ports:
                     type: list
@@ -6729,6 +6770,10 @@ keys:
                       type: int
                       convert_types:
                       - str
+                  ssl_profile:
+                    type: str
+                    description: Used when host protocol is 'tls'. Profiles are defined
+                      under `management_security.ssl_profiles`.
       policy:
         type: dict
         keys:
@@ -7323,6 +7368,8 @@ keys:
       enable_http:
         type: bool
       enable_https:
+        type: bool
+      enable_unix:
         type: bool
       https_ssl_profile:
         description: SSL Profile Name.
@@ -8501,6 +8548,9 @@ keys:
               default: true
             url:
               type: str
+      name_server_group:
+        type: str
+        description: Set name-server group.
       vrfs:
         type: list
         primary_key: name

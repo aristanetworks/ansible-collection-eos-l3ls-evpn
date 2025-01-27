@@ -135,15 +135,11 @@
 
 | Interface name | DHCP IPv4 | DHCP IPv6 |
 | -------------- | --------- | --------- |
-{%         if ethernet_interfaces_dhcp_server | length > 0 %}
-{%             for ethernet_interface in ethernet_interfaces_dhcp_server | arista.avd.natural_sort %}
+{%         for ethernet_interface in ethernet_interfaces_dhcp_server | arista.avd.natural_sort %}
 | {{ ethernet_interface.name }} | {{ ethernet_interface.dhcp_server_ipv4 | arista.avd.default("-") }} | {{ ethernet_interface.dhcp_server_ipv6 | arista.avd.default("-") }} |
-{%             endfor %}
-{%         endif %}
-{%         if port_channel_interfaces_dhcp_server | length > 0 %}
-{%             for port_channel_interface in port_channel_interfaces_dhcp_server | arista.avd.natural_sort %}
+{%         endfor %}
+{%         for port_channel_interface in port_channel_interfaces_dhcp_server | arista.avd.natural_sort %}
 | {{ port_channel_interface.name }} | {{ port_channel_interface.dhcp_server_ipv4 | arista.avd.default("-") }} | {{ port_channel_interface.dhcp_server_ipv6 | arista.avd.default("-") }} |
-{%             endfor %}
-{%         endif %}
+{%         endfor %}
 {%     endif %}
 {% endif %}

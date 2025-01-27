@@ -429,4 +429,22 @@ class AvdModel(AvdBase):
             msg = f"Unable to compare '{cls}' with a '{type(other)}' class."
             raise TypeError(msg)
 
-        return all(self._get_defined_attr(field) == other._get_defined_attr(field) for field in self._fields if field not in ignore_fields)
+        for field, field_info in self._fields.items():
+            if field in ignore_fields:
+                continue
+
+            if (value := self._get_defined_attr(field)) == (other_value := other._get_defined_attr(field)) or value is Undefined:
+                continue
+
+            field_type = field_info["type"]
+
+            # TODO: Handle deep comparison for lists and indexed lists as well.
+            if not issubclass(field_type, AvdModel) or not isinstance(other_value, field_type):
+                # Difference and not a nested model.
+                return False
+
+            value = cast(AvdModel, value)
+            if not value._compare(other_value):
+                return False
+
+        return True

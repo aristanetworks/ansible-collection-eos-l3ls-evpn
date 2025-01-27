@@ -23,7 +23,7 @@ class AvdFacts:
         self.shared_utils = shared_utils
 
     @classmethod
-    def __keys(cls) -> list[str]:  # pylint: disable=bad-option-value, unused-private-member # CH Sep-22: Some pylint bug.
+    def _keys(cls) -> list[str]:
         """
         Get all class attributes including those of base Classes and Mixins.
 
@@ -44,12 +44,12 @@ class AvdFacts:
         Actually the returned list are the names of attributes not starting with "_" and using cached_property class.
         The "_" check is added to allow support for "internal" cached_properties storing temporary values.
         """
-        return [key for key in cls.__keys() if not key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
+        return [key for key in cls._keys() if not key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
 
     @classmethod
     def internal_keys(cls) -> list[str]:
         """Return a list containing the names of attributes starting with "_" and using cached_property class."""
-        return [key for key in cls.__keys() if key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
+        return [key for key in cls._keys() if key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
 
     def get(self, key: str, default_value: Any = None) -> Any:
         """Emulate the builtin dict .get method."""

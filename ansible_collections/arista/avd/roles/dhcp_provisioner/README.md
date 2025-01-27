@@ -129,8 +129,8 @@ custom_structured_configuration_daemon_terminattr:
 
 ## Requirements
 
-Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#python-requirements-installation)
+Requirements are located here: [avd-requirements](../../../../../docs/installation/collection-installation.md#python-requirements-installation)
 
 ## License
 
-Project is published under [Apache 2.0 License](../../LICENSE)
+Project is published under [Apache 2.0 License](https://github.com/aristanetworks/avd/blob/devel/LICENSE)

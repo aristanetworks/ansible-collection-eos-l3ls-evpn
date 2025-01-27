@@ -4,6 +4,7 @@ lldp:
   run: false
   timer: 30
   holdtime: 90
+  timer_reinitialization: 10
   management_address: 192.168.1.1/24
   receive_packet_tagged_drop: true
   vrf: Management
