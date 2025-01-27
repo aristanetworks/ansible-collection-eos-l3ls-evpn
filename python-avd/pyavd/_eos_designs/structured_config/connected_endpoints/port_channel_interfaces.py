@@ -179,18 +179,12 @@ class PortChannelInterfacesMixin(UtilsMixin):
                     )
                     raise AristaAvdInvalidInputsError(msg) from e
 
-            elif adapter.mode == "trunk":
+            elif adapter.mode in ["trunk", "trunk phone"]:
                 port_channel_interface.switchport.trunk._update(
-                    allowed_vlan=adapter.vlans,
+                    allowed_vlan=adapter.vlans if adapter.mode == "trunk" else None,
                     groups=self._get_adapter_trunk_groups(
                         adapter, connected_endpoint, output_type=EosCliConfigGen.PortChannelInterfacesItem.Switchport.Trunk.Groups
                     ),
-                    native_vlan_tag=adapter.native_vlan_tag,
-                    native_vlan=adapter.native_vlan,
-                )
-
-            elif adapter.mode == "trunk phone":
-                port_channel_interface.switchport.trunk._update(
                     native_vlan_tag=adapter.native_vlan_tag,
                     native_vlan=adapter.native_vlan,
                 )

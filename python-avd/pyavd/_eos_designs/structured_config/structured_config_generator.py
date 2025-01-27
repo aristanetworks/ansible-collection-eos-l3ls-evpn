@@ -87,7 +87,7 @@ class StructuredConfigGenerator(AvdFacts):
         and refactored classes which inplace updates the self.structured_config.
         """
         # This knob makes us keep the legacy behavior of maintaining a single structured config object per module and merging them.
-        # Without it set we will just inplace update the same structured_config, which means any duplication checks will be enforced across all modules.
+        # Without it set, we will just in-place update the same structured_config, which means any duplication checks will be enforced across all modules.
         # Note that methods that have not been refactored to update structured_config directly will still be merged on top.
         if not self.inputs.avd_eos_designs_enforce_duplication_checks_across_all_models and not getattr(
             self, "ignore_avd_eos_designs_enforce_duplication_checks_across_all_models", False
@@ -99,7 +99,7 @@ class StructuredConfigGenerator(AvdFacts):
         self.render_structured_config()
 
         # The render method on AvdFacts class will only execute methods with @cached_property not starting with _.
-        # These are the legacy methods which once refactored to use the @structured_config_contributor decorator instead.
+        # These are the legacy methods which will be refactored to use the @structured_config_contributor decorator instead.
         generated_structured_config_as_dict = super().render()
         if generated_structured_config_as_dict:
             generated_structured_config = EosCliConfigGen._from_dict(generated_structured_config_as_dict)
