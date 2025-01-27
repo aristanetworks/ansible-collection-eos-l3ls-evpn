@@ -15,6 +15,7 @@ keys:
           type: str
           required: true
           description: IPv4 or IPv6 address for DNS server.
+        # TODO: AVD 6.0 Make vrf key required(issue 4788)
         vrf:
           description: VRF Name.
           type: str

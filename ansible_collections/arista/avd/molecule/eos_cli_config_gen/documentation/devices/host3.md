@@ -28,6 +28,66 @@ interface Management1
    ip address 10.73.255.122/24
 ```
 
+### Management SSH
+
+#### SSH Timeout and Management
+
+| Idle Timeout | SSH Management |
+| ------------ | -------------- |
+| default | Enabled |
+
+#### Max number of SSH sessions limit and per-host limit
+
+| Connection Limit | Max from a single Host |
+| ---------------- | ---------------------- |
+| - | - |
+
+#### Ciphers and Algorithms
+
+| Ciphers | Key-exchange methods | MAC algorithms | Hostkey server algorithms |
+|---------|----------------------|----------------|---------------------------|
+| default | default | default | default |
+
+#### VRFs
+
+| VRF | Status |
+| --- | ------ |
+| mgt | Disabled |
+
+#### Management SSH Device Configuration
+
+```eos
+!
+management ssh
+   !
+   vrf mgt
+```
+
+## CVX
+
+CVX is enabled
+
+### CVX Services
+
+| Service | Enabled | Settings |
+| ------- | ------- | -------- |
+| MCS | - | Redis Password Set |
+| VXLAN | - | VTEP MAC learning: control-plane |
+
+### CVX Device Configuration
+
+```eos
+!
+cvx
+   no shutdown
+   !
+   service mcs
+      redis password 7 <removed>
+   !
+   service vxlan
+      vtep mac-learning control-plane
+```
+
 ## Monitoring
 
 ### TerminAttr Daemon
@@ -45,6 +105,47 @@ interface Management1
 daemon TerminAttr
    exec /usr/bin/TerminAttr -cvaddr=apiserver.arista.io:443 -cvauth=token-secure,/tmp/cv-onboarding-token -cvvrf=mgt -smashexcludes=ale,flexCounter,hardware,kni,pulse,strata -ingestexclude=/Sysdb/cell/1/agent,/Sysdb/cell/2/agent -taillogs
    no shutdown
+```
+
+### Logging
+
+#### Logging Servers and Features Summary
+
+| Type | Level |
+| -----| ----- |
+| Synchronous | critical |
+
+| Format Type | Setting |
+| ----------- | ------- |
+| Timestamp | traditional year timezone |
+| Hostname | hostname |
+| Sequence-numbers | false |
+| RFC5424 | False |
+
+#### Logging Servers and Features Device Configuration
+
+```eos
+!
+logging synchronous level critical
+logging format timestamp traditional year timezone
+```
+
+### MCS Client Summary
+
+MCS client is shutdown
+
+| Secondary CVX cluster | Server Hosts | Enabled |
+| --------------------- | ------------ | ------- |
+| default | - | - |
+
+#### MCS Client Device Configuration
+
+```eos
+!
+mcs client
+   shutdown
+   !
+   cvx secondary default
 ```
 
 ## Spanning Tree
@@ -141,6 +242,17 @@ ASN Notation: asplain
 | graceful-restart-helper long-lived |
 | bgp additional-paths send limit 5 |
 
+#### Router BGP EVPN Address Family
+
+#### Router BGP IPv4 Labeled Unicast
+
+##### General Settings
+
+| Settings | Value |
+| -------- | ----- |
+
+#### Router BGP Path-Selection Address Family
+
 #### Router BGP Device Configuration
 
 ```eos
@@ -157,6 +269,15 @@ router bgp 65101.0001
    redistribute ospf include leaked route-map RM-OSPF-TO-BGP
    redistribute static
    !
+   address-family evpn
+      bgp additional-paths send ecmp limit 10
+   !
+   address-family ipv4
+      bgp additional-paths send limit 10
+   !
+   address-family ipv4 labeled-unicast
+      no bgp additional-paths send
+   !
    address-family ipv4 multicast
       redistribute attached-host
       redistribute connected
@@ -169,8 +290,12 @@ router bgp 65101.0001
       redistribute ospf match nssa-external 2
    !
    address-family ipv6
+      no bgp additional-paths send
       redistribute ospfv3 include leaked route-map RM-REDISTRIBUTE-OSPFV3
       redistribute ospfv3 match external include leaked route-map RM-REDISTRIBUTE-OSPFV3-EXTERNAL
+   !
+   address-family path-selection
+      bgp additional-paths send limit 20
 ```
 
 ## MPLS
@@ -205,6 +330,23 @@ mpls ldp
    interface disabled default
 !
 mpls rsvp
+```
+
+## Multicast
+
+### Router Multicast
+
+#### IP Router Multicast Summary
+
+- Multipathing via ECMP.
+
+#### Router Multicast Device Configuration
+
+```eos
+!
+router multicast
+   ipv4
+      multipath deterministic
 ```
 
 ### Traffic Policies information

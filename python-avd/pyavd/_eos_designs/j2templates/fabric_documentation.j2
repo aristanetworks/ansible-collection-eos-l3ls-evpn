@@ -44,8 +44,8 @@
 
 | Uplink IPv4 Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ---------------- | ------------------- | ------------------ | ------------------ |
-{% for uplink_ipv4_pool in uplink_ipv4_pools %}
-| {{ uplink_ipv4_pool.pool }} | {{ uplink_ipv4_pool.size }} | {{ uplink_ipv4_pool.used }} | {{ uplink_ipv4_pool.used_percent }} % |
+{% for uplink_ipv4_network in uplink_ipv4_networks %}
+| {{ uplink_ipv4_network.network }} | {{ uplink_ipv4_network.size }} | {{ uplink_ipv4_network.used }} | {{ uplink_ipv4_network.used_percent }} % |
 {% endfor %}
 
 ### Point-To-Point Links Node Allocation
@@ -60,8 +60,8 @@
 
 | Loopback Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ------------- | ------------------- | ------------------ | ------------------ |
-{% for loopback_ipv4_pool in loopback_ipv4_pools %}
-| {{ loopback_ipv4_pool.pool }} | {{ loopback_ipv4_pool.size }} | {{ loopback_ipv4_pool.used }} | {{ loopback_ipv4_pool.used_percent }} % |
+{% for loopback_ipv4_network in loopback_ipv4_networks %}
+| {{ loopback_ipv4_network.network }} | {{ loopback_ipv4_network.size }} | {{ loopback_ipv4_network.used }} | {{ loopback_ipv4_network.used_percent }} % |
 {% endfor %}
 
 ### Loopback0 Interfaces Node Allocation
@@ -86,8 +86,8 @@
 
 | VTEP Loopback Pool | Available Addresses | Assigned addresses | Assigned Address % |
 | ------------------ | ------------------- | ------------------ | ------------------ |
-{% for vtep_loopback_ipv4_pool in vtep_loopback_ipv4_pools %}
-| {{ vtep_loopback_ipv4_pool.pool }} | {{ vtep_loopback_ipv4_pool.size }} | {{ vtep_loopback_ipv4_pool.used }} | {{ vtep_loopback_ipv4_pool.used_percent }} % |
+{% for vtep_loopback_ipv4_network in vtep_loopback_ipv4_networks %}
+| {{ vtep_loopback_ipv4_network.network }} | {{ vtep_loopback_ipv4_network.size }} | {{ vtep_loopback_ipv4_network.used }} | {{ vtep_loopback_ipv4_network.used_percent }} % |
 {% endfor %}
 
 ### VTEP Loopback Node allocation
