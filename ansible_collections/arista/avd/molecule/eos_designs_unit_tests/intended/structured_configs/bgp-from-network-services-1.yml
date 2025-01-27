@@ -121,8 +121,6 @@ router_bgp:
     neighbors:
     - ip_address: 10.10.1.2
       activate: true
-  vrfs:
-  - name: default
 service_routing_protocols_model: multi-agent
 spanning_tree:
   mode: none
