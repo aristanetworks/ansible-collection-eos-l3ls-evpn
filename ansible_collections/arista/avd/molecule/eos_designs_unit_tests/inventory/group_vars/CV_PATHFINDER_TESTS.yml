@@ -4,8 +4,6 @@ wan_mode: cv-pathfinder
 # Have all the router in the examples use eBGP as underlay routing protocol -
 # the default is "none" for WAN routers"
 underlay_routing_protocol: ebgp
-# the default is currently ibgp for WAN routers but need to change it soon.
-overlay_routing_protocol: none
 
 ipv4_prefix_list_catalog:
   - name: ALLOW-DEFAULT
