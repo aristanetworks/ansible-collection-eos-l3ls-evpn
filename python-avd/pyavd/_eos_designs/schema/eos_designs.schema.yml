@@ -2335,7 +2335,7 @@ keys:
           description: "List of ranges using AVD range_expand syntax.\nFor example:\n\nswitch_ports:\n
             \ - Ethernet1\n  - Ethernet2-48\n\nAll switch_ports ranges are expanded
             into individual port configurations.\n\nFor more details and examples
-            of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../docs/plugins/Filter_plugins/range_expand.md).\n"
+            of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../../../../docs/plugins/Filter_plugins/range_expand.md).\n"
           items:
             type: str
         description:

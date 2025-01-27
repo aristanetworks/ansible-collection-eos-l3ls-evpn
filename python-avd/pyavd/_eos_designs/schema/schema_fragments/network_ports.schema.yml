@@ -48,7 +48,7 @@ keys:
 
             All switch_ports ranges are expanded into individual port configurations.
 
-            For more details and examples of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../docs/plugins/Filter_plugins/range_expand.md).
+            For more details and examples of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../../../../docs/plugins/Filter_plugins/range_expand.md).
           items:
             type: str
         description:

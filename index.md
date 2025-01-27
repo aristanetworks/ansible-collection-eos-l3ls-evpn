@@ -6,7 +6,7 @@
 
 # Arista Validated Designs
 
-<center><img src="media/avd-logo.png" alt="Arista AVD Overview" width="800"/></center>
+<center><img src="docs/_media/avd-logo.png" alt="Arista AVD Overview" width="800"/></center>
 
 Arista Validated Designs (AVD) is an extensible data model that defines Arista's Unified Cloud Network architecture as "code".
 
@@ -24,10 +24,10 @@ Arista Validated Designs (AVD) is an extensible data model that defines Arista's
 
 ## Reference designs
 
-- [L3LS VXLAN-EVPN](roles/eos_designs/README.md#layer-3-leaf-spine-with-vxlan-evpn)
-- [L2LS](roles/eos_designs/README.md#layer-2-leaf-spine)
-- [MPLS](roles/eos_designs/README.md#mpls-core-with-mpls-evpn-vpn-ipv4-vpn-ipv6)
-- [WAN AutoVPN/CV Pathfinder](roles/eos_designs/README.md#wan-autovpn-cv-pathfinder)
+- [L3LS VXLAN-EVPN](ansible_collections/arista/avd/roles/eos_designs/README.md#layer-3-leaf-spine-with-vxlan-evpn)
+- [L2LS](ansible_collections/arista/avd/roles/eos_designs/README.md#layer-2-leaf-spine)
+- [MPLS](ansible_collections/arista/avd/roles/eos_designs/README.md#mpls-core-with-mpls-evpn-vpn-ipv4-vpn-ipv6)
+- [WAN AutoVPN/CV Pathfinder](ansible_collections/arista/avd/roles/eos_designs/README.md#wan-autovpn-cv-pathfinder)
 
 ## AVD Ansible Collection
 
@@ -76,6 +76,6 @@ You can also open an [issue](https://github.com/aristanetworks/avd/issues) to re
 
 ## License
 
-Copyright (c) 2019-2024 Arista Networks, Inc.
+Copyright (c) 2019-2025 Arista Networks, Inc.
 
-The project is published under [Apache 2.0 License](LICENSE)
+The project is published under [Apache 2.0 License](https://github.com/aristanetworks/avd/blob/devel/LICENSE)
