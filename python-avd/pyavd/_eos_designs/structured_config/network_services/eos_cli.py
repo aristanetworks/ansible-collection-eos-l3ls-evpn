@@ -26,8 +26,12 @@ class EosCliMixin(UtilsMixin):
             return None
 
         eos_clis = []
-        if (eos_cli := self.structured_config.eos_cli) is not None:
-            eos_clis.append(eos_cli)
+        # Find any existing eos_cli set by AvdStructuredConfigBase.
+        # Depending on the render() logic this may be in self.structured_config or in self._complete_structured_config
+        if self.structured_config.eos_cli is not None:
+            eos_clis.append(self.structured_config.eos_cli)
+        elif hasattr(self, "_complete_structured_config") and self._complete_structured_config.eos_cli is not None:
+            eos_clis.append(self._complete_structured_config.eos_cli)
 
         eos_clis.extend(vrf.raw_eos_cli for tenant in self.shared_utils.filtered_tenants for vrf in tenant.vrfs if vrf.raw_eos_cli is not None)
 

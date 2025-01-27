@@ -114,13 +114,7 @@ $defs:
         valid_values: ["enabled", "disabled", "True", "False", "true", "false"]
       flowcontrol:
         type: dict
-        keys:
-          received:
-            type: str
-            valid_values:
-              - "received"
-              - "send"
-              - "on"
+        $ref: eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/flowcontrol
       qos_profile:
         type: str
         description: QOS profile name.
@@ -428,7 +422,8 @@ $defs:
                 type: int
                 convert_types:
                   - str
-                description: Timeout in seconds. EOS default is 90 seconds.
+                description: Timeout in seconds.
+                default: 90
           lacp_timer:
             type: dict
             description: LACP timer configuration. Applies only when Port-channel mode is not "on".
