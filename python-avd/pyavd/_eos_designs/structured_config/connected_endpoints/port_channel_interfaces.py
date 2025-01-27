@@ -143,7 +143,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
             link_tracking_groups=self._get_adapter_link_tracking_groups(adapter, output_type=EosCliConfigGen.PortChannelInterfacesItem.LinkTrackingGroups),
             ptp=self._get_adapter_ptp(adapter, output_type=EosCliConfigGen.PortChannelInterfacesItem.Ptp),
             sflow=self._get_adapter_sflow(adapter, output_type=EosCliConfigGen.PortChannelInterfacesItem.Sflow),
-            flow_tracker=self._get_adapter_flowtracker(adapter, output_type=EosCliConfigGen.PortChannelInterfacesItem.FlowTracker),
+            flow_tracker=self.shared_utils.new_get_flow_tracker(adapter.flow_tracking, output_type=EosCliConfigGen.PortChannelInterfacesItem.FlowTracker),
             validate_state=None if (adapter.validate_state if adapter.validate_state is not None else True) else False,
             validate_lldp=None if (adapter.validate_lldp if adapter.validate_lldp is not None else True) else False,
             eos_cli=adapter.port_channel.raw_eos_cli,

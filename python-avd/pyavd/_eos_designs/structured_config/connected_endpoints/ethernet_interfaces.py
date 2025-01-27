@@ -92,7 +92,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             ptp=self._get_adapter_ptp(adapter, output_type=EosCliConfigGen.EthernetInterfacesItem.Ptp),
             service_profile=adapter.qos_profile,
             sflow=self._get_adapter_sflow(adapter, output_type=EosCliConfigGen.EthernetInterfacesItem.Sflow),
-            flow_tracker=self._get_adapter_flowtracker(adapter, output_type=EosCliConfigGen.EthernetInterfacesItem.FlowTracker),
+            flow_tracker=self.shared_utils.new_get_flow_tracker(adapter.flow_tracking, output_type=EosCliConfigGen.EthernetInterfacesItem.FlowTracker),
             link_tracking_groups=self._get_adapter_link_tracking_groups(adapter, output_type=EosCliConfigGen.EthernetInterfacesItem.LinkTrackingGroups),
         )
         ethernet_interface.switchport._update(

@@ -304,18 +304,3 @@ class UtilsMixin:
             return output_type(enable=adapter_sflow)
 
         return Undefined
-
-    def _get_adapter_flowtracker(
-        self: AvdStructuredConfigConnectedEndpoints,
-        adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
-        output_type: type[T_FlowTracker],
-    ) -> T_FlowTracker | UndefinedType:
-        if default(adapter.flow_tracking.enabled, self.inputs.fabric_flow_tracking.endpoints.enabled):
-            name: str = default(adapter.flow_tracking.name, self.inputs.fabric_flow_tracking.endpoints.name)
-            match self.shared_utils.flow_tracking_type:
-                case "hardware":
-                    return output_type(hardware=name)
-                case "sampled":
-                    return output_type(sampled=name)
-
-        return Undefined
