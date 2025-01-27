@@ -91,7 +91,7 @@ class VxlanInterfaceMixin(UtilsMixin):
 
         if self.shared_utils.is_wan_server:
             # loop through wan_vrfs and add VRF VNI if not present
-            for vrf in self.shared_utils._filtered_wan_vrfs:
+            for vrf in self._filtered_wan_vrfs:
                 # Duplicate check is not done on the actual list of vlans, but instead on our local "vnis" list.
                 # This is necessary to find duplicate VNIs across multiple object types.
                 vrf_data = {"name": vrf.name, "vni": vrf.wan_vni}
@@ -163,7 +163,7 @@ class VxlanInterfaceMixin(UtilsMixin):
 
             if self.shared_utils.is_wan_router:
                 # Every VRF with EVPN on a WAN router must have a wan_vni defined.
-                if vrf_name not in self.shared_utils._filtered_wan_vrfs:
+                if vrf_name not in self._filtered_wan_vrfs:
                     msg = (
                         f"The VRF '{vrf_name}' does not have a `wan_vni` defined under 'wan_virtual_topologies'. "
                         "If this VRF was not intended to be extended over the WAN, but still required to be configured on the WAN router, "
@@ -171,7 +171,7 @@ class VxlanInterfaceMixin(UtilsMixin):
                         "use the VRF filter 'deny_vrfs' under the node settings."
                     )
                     raise AristaAvdInvalidInputsError(msg)
-                vni = self.shared_utils._filtered_wan_vrfs[vrf_name].wan_vni
+                vni = self._filtered_wan_vrfs[vrf_name].wan_vni
             else:
                 vni = default(vrf.vrf_vni, vrf.vrf_id)
 

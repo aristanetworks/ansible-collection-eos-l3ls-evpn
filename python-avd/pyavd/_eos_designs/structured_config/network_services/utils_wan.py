@@ -24,6 +24,19 @@ class UtilsWanMixin:
     """
 
     @cached_property
+    def _filtered_wan_vrfs(self: AvdStructuredConfigNetworkServices) -> EosDesigns.WanVirtualTopologies.Vrfs:
+        """Loop through all the VRFs defined under `wan_virtual_topologies.vrfs` and returns a list of mode."""
+        wan_vrfs = EosDesigns.WanVirtualTopologies.Vrfs(
+            vrf for vrf in self.inputs.wan_virtual_topologies.vrfs if vrf.name in self.shared_utils.vrfs or self.shared_utils.is_wan_server
+        )
+
+        # Check that default is in the list as it is required everywhere
+        if "default" not in wan_vrfs:
+            wan_vrfs.append(EosDesigns.WanVirtualTopologies.VrfsItem(name="default", wan_vni=1))
+
+        return wan_vrfs
+
+    @cached_property
     def _wan_virtual_topologies_policies(self: AvdStructuredConfigNetworkServices) -> EosDesigns.WanVirtualTopologies.Policies:
         """This function parses the input data and append the default-policy if not already present."""
         # If not overwritten, inject the default policy in case it is required for one of the VRFs
@@ -49,7 +62,7 @@ class UtilsWanMixin:
         filtered_policy_names = []
         filtered_policies = []
 
-        for vrf in self.shared_utils._filtered_wan_vrfs:
+        for vrf in self._filtered_wan_vrfs:
             # Need to handle VRF default differently and lookup for the original policy
             if vrf.policy not in self._wan_virtual_topologies_policies:
                 msg = (
@@ -388,7 +401,7 @@ class UtilsWanMixin:
     @cached_property
     def _wan_control_plane_profile_name(self: AvdStructuredConfigNetworkServices) -> str:
         """Control plane profile name."""
-        vrf_default_policy_name = self.shared_utils._filtered_wan_vrfs["default"].policy
+        vrf_default_policy_name = self._filtered_wan_vrfs["default"].policy
         return self._wan_control_plane_virtual_topology.name or f"{vrf_default_policy_name}-CONTROL-PLANE"
 
     @cached_property

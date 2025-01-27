@@ -161,8 +161,8 @@ class RouterBgpMixin(UtilsMixin):
                     )
 
                 if (
-                    vrf_address_families := [af for af in vrf.address_families if af in self.shared_utils.overlay_address_families]
-                ) or self.shared_utils.vrf_wan_vni(vrf_name) is not None:
+                    vrf_address_families := {af for af in vrf.address_families if af in self.shared_utils.overlay_address_families}
+                ) or self.shared_utils.is_wan_vrf(vrf_name):
                     # The called function in-place updates the bgp_vrf dict.
                     self._update_router_bgp_vrf_evpn_or_mpls_cfg(bgp_vrf, vrf, vrf_address_families)
 
@@ -280,7 +280,7 @@ class RouterBgpMixin(UtilsMixin):
         self: AvdStructuredConfigNetworkServices,
         bgp_vrf: dict,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
-        vrf_address_families: list[str],
+        vrf_address_families: set[str],
     ) -> None:
         """In-place update EVPN/MPLS part of structured config for *one* VRF under router_bgp.vrfs."""
         vrf_name = vrf.name
@@ -288,17 +288,9 @@ class RouterBgpMixin(UtilsMixin):
         vrf_rt = self.get_vrf_rt(vrf)
         route_targets = {"import": [], "export": []}
 
-        # if "evpn" in vrf_address_families the RTs will be added
-        if self.shared_utils.vrf_wan_vni(bgp_vrf["name"]) and "evpn" not in vrf_address_families:
-            if (target := get_item(route_targets["import"], "address_family", "evpn")) is None:
-                route_targets["import"].append({"address_family": "evpn", "route_targets": [vrf_rt]})
-            else:
-                target["route_targets"].append(vrf_rt)
-
-            if (target := get_item(route_targets["export"], "address_family", "evpn")) is None:
-                route_targets["export"].append({"address_family": "evpn", "route_targets": [vrf_rt]})
-            else:
-                target["route_targets"].append(vrf_rt)
+        # If the VRF is a WAN VRF, EVPN RTs are needed.
+        if self.shared_utils.is_wan_vrf(vrf.name):
+            vrf_address_families.add("evpn")
 
         for af in vrf_address_families:
             if (target := get_item(route_targets["import"], "address_family", af)) is None:

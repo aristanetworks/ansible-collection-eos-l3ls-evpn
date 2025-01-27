@@ -204,10 +204,11 @@ class CvPathfinderMixin:
         return strip_empties_from_list(metadata_vrfs)
 
     def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadata, vrf_name: str) -> int:
-        if (wan_vni := self.shared_utils.vrf_wan_vni(vrf_name)) is not None:
-            return wan_vni
-        if vrf_name == "default":
-            return 1
+        if vrf_name not in self.inputs.wan_virtual_topologies.vrfs or (wan_vni := self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni) is None:
+            if vrf_name == "default":
+                return 1
 
-        msg = f"Unable to find the WAN VNI for VRF {vrf_name} during generation of cv_pathfinder metadata."
-        raise AristaAvdError(msg)
+            msg = f"Unable to find the WAN VNI for VRF {vrf_name} during generation of cv_pathfinder metadata."
+            raise AristaAvdError(msg)
+
+        return wan_vni

@@ -66,12 +66,9 @@ class FilteredTenantsMixin:
             for tenant in filtered_tenants:
                 if "default" not in tenant.vrfs:
                     continue
-                if "evpn" not in tenant.vrfs["default"].address_families:
-                    msg = "WAN configuration requires EVPN to be enabled for VRF 'default'. Got 'address_families: {vrf_default['address_families']}."
-                    raise AristaAvdError(msg)
                 if self.inputs.underlay_filter_peer_as:
                     msg = "WAN configuration is not compatible with 'underlay_filter_peer_as'"
-                    raise AristaAvdError
+                    raise AristaAvdError(msg)
                 break
 
         return filtered_tenants._natural_sorted()
@@ -431,9 +428,9 @@ class FilteredTenantsMixin:
         vrf_address_families = [af for af in vrf.address_families if af in self.overlay_address_families]
         return any(
             [
-                (self.is_wan_router and self.vrf_wan_vni(vrf.name) is not None),
                 vrf_address_families,
                 vrf.bgp_peers,
                 (self.uplink_type == "p2p-vrfs" and vrf.name in (self.get_switch_fact("uplink_switch_vrfs", required=False) or [])),
+                self.is_wan_vrf(vrf.name),
             ]
         )
