@@ -125,7 +125,21 @@ class EthernetInterfacesMixin(UtilsMixin):
         node_index: int,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
     ) -> EosCliConfigGen.EthernetInterfacesItem:
-        """Return structured_config for one ethernet_interface."""
+        """
+        Return structured configuration for one ethernet interface.
+
+        Args:
+            adapter: The adapter configuration item.
+            node_index: The index of the node in the list of nodes.
+            connected_endpoint: The connected endpoint configuration item.
+
+        Returns:
+            The structured configuration for the ethernet interface.
+
+        Raises:
+            AristaAvdError: If the lengths of the lists 'switches', 'switch_ports', and 'descriptions' (if used) do not match.
+            AristaAvdInvalidInputsError: If a port-channel set to LACP fallback mode 'individual' does not have a 'profile' defined.
+        """
         peer = connected_endpoint.name
         endpoint_ports = adapter.endpoint_ports
         peer_interface = endpoint_ports[node_index] if node_index < len(endpoint_ports) else None

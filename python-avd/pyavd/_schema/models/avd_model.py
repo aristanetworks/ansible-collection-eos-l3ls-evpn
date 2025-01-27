@@ -414,6 +414,8 @@ class AvdModel(AvdBase):
                 continue
 
             field_type = field_info["type"]
+
+            # TODO: Handle deep comparison for lists and indexed lists as well.
             if not issubclass(field_type, AvdModel) or not isinstance(other_value, field_type):
                 # Difference and not a nested model.
                 return False
