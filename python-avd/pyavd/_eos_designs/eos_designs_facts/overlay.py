@@ -64,7 +64,6 @@ class OverlayMixin:
     @cached_property
     def vtep_ip(self: EosDesignsFacts) -> str | None:
         """Exposed in avd_switch_facts."""
-        # TODO: Probably need to handle this differently for WAN router - maybe `dps_ip` is needed.
         if self.shared_utils.vtep or self.shared_utils.is_wan_router:
             return self.shared_utils.vtep_ip
         return None
