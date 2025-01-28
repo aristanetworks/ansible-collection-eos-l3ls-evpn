@@ -583,6 +583,24 @@ class WanMixin:
 
         return self.inputs.wan_stun_dtls_profile_name
 
-    def is_wan_vrf(self: SharedUtils, vrf_name: str) -> int | None:
+    def is_wan_vrf(self: SharedUtils, vrf) -> bool:
         """Returns True is the VRF is a WAN VRF."""
-        return all([self.is_wan_router, vrf_name in self.inputs.wan_virtual_topologies.vrfs or vrf_name == "default"])
+        # TODO: check need to also look at the address_families if new knob is unset
+        # if new knob is set the implemenetation is enough and will be able to signal later
+        # using extension mechanism.
+        # TODO: need to receive the VrfItem object from NetworkServices to decide on this
+        vrf_name = vrf.name
+        if not self.is_wan_router:
+            return False
+
+        if not (vrf_name in self.inputs.wan_virtual_topologies.vrfs or vrf_name == "default"):
+            if not self.inputs.wan_use_evpn_node_settings_for_lan:
+                # need to check address families
+                if "evpn" in vrf.address_families:
+                    raise AristaAvdInvalidInputsError("TODO")
+                return False
+            # TODO: check for new signal as we may need to raise
+            return False
+
+        # TODO: check for new signal
+        return True
