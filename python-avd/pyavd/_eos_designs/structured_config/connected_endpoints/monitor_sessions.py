@@ -4,17 +4,28 @@
 from __future__ import annotations
 
 import re
+<<<<<<< HEAD
 from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
+=======
+
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
+from typing import TYPE_CHECKING
+>>>>>>> 2fed6bb933 (Refactor(eos_designs): Refactor eos_designs structured_config code for monitor_sessions)
 
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import append_if_not_duplicate, groupby_obj, strip_null_from_data
+from pyavd._utils import groupby_obj
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
+<<<<<<< HEAD
 
     from . import AvdStructuredConfigConnectedEndpointsProtocol
+=======
+    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+    from . import AvdStructuredConfigConnectedEndpoints
+>>>>>>> 2fed6bb933 (Refactor(eos_designs): Refactor eos_designs structured_config code for monitor_sessions)
 
 
 class MonitorSessionsMixin(Protocol):
@@ -24,13 +35,11 @@ class MonitorSessionsMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def monitor_sessions(self: AvdStructuredConfigConnectedEndpointsProtocol) -> list | None:
+    @structured_config_contributor
+    def monitor_sessions(self: AvdStructuredConfigConnectedEndpoints) -> None:
         """Return structured_config for monitor_sessions."""
         if not self._monitor_session_configs:
-            return None
-
-        monitor_sessions = []
+            return
 
         for session_name, session_configs in groupby_obj(self._monitor_session_configs, "name"):
             # Convert iterator to list since we can only access it once.
@@ -48,42 +57,31 @@ class MonitorSessionsMixin(Protocol):
                         )
                         raise AristaAvdInvalidInputsError(msg)
 
-            monitor_session = {
-                "name": session_name,
-                "sources": [],
-                "destinations": [session._internal_data.interface for session in session_configs_list if session.role == "destination"],
-            }
+            monitor_session = EosCliConfigGen.MonitorSessionsItem(
+                name=session_name,
+                sources=[],
+                destinations=[session._interface for session in session_configs_list if session.role == "destination"],
+            )
             source_sessions = [session for session in session_configs_list if session.role == "source"]
             for session in source_sessions:
-                source = {
-                    "name": session._internal_data.interface,
-                    "direction": session.source_settings.direction,
-                }
-                if session.source_settings.access_group.name is not None:
-                    source["access_group"] = {
-                        "type": session.source_settings.access_group.type,
-                        "name": session.source_settings.access_group.name,
-                        "priority": session.source_settings.access_group.priority,
-                    }
-                append_if_not_duplicate(
-                    list_of_dicts=monitor_session["sources"],
-                    primary_key="name",
-                    new_dict=source,
-                    context="Monitor session defined under connected_endpoints",
-                    context_keys=["name"],
+                source = EosCliConfigGen.MonitorSessionsItem.SourcesItem(
+                    name=session._interface,
+                    direction=session.source_settings.direction,
                 )
+                if session.source_settings.access_group.name is not None:
+                    source.access_group = EosCliConfigGen.MonitorSessionsItem.SourcesItem.AccessGroup(
+                        type=session.source_settings.access_group.type,
+                        name=session.source_settings.access_group.name,
+                        priority=session.source_settings.access_group.priority,
+                    )
+                monitor_session.sources.extend(source)
 
             if session_settings := merged_settings.session_settings:
-                monitor_session.update(session_settings._as_dict())
+                monitor_session._update(session_settings)
 
-            monitor_sessions.append(monitor_session)
+            self.structured_config.monitor_sessions.append(monitor_session)
 
-        if monitor_sessions:
-            return strip_null_from_data(monitor_sessions, ([], {}, None))
 
-        return None
-
-    @cached_property
     def _monitor_session_configs(
         self: AvdStructuredConfigConnectedEndpointsProtocol,
     ) -> list[EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.MonitorSessionsItem]:
