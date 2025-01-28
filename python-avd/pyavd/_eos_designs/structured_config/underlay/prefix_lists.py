@@ -5,10 +5,10 @@ from __future__ import annotations
 
 import ipaddress
 from functools import cached_property
-from ipaddress import ip_network
+from ipaddress import collapse_addresses, ip_network
 from typing import TYPE_CHECKING
 
-from pyavd._utils import get
+from pyavd._utils import get, get_ipv4_networks_from_pool, get_ipv6_networks_from_pool
 
 from .utils import UtilsMixin
 
@@ -36,13 +36,22 @@ class PrefixListsMixin(UtilsMixin):
             return None
 
         # IPv4 - PL-LOOPBACKS-EVPN-OVERLAY
-        sequence_numbers = [{"sequence": 10, "action": f"permit {self.shared_utils.loopback_ipv4_pool} eq 32"}]
+        sequence_numbers = [
+            {"sequence": index * 10, "action": f"permit {network} eq 32"}
+            for index, network in enumerate(collapse_addresses(get_ipv4_networks_from_pool(self.shared_utils.loopback_ipv4_pool)), start=1)
+        ]
 
         if self.shared_utils.overlay_vtep and self.shared_utils.vtep_loopback.lower() != "loopback0" and not self.shared_utils.is_wan_router:
-            sequence_numbers.append({"sequence": 20, "action": f"permit {self.shared_utils.vtep_loopback_ipv4_pool} eq 32"})
+            sequence_numbers.extend(
+                {"sequence": index * 10, "action": f"permit {network} eq 32"}
+                for index, network in enumerate(
+                    collapse_addresses(get_ipv4_networks_from_pool(self.shared_utils.vtep_loopback_ipv4_pool)), start=len(sequence_numbers) + 1
+                )
+            )
 
         if self.inputs.vtep_vvtep_ip is not None and self.shared_utils.network_services_l3 is True and not self.shared_utils.is_wan_router:
-            sequence_numbers.append({"sequence": 30, "action": f"permit {self.inputs.vtep_vvtep_ip}"})
+            sequence_number = (len(sequence_numbers) + 1) * 10
+            sequence_numbers.append({"sequence": sequence_number, "action": f"permit {self.inputs.vtep_vvtep_ip}"})
 
         prefix_lists = [{"name": "PL-LOOPBACKS-EVPN-OVERLAY", "sequence_numbers": sequence_numbers}]
 
@@ -109,5 +118,11 @@ class PrefixListsMixin(UtilsMixin):
 
         # IPv6 - PL-LOOPBACKS-EVPN-OVERLAY-V6
         return [
-            {"name": "PL-LOOPBACKS-EVPN-OVERLAY-V6", "sequence_numbers": [{"sequence": 10, "action": f"permit {self.shared_utils.loopback_ipv6_pool} eq 128"}]},
+            {
+                "name": "PL-LOOPBACKS-EVPN-OVERLAY-V6",
+                "sequence_numbers": [
+                    {"sequence": index * 10, "action": f"permit {network} eq 128"}
+                    for index, network in enumerate(collapse_addresses(get_ipv6_networks_from_pool(self.shared_utils.loopback_ipv6_pool)), start=1)
+                ],
+            },
         ]

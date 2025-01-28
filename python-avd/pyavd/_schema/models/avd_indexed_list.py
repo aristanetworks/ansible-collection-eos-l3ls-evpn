@@ -117,7 +117,9 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             if item._compare(existing_item := self._items[primary_key], ignore_fields):
                 # Ignore identical item.
                 return
-            raise AristaAvdDuplicateDataError(type(self).__name__, str(item), str(existing_item))
+            item._strip_empties()
+            existing_item._strip_empties()
+            raise AristaAvdDuplicateDataError(type(self).__name__, str(item._dump()), str(existing_item._dump()))
 
         self._items[primary_key] = item
 
@@ -137,7 +139,8 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
             return self._items[kwargs[self._primary_key]]
 
     def extend(self, items: Iterable[T_AvdModel]) -> None:
-        self._items.update({getattr(item, self._primary_key): item for item in items})
+        for item in items:
+            self.append(item)
 
     def _strip_empties(self) -> None:
         """In-place update the instance to remove data matching the given strip_values."""

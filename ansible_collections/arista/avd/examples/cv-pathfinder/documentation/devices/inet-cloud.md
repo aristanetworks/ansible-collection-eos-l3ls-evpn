@@ -121,9 +121,9 @@ ntp server vrf MGMT 0.pool.ntp.org prefer
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | - |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | - | - |
 
 #### Management API VRF Access
 
@@ -233,9 +233,9 @@ dhcp server
 
 | Interface name | DHCP IPv4 | DHCP IPv6 |
 | -------------- | --------- | --------- |
-| Ethernet5 | True | False |
-| Ethernet6 | True | False |
-| Ethernet8 | True | False |
+| Ethernet5 | True | - |
+| Ethernet6 | True | - |
+| Ethernet8 | True | - |
 
 ## Monitoring
 

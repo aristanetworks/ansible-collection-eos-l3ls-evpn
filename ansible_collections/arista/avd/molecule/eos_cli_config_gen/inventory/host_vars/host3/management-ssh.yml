@@ -1,0 +1,4 @@
+---
+management_ssh:
+  vrfs:
+    - name: mgt

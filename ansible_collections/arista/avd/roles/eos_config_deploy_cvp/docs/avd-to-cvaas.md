@@ -36,9 +36,9 @@ Make sure to copy the generated password. You only get view it once.
 Click "Save" to exit the dialogue box.
 ```
 
-![Figure: 1](../../../media/serviceaccount1.png)
-![Figure: 2](../../../media/serviceaccount2.png)
-![Figure: 3](../../../media/serviceaccount3.png)
+![Figure: 1](../../../../../../docs/_media/serviceaccount1.png)
+![Figure: 2](../../../../../../docs/_media/serviceaccount2.png)
+![Figure: 3](../../../../../../docs/_media/serviceaccount3.png)
 
 !!! note
     The name of the service account must match a username configured to be authorized on
