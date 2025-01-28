@@ -56051,7 +56051,7 @@ class EosDesigns(EosDesignsRootModel):
     Depending on the values of vrf_id /
     vrf_vni it may be required to adjust the base_vlan to avoid overlaps or invalid vlan ids.
     The SVI ip
-    address derived from mlag_l3_peer_ipv4_pool is re-used across all iBGP peerings.
+    address derived from mlag_l3_peer_ipv4_pool is reused across all iBGP peerings.
 
 
     Subclass of
@@ -57763,7 +57763,7 @@ class EosDesigns(EosDesignsRootModel):
                    Depending on the values of vrf_id /
                    vrf_vni it may be required to adjust the base_vlan to avoid overlaps or invalid vlan ids.
                    The SVI ip
-                   address derived from mlag_l3_peer_ipv4_pool is re-used across all iBGP peerings.
+                   address derived from mlag_l3_peer_ipv4_pool is reused across all iBGP peerings.
 
 
                    Subclass of
