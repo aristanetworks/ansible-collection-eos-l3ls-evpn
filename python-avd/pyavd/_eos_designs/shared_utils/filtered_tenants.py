@@ -431,6 +431,6 @@ class FilteredTenantsMixin:
                 vrf_address_families,
                 vrf.bgp_peers,
                 (self.uplink_type == "p2p-vrfs" and vrf.name in (self.get_switch_fact("uplink_switch_vrfs", required=False) or [])),
-                self.is_wan_vrf(vrf.name),
+                self.is_wan_vrf(vrf),
             ]
         )

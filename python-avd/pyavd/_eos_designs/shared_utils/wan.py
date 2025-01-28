@@ -583,24 +583,21 @@ class WanMixin:
 
         return self.inputs.wan_stun_dtls_profile_name
 
-    def is_wan_vrf(self: SharedUtils, vrf) -> bool:
+    def is_wan_vrf(self: SharedUtils, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
         """Returns True is the VRF is a WAN VRF."""
-        # TODO: check need to also look at the address_families if new knob is unset
-        # if new knob is set the implemenetation is enough and will be able to signal later
-        # using extension mechanism.
-        # TODO: need to receive the VrfItem object from NetworkServices to decide on this
-        vrf_name = vrf.name
         if not self.is_wan_router:
             return False
 
-        if not (vrf_name in self.inputs.wan_virtual_topologies.vrfs or vrf_name == "default"):
-            if not self.inputs.wan_use_evpn_node_settings_for_lan:
-                # need to check address families
-                if "evpn" in vrf.address_families:
-                    raise AristaAvdInvalidInputsError("TODO")
-                return False
-            # TODO: check for new signal as we may need to raise
-            return False
+        configured_as_wan_vrf = vrf.name in self.inputs.wan_virtual_topologies.vrfs or vrf.name == "default"
 
-        # TODO: check for new signal
-        return True
+        # Old behavior where we rely on address_families.
+        if not self.inputs.wan_use_evpn_node_settings_for_lan and "evpn" in vrf.address_families and not configured_as_wan_vrf:
+            msg = (
+                f"The VRF '{vrf.name}' does not have a `wan_vni` defined under 'wan_virtual_topologies'. "
+                "If this VRF was not intended to be extended over the WAN, but still required to be configured on the WAN router, "
+                "set 'address_families: []' under the VRF definition. If this VRF was not intended to be configured on the WAN router, "
+                "use the VRF filter 'deny_vrfs' under the node settings."
+            )
+            raise AristaAvdInvalidInputsError(msg)
+
+        return configured_as_wan_vrf

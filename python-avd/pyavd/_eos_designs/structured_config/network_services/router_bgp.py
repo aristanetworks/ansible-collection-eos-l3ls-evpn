@@ -157,7 +157,7 @@ class RouterBgpMixin(UtilsMixin):
                     )
 
                 vrf_address_families = {af for af in vrf.address_families if af in self.shared_utils.overlay_address_families}
-                if self.shared_utils.is_wan_vrf(vrf.name):
+                if self.shared_utils.is_wan_vrf(vrf):
                     # If the VRF is a WAN VRF, EVPN RTs are needed.
                     vrf_address_families.add("evpn")
 

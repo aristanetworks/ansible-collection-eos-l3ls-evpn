@@ -158,22 +158,10 @@ class VxlanInterfaceMixin(UtilsMixin):
             vrf_name = vrf.name
 
             # Only configure VNI for VRF if the VRF is EVPN enabled
-            if "evpn" not in vrf.address_families:
+            if "evpn" not in vrf.address_families and not (is_wan_vrf := self.shared_utils.is_wan_vrf(vrf)):
                 return
 
-            if self.shared_utils.is_wan_router:
-                # Every VRF with EVPN on a WAN router must have a wan_vni defined.
-                if vrf_name not in self._filtered_wan_vrfs:
-                    msg = (
-                        f"The VRF '{vrf_name}' does not have a `wan_vni` defined under 'wan_virtual_topologies'. "
-                        "If this VRF was not intended to be extended over the WAN, but still required to be configured on the WAN router, "
-                        "set 'address_families: []' under the VRF definition. If this VRF was not intended to be configured on the WAN router, "
-                        "use the VRF filter 'deny_vrfs' under the node settings."
-                    )
-                    raise AristaAvdInvalidInputsError(msg)
-                vni = self._filtered_wan_vrfs[vrf_name].wan_vni
-            else:
-                vni = default(vrf.vrf_vni, vrf.vrf_id)
+            vni = self._filtered_wan_vrfs[vrf_name].wan_vni if is_wan_vrf else default(vrf.vrf_vni, vrf.vrf_id)
 
             if vni is None:
                 # Silently ignore if we cannot set a VNI
