@@ -4,13 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get
 from pyavd.j2filters import range_expand
 
+if TYPE_CHECKING:
+    from . import AvdIpAddressingProtocol
 
-class UtilsMixin:
+
+class UtilsMixin(Protocol):
     """
     Mixin Class with internal functions.
 
