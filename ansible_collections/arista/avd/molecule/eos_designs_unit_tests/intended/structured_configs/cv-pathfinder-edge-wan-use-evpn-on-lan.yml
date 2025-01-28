@@ -297,6 +297,15 @@ router_adaptive_virtual_topology:
       id: 4
     - name: PROD-AVT-POLICY-DEFAULT
       id: 1
+  - name: WAN-VRF-NO-AF
+    policy: PROD-AVT-POLICY
+    profiles:
+    - name: PROD-AVT-POLICY-VOICE
+      id: 2
+    - name: PROD-AVT-POLICY-VIDEO
+      id: 4
+    - name: PROD-AVT-POLICY-DEFAULT
+      id: 1
 router_bfd:
   multihop:
     interval: 300
@@ -414,6 +423,21 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
+  - name: WAN-VRF-NO-AF
+    rd: 192.168.42.12:200
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 200:200
+      export:
+      - address_family: evpn
+        route_targets:
+        - 200:200
+    router_id: 192.168.42.12
+    redistribute:
+      connected:
+        enabled: true
 router_path_selection:
   path_groups:
   - name: INET
@@ -480,6 +504,12 @@ vrfs:
 - name: PROD
   ip_routing: true
   tenant: TenantA
+- name: VRF-NO-AF-NO-WAN
+  ip_routing: true
+  tenant: TenantD
+- name: WAN-VRF-NO-AF
+  ip_routing: true
+  tenant: TenantD
 vxlan_interface:
   vxlan1:
     description: cv-pathfinder-edge-wan-use-evpn-on-lan_VTEP
@@ -491,3 +521,5 @@ vxlan_interface:
         vni: 1
       - name: PROD
         vni: 42
+      - name: WAN-VRF-NO-AF
+        vni: 200

@@ -556,6 +556,17 @@ tenants:
             nodes:
               - node: site-ha-disabled-leaf
                 ip_address: 10.66.66.1
+  - name: TenantD
+    # Tenant used to test VRF without address family set with
+    # knob wan_use_evpn_node_settings_for_lan: true
+    mac_vrf_vni_base: 1000
+    vrfs:
+      - name: WAN-VRF-NO-AF
+        vrf_id: 200
+        address_families: []
+      - name: VRF-NO-AF-NO-WAN
+        vrf_id: 300
+        address_families: []
 
 wan_virtual_topologies:
   vrfs:
@@ -575,6 +586,10 @@ wan_virtual_topologies:
       wan_vni: 66
     - name: ATTRACTED-VRF-FROM-UPLINK
       wan_vni: 166
+    - name: WAN-VRF-NO-AF
+      # Using PROD policy to avoid extra noise
+      policy: PROD-AVT-POLICY
+      wan_vni: 200
   policies:
     - name: PROD-AVT-POLICY
       default_virtual_topology:

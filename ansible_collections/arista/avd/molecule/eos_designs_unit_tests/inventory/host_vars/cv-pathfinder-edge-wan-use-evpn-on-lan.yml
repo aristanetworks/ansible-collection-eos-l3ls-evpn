@@ -14,7 +14,7 @@ wan_router:
     loopback_ipv4_pool: 192.168.42.0/24
     vtep_loopback_ipv4_pool: 192.168.142.0/24
     filter:
-      always_include_vrfs_in_tenants: [TenantA]
+      always_include_vrfs_in_tenants: [TenantA, TenantD]
       deny_vrfs: [IT]
   nodes:
     - name: cv-pathfinder-edge-wan-use-evpn-on-lan

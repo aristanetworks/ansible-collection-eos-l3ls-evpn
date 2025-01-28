@@ -238,6 +238,12 @@ vrfs:
 - name: ATTRACTED-VRF-FROM-UPLINK
   ip_routing: true
   tenant: TenantC
+- name: VRF-NO-AF-NO-WAN
+  ip_routing: true
+  tenant: TenantD
+- name: WAN-VRF-NO-AF
+  ip_routing: true
+  tenant: TenantD
 vxlan_interface:
   vxlan1:
     description: leaf-wan-use-evpn-on-lan_VTEP
