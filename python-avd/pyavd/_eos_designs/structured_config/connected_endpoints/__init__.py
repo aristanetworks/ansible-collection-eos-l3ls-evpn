@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 from typing import Protocol
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, StructuredConfigGeneratorProtocol
 
 from .ethernet_interfaces import EthernetInterfacesMixin
 from .monitor_sessions import MonitorSessionsMixin
@@ -16,7 +16,7 @@ class AvdStructuredConfigConnectedEndpointsProtocol(
     PortChannelInterfacesMixin,
     MonitorSessionsMixin,
     UtilsMixin,
-    StructuredConfigGenerator,
+    StructuredConfigGeneratorProtocol,
     Protocol,
 ):
     """
@@ -40,7 +40,7 @@ class AvdStructuredConfigConnectedEndpointsProtocol(
         return None
 
 
-class AvdStructuredConfigConnectedEndpoints(AvdStructuredConfigConnectedEndpointsProtocol):
+class AvdStructuredConfigConnectedEndpoints(StructuredConfigGenerator, AvdStructuredConfigConnectedEndpointsProtocol):
     """
     Protocol for the AvdStructuredConfig Class which is imported by "get_structured_config" to render parts of the structured config.
 

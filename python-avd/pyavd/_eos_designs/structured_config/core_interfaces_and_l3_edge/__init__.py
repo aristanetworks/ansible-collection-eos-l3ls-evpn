@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Literal, Protocol
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, StructuredConfigGeneratorProtocol
 
 from .ethernet_interfaces import EthernetInterfacesMixin
 from .port_channel_interfaces import PortChannelInterfacesMixin
@@ -25,7 +25,7 @@ class AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol(
     RouterBgpMixin,
     RouterOspfMixin,
     UtilsMixin,
-    StructuredConfigGenerator,
+    StructuredConfigGeneratorProtocol,
     Protocol,
 ):
     """
@@ -57,7 +57,7 @@ class AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol(
         return result_list
 
 
-class AvdStructuredConfigCoreInterfacesAndL3Edge(AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol):
+class AvdStructuredConfigCoreInterfacesAndL3Edge(StructuredConfigGenerator, AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 

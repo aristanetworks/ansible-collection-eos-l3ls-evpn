@@ -7,7 +7,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING, Literal, Protocol, cast
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.avdfacts import AvdFacts, AvdFactsProtocol
 
 if TYPE_CHECKING:
     from collections.abc import Callable
@@ -54,9 +54,9 @@ class StructCfgs:
         return cls(list_merge_strategy=list_merge_strategy)
 
 
-class StructuredConfigGenerator(AvdFacts, Protocol):
+class StructuredConfigGeneratorProtocol(AvdFactsProtocol, Protocol):
     """
-    Base class for structured config generators.
+    Protocol for the StructuredConfigGenerator base class for structured config generators.
 
     This differs from AvdFacts by also taking structured_config and custom_structured_configs as argument
     and by the render function which updates the structured_config instead of
@@ -71,13 +71,6 @@ class StructuredConfigGenerator(AvdFacts, Protocol):
 
     See render() for details.
     """
-
-    def __init__(
-        self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtils, structured_config: EosCliConfigGen, custom_structured_configs: StructCfgs
-    ) -> None:
-        self.structured_config = structured_config
-        self.custom_structured_configs = custom_structured_configs
-        super().__init__(hostvars=hostvars, inputs=inputs, shared_utils=shared_utils)
 
     def render(self) -> None:
         """
@@ -126,3 +119,20 @@ class StructuredConfigGenerator(AvdFacts, Protocol):
     def structured_config_methods(cls) -> list[Callable[[Self], None]]:
         """Return the list of methods decorated with 'structured_config_contributor'."""
         return [method for key in cls._keys() if getattr(method := getattr(cls, key), "_is_structured_config_contributor", False)]
+
+
+class StructuredConfigGenerator(AvdFacts, StructuredConfigGeneratorProtocol):
+    """
+    Base class for structured config generators.
+
+    This differs from AvdFacts by also taking structured_config and custom_structured_configs as argument
+    and by the render function which updates the structured_config instead of
+    returning a dict.
+    """
+
+    def __init__(
+        self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtils, structured_config: EosCliConfigGen, custom_structured_configs: StructCfgs
+    ) -> None:
+        self.structured_config = structured_config
+        self.custom_structured_configs = custom_structured_configs
+        super().__init__(hostvars=hostvars, inputs=inputs, shared_utils=shared_utils)

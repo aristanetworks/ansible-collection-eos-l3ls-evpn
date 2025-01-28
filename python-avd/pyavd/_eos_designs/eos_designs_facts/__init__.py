@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import Protocol
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.avdfacts import AvdFacts, AvdFactsProtocol
 from pyavd._errors import AristaAvdError
 
 from .mlag import MlagMixin
@@ -17,7 +17,7 @@ from .vlans import VlansMixin
 from .wan import WanMixin
 
 
-class EosDesignsFactsProtocol(MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin, UplinksMixin, VlansMixin, AvdFacts, Protocol):
+class EosDesignsFactsProtocol(MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin, UplinksMixin, VlansMixin, AvdFactsProtocol, Protocol):
     @cached_property
     def id(self) -> int | None:
         """Exposed in avd_switch_facts."""
@@ -229,7 +229,7 @@ class EosDesignsFactsProtocol(MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin, 
         return [{"profile": profile.profile, "parent_profile": profile.parent_profile} for profile in self.inputs.port_profiles]
 
 
-class EosDesignsFacts(EosDesignsFactsProtocol):
+class EosDesignsFacts(AvdFacts, EosDesignsFactsProtocol):
     """
     `EosDesignsFacts` is based on `AvdFacts`, so make sure to read the description there first.
 

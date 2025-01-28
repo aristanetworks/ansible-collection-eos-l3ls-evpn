@@ -3,7 +3,6 @@
 # that can be found in the LICENSE file.
 from typing import Protocol
 
-from pyavd._eos_designs.avdfacts import AvdFacts
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._schema.avdschema import AvdSchema
 
@@ -52,7 +51,6 @@ class SharedUtilsProtocol(
     UnderlayMixin,
     UtilsMixin,
     FlowTrackingMixin,
-    AvdFacts,
     Protocol,
 ):
     """Protocol for the SharedUtils Class with commonly used methods / cached_properties to be shared between all the python modules loaded in eos_designs."""
@@ -61,12 +59,6 @@ class SharedUtilsProtocol(
     inputs: EosDesigns
     templar: object
     schema: AvdSchema
-
-    def __init__(self, hostvars: dict, inputs: EosDesigns, templar: object, schema: AvdSchema) -> None:
-        self.hostvars = hostvars
-        self.inputs = inputs
-        self.templar = templar
-        self.schema = schema
 
 
 class SharedUtils(SharedUtilsProtocol):
@@ -81,3 +73,9 @@ class SharedUtils(SharedUtilsProtocol):
     general conditions and just return the value. We expect the logic that determines the relevancy of the
     value to be handled in calling function.
     """
+
+    def __init__(self, hostvars: dict, inputs: EosDesigns, templar: object, schema: AvdSchema) -> None:
+        self.hostvars = hostvars
+        self.inputs = inputs
+        self.templar = templar
+        self.schema = schema

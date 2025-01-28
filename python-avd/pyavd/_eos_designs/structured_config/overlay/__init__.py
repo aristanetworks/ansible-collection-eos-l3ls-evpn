@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 from typing import Protocol
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, StructuredConfigGeneratorProtocol
 
 from .cvx import CvxMixin
 from .ip_extcommunity_lists import IpExtCommunityListsMixin
@@ -34,7 +34,7 @@ class AvdStructuredConfigOverlayProtocol(
     RouterTrafficEngineering,
     StunMixin,
     UtilsMixin,
-    StructuredConfigGenerator,
+    StructuredConfigGeneratorProtocol,
     Protocol,
 ):
     """
@@ -72,7 +72,7 @@ class AvdStructuredConfigOverlayProtocol(
         return None
 
 
-class AvdStructuredConfigOverlay(AvdStructuredConfigOverlayProtocol):
+class AvdStructuredConfigOverlay(StructuredConfigGenerator, AvdStructuredConfigOverlayProtocol):
     """
     The AvdStructuredConfig Class is imported used "get_structured_config" to render parts of the structured config.
 

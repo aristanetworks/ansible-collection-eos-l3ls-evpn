@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 from typing import Protocol
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, StructuredConfigGeneratorProtocol
 
 from .agents import AgentsMixin
 from .as_path import AsPathMixin
@@ -46,7 +46,7 @@ class AvdStructuredConfigUnderlayProtocol(
     IpAccesslistsMixin,
     DhcpServersMixin,
     UtilsMixin,
-    StructuredConfigGenerator,
+    StructuredConfigGeneratorProtocol,
     Protocol,
 ):
     """
@@ -63,7 +63,7 @@ class AvdStructuredConfigUnderlayProtocol(
     """
 
 
-class AvdStructuredConfigUnderlay(AvdStructuredConfigUnderlayProtocol):
+class AvdStructuredConfigUnderlay(StructuredConfigGenerator, AvdStructuredConfigUnderlayProtocol):
     """
     The AvdStructuredConfig Class is imported used "get_structured_config" to render parts of the structured config.
 

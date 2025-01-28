@@ -12,15 +12,10 @@ if TYPE_CHECKING:
     from .shared_utils import SharedUtils
 
 
-class AvdFacts(Protocol):
+class AvdFactsProtocol(Protocol):
     _hostvars: dict
     inputs: EosDesigns
     shared_utils: SharedUtils
-
-    def __init__(self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtils) -> None:
-        self._hostvars = hostvars
-        self.inputs = inputs
-        self.shared_utils = shared_utils
 
     @classmethod
     def _keys(cls) -> list[str]:
@@ -70,3 +65,10 @@ class AvdFacts(Protocol):
     def clear_cache(self) -> None:
         for key in self.keys() + self.internal_keys():
             self.__dict__.pop(key, None)
+
+
+class AvdFacts(AvdFactsProtocol):
+    def __init__(self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtils) -> None:
+        self._hostvars = hostvars
+        self.inputs = inputs
+        self.shared_utils = shared_utils

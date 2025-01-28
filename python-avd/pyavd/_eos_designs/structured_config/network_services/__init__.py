@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 from typing import Protocol
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, StructuredConfigGeneratorProtocol
 
 from .application_traffic_recognition import ApplicationTrafficRecognitionMixin
 from .dps_interfaces import DpsInterfacesMixin
@@ -86,7 +86,7 @@ class AvdStructuredConfigNetworkServicesProtocol(
     UtilsMixin,
     UtilsWanMixin,
     UtilsZscalerMixin,
-    StructuredConfigGenerator,
+    StructuredConfigGeneratorProtocol,
     Protocol,
 ):
     """
@@ -115,7 +115,7 @@ class AvdStructuredConfigNetworkServicesProtocol(
         return None
 
 
-class AvdStructuredConfigNetworkServices(AvdStructuredConfigNetworkServicesProtocol):
+class AvdStructuredConfigNetworkServices(StructuredConfigGenerator, AvdStructuredConfigNetworkServicesProtocol):
     """
     The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 
