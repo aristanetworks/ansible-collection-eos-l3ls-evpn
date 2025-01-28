@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import wraps
 from inspect import signature
 from logging import getLogger
-from typing import TYPE_CHECKING, Any, ClassVar, Protocol, get_origin
+from typing import TYPE_CHECKING, Any, ClassVar, get_origin
 
 from pyavd._utils import batch
 
@@ -79,7 +79,7 @@ def grpc_msg_size_handler(list_field: str) -> Callable:
     return decorator_grpc_msg_size_handler
 
 
-class LimitCvVersion(Protocol):
+class LimitCvVersion:
     """
     Decorator used to limit the supported CloudVision versions for a certain method.
 
