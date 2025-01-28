@@ -8,3 +8,6 @@ skip_list:
   - var-naming[no-role-prefix] # TODO: Fix internal variable names as a breaking change for AVD 5.0.0
 kinds:
   - yaml: "**/molecule/**/inventory/host_vars/host1/roles.yml"
+exclude_paths:
+  - .cache/
+  - .ansible/
