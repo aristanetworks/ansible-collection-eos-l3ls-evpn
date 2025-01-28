@@ -4,10 +4,9 @@
 from __future__ import annotations
 
 import re
-
-from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from typing import TYPE_CHECKING
 
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import groupby_obj
 from pyavd.j2filters import range_expand
@@ -15,8 +14,9 @@ from pyavd.j2filters import range_expand
 from .utils import UtilsMixin
 
 if TYPE_CHECKING:
-    from pyavd._eos_designs.schema import EosDesigns
     from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+    from pyavd._eos_designs.schema import EosDesigns
+
     from . import AvdStructuredConfigConnectedEndpoints
 
 
@@ -72,7 +72,6 @@ class MonitorSessionsMixin(UtilsMixin):
                 monitor_session._update(session_settings)
 
             self.structured_config.monitor_sessions.append(monitor_session)
-
 
     def _monitor_session_configs(
         self: AvdStructuredConfigConnectedEndpoints,
