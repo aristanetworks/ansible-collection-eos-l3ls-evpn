@@ -19,7 +19,6 @@ ntp:
       local_interface: lo0
   authenticate_servers_only: true
   trusted_keys: "1-2"
-  authenticate: true
   authentication_keys:
     - id: 1
       hash_algorithm: "md5"

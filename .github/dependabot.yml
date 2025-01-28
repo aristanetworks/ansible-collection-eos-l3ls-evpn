@@ -2,41 +2,33 @@
 version: 2
 updates:
   # Maintain dependencies for Python
-  # Need one per directory until the following issue is fixed - Beta in April 2024
-  # https://github.com/dependabot/dependabot-core/issues/2178
-  # This first entry for pip should cover python-avd
   - package-ecosystem: "pip"
-    directory: "/"
+    directories:
+      - "/"
+      - "/python-avd/"
+      - "/ansible_collections/arista/avd/"
     schedule:
-      interval: "daily"
+      interval: "weekly"
+      day: "monday"
     reviewers:
       - "aristanetworks/avd-maintainers"
+    groups:
+      prod:
+        dependency-type: "production"
+      dev:
+        dependency-type: "development"
     pull-request-branch-name:
       separator: "/"
     commit-message:
       prefix: "Bump(requirements): "
-    # Allow up to 10 open pull requests for pip dependencies
-    open-pull-requests-limit: 10
-  # This second entry for pip covers the requirements file in the ansible collection
-  - package-ecosystem: "pip"
-    directory: "/ansible_collections/arista/avd/"
-    schedule:
-      interval: "daily"
-    reviewers:
-      - "aristanetworks/avd-maintainers"
-    pull-request-branch-name:
-      separator: "/"
-    commit-message:
-      prefix: "Bump(requirements): "
-    # Allow up to 10 open pull requests for pip dependencies
-    open-pull-requests-limit: 10
+      prefix-development: "CI(requirements):"
   # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
     reviewers:
       - "aristanetworks/avd-maintainers"
     commit-message:
       prefix: "CI: "
-    open-pull-requests-limit: 10

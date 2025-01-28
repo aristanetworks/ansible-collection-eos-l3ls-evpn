@@ -59,12 +59,12 @@
 {%             endif %}
 {%         endfor %}
 
-| VRF | Hosts | Ports | Protocol |
-| --- | ----- | ----- | -------- |
+| VRF | Hosts | Ports | Protocol | SSL-profile |
+| --- | ----- | ----- | -------- | ----------- |
 {%         for vrf in logging.vrfs | arista.avd.natural_sort('name') %}
 {%             if vrf.hosts is arista.avd.defined %}
 {%                 for host in vrf.hosts | arista.avd.natural_sort('name') %}
-| {{ vrf.name }} | {{ host.name }} | {{ host.ports | arista.avd.default(['Default']) | join(', ') }} | {{ host.protocol | arista.avd.default('UDP') | upper }} |
+| {{ vrf.name }} | {{ host.name }} | {{ host.ports | arista.avd.default(['Default']) | join(', ') }} | {{ host.protocol | arista.avd.default('UDP') | upper }} | {{ host.ssl_profile | arista.avd.default("-") }} |
 {%                 endfor %}
 {%             endif %}
 {%         endfor %}

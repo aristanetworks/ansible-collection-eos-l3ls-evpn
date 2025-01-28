@@ -51,6 +51,8 @@ class AvdStructuredConfigMetadata(StructuredConfigGenerator, CvTagsMixin, CvPath
     }.
     """
 
+    ignore_avd_eos_designs_enforce_duplication_checks_across_all_models = True
+
     @cached_property
     def metadata(self) -> dict | None:
         metadata = {

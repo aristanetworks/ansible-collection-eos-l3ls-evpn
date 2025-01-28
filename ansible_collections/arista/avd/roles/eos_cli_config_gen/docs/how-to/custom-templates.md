@@ -41,7 +41,7 @@ custom_templates:
   - custom_template_name.j2
 ```
 
-For more details, see [Extensibility with Custom Templates](https://avd.sh/en/stable/roles/eos_cli_config_gen/docs/role-configuration.html#extensibility-with-custom-templates)
+For more details, see [Extensibility with Custom Templates](https://avd.arista.com/stable/roles/eos_cli_config_gen/docs/role-configuration.html#extensibility-with-custom-templates)
 
 ## Adding the Custom Template to the `eos_cli_config_gen` Role
 

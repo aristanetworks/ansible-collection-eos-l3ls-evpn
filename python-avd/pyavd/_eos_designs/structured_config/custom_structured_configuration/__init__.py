@@ -17,6 +17,8 @@ class AvdStructuredConfigCustomStructuredConfiguration(StructuredConfigGenerator
     The Class uses StructuredConfigGenerator, as the base class, to inherit _hostvars other attributes.
     """
 
+    ignore_avd_eos_designs_enforce_duplication_checks_across_all_models = True
+
     def render(self) -> None:
         """
         Custom Structured Configuration can contain any key, so we cannot use the regular render method.
