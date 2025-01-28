@@ -42,7 +42,7 @@ class AvdStructuredConfigConnectedEndpointsProtocol(
 
 class AvdStructuredConfigConnectedEndpoints(StructuredConfigGenerator, AvdStructuredConfigConnectedEndpointsProtocol):
     """
-    Protocol for the AvdStructuredConfig Class which is imported by "get_structured_config" to render parts of the structured config.
+    The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
 
     "get_structured_config" imports, instantiates and run the .render() method on the class.
     .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
