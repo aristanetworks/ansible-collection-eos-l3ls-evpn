@@ -4,28 +4,19 @@
 from __future__ import annotations
 
 import re
-<<<<<<< HEAD
 from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
-=======
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
-from typing import TYPE_CHECKING
->>>>>>> 2fed6bb933 (Refactor(eos_designs): Refactor eos_designs structured_config code for monitor_sessions)
-
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import groupby_obj
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
-<<<<<<< HEAD
 
     from . import AvdStructuredConfigConnectedEndpointsProtocol
-=======
-    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
-    from . import AvdStructuredConfigConnectedEndpoints
->>>>>>> 2fed6bb933 (Refactor(eos_designs): Refactor eos_designs structured_config code for monitor_sessions)
 
 
 class MonitorSessionsMixin(Protocol):
@@ -81,7 +72,7 @@ class MonitorSessionsMixin(Protocol):
 
             self.structured_config.monitor_sessions.append(monitor_session)
 
-
+    @cached_property
     def _monitor_session_configs(
         self: AvdStructuredConfigConnectedEndpointsProtocol,
     ) -> list[EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.MonitorSessionsItem]:
