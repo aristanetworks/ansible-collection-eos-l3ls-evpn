@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class AsPathMixin(UtilsMixin):
+class AsPathMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -20,7 +18,7 @@ class AsPathMixin(UtilsMixin):
     """
 
     @cached_property
-    def as_path(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def as_path(self: AvdStructuredConfigUnderlayProtocol) -> dict | None:
         """Return structured config for as_path."""
         if self.shared_utils.underlay_routing_protocol != "ebgp":
             return None

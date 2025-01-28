@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from .shared_utils import SharedUtils
 
 
-class AvdFacts:
+class AvdFacts(Protocol):
     _hostvars: dict
     inputs: EosDesigns
     shared_utils: SharedUtils

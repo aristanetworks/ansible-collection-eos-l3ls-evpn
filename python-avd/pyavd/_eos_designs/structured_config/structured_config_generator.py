@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Literal, cast
+from typing import TYPE_CHECKING, Literal, Protocol, cast
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.avdfacts import AvdFacts
@@ -54,7 +54,7 @@ class StructCfgs:
         return cls(list_merge_strategy=list_merge_strategy)
 
 
-class StructuredConfigGenerator(AvdFacts):
+class StructuredConfigGenerator(AvdFacts, Protocol):
     """
     Base class for structured config generators.
 

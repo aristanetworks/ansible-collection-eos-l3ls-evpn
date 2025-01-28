@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class DpsInterfacesMixin(UtilsMixin):
+class DpsInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -20,7 +18,7 @@ class DpsInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def dps_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def dps_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Returns structured config for dps_interfaces.
 
