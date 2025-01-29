@@ -3,9 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
 
 from .utils import UtilsMixin
@@ -21,16 +22,14 @@ class StaticRoutesMixin(UtilsMixin):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def static_routes(self: AvdStructuredConfigUnderlay) -> list[dict] | None:
+    @structured_config_contributor
+    def static_routes(self: AvdStructuredConfigUnderlay) -> None:
         """
         Returns structured config for static_routes.
 
         Consist of
         - static_routes configured under node type l3 interfaces
         """
-        static_routes = []
-
         for l3_interface in self.shared_utils.l3_interfaces:
             if not l3_interface.static_routes:
                 continue
@@ -38,13 +37,6 @@ class StaticRoutesMixin(UtilsMixin):
             if not l3_interface.peer_ip:
                 msg = f"Cannot set a static_route route for interface {l3_interface.name} because 'peer_ip' is missing."
                 raise AristaAvdInvalidInputsError(msg)
-
-            static_routes.extend(
-                {"destination_address_prefix": l3_interface_static_route.prefix, "gateway": l3_interface.peer_ip}
-                for l3_interface_static_route in l3_interface.static_routes
-            )
-
-        if static_routes:
-            return static_routes
-
-        return None
+            for l3_interface_static_route in l3_interface.static_routes:
+                static_route = EosCliConfigGen.StaticRoutesItem(destination_address_prefix=l3_interface_static_route.prefix, gateway=l3_interface.peer_ip)
+                self.structured_config.static_routes.append(static_route)
