@@ -564,9 +564,10 @@ tenants:
       - name: WAN-VRF-NO-AF
         vrf_id: 200
         address_families: []
-      - name: VRF-NO-AF-NO-WAN
+      - name: VRF-NO-WAN
         vrf_id: 300
-        address_families: []
+        # keeping default address family "evpn" and verifying we do not raise
+        # when the knob is true
 
 wan_virtual_topologies:
   vrfs:
