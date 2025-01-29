@@ -523,7 +523,7 @@ interface Loopback100
 
 | Interface | VRF | IP Address | IP Address Virtual | IP Router Virtual Address | ACL In | ACL Out |
 | --------- | --- | ---------- | ------------------ | ------------------------- | ------ | ------- |
-| Vlan2 |  Tenant_C_OP_Zone  |  -  |  -  |  -  |  -  |  -  |
+| Vlan2 |  Tenant_C_OP_Zone  |  10.255.251.15/31  |  -  |  -  |  -  |  -  |
 | Vlan110 |  Tenant_A_OP_Zone  |  -  |  10.1.10.1/24  |  -  |  -  |  -  |
 | Vlan111 |  Tenant_A_OP_Zone  |  -  |  10.1.11.1/24  |  -  |  -  |  -  |
 | Vlan120 |  Tenant_A_WEB_Zone  |  -  |  10.1.20.1/24  |  -  |  -  |  -  |
@@ -536,11 +536,11 @@ interface Loopback100
 | Vlan211 |  Tenant_B_OP_Zone  |  -  |  10.2.11.1/24  |  -  |  -  |  -  |
 | Vlan310 |  Tenant_C_OP_Zone  |  -  |  10.3.10.1/24  |  -  |  -  |  -  |
 | Vlan311 |  Tenant_C_OP_Zone  |  -  |  10.3.11.1/24  |  -  |  -  |  -  |
-| Vlan3009 |  Tenant_A_OP_Zone  |  -  |  -  |  -  |  -  |  -  |
-| Vlan3010 |  Tenant_A_WEB_Zone  |  -  |  -  |  -  |  -  |  -  |
-| Vlan3011 |  Tenant_A_APP_Zone  |  -  |  -  |  -  |  -  |  -  |
-| Vlan3012 |  Tenant_A_DB_Zone  |  -  |  -  |  -  |  -  |  -  |
-| Vlan3019 |  Tenant_B_OP_Zone  |  -  |  -  |  -  |  -  |  -  |
+| Vlan3009 |  Tenant_A_OP_Zone  |  10.255.251.15/31  |  -  |  -  |  -  |  -  |
+| Vlan3010 |  Tenant_A_WEB_Zone  |  10.255.251.15/31  |  -  |  -  |  -  |  -  |
+| Vlan3011 |  Tenant_A_APP_Zone  |  10.255.251.15/31  |  -  |  -  |  -  |  -  |
+| Vlan3012 |  Tenant_A_DB_Zone  |  10.255.251.15/31  |  -  |  -  |  -  |  -  |
+| Vlan3019 |  Tenant_B_OP_Zone  |  10.255.251.15/31  |  -  |  -  |  -  |  -  |
 | Vlan4093 |  default  |  -  |  -  |  -  |  -  |  -  |
 | Vlan4094 |  default  |  10.255.252.15/31  |  -  |  -  |  -  |  -  |
 
@@ -553,7 +553,7 @@ interface Vlan2
    no shutdown
    mtu 1500
    vrf Tenant_C_OP_Zone
-   ipv6 enable
+   ip address 10.255.251.15/31
 !
 interface Vlan110
    description Tenant_A_OP_Zone_1
@@ -635,35 +635,35 @@ interface Vlan3009
    no shutdown
    mtu 1500
    vrf Tenant_A_OP_Zone
-   ipv6 enable
+   ip address 10.255.251.15/31
 !
 interface Vlan3010
    description MLAG_L3_VRF_Tenant_A_WEB_Zone
    no shutdown
    mtu 1500
    vrf Tenant_A_WEB_Zone
-   ipv6 enable
+   ip address 10.255.251.15/31
 !
 interface Vlan3011
    description MLAG_L3_VRF_Tenant_A_APP_Zone
    no shutdown
    mtu 1500
    vrf Tenant_A_APP_Zone
-   ipv6 enable
+   ip address 10.255.251.15/31
 !
 interface Vlan3012
    description MLAG_L3_VRF_Tenant_A_DB_Zone
    no shutdown
    mtu 1500
    vrf Tenant_A_DB_Zone
-   ipv6 enable
+   ip address 10.255.251.15/31
 !
 interface Vlan3019
    description MLAG_L3_VRF_Tenant_B_OP_Zone
    no shutdown
    mtu 1500
    vrf Tenant_B_OP_Zone
-   ipv6 enable
+   ip address 10.255.251.15/31
 !
 interface Vlan4093
    description MLAG_L3
@@ -782,12 +782,12 @@ ip virtual-router mac-address 00:dc:00:00:00:0a
 | --- | --------------- |
 | default | True (ipv6 interfaces) |
 | MGMT | False |
-| Tenant_A_APP_Zone | True (ipv6 interfaces) |
-| Tenant_A_DB_Zone | True (ipv6 interfaces) |
-| Tenant_A_OP_Zone | True (ipv6 interfaces) |
-| Tenant_A_WEB_Zone | True (ipv6 interfaces) |
-| Tenant_B_OP_Zone | True (ipv6 interfaces) |
-| Tenant_C_OP_Zone | True (ipv6 interfaces) |
+| Tenant_A_APP_Zone | True |
+| Tenant_A_DB_Zone | True |
+| Tenant_A_OP_Zone | True |
+| Tenant_A_WEB_Zone | True |
+| Tenant_B_OP_Zone | True |
+| Tenant_C_OP_Zone | True |
 
 #### IP Routing Device Configuration
 
@@ -795,12 +795,12 @@ ip virtual-router mac-address 00:dc:00:00:00:0a
 !
 ip routing ipv6 interfaces
 no ip routing vrf MGMT
-ip routing ipv6 interfaces vrf Tenant_A_APP_Zone
-ip routing ipv6 interfaces vrf Tenant_A_DB_Zone
-ip routing ipv6 interfaces vrf Tenant_A_OP_Zone
-ip routing ipv6 interfaces vrf Tenant_A_WEB_Zone
-ip routing ipv6 interfaces vrf Tenant_B_OP_Zone
-ip routing ipv6 interfaces vrf Tenant_C_OP_Zone
+ip routing vrf Tenant_A_APP_Zone
+ip routing vrf Tenant_A_DB_Zone
+ip routing vrf Tenant_A_OP_Zone
+ip routing vrf Tenant_A_WEB_Zone
+ip routing vrf Tenant_B_OP_Zone
+ip routing vrf Tenant_C_OP_Zone
 ```
 
 ### IPv6 Routing
@@ -811,24 +811,18 @@ ip routing ipv6 interfaces vrf Tenant_C_OP_Zone
 | --- | --------------- |
 | default | True |
 | MGMT | false |
-| Tenant_A_APP_Zone | true |
-| Tenant_A_DB_Zone | true |
-| Tenant_A_OP_Zone | true |
-| Tenant_A_WEB_Zone | true |
-| Tenant_B_OP_Zone | true |
-| Tenant_C_OP_Zone | true |
+| Tenant_A_APP_Zone | false |
+| Tenant_A_DB_Zone | false |
+| Tenant_A_OP_Zone | false |
+| Tenant_A_WEB_Zone | false |
+| Tenant_B_OP_Zone | false |
+| Tenant_C_OP_Zone | false |
 
 #### IPv6 Routing Device Configuration
 
 ```eos
 !
 ipv6 unicast-routing
-ipv6 unicast-routing vrf Tenant_A_APP_Zone
-ipv6 unicast-routing vrf Tenant_A_DB_Zone
-ipv6 unicast-routing vrf Tenant_A_OP_Zone
-ipv6 unicast-routing vrf Tenant_A_WEB_Zone
-ipv6 unicast-routing vrf Tenant_B_OP_Zone
-ipv6 unicast-routing vrf Tenant_C_OP_Zone
 ```
 
 ### Static Routes
@@ -886,6 +880,16 @@ ASN Notation: asplain
 | Send community | all |
 | Maximum routes | 12000 |
 
+##### MLAG_VRFS_PEER
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65106 |
+| Next-hop self | True |
+| Send community | all |
+| Maximum routes | 12000 |
+
 ##### UNDERLAY_PEERS
 
 | Settings | Value |
@@ -899,6 +903,12 @@ ASN Notation: asplain
 | Neighbor | Remote AS | VRF | Shutdown | Send-community | Maximum-routes | Allowas-in | BFD | RIB Pre-Policy Retain | Route-Reflector Client | Passive | TTL Max Hops |
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- | ------------ |
 | 2001:1::5 | 65001 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
+| 10.255.251.14 | Inherited from peer group MLAG_VRFS_PEER | Tenant_A_APP_Zone | - | Inherited from peer group MLAG_VRFS_PEER | Inherited from peer group MLAG_VRFS_PEER | - | - | - | - | - | - |
+| 10.255.251.14 | Inherited from peer group MLAG_VRFS_PEER | Tenant_A_DB_Zone | - | Inherited from peer group MLAG_VRFS_PEER | Inherited from peer group MLAG_VRFS_PEER | - | - | - | - | - | - |
+| 10.255.251.14 | Inherited from peer group MLAG_VRFS_PEER | Tenant_A_OP_Zone | - | Inherited from peer group MLAG_VRFS_PEER | Inherited from peer group MLAG_VRFS_PEER | - | - | - | - | - | - |
+| 10.255.251.14 | Inherited from peer group MLAG_VRFS_PEER | Tenant_A_WEB_Zone | - | Inherited from peer group MLAG_VRFS_PEER | Inherited from peer group MLAG_VRFS_PEER | - | - | - | - | - | - |
+| 10.255.251.14 | Inherited from peer group MLAG_VRFS_PEER | Tenant_B_OP_Zone | - | Inherited from peer group MLAG_VRFS_PEER | Inherited from peer group MLAG_VRFS_PEER | - | - | - | - | - | - |
+| 10.255.251.14 | Inherited from peer group MLAG_VRFS_PEER | Tenant_C_OP_Zone | - | Inherited from peer group MLAG_VRFS_PEER | Inherited from peer group MLAG_VRFS_PEER | - | - | - | - | - | - |
 
 #### BGP Neighbor Interfaces
 
@@ -907,12 +917,6 @@ ASN Notation: asplain
 | Ethernet1 | default | UNDERLAY_PEERS | 65001 | - |
 | Ethernet2 | default | UNDERLAY_PEERS | 65001 | - |
 | Vlan4093 | default | MLAG_PEER | 65106 | - |
-| Vlan3011 | Tenant_A_APP_Zone | MLAG_PEER | 65106 | - |
-| Vlan3012 | Tenant_A_DB_Zone | MLAG_PEER | 65106 | - |
-| Vlan3009 | Tenant_A_OP_Zone | MLAG_PEER | 65106 | - |
-| Vlan3010 | Tenant_A_WEB_Zone | MLAG_PEER | 65106 | - |
-| Vlan3019 | Tenant_B_OP_Zone | MLAG_PEER | 65106 | - |
-| Vlan2 | Tenant_C_OP_Zone | MLAG_PEER | 65106 | - |
 
 #### Router BGP EVPN Address Family
 
@@ -977,6 +981,13 @@ router bgp 65106
    neighbor MLAG_PEER password 7 <removed>
    neighbor MLAG_PEER send-community
    neighbor MLAG_PEER maximum-routes 12000
+   neighbor MLAG_VRFS_PEER peer group
+   neighbor MLAG_VRFS_PEER remote-as 65106
+   neighbor MLAG_VRFS_PEER next-hop-self
+   neighbor MLAG_VRFS_PEER description DC1-LEAF3A
+   neighbor MLAG_VRFS_PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG_VRFS_PEER send-community
+   neighbor MLAG_VRFS_PEER maximum-routes 12000
    neighbor UNDERLAY_PEERS peer group
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
@@ -1045,6 +1056,7 @@ router bgp 65106
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor MLAG_PEER activate
       neighbor MLAG_PEER next-hop address-family ipv6 originate
+      neighbor MLAG_VRFS_PEER activate
       neighbor UNDERLAY_PEERS activate
       neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
    !
@@ -1057,48 +1069,60 @@ router bgp 65106
       route-target import evpn 12:12
       route-target export evpn 12:12
       router-id 192.168.255.13
+      update wait-install
+      neighbor 10.255.251.14 peer group MLAG_VRFS_PEER
+      neighbor 10.255.251.14 description DC1-LEAF3A_Vlan3011
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3011 peer-group MLAG_PEER remote-as 65106
    !
    vrf Tenant_A_DB_Zone
       rd 192.168.255.13:13
       route-target import evpn 13:13
       route-target export evpn 13:13
       router-id 192.168.255.13
+      update wait-install
+      neighbor 10.255.251.14 peer group MLAG_VRFS_PEER
+      neighbor 10.255.251.14 description DC1-LEAF3A_Vlan3012
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3012 peer-group MLAG_PEER remote-as 65106
    !
    vrf Tenant_A_OP_Zone
       rd 192.168.255.13:10
       route-target import evpn 10:10
       route-target export evpn 10:10
       router-id 192.168.255.13
+      update wait-install
+      neighbor 10.255.251.14 peer group MLAG_VRFS_PEER
+      neighbor 10.255.251.14 description DC1-LEAF3A_Vlan3009
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3009 peer-group MLAG_PEER remote-as 65106
    !
    vrf Tenant_A_WEB_Zone
       rd 192.168.255.13:11
       route-target import evpn 11:11
       route-target export evpn 11:11
       router-id 192.168.255.13
+      update wait-install
+      neighbor 10.255.251.14 peer group MLAG_VRFS_PEER
+      neighbor 10.255.251.14 description DC1-LEAF3A_Vlan3010
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3010 peer-group MLAG_PEER remote-as 65106
    !
    vrf Tenant_B_OP_Zone
       rd 192.168.255.13:20
       route-target import evpn 20:20
       route-target export evpn 20:20
       router-id 192.168.255.13
+      update wait-install
+      neighbor 10.255.251.14 peer group MLAG_VRFS_PEER
+      neighbor 10.255.251.14 description DC1-LEAF3A_Vlan3019
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3019 peer-group MLAG_PEER remote-as 65106
    !
    vrf Tenant_C_OP_Zone
       rd 192.168.255.13:30
       route-target import evpn 30:30
       route-target export evpn 30:30
       router-id 192.168.255.13
+      update wait-install
+      neighbor 10.255.251.14 peer group MLAG_VRFS_PEER
+      neighbor 10.255.251.14 description DC1-LEAF3A_Vlan2
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan2 peer-group MLAG_PEER remote-as 65106
 ```
 
 ## BFD
@@ -1155,6 +1179,12 @@ no ip igmp snooping vlan 120
 | 10 | permit 192.168.255.0/24 eq 32 |
 | 20 | permit 192.168.254.0/24 eq 32 |
 
+##### PL-MLAG-PEER-VRFS
+
+| Sequence | Action |
+| -------- | ------ |
+| 10 | permit 10.255.251.14/31 |
+
 #### Prefix-lists Device Configuration
 
 ```eos
@@ -1162,6 +1192,9 @@ no ip igmp snooping vlan 120
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 10 permit 192.168.255.0/24 eq 32
    seq 20 permit 192.168.254.0/24 eq 32
+!
+ip prefix-list PL-MLAG-PEER-VRFS
+   seq 10 permit 10.255.251.14/31
 ```
 
 ### IPv6 Prefix-lists
@@ -1193,6 +1226,13 @@ ipv6 prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 | 10 | permit | ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY | - | - | - |
 | 30 | permit | ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6 | - | - | - |
 
+##### RM-CONN-2-BGP-VRFS
+
+| Sequence | Type | Match | Set | Sub-Route-Map | Continue |
+| -------- | ---- | ----- | --- | ------------- | -------- |
+| 10 | deny | ip address prefix-list PL-MLAG-PEER-VRFS | - | - | - |
+| 20 | permit | - | - | - | - |
+
 ##### RM-MLAG-PEER-IN
 
 | Sequence | Type | Match | Set | Sub-Route-Map | Continue |
@@ -1209,6 +1249,11 @@ route-map RM-CONN-2-BGP permit 10
 route-map RM-CONN-2-BGP permit 30
    match ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
 !
+route-map RM-CONN-2-BGP-VRFS deny 10
+   match ip address prefix-list PL-MLAG-PEER-VRFS
+!
+route-map RM-CONN-2-BGP-VRFS permit 20
+!
 route-map RM-MLAG-PEER-IN permit 10
    description Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
    set origin incomplete
@@ -1221,12 +1266,12 @@ route-map RM-MLAG-PEER-IN permit 10
 | VRF Name | IP Routing |
 | -------- | ---------- |
 | MGMT | disabled |
-| Tenant_A_APP_Zone | enabled (ipv6 interface) |
-| Tenant_A_DB_Zone | enabled (ipv6 interface) |
-| Tenant_A_OP_Zone | enabled (ipv6 interface) |
-| Tenant_A_WEB_Zone | enabled (ipv6 interface) |
-| Tenant_B_OP_Zone | enabled (ipv6 interface) |
-| Tenant_C_OP_Zone | enabled (ipv6 interface) |
+| Tenant_A_APP_Zone | enabled |
+| Tenant_A_DB_Zone | enabled |
+| Tenant_A_OP_Zone | enabled |
+| Tenant_A_WEB_Zone | enabled |
+| Tenant_B_OP_Zone | enabled |
+| Tenant_C_OP_Zone | enabled |
 
 ### VRF Instances Device Configuration
 
