@@ -12034,7 +12034,7 @@ qos random-detect ecn allow non-ect chip-based
 | DSCP_TEST_1 | dscp<br>ecn | af11<br>ect-ce |
 | DSCP_TEST_2 | dscp<br>ecn | 2-4,6<br>non-ect |
 | DSCP_TEST_3 | dscp | cs0 |
-| DSCP_TEST_4 | dscp + ecn | ef + ce |
+| DSCP_TEST_4 | dscp<br>ecn | ef<br>ce |
 | DSCP_TEST_5 | ecn | ce |
 | VLAN_RANGE | vlan | 200-400 |
 
