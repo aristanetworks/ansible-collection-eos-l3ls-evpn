@@ -17,6 +17,11 @@ management api http-commands
 {%     elif management_api_http.enable_http is arista.avd.defined(false) %}
    no protocol http
 {%     endif %}
+{%     if management_api_http.enable_unix is arista.avd.defined(true) %}
+   protocol unix-socket
+{%     elif management_api_http.enable_unix is arista.avd.defined(false) %}
+   no protocol unix-socket
+{%     endif %}
 {%     if management_api_http.default_services is arista.avd.defined(true) %}
    default-services
 {%     elif management_api_http.default_services is arista.avd.defined(false) %}

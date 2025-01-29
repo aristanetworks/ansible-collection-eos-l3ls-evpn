@@ -10,7 +10,7 @@ git config --global --add safe.directory /site
 
 # install pip requirements
 echo "Installing Python requirements"
-pip install -r ansible_collections/arista/avd/docs/requirements.txt --upgrade
+pip install -r docs/requirements.txt --upgrade
 
 # Start mkdocs
 echo "Starting mkdocs"
