@@ -13,7 +13,6 @@
 | Name | Field | Value |
 | ---- | ----- | ----- |
 {%     for class_map in class_maps.qos | arista.avd.natural_sort('name') %}
-{%         set row = namespace() %}
 {%         if class_map.cos is arista.avd.defined %}
 | {{ class_map.name }} | cos | {{ class_map.cos }} |
 {%         elif class_map.vlan is arista.avd.defined %}
