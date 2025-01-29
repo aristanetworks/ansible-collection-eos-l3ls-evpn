@@ -25,3 +25,5 @@ intends to clarify why the words are ignored and if any action is pending
     Acronym Transfer of Information
 - pathc
     Used as test data
+- ect
+    Valid value for class_maps.qos.[].ecn in eos_cli_config_gen
