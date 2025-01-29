@@ -160,6 +160,60 @@ class EosDesigns(EosDesignsRootModel):
 
                     """
 
+        class MlagIpv4VrfsPeer(AvdModel):
+            """Subclass of AvdModel."""
+
+            class StructuredConfig(EosCliConfigGen.RouterBgp.PeerGroupsItem):
+                """Subclass of AvdModel."""
+
+            _fields: ClassVar[dict] = {
+                "name": {"type": str},
+                "password": {"type": str},
+                "bfd": {"type": bool, "default": False},
+                "structured_config": {"type": StructuredConfig},
+                "_custom_data": {"type": dict},
+            }
+            name: str
+            """Name of peer group."""
+            password: str | None
+            """Type 7 encrypted password."""
+            bfd: bool
+            """Default value: `False`"""
+            structured_config: StructuredConfig
+            """
+            Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
+            Subclass of AvdModel.
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    name: str | UndefinedType = Undefined,
+                    password: str | None | UndefinedType = Undefined,
+                    bfd: bool | UndefinedType = Undefined,
+                    structured_config: StructuredConfig | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    MlagIpv4VrfsPeer.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        name: Name of peer group.
+                        password: Type 7 encrypted password.
+                        bfd: bfd
+                        structured_config:
+                           Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
+                           Subclass of AvdModel.
+                        _custom_data: _custom_data
+
+                    """
+
         class MlagIpv4UnderlayPeer(AvdModel):
             """Subclass of AvdModel."""
 
@@ -827,6 +881,7 @@ class EosDesigns(EosDesignsRootModel):
 
         _fields: ClassVar[dict] = {
             "ipv4_underlay_peers": {"type": Ipv4UnderlayPeers},
+            "mlag_ipv4_vrfs_peer": {"type": MlagIpv4VrfsPeer},
             "mlag_ipv4_underlay_peer": {"type": MlagIpv4UnderlayPeer},
             "evpn_overlay_peers": {"type": EvpnOverlayPeers},
             "evpn_overlay_core": {"type": EvpnOverlayCore},
@@ -839,6 +894,19 @@ class EosDesigns(EosDesignsRootModel):
         }
         ipv4_underlay_peers: Ipv4UnderlayPeers
         """Subclass of AvdModel."""
+        mlag_ipv4_vrfs_peer: MlagIpv4VrfsPeer
+        """
+        Set this peer group name to use a different peer-group for MLAG peerings in VRFs.
+        By default AVD
+        uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFs.
+
+        If
+        `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same,
+        then all the attributes
+        set here are ignored.
+
+        Subclass of AvdModel.
+        """
         mlag_ipv4_underlay_peer: MlagIpv4UnderlayPeer
         """Subclass of AvdModel."""
         evpn_overlay_peers: EvpnOverlayPeers
@@ -866,6 +934,7 @@ class EosDesigns(EosDesignsRootModel):
                 self,
                 *,
                 ipv4_underlay_peers: Ipv4UnderlayPeers | UndefinedType = Undefined,
+                mlag_ipv4_vrfs_peer: MlagIpv4VrfsPeer | UndefinedType = Undefined,
                 mlag_ipv4_underlay_peer: MlagIpv4UnderlayPeer | UndefinedType = Undefined,
                 evpn_overlay_peers: EvpnOverlayPeers | UndefinedType = Undefined,
                 evpn_overlay_core: EvpnOverlayCore | UndefinedType = Undefined,
@@ -884,6 +953,17 @@ class EosDesigns(EosDesignsRootModel):
 
                 Args:
                     ipv4_underlay_peers: Subclass of AvdModel.
+                    mlag_ipv4_vrfs_peer:
+                       Set this peer group name to use a different peer-group for MLAG peerings in VRFs.
+                       By default AVD
+                       uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFs.
+
+                       If
+                       `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same,
+                       then all the attributes
+                       set here are ignored.
+
+                       Subclass of AvdModel.
                     mlag_ipv4_underlay_peer: Subclass of AvdModel.
                     evpn_overlay_peers: Subclass of AvdModel.
                     evpn_overlay_core: Subclass of AvdModel.
@@ -20332,6 +20412,11 @@ class EosDesigns(EosDesignsRootModel):
                     class Ptp(AvdModel):
                         """Subclass of AvdModel."""
 
+                        class Uplinks(AvdList[str]):
+                            """Subclass of AvdList with `str` items."""
+
+                        Uplinks._item_type = str
+
                         class Dscp(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -20606,6 +20691,7 @@ class EosDesigns(EosDesignsRootModel):
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
                             "profile": {"type": str},
+                            "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
                             "domain": {"type": int, "default": 127},
                             "priority1": {"type": int},
@@ -20630,6 +20716,8 @@ class EosDesigns(EosDesignsRootModel):
                           - "aes67-r16-2016"
                           - "smpte2059-2"
                         """
+                        uplinks: Uplinks
+                        """Subclass of AvdList with `str` items."""
                         mlag: bool
                         """
                         Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
@@ -20693,6 +20781,7 @@ class EosDesigns(EosDesignsRootModel):
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
                                 profile: str | None | UndefinedType = Undefined,
+                                uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
                                 domain: int | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
@@ -20722,6 +20811,7 @@ class EosDesigns(EosDesignsRootModel):
                                          - "aes67"
                                          - "aes67-r16-2016"
                                          - "smpte2059-2"
+                                    uplinks: Subclass of AvdList with `str` items.
                                     mlag:
                                        Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
                                        configured on the MLAG peer-link port-channel.
@@ -23867,6 +23957,11 @@ class EosDesigns(EosDesignsRootModel):
                         class Ptp(AvdModel):
                             """Subclass of AvdModel."""
 
+                            class Uplinks(AvdList[str]):
+                                """Subclass of AvdList with `str` items."""
+
+                            Uplinks._item_type = str
+
                             class Dscp(AvdModel):
                                 """Subclass of AvdModel."""
 
@@ -24141,6 +24236,7 @@ class EosDesigns(EosDesignsRootModel):
                             _fields: ClassVar[dict] = {
                                 "enabled": {"type": bool},
                                 "profile": {"type": str},
+                                "uplinks": {"type": Uplinks},
                                 "mlag": {"type": bool, "default": False},
                                 "domain": {"type": int, "default": 127},
                                 "priority1": {"type": int},
@@ -24165,6 +24261,8 @@ class EosDesigns(EosDesignsRootModel):
                               - "aes67-r16-2016"
                               - "smpte2059-2"
                             """
+                            uplinks: Uplinks
+                            """Subclass of AvdList with `str` items."""
                             mlag: bool
                             """
                             Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
@@ -24228,6 +24326,7 @@ class EosDesigns(EosDesignsRootModel):
                                     *,
                                     enabled: bool | None | UndefinedType = Undefined,
                                     profile: str | None | UndefinedType = Undefined,
+                                    uplinks: Uplinks | UndefinedType = Undefined,
                                     mlag: bool | UndefinedType = Undefined,
                                     domain: int | UndefinedType = Undefined,
                                     priority1: int | None | UndefinedType = Undefined,
@@ -24257,6 +24356,7 @@ class EosDesigns(EosDesignsRootModel):
                                              - "aes67"
                                              - "aes67-r16-2016"
                                              - "smpte2059-2"
+                                        uplinks: Subclass of AvdList with `str` items.
                                         mlag:
                                            Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
                                            configured on the MLAG peer-link port-channel.
@@ -27356,6 +27456,11 @@ class EosDesigns(EosDesignsRootModel):
                     class Ptp(AvdModel):
                         """Subclass of AvdModel."""
 
+                        class Uplinks(AvdList[str]):
+                            """Subclass of AvdList with `str` items."""
+
+                        Uplinks._item_type = str
+
                         class Dscp(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -27630,6 +27735,7 @@ class EosDesigns(EosDesignsRootModel):
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
                             "profile": {"type": str},
+                            "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
                             "domain": {"type": int, "default": 127},
                             "priority1": {"type": int},
@@ -27654,6 +27760,8 @@ class EosDesigns(EosDesignsRootModel):
                           - "aes67-r16-2016"
                           - "smpte2059-2"
                         """
+                        uplinks: Uplinks
+                        """Subclass of AvdList with `str` items."""
                         mlag: bool
                         """
                         Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
@@ -27717,6 +27825,7 @@ class EosDesigns(EosDesignsRootModel):
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
                                 profile: str | None | UndefinedType = Undefined,
+                                uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
                                 domain: int | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
@@ -27746,6 +27855,7 @@ class EosDesigns(EosDesignsRootModel):
                                          - "aes67"
                                          - "aes67-r16-2016"
                                          - "smpte2059-2"
+                                    uplinks: Subclass of AvdList with `str` items.
                                     mlag:
                                        Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
                                        configured on the MLAG peer-link port-channel.
@@ -30919,6 +31029,11 @@ class EosDesigns(EosDesignsRootModel):
                     class Ptp(AvdModel):
                         """Subclass of AvdModel."""
 
+                        class Uplinks(AvdList[str]):
+                            """Subclass of AvdList with `str` items."""
+
+                        Uplinks._item_type = str
+
                         class Dscp(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -31193,6 +31308,7 @@ class EosDesigns(EosDesignsRootModel):
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
                             "profile": {"type": str},
+                            "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
                             "domain": {"type": int, "default": 127},
                             "priority1": {"type": int},
@@ -31217,6 +31333,8 @@ class EosDesigns(EosDesignsRootModel):
                           - "aes67-r16-2016"
                           - "smpte2059-2"
                         """
+                        uplinks: Uplinks
+                        """Subclass of AvdList with `str` items."""
                         mlag: bool
                         """
                         Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
@@ -31280,6 +31398,7 @@ class EosDesigns(EosDesignsRootModel):
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
                                 profile: str | None | UndefinedType = Undefined,
+                                uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
                                 domain: int | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
@@ -31309,6 +31428,7 @@ class EosDesigns(EosDesignsRootModel):
                                          - "aes67"
                                          - "aes67-r16-2016"
                                          - "smpte2059-2"
+                                    uplinks: Subclass of AvdList with `str` items.
                                     mlag:
                                        Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
                                        configured on the MLAG peer-link port-channel.
@@ -41337,6 +41457,11 @@ class EosDesigns(EosDesignsRootModel):
                     class Ptp(AvdModel):
                         """Subclass of AvdModel."""
 
+                        class Uplinks(AvdList[str]):
+                            """Subclass of AvdList with `str` items."""
+
+                        Uplinks._item_type = str
+
                         class Dscp(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -41611,6 +41736,7 @@ class EosDesigns(EosDesignsRootModel):
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
                             "profile": {"type": str},
+                            "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
                             "domain": {"type": int, "default": 127},
                             "priority1": {"type": int},
@@ -41635,6 +41761,8 @@ class EosDesigns(EosDesignsRootModel):
                           - "aes67-r16-2016"
                           - "smpte2059-2"
                         """
+                        uplinks: Uplinks
+                        """Subclass of AvdList with `str` items."""
                         mlag: bool
                         """
                         Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
@@ -41698,6 +41826,7 @@ class EosDesigns(EosDesignsRootModel):
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
                                 profile: str | None | UndefinedType = Undefined,
+                                uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
                                 domain: int | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
@@ -41727,6 +41856,7 @@ class EosDesigns(EosDesignsRootModel):
                                          - "aes67"
                                          - "aes67-r16-2016"
                                          - "smpte2059-2"
+                                    uplinks: Subclass of AvdList with `str` items.
                                     mlag:
                                        Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
                                        configured on the MLAG peer-link port-channel.
@@ -44872,6 +45002,11 @@ class EosDesigns(EosDesignsRootModel):
                         class Ptp(AvdModel):
                             """Subclass of AvdModel."""
 
+                            class Uplinks(AvdList[str]):
+                                """Subclass of AvdList with `str` items."""
+
+                            Uplinks._item_type = str
+
                             class Dscp(AvdModel):
                                 """Subclass of AvdModel."""
 
@@ -45146,6 +45281,7 @@ class EosDesigns(EosDesignsRootModel):
                             _fields: ClassVar[dict] = {
                                 "enabled": {"type": bool},
                                 "profile": {"type": str},
+                                "uplinks": {"type": Uplinks},
                                 "mlag": {"type": bool, "default": False},
                                 "domain": {"type": int, "default": 127},
                                 "priority1": {"type": int},
@@ -45170,6 +45306,8 @@ class EosDesigns(EosDesignsRootModel):
                               - "aes67-r16-2016"
                               - "smpte2059-2"
                             """
+                            uplinks: Uplinks
+                            """Subclass of AvdList with `str` items."""
                             mlag: bool
                             """
                             Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
@@ -45233,6 +45371,7 @@ class EosDesigns(EosDesignsRootModel):
                                     *,
                                     enabled: bool | None | UndefinedType = Undefined,
                                     profile: str | None | UndefinedType = Undefined,
+                                    uplinks: Uplinks | UndefinedType = Undefined,
                                     mlag: bool | UndefinedType = Undefined,
                                     domain: int | UndefinedType = Undefined,
                                     priority1: int | None | UndefinedType = Undefined,
@@ -45262,6 +45401,7 @@ class EosDesigns(EosDesignsRootModel):
                                              - "aes67"
                                              - "aes67-r16-2016"
                                              - "smpte2059-2"
+                                        uplinks: Subclass of AvdList with `str` items.
                                         mlag:
                                            Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
                                            configured on the MLAG peer-link port-channel.
@@ -48361,6 +48501,11 @@ class EosDesigns(EosDesignsRootModel):
                     class Ptp(AvdModel):
                         """Subclass of AvdModel."""
 
+                        class Uplinks(AvdList[str]):
+                            """Subclass of AvdList with `str` items."""
+
+                        Uplinks._item_type = str
+
                         class Dscp(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -48635,6 +48780,7 @@ class EosDesigns(EosDesignsRootModel):
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
                             "profile": {"type": str},
+                            "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
                             "domain": {"type": int, "default": 127},
                             "priority1": {"type": int},
@@ -48659,6 +48805,8 @@ class EosDesigns(EosDesignsRootModel):
                           - "aes67-r16-2016"
                           - "smpte2059-2"
                         """
+                        uplinks: Uplinks
+                        """Subclass of AvdList with `str` items."""
                         mlag: bool
                         """
                         Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
@@ -48722,6 +48870,7 @@ class EosDesigns(EosDesignsRootModel):
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
                                 profile: str | None | UndefinedType = Undefined,
+                                uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
                                 domain: int | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
@@ -48751,6 +48900,7 @@ class EosDesigns(EosDesignsRootModel):
                                          - "aes67"
                                          - "aes67-r16-2016"
                                          - "smpte2059-2"
+                                    uplinks: Subclass of AvdList with `str` items.
                                     mlag:
                                        Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
                                        configured on the MLAG peer-link port-channel.
@@ -51924,6 +52074,11 @@ class EosDesigns(EosDesignsRootModel):
                     class Ptp(AvdModel):
                         """Subclass of AvdModel."""
 
+                        class Uplinks(AvdList[str]):
+                            """Subclass of AvdList with `str` items."""
+
+                        Uplinks._item_type = str
+
                         class Dscp(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -52198,6 +52353,7 @@ class EosDesigns(EosDesignsRootModel):
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
                             "profile": {"type": str},
+                            "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
                             "domain": {"type": int, "default": 127},
                             "priority1": {"type": int},
@@ -52222,6 +52378,8 @@ class EosDesigns(EosDesignsRootModel):
                           - "aes67-r16-2016"
                           - "smpte2059-2"
                         """
+                        uplinks: Uplinks
+                        """Subclass of AvdList with `str` items."""
                         mlag: bool
                         """
                         Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
@@ -52285,6 +52443,7 @@ class EosDesigns(EosDesignsRootModel):
                                 *,
                                 enabled: bool | None | UndefinedType = Undefined,
                                 profile: str | None | UndefinedType = Undefined,
+                                uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
                                 domain: int | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
@@ -52314,6 +52473,7 @@ class EosDesigns(EosDesignsRootModel):
                                          - "aes67"
                                          - "aes67-r16-2016"
                                          - "smpte2059-2"
+                                    uplinks: Subclass of AvdList with `str` items.
                                     mlag:
                                        Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be
                                        configured on the MLAG peer-link port-channel.
