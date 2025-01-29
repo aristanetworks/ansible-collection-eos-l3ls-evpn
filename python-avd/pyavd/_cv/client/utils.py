@@ -8,6 +8,8 @@ from typing import TYPE_CHECKING, Any, Protocol
 if TYPE_CHECKING:
     from collections.abc import Callable
 
+    from . import CVClientProtocol
+
 
 class UtilsMixin(Protocol):
     """Only to be used as mixin on CVClient class."""

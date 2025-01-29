@@ -12,7 +12,7 @@ from pyavd.j2filters import list_compress, range_expand
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import EosDesignsFactsProtocol
+    from . import EosDesignsFacts, EosDesignsFactsProtocol
 
 
 class VlansMixin(Protocol):

@@ -38,6 +38,8 @@ from .exceptions import get_cv_client_exception
 if TYPE_CHECKING:
     from datetime import datetime
 
+    from . import CVClientProtocol
+
 
 ASSIGNMENT_MATCH_POLICY_MAP = {
     "match_first": MatchPolicy.MATCH_FIRST,

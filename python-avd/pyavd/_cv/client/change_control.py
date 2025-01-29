@@ -32,6 +32,8 @@ if TYPE_CHECKING:
 
     from aristaproto import _DateTime
 
+    from . import CVClientProtocol
+
 
 LOGGER = getLogger(__name__)
 

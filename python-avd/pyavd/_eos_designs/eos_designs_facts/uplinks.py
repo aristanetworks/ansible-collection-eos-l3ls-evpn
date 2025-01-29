@@ -12,7 +12,7 @@ from pyavd._utils import append_if_not_duplicate
 from pyavd.j2filters import list_compress, natural_sort, range_expand
 
 if TYPE_CHECKING:
-    from . import EosDesignsFactsProtocol
+    from . import EosDesignsFacts, EosDesignsFactsProtocol
 
 
 class UplinksMixin(Protocol):
@@ -104,7 +104,7 @@ class UplinksMixin(Protocol):
             uplink_switch_port_channel_id = int("".join(re.findall(r"\d", self.shared_utils.uplink_switch_interfaces[0])))
 
         # produce an error if the uplink switch is MLAG and port-channel ID is above 2000
-        uplink_switch_facts: EosDesignsFactsProtocol = self.shared_utils.get_peer_facts(self.shared_utils.uplink_switches[0], required=True)
+        uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(self.shared_utils.uplink_switches[0], required=True)
         if uplink_switch_facts.shared_utils.mlag and not 1 <= uplink_switch_port_channel_id <= 2000:
             msg = f"'uplink_switch_port_channel_id' must be between 1 and 2000 for MLAG switches. Got '{uplink_switch_port_channel_id}'."
             raise AristaAvdError(msg)
