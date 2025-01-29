@@ -236,6 +236,8 @@ dhcp server
 | Ethernet5 | True | - |
 | Ethernet6 | True | - |
 | Ethernet8 | True | - |
+| Ethernet9 | True | - |
+| Ethernet10 | True | - |
 
 ## Monitoring
 
@@ -307,6 +309,8 @@ vlan internal order ascending range 1006 1199
 | Ethernet6 | site1-wan2-Ethernet4 | - | 100.64.11.1/24 | default | - | False | - | - |
 | Ethernet7 | site2-wan2-Ethernet4 | - | 100.64.21.1/24 | default | - | False | - | - |
 | Ethernet8 | site3-wan1-Ethernet4 | - | 100.64.30.1/24 | default | - | False | - | - |
+| Ethernet9 | site4-wan1-Ethernet4 | - | 100.64.40.1/24 | default | - | False | - | - |
+| Ethernet10 | site4-wan2-Ethernet4 | - | 100.64.41.1/24 | default | - | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -349,6 +353,20 @@ interface Ethernet8
    no shutdown
    no switchport
    ip address 100.64.30.1/24
+   dhcp server ipv4
+!
+interface Ethernet9
+   description site4-wan1-Ethernet4
+   no shutdown
+   no switchport
+   ip address 100.64.40.1/24
+   dhcp server ipv4
+!
+interface Ethernet10
+   description site4-wan2-Ethernet4
+   no shutdown
+   no switchport
+   ip address 100.64.41.1/24
    dhcp server ipv4
 ```
 

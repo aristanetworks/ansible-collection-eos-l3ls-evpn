@@ -36,6 +36,8 @@ class OverlayMixin:
             if self.is_wan_router and not self.inputs.wan_use_evpn_node_settings_for_lan:
                 # For WAN routers without the knob, evpn_role should be ignored.
                 return None
+            elif self.is_wan_router:
+                default_evpn_role = "none"
             return default(self.node_config.evpn_role, default_evpn_role)
         return None
 

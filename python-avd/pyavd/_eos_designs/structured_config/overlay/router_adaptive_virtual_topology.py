@@ -42,7 +42,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
             raise AristaAvdInvalidInputsError(msg)
 
         # Edge or Transit
-        return {
+        avt = {
             "topology_role": self.shared_utils.cv_pathfinder_role,
             "region": {
                 "name": self.shared_utils.wan_region.name,
@@ -54,3 +54,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
                 "id": self.shared_utils.wan_site.id,
             },
         }
+
+        if self.shared_utils.evpn_wan_gateway:
+            avt["gateway_vxlan"] = True
+        return avt

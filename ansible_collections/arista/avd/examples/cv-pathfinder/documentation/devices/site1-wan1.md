@@ -288,7 +288,7 @@ daemon TerminAttr
 
 | Tracker Name | Record Export On Inactive Timeout | Record Export On Interval | Number of Exporters | Applied On |
 | ------------ | --------------------------------- | ------------------------- | ------------------- | ---------- |
-| FLOW-TRACKER | 70000 | 5000 | 1 | Dps1<br>Ethernet1<br>Ethernet1.100<br>Ethernet1.101<br>Ethernet2<br>Ethernet2.100<br>Ethernet2.101<br>Ethernet3<br>Ethernet4 |
+| FLOW-TRACKER | 70000 | 5000 | 1 | Dps1<br>Ethernet1<br>Ethernet2<br>Ethernet3<br>Ethernet4 |
 
 ##### Exporters Summary
 
@@ -423,25 +423,12 @@ interface Dps1
 
 *Inherited from Port-Channel Interface
 
-##### Encapsulation Dot1q Interfaces
-
-| Interface | Description | Vlan ID | Dot1q VLAN Tag | Dot1q Inner VLAN Tag |
-| --------- | ----------- | ------- | -------------- | -------------------- |
-| Ethernet1.100 | P2P_site1-border1_Ethernet3.100_VRF_BLUE | - | 100 | - |
-| Ethernet1.101 | P2P_site1-border1_Ethernet3.101_VRF_RED | - | 101 | - |
-| Ethernet2.100 | P2P_site1-border2_Ethernet3.100_VRF_BLUE | - | 100 | - |
-| Ethernet2.101 | P2P_site1-border2_Ethernet3.101_VRF_RED | - | 101 | - |
-
 ##### IPv4
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1 | P2P_site1-border1_Ethernet3 | - | 10.0.1.9/31 | default | 9214 | False | - | - |
-| Ethernet1.100 | P2P_site1-border1_Ethernet3.100_VRF_BLUE | - | 10.0.1.9/31 | BLUE | 9214 | False | - | - |
-| Ethernet1.101 | P2P_site1-border1_Ethernet3.101_VRF_RED | - | 10.0.1.9/31 | RED | 9214 | False | - | - |
 | Ethernet2 | P2P_site1-border2_Ethernet3 | - | 10.0.1.11/31 | default | 9214 | False | - | - |
-| Ethernet2.100 | P2P_site1-border2_Ethernet3.100_VRF_BLUE | - | 10.0.1.11/31 | BLUE | 9214 | False | - | - |
-| Ethernet2.101 | P2P_site1-border2_Ethernet3.101_VRF_RED | - | 10.0.1.11/31 | RED | 9214 | False | - | - |
 | Ethernet3 | ACME-MPLS-INC_mpls-site1-wan1_mpls-cloud_Ethernet5 | - | 172.18.10.2/24 | default | - | False | - | - |
 | Ethernet4 | REGION1-INTERNET-CORP_inet-site1-wan1_inet-cloud_Ethernet5 | - | 100.64.10.2/24 | default | - | False | ACL-INTERNET-IN_Ethernet4 | - |
 
@@ -457,48 +444,12 @@ interface Ethernet1
    flow tracker hardware FLOW-TRACKER
    ip address 10.0.1.9/31
 !
-interface Ethernet1.100
-   description P2P_site1-border1_Ethernet3.100_VRF_BLUE
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 100
-   flow tracker hardware FLOW-TRACKER
-   vrf BLUE
-   ip address 10.0.1.9/31
-!
-interface Ethernet1.101
-   description P2P_site1-border1_Ethernet3.101_VRF_RED
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 101
-   flow tracker hardware FLOW-TRACKER
-   vrf RED
-   ip address 10.0.1.9/31
-!
 interface Ethernet2
    description P2P_site1-border2_Ethernet3
    no shutdown
    mtu 9214
    no switchport
    flow tracker hardware FLOW-TRACKER
-   ip address 10.0.1.11/31
-!
-interface Ethernet2.100
-   description P2P_site1-border2_Ethernet3.100_VRF_BLUE
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 100
-   flow tracker hardware FLOW-TRACKER
-   vrf BLUE
-   ip address 10.0.1.11/31
-!
-interface Ethernet2.101
-   description P2P_site1-border2_Ethernet3.101_VRF_RED
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 101
-   flow tracker hardware FLOW-TRACKER
-   vrf RED
    ip address 10.0.1.11/31
 !
 interface Ethernet3
@@ -639,6 +590,8 @@ ip route vrf MGMT 0.0.0.0/0 192.168.17.1
 
 Topology role: transit region
 
+VXLAN gateway: Enabled
+
 | Hierarchy | Name | ID |
 | --------- | ---- | -- |
 | Region | REGION1 | 1 |
@@ -725,7 +678,7 @@ Topology role: transit region
 ```eos
 !
 router adaptive-virtual-topology
-   topology role transit region
+   topology role transit region gateway vxlan
    region REGION1 id 1
    zone REGION1-ZONE id 1
    site SITE1 id 101
@@ -831,6 +784,17 @@ ASN Notation: asplain
 
 #### Router BGP Peer Groups
 
+##### EVPN-OVERLAY-PEERS
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | evpn |
+| Source | Loopback0 |
+| BFD | True |
+| Ebgp multihop | 3 |
+| Send community | all |
+| Maximum routes | 0 (no limit) |
+
 ##### IPv4-UNDERLAY-PEERS
 
 | Settings | Value |
@@ -862,10 +826,7 @@ ASN Notation: asplain
 | 192.168.42.1 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.2 | Inherited from peer group WAN-OVERLAY-PEERS | default | - | Inherited from peer group WAN-OVERLAY-PEERS | Inherited from peer group WAN-OVERLAY-PEERS | - | Inherited from peer group WAN-OVERLAY-PEERS(interval: 1000, min_rx: 1000, multiplier: 10) | - | - | - | Inherited from peer group WAN-OVERLAY-PEERS |
 | 192.168.42.4 | 65000 | default | - | all | - | - | - | - | True | - | - |
-| 10.0.1.8 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 10.0.1.10 | 65101 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 10.0.1.8 | 65101 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
-| 10.0.1.10 | 65101 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - |
+| 192.168.255.18 | 65110 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 
 #### Router BGP EVPN Address Family
 
@@ -873,6 +834,7 @@ ASN Notation: asplain
 
 | Peer Group | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
 | ---------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| EVPN-OVERLAY-PEERS | True |  - | - | default | - |
 | WAN-OVERLAY-PEERS | True |  RM-EVPN-SOO-IN | RM-EVPN-SOO-OUT | path-selection | - |
 
 ##### EVPN Neighbors
@@ -885,7 +847,9 @@ ASN Notation: asplain
 
 | Settings | Value |
 | -------- | ----- |
+| Remote Domain Peer Groups | WAN-OVERLAY-PEERS |
 | L3 Gateway Configured | True |
+| L3 Gateway Inter-domain | True |
 
 #### Router BGP IPv4 SR-TE Address Family
 
@@ -933,6 +897,12 @@ router bgp 65000
    router-id 192.168.255.3
    no bgp default ipv4-unicast
    maximum-paths 16
+   neighbor EVPN-OVERLAY-PEERS peer group
+   neighbor EVPN-OVERLAY-PEERS update-source Loopback0
+   neighbor EVPN-OVERLAY-PEERS bfd
+   neighbor EVPN-OVERLAY-PEERS ebgp-multihop 3
+   neighbor EVPN-OVERLAY-PEERS send-community
+   neighbor EVPN-OVERLAY-PEERS maximum-routes 0
    neighbor IPv4-UNDERLAY-PEERS peer group
    neighbor IPv4-UNDERLAY-PEERS allowas-in 1
    neighbor IPv4-UNDERLAY-PEERS route-map RM-BGP-UNDERLAY-PEERS-IN in
@@ -965,18 +935,24 @@ router bgp 65000
    neighbor 192.168.42.4 route-map RM-WAN-HA-PEER-IN in
    neighbor 192.168.42.4 route-map RM-WAN-HA-PEER-OUT out
    neighbor 192.168.42.4 send-community
+   neighbor 192.168.255.18 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.18 remote-as 65110
+   neighbor 192.168.255.18 description site1-spine1_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    address-family evpn
+      neighbor EVPN-OVERLAY-PEERS activate
       neighbor WAN-OVERLAY-PEERS activate
       neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-IN in
       neighbor WAN-OVERLAY-PEERS route-map RM-EVPN-SOO-OUT out
       neighbor WAN-OVERLAY-PEERS encapsulation path-selection
+      neighbor WAN-OVERLAY-PEERS domain remote
       neighbor 192.168.42.4 activate
       neighbor 192.168.42.4 encapsulation path-selection
-      neighbor default next-hop-self received-evpn-routes route-type ip-prefix
+      neighbor default next-hop-self received-evpn-routes route-type ip-prefix inter-domain
    !
    address-family ipv4
+      no neighbor EVPN-OVERLAY-PEERS activate
       neighbor IPv4-UNDERLAY-PEERS activate
       no neighbor WAN-OVERLAY-PEERS activate
    !
@@ -997,12 +973,6 @@ router bgp 65000
       route-target import evpn 100:100
       route-target export evpn 100:100
       router-id 192.168.255.3
-      neighbor 10.0.1.8 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.8 remote-as 65101
-      neighbor 10.0.1.8 description site1-border1_Ethernet3.100_vrf_BLUE
-      neighbor 10.0.1.10 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.10 remote-as 65101
-      neighbor 10.0.1.10 description site1-border2_Ethernet3.100_vrf_BLUE
       redistribute connected
    !
    vrf default
@@ -1016,12 +986,6 @@ router bgp 65000
       route-target import evpn 101:101
       route-target export evpn 101:101
       router-id 192.168.255.3
-      neighbor 10.0.1.8 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.8 remote-as 65101
-      neighbor 10.0.1.8 description site1-border1_Ethernet3.101_vrf_RED
-      neighbor 10.0.1.10 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.10 remote-as 65101
-      neighbor 10.0.1.10 description site1-border2_Ethernet3.101_vrf_RED
       redistribute connected
 ```
 
@@ -1054,6 +1018,7 @@ router bfd
 | Sequence | Action |
 | -------- | ------ |
 | 10 | permit 192.168.255.0/24 eq 32 |
+| 20 | permit 192.168.42.3/32 eq 32 |
 
 ##### PL-WAN-HA-PEER-PREFIXES
 
@@ -1075,6 +1040,7 @@ router bfd
 !
 ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
    seq 10 permit 192.168.255.0/24 eq 32
+   seq 20 permit 192.168.42.3/32 eq 32
 !
 ip prefix-list PL-WAN-HA-PEER-PREFIXES
    seq 10 permit 10.0.1.12/31

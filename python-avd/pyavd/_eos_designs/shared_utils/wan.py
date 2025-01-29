@@ -586,3 +586,8 @@ class WanMixin:
     def is_wan_vrf(self: SharedUtils, vrf_name: str) -> int | None:
         """Returns True is the VRF is a WAN VRF."""
         return all([self.is_wan_router, vrf_name in self.inputs.wan_virtual_topologies.vrfs or vrf_name == "default"])
+
+    @cached_property
+    def evpn_wan_gateway(self: SharedUtils) -> str | None:
+        """Return whether device is running in wan gateway mode."""
+        return self.wan_role == "client" and self.evpn_role != "none" and self.inputs.wan_use_evpn_node_settings_for_lan

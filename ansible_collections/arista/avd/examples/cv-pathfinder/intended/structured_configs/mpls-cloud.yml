@@ -53,6 +53,20 @@ ethernet_interfaces:
   peer_type: l3_interface
   switchport:
     enabled: false
+- name: Ethernet8
+  description: site4-wan1-Ethernet3
+  shutdown: false
+  ip_address: 172.18.40.1/24
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet9
+  description: site4-wan2-Ethernet3
+  shutdown: false
+  ip_address: 172.18.41.1/24
+  peer_type: l3_interface
+  switchport:
+    enabled: false
 hostname: mpls-cloud
 ip_name_servers:
 - ip_address: 192.168.17.1

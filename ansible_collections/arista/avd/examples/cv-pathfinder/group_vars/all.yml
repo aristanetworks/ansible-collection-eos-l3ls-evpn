@@ -15,6 +15,7 @@ fabric_name: WAN
 
 # Disabling for virtual devices
 bgp_update_wait_install: false
+wan_use_evpn_node_settings_for_lan: true
 
 # define default node types based on hostnames
 default_node_types:
@@ -35,3 +36,4 @@ default_node_types:
   - node_type: spine
     match_hostnames:
       - .*-cloud
+      - site.*-spine.*
