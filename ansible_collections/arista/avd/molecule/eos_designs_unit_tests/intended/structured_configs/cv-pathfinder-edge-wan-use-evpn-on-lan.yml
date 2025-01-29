@@ -423,6 +423,21 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
+  - name: VRF-NO-WAN
+    rd: 192.168.42.12:300
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 300:300
+      export:
+      - address_family: evpn
+        route_targets:
+        - 300:300
+    router_id: 192.168.42.12
+    redistribute:
+      connected:
+        enabled: true
   - name: WAN-VRF-NO-AF
     rd: 192.168.42.12:200
     route_targets:
@@ -504,7 +519,10 @@ vrfs:
 - name: PROD
   ip_routing: true
   tenant: TenantA
-- name: VRF-NO-AF-NO-WAN
+- name: VRF-NO-WAN
+  ip_routing: true
+  tenant: TenantD
+- name: VRF-NO-WAN-NO-AF
   ip_routing: true
   tenant: TenantD
 - name: WAN-VRF-NO-AF
@@ -521,5 +539,7 @@ vxlan_interface:
         vni: 1
       - name: PROD
         vni: 42
+      - name: VRF-NO-WAN
+        vni: 300
       - name: WAN-VRF-NO-AF
         vni: 200

@@ -557,17 +557,24 @@ tenants:
               - node: site-ha-disabled-leaf
                 ip_address: 10.66.66.1
   - name: TenantD
-    # Tenant used to test VRF without address family set with
+    # Tenant used to test VRFs
     # knob wan_use_evpn_node_settings_for_lan: true
     mac_vrf_vni_base: 1000
     vrfs:
       - name: WAN-VRF-NO-AF
         vrf_id: 200
+        # Setting address families under tenant to empty list
+        # and checking the VRF is still added on the WAN when the knob is true
+        # and the VRF is defined under wan_virtual_topologies.vrfs
         address_families: []
       - name: VRF-NO-WAN
         vrf_id: 300
         # keeping default address family "evpn" and verifying we do not raise
-        # when the knob is true
+        # when the knob is true. The VRF should be configured.
+      - name: VRF-NO-WAN-NO-AF
+        vrf_id: 400
+        # when the knob is true. The VRF should not be configured.
+        address_families: []
 
 wan_virtual_topologies:
   vrfs:

@@ -187,6 +187,21 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
+  - name: VRF-NO-WAN
+    rd: 192.168.45.13:300
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - 300:300
+      export:
+      - address_family: evpn
+        route_targets:
+        - 300:300
+    router_id: 192.168.45.13
+    redistribute:
+      connected:
+        enabled: true
 service_routing_protocols_model: multi-agent
 transceiver_qsfp_default_mode_4x10: true
 vlan_interfaces:
@@ -238,7 +253,10 @@ vrfs:
 - name: ATTRACTED-VRF-FROM-UPLINK
   ip_routing: true
   tenant: TenantC
-- name: VRF-NO-AF-NO-WAN
+- name: VRF-NO-WAN
+  ip_routing: true
+  tenant: TenantD
+- name: VRF-NO-WAN-NO-AF
   ip_routing: true
   tenant: TenantD
 - name: WAN-VRF-NO-AF
@@ -268,3 +286,5 @@ vxlan_interface:
         vni: 142
       - name: ATTRACTED-VRF-FROM-UPLINK
         vni: 666
+      - name: VRF-NO-WAN
+        vni: 300
