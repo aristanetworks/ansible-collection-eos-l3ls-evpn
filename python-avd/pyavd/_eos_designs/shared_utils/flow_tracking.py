@@ -29,7 +29,12 @@ if TYPE_CHECKING:
         | EosDesigns.FabricFlowTracking.Downlinks
     )
 
-    T_FlowTracker = TypeVar("T_FlowTracker", EosCliConfigGen.EthernetInterfacesItem.FlowTracker, EosCliConfigGen.PortChannelInterfacesItem.FlowTracker)
+    T_FlowTracker = TypeVar(
+        "T_FlowTracker",
+        EosCliConfigGen.EthernetInterfacesItem.FlowTracker,
+        EosCliConfigGen.PortChannelInterfacesItem.FlowTracker,
+        EosCliConfigGen.DpsInterfacesItem.FlowTracker,
+    )
 
 
 class FlowTrackingMixin(Protocol):
