@@ -3,12 +3,28 @@
 # Use eBGP as underlay routing protocol on SITE1, the default is 'none' for WAN routers.
 underlay_routing_protocol: ebgp
 
+# Spine switch group
+spine:
+  defaults:
+    platform: vEOS-lab
+    loopback_ipv4_pool: 192.168.255.0/24
+    bgp_as: 65110
+
+  nodes:
+    - name: site1-spine1
+      id: 18
+      mgmt_ip: 192.168.17.101/24
+
 l3leaf:
   defaults:
     loopback_ipv4_pool: 192.168.255.0/24
     vtep_loopback_ipv4_pool: 192.168.42.0/24
     filter:
       always_include_vrfs_in_tenants: [all]
+    uplink_switches: ['site1-spine1']
+    # Definition of pool of IPs to be used in P2P links
+    uplink_ipv4_pool: 10.0.5.0/24
+    uplink_interfaces: [Ethernet1]
     mlag_interfaces: [Ethernet5, Ethernet6]
     mlag_peer_l3_ipv4_pool: 10.255.251.0/24
     mlag_peer_ipv4_pool: 10.255.252.0/24
@@ -18,9 +34,11 @@ l3leaf:
       nodes:
         - name: site1-border1
           mgmt_ip: 192.168.17.14/24
+          uplink_switch_interfaces: [Ethernet1]
           id: 5
         - name: site1-border2
           mgmt_ip: 192.168.17.15/24
+          uplink_switch_interfaces: [Ethernet2]
           id: 6
 
 wan_router:
@@ -32,7 +50,9 @@ wan_router:
       always_include_vrfs_in_tenants: [all]
     uplink_interfaces: [Ethernet1, Ethernet2]
     uplink_switches: [site1-border1, site1-border2]
-    uplink_type: p2p-vrfs # (1)!
+    uplink_type: p2p # (1)!
+    evpn_role: client
+    evpn_route_servers: [site1-spine1]
     bgp_as: 65000
   node_groups:
     - group: SITE1

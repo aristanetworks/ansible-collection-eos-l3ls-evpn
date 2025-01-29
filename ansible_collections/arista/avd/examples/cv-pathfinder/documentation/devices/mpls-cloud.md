@@ -255,6 +255,8 @@ vlan internal order ascending range 1006 1199
 | Ethernet5 | site1-wan1-Ethernet3 | - | 172.18.10.1/24 | default | - | False | - | - |
 | Ethernet6 | site1-wan2-Ethernet3 | - | 172.18.11.1/24 | default | - | False | - | - |
 | Ethernet7 | site2-wan1-Ethernet3 | - | 172.18.20.1/24 | default | - | False | - | - |
+| Ethernet8 | site4-wan1-Ethernet3 | - | 172.18.40.1/24 | default | - | False | - | - |
+| Ethernet9 | site4-wan2-Ethernet3 | - | 172.18.41.1/24 | default | - | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -289,6 +291,18 @@ interface Ethernet7
    no shutdown
    no switchport
    ip address 172.18.20.1/24
+!
+interface Ethernet8
+   description site4-wan1-Ethernet3
+   no shutdown
+   no switchport
+   ip address 172.18.40.1/24
+!
+interface Ethernet9
+   description site4-wan2-Ethernet3
+   no shutdown
+   no switchport
+   ip address 172.18.41.1/24
 ```
 
 ### Loopback Interfaces

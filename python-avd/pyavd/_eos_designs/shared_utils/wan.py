@@ -601,3 +601,8 @@ class WanMixin:
             raise AristaAvdInvalidInputsError(msg)
 
         return configured_as_wan_vrf
+
+    @cached_property
+    def evpn_wan_gateway(self: SharedUtils) -> str | None:
+        """Return whether device is running in wan gateway mode."""
+        return self.wan_role == "client" and self.evpn_role != "none" and self.inputs.wan_use_evpn_node_settings_for_lan

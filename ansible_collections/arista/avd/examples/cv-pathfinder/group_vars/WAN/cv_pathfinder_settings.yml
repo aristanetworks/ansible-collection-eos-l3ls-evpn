@@ -21,6 +21,12 @@ cv_pathfinder_regions:  # (1)!
       - name: SITE3
         id: 203
         location: Milan, Italy
+  - name: REGION3
+    id: 3
+    sites:
+      - name: SITE4
+        id: 301
+        location: Who, Who1
 
 cv_pathfinder_global_sites:  # (2)!
   - name: PF1-GLOBAL
@@ -93,6 +99,8 @@ wan_carriers: # (7)!
   - name: REGION1-INTERNET-CORP
     path_group: INTERNET
   - name: REGION2-INTERNET-CORP
+    path_group: INTERNET
+  - name: REGION3-INTERNET-CORP
     path_group: INTERNET
 
 wan_path_groups: # (8)!

@@ -273,6 +273,7 @@ metadata:
       - name: GLOBAL-INTERNET-LIMITED
       - name: REGION1-INTERNET-CORP
       - name: REGION2-INTERNET-CORP
+      - name: REGION3-INTERNET-CORP
     regions:
     - id: 1
       name: REGION1
@@ -298,6 +299,16 @@ metadata:
           name: SITE3
           location:
             address: Milan, Italy
+    - id: 3
+      name: REGION3
+      zones:
+      - id: 1
+        name: REGION3-ZONE
+        sites:
+        - id: 301
+          name: SITE4
+          location:
+            address: Who, Who1
     vrfs:
     - name: BLUE
       vni: 100
