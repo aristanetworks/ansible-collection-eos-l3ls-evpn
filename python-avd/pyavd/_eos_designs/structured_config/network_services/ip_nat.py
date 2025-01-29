@@ -3,9 +3,9 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from collections import defaultdict
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
+
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
@@ -18,22 +18,15 @@ class IpNatMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def ip_nat(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
+    @structured_config_contributor
+    def ip_nat(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """Returns structured config for ip_nat."""
         if not self.shared_utils.is_cv_pathfinder_client:
-            return None
-
-        ip_nat = defaultdict(list)
+            return
 
         for policy_type in self._filtered_internet_exit_policy_types:
             pool, profile = self.get_internet_exit_nat_pool_and_profile(policy_type)
             if pool:
-                ip_nat["pools"].append(pool)
+                self.structured_config.ip_nat.pools.append(pool)
             if profile:
-                ip_nat["profiles"].append(profile)
-
-        if ip_nat:
-            return ip_nat
-
-        return None
+                self.structured_config.ip_nat.profiles.append(profile)
