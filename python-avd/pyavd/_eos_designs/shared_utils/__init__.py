@@ -1,7 +1,10 @@
 # Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
-from pyavd._eos_designs.schema import EosDesigns
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from pyavd._schema.avdschema import AvdSchema
 
 from .cv_topology import CvTopology
@@ -25,6 +28,11 @@ from .routing import RoutingMixin
 from .underlay import UnderlayMixin
 from .utils import UtilsMixin
 from .wan import WanMixin
+
+if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
+    from pyavd._schema.avdschema import AvdSchema
+    from pyavd.api.pool_manager import PoolManager
 
 
 class SharedUtils(
@@ -64,8 +72,9 @@ class SharedUtils(
     The class cannot be overridden.
     """
 
-    def __init__(self, hostvars: dict, inputs: EosDesigns, templar: object, schema: AvdSchema) -> None:
+    def __init__(self, hostvars: dict, inputs: EosDesigns, templar: object, schema: AvdSchema, pool_manager: PoolManager | None = None) -> None:
         self.hostvars = hostvars
         self.inputs = inputs
         self.templar = templar
         self.schema = schema
+        self.pool_manager = pool_manager
