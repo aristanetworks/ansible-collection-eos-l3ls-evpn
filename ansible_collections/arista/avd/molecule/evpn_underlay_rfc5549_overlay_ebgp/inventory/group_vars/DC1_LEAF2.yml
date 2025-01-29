@@ -1,5 +1,15 @@
 ---
-
+# Overriding bgp_peer_groups removing the dedicated per-vrf peer-group.
+# This is needed to have the tested scenario below where we use the same peer group.
+bgp_peer_groups:
+  ipv4_underlay_peers:
+    password: "af6F4WLl4wUrWRZcwbEwkQ=="
+    name: "UNDERLAY_PEERS"
+  evpn_overlay_peers:
+    password: "q+VNViP5i4rVjW1cxFv2wA=="
+  mlag_ipv4_underlay_peer:
+    name: "MLAG_PEER"
+    password: "arwUnrq9ydqIhjfTwRhAlg=="
 # Test if underlay_rfc5549 is True and overlay_mlag_rfc5549 is False
 # Results to the following EOS config:
 #  router_bgp <asn>

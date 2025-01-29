@@ -1094,6 +1094,13 @@ $defs:
                     - "aes67"
                     - "aes67-r16-2016"
                     - "smpte2059-2"
+              uplinks:
+                type: list
+                items:
+                  type: str
+                  description: |-
+                    Limit PTP to the specified uplink interfaces.
+                    Only considered when `uplink_type` is `p2p`.
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
                 type: bool
