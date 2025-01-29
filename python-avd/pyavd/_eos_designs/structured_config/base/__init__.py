@@ -6,7 +6,8 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, strip_empties_from_dict, strip_null_from_data
 from pyavd.j2filters import natural_sort
@@ -125,29 +126,23 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
 
         return strip_null_from_data(router_bgp)
 
-    @cached_property
-    def static_routes(self) -> list | None:
+    @structured_config_contributor
+    def static_routes(self) -> None:
         """static_routes set based on mgmt_gateway, mgmt_destination_networks and mgmt_interface_vrf."""
         if self.shared_utils.mgmt_gateway is None:
-            return None
+            return
 
         if self.inputs.mgmt_destination_networks:
-            return [
-                {
-                    "vrf": self.inputs.mgmt_interface_vrf,
-                    "destination_address_prefix": mgmt_destination_network,
-                    "gateway": self.shared_utils.mgmt_gateway,
-                }
-                for mgmt_destination_network in self.inputs.mgmt_destination_networks
-            ]
-
-        return [
-            {
-                "vrf": self.inputs.mgmt_interface_vrf,
-                "destination_address_prefix": "0.0.0.0/0",
-                "gateway": self.shared_utils.mgmt_gateway,
-            }
-        ]
+            for mgmt_destination_network in self.inputs.mgmt_destination_networks:
+                static_route = EosCliConfigGen.StaticRoutesItem(
+                    vrf=self.inputs.mgmt_interface_vrf, destination_address_prefix=mgmt_destination_network, gateway=self.shared_utils.mgmt_gateway
+                )
+                self.structured_config.static_routes.append(static_route)
+        else:
+            static_route = EosCliConfigGen.StaticRoutesItem(
+                vrf=self.inputs.mgmt_interface_vrf, destination_address_prefix="0.0.0.0/0", gateway=self.shared_utils.mgmt_gateway
+            )
+            self.structured_config.static_routes.append(static_route)
 
     @cached_property
     def ipv6_static_routes(self) -> list | None:
