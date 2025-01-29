@@ -21,7 +21,7 @@
 | {{ class_map.name }} | acl | {{ class_map.ip.access_group }} |
 {%         else %}
 {%             if class_map.dscp is arista.avd.defined and class_map.ecn is arista.avd.defined %}
-| {{ class_map.name }} | dscp + ecn | {{ class_map.dscp }} + {{ class_map.ecn }} |
+| {{ class_map.name }} | dscp<br>ecn | {{ class_map.dscp }}<br>{{ class_map.ecn }} |
 {%             elif class_map.dscp is arista.avd.defined %}
 | {{ class_map.name }} | dscp | {{ class_map.dscp }} |
 {%             elif class_map.ecn is arista.avd.defined %}
