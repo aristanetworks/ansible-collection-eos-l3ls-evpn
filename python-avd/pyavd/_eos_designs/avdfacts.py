@@ -8,14 +8,13 @@ from typing import TYPE_CHECKING, Any, Protocol
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
-
-    from .shared_utils import SharedUtils
+    from pyavd._eos_designs.shared_utils import SharedUtilsProtocol
 
 
 class AvdFactsProtocol(Protocol):
     _hostvars: dict
     inputs: EosDesigns
-    shared_utils: SharedUtils
+    shared_utils: SharedUtilsProtocol
 
     @classmethod
     def _keys(cls) -> list[str]:
@@ -68,7 +67,7 @@ class AvdFactsProtocol(Protocol):
 
 
 class AvdFacts(AvdFactsProtocol):
-    def __init__(self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtils) -> None:
+    def __init__(self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtilsProtocol) -> None:
         self._hostvars = hostvars
         self.inputs = inputs
         self.shared_utils = shared_utils

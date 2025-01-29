@@ -16,7 +16,7 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
     from pyavd._eos_designs.schema import EosDesigns
-    from pyavd._eos_designs.shared_utils import SharedUtils
+    from pyavd._eos_designs.shared_utils import SharedUtilsProtocol
 
     T_StructuredConfigGeneratorSubclass = TypeVar("T_StructuredConfigGeneratorSubclass", bound="StructuredConfigGenerator")
 
@@ -131,7 +131,7 @@ class StructuredConfigGenerator(AvdFacts, StructuredConfigGeneratorProtocol):
     """
 
     def __init__(
-        self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtils, structured_config: EosCliConfigGen, custom_structured_configs: StructCfgs
+        self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtilsProtocol, structured_config: EosCliConfigGen, custom_structured_configs: StructCfgs
     ) -> None:
         self.structured_config = structured_config
         self.custom_structured_configs = custom_structured_configs
