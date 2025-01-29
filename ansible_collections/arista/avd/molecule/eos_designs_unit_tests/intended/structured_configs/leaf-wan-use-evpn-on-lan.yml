@@ -14,6 +14,16 @@ ethernet_interfaces:
   peer_type: wan_router
   switchport:
     enabled: false
+- name: Ethernet2
+  description: P2P_cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan_Ethernet52
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.18.0.26/31
+  peer: cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan
+  peer_interface: Ethernet52
+  peer_type: wan_router
+  switchport:
+    enabled: false
 hostname: leaf-wan-use-evpn-on-lan
 ip_igmp_snooping:
   globally_enabled: true
@@ -83,6 +93,11 @@ router_bgp:
     remote_as: '65000'
     peer: cv-pathfinder-edge-wan-use-evpn-on-lan
     description: cv-pathfinder-edge-wan-use-evpn-on-lan_Ethernet52
+  - ip_address: 172.18.0.27
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65000'
+    peer: cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan
+    description: cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan_Ethernet52
   redistribute:
     connected:
       enabled: true
