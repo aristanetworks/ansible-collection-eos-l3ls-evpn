@@ -573,7 +573,7 @@ tenants:
         # when the knob is true. The VRF should be configured.
       - name: VRF-NO-WAN-NO-AF
         vrf_id: 400
-        # when the knob is true. The VRF should not be configured.
+        # when the knob is true. The VRF should not be configured under VXLAN and BGP.
         address_families: []
 
 wan_virtual_topologies:
