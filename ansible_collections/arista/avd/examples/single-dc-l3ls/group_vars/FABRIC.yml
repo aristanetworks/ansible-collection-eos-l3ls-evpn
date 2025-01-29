@@ -78,8 +78,9 @@ terminattr_ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
 terminattr_disable_aaa: true
 
 # DNS Server
-name_servers:
-  - 192.168.1.1
+dns_settings:
+  servers:
+    - ip_address: 192.168.1.1
 
 # NTP Servers IP or DNS name, first NTP server will be preferred, and sourced from Management VRF
 ntp_settings:

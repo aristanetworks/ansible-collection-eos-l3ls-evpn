@@ -59,6 +59,10 @@ ethernet_interfaces:
   switchport:
     enabled: false
 hostname: DC1-BL2A
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
 ip_igmp_snooping:
   globally_enabled: true
 ip_name_servers:

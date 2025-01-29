@@ -1170,6 +1170,54 @@ keys:
         - mpls
         - l2ls
         default: l3ls-evpn
+  dns_settings:
+    documentation_options:
+      table: management-settings
+    type: dict
+    description: 'DNS settings
+
+      For DNS source-interfaces see "source_interfaces.domain_lookup"'
+    keys:
+      domain:
+        type: str
+        description: DNS domain name like 'fabric.local'
+      servers:
+        type: list
+        $ref: eos_cli_config_gen#/keys/ip_name_servers
+        description: This key replaces the deprecated `name_servers` and `source_interfaces.ip_domain_lookup`
+          models.
+        items:
+          type: dict
+          description: 'List of DNS servers.
+
+            Each server can be configured under different VRFs by using the keys "vrf",
+            "use_mgmt_interface_vrf" and "use_inband_mgmt_vrf".
+
+            When used in combination the DNS server is configured under multiple VRFs.
+
+            If no VRF is set using either method, the DNS server will be configured
+            according to the "default_mgmt_method" setting.
+
+            Source interfaces are configured for inband or out-of-band management
+            VRFs.'
+          keys:
+            vrf:
+              type: str
+              description: VRF Name.
+              convert_types:
+              - int
+            use_mgmt_interface_vrf:
+              type: bool
+              description: Configure the DNS server under the VRF set with "mgmt_interface_vrf".
+                Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the
+                device, so if the host is only configured with this VRF, the server
+                will not be configured at all.
+            use_inband_mgmt_vrf:
+              type: bool
+              description: Configure the DNS server under the VRF set with "inband_mgmt_vrf".
+                Ignored if inband management is not configured for the device, so
+                if the host is only configured with this VRF, the server will not
+                be configured at all.
   enable_trunk_groups:
     documentation_options:
       table: fabric-settings
@@ -2357,6 +2405,10 @@ keys:
     items:
       type: str
       description: IPv4 or IPv6 address.
+    deprecation:
+      warning: true
+      remove_in_version: 6.0.0
+      new_key: dns_settings.servers
   network_ports:
     type: list
     items:
@@ -4071,6 +4123,11 @@ keys:
       domain_lookup:
         type: dict
         description: IP Domain Lookup source-interfaces.
+        deprecation:
+          warning: true
+          removed: false
+          remove_in_version: 6.0.0
+          new_key: dns_settings.servers
         keys:
           mgmt_interface:
             type: bool

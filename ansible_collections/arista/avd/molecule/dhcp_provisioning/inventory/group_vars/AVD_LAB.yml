@@ -23,6 +23,8 @@ cvp_ingestauth_key: telarista
 mgmt_gateway: 192.168.200.5
 
 # dns servers.
+# test that we can still use the old key.
+# TODO: AVD 6.0.0 move this server to dns_settings.
 name_servers:
   - 192.168.200.5
   - 8.8.8.8

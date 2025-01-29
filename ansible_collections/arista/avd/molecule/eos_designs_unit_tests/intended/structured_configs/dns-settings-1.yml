@@ -1,0 +1,53 @@
+aaa_root:
+  disabled: true
+config_end: true
+dns_domain: testfabric.local
+enable_password:
+  disabled: true
+hostname: dns-settings-1
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
+ip_igmp_snooping:
+  globally_enabled: true
+ip_name_servers:
+- ip_address: 10.10.10.1
+  vrf: default
+  priority: 1
+- ip_address: 10.10.10.1
+  vrf: MGMT
+  priority: 1
+- ip_address: 10.10.10.2
+  vrf: default
+  priority: 1
+- ip_address: 10.10.10.3
+  vrf: MGMT
+- ip_address: 10.10.10.5
+  vrf: MGMT
+- ip_address: 10.10.10.6
+  vrf: MGMT
+is_deployed: true
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.0.2/24
+  type: oob
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

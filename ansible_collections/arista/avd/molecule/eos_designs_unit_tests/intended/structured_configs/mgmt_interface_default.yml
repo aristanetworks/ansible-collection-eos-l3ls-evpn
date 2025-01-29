@@ -14,6 +14,10 @@ daemon_terminattr:
 enable_password:
   disabled: true
 hostname: mgmt_interface_default
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
 ip_igmp_snooping:
   globally_enabled: true
   vlans:

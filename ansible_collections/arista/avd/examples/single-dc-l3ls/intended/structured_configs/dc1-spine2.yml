@@ -55,6 +55,10 @@ ethernet_interfaces:
   switchport:
     enabled: false
 hostname: dc1-spine2
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
 ip_name_servers:
 - ip_address: 192.168.1.1
   vrf: MGMT

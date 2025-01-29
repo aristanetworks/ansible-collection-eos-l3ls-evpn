@@ -78,6 +78,10 @@ ethernet_interfaces:
     mode: access
     access_vlan: 110
 hostname: DC1-LEAF1A
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
 ip_igmp_snooping:
   globally_enabled: true
   vlans:

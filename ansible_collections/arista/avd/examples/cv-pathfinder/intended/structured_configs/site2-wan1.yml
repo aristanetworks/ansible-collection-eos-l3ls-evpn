@@ -158,6 +158,10 @@ flow_tracking:
         local_interface: Loopback0
     shutdown: false
 hostname: site2-wan1
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
 ip_extcommunity_lists:
 - name: ECL-EVPN-SOO
   entries:

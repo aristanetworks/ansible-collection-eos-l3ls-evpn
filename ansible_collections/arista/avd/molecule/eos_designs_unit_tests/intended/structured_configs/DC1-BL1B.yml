@@ -182,6 +182,10 @@ ip_access_lists:
     protocol: ip
     source: 10.10.50.20
     destination: any
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management99
+    vrf: MGMT
 ip_igmp_snooping:
   globally_enabled: true
 ip_name_servers:

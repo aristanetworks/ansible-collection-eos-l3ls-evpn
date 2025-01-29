@@ -90,9 +90,9 @@ ip_igmp_snooping:
   globally_enabled: true
 ip_name_servers:
 - ip_address: 1.1.1.1
-  vrf: MGMT
+  vrf: default
 - ip_address: 8.8.8.8
-  vrf: MGMT
+  vrf: default
 ip_routing: true
 ip_virtual_router_mac_address: 00:1c:73:00:dc:01
 is_deployed: true

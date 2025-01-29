@@ -25,9 +25,10 @@ mgmt_gateway: 172.16.100.1
 mgmt_interface: Management0
 
 # dns servers.
-name_servers:
-  - 8.8.4.4
-  - 8.8.8.8
+dns_settings:
+  servers:
+    - ip_address: 8.8.4.4
+    - ip_address: 8.8.8.8
 
 # NTP Servers IP or DNS name, first NTP server will be preferred, and sourced from Management VRF
 ntp_settings:

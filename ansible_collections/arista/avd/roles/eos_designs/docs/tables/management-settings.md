@@ -7,6 +7,14 @@
 
     | Variable | Type | Required | Default | Value Restrictions | Description |
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
+    | [<samp>dns_settings</samp>](## "dns_settings") | Dictionary |  |  |  | DNS settings<br>For DNS source-interfaces see "source_interfaces.domain_lookup" |
+    | [<samp>&nbsp;&nbsp;domain</samp>](## "dns_settings.domain") | String |  |  |  | DNS domain name like 'fabric.local' |
+    | [<samp>&nbsp;&nbsp;servers</samp>](## "dns_settings.servers") | List, items: Dictionary |  |  |  | This key replaces the deprecated `name_servers` and `source_interfaces.ip_domain_lookup` models. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;vrf</samp>](## "dns_settings.servers.[].vrf") | String |  |  |  | VRF Name. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_mgmt_interface_vrf</samp>](## "dns_settings.servers.[].use_mgmt_interface_vrf") | Boolean |  |  |  | Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;use_inband_mgmt_vrf</samp>](## "dns_settings.servers.[].use_inband_mgmt_vrf") | Boolean |  |  |  | Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ip_address</samp>](## "dns_settings.servers.[].ip_address") | String | Required |  |  | IPv4 or IPv6 address for DNS server. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority</samp>](## "dns_settings.servers.[].priority") | Integer |  |  | Min: 0<br>Max: 4 | Priority value (lower is first). |
     | [<samp>event_handlers</samp>](## "event_handlers") | List, items: Dictionary |  |  |  | Gives the ability to monitor and react to Syslog messages.<br>Event Handlers provide a powerful and flexible tool that can be used to apply self-healing actions,<br>customize the system behavior, and implement workarounds to problems discovered in the field.<br> |
     | [<samp>&nbsp;&nbsp;-&nbsp;name</samp>](## "event_handlers.[].name") | String | Required, Unique |  |  | Event Handler Name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;actions</samp>](## "event_handlers.[].actions") | Dictionary |  |  |  | Note: `bash_command` and `log` are mutually exclusive. `bash_command` takes precedence over `log`. |
@@ -56,7 +64,7 @@
     | [<samp>&nbsp;&nbsp;enable_http</samp>](## "management_eapi.enable_http") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;enable_https</samp>](## "management_eapi.enable_https") | Boolean |  | `True` |  |  |
     | [<samp>&nbsp;&nbsp;default_services</samp>](## "management_eapi.default_services") | Boolean |  |  |  |  |
-    | [<samp>name_servers</samp>](## "name_servers") | List, items: String |  |  |  | List of DNS servers. The VRF is set to < mgmt_interface_vrf >. |
+    | [<samp>name_servers</samp>](## "name_servers") <span style="color:red">deprecated</span> | List, items: String |  |  |  | List of DNS servers. The VRF is set to < mgmt_interface_vrf >.<span style="color:red">This key is deprecated. Support will be removed in AVD version 6.0.0. Use <samp>dns_settings.servers</samp> instead.</span> |
     | [<samp>&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "name_servers.[]") | String |  |  |  | IPv4 or IPv6 address. |
     | [<samp>ntp_settings</samp>](## "ntp_settings") | Dictionary |  |  |  | NTP settings |
     | [<samp>&nbsp;&nbsp;server_vrf</samp>](## "ntp_settings.server_vrf") | String |  |  |  | EOS only supports NTP servers in one VRF, so this VRF is used for all NTP servers and one local-interface.<br>- `use_mgmt_interface_vrf` will configure the NTP server(s) under the VRF set with `mgmt_interface_vrf` and set the `mgmt_interface` as NTP local-interface.<br>  An error will be raised if `mgmt_ip` or `ipv6_mgmt_ip` are not configured for the device.<br>- `use_inband_mgmt_vrf` will configure the NTP server(s) under the VRF set with `inband_mgmt_vrf` and set the `inband_mgmt_interface` as NTP local-interface.<br>  An error will be raised if inband management is not configured for the device.<br>- Any other string will be used directly as the VRF name but local interface must be set with `custom_structured_configuration_ntp` if needed.<br>If not set, the VRF is automatically picked up from the global setting `default_mgmt_method`. |
@@ -81,6 +89,31 @@
 === "YAML"
 
     ```yaml
+    # DNS settings
+    # For DNS source-interfaces see "source_interfaces.domain_lookup"
+    dns_settings:
+
+      # DNS domain name like 'fabric.local'
+      domain: <str>
+
+      # This key replaces the deprecated `name_servers` and `source_interfaces.ip_domain_lookup` models.
+      servers:
+
+          # VRF Name.
+        - vrf: <str>
+
+          # Configure the DNS server under the VRF set with "mgmt_interface_vrf". Ignored if 'mgmt_ip' or 'ipv6_mgmt_ip' are not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all.
+          use_mgmt_interface_vrf: <bool>
+
+          # Configure the DNS server under the VRF set with "inband_mgmt_vrf". Ignored if inband management is not configured for the device, so if the host is only configured with this VRF, the server will not be configured at all.
+          use_inband_mgmt_vrf: <bool>
+
+          # IPv4 or IPv6 address for DNS server.
+          ip_address: <str; required>
+
+          # Priority value (lower is first).
+          priority: <int; 0-4>
+
     # Gives the ability to monitor and react to Syslog messages.
     # Event Handlers provide a powerful and flexible tool that can be used to apply self-healing actions,
     # customize the system behavior, and implement workarounds to problems discovered in the field.
@@ -217,6 +250,9 @@
       default_services: <bool>
 
     # List of DNS servers. The VRF is set to < mgmt_interface_vrf >.
+    # This key is deprecated.
+    # Support will be removed in AVD version 6.0.0.
+    # Use <samp>dns_settings.servers</samp> instead.
     name_servers:
 
         # IPv4 or IPv6 address.

@@ -66,11 +66,12 @@ snmp_settings:
 mgmt_gateway: 192.168.200.5
 
 # dns servers.
-name_servers:
-  - 192.168.200.5
-  - 8.8.8.8
-  - 2001:db8::1
-  - 2001:db8::2
+dns_settings:
+  servers:
+    - ip_address: 192.168.200.5
+    - ip_address: 8.8.8.8
+    - ip_address: 2001:db8::1
+    - ip_address: 2001:db8::2
 
 # Management api-http
 management_eapi:

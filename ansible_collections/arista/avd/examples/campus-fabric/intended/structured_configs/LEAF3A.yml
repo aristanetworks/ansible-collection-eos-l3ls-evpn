@@ -3140,6 +3140,10 @@ ethernet_interfaces:
       vlan: 320
       trunk: untagged
 hostname: LEAF3A
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management0
+    vrf: MGMT
 ip_igmp_snooping:
   globally_enabled: true
 ip_name_servers:

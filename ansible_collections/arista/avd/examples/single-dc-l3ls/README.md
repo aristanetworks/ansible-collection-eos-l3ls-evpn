@@ -338,8 +338,10 @@ terminattr_smashexcludes: "ale,flexCounter,hardware,kni,pulse,strata"
 terminattr_ingestexclude: "/Sysdb/cell/1/agent,/Sysdb/cell/2/agent"
 terminattr_disable_aaa: true
 
-name_servers: # (7)!
-  - 192.168.1.1
+dns_settings: # (7)!
+  servers:
+    - ip_address: 192.168.1.1
+      use_mgmt_interface_vrf: true
 
 ntp_settings: # (8)!
   server_vrf: use_mgmt_interface_vrf

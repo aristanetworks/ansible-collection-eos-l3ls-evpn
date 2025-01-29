@@ -51,6 +51,10 @@ ethernet_interfaces:
   peer_interface: Ethernet7
   peer_type: l3leaf
 hostname: DC1-L2LEAF2A
+ip_domain_lookup:
+  source_interfaces:
+  - name: Management1
+    vrf: MGMT
 ip_igmp_snooping:
   globally_enabled: true
 ip_name_servers:

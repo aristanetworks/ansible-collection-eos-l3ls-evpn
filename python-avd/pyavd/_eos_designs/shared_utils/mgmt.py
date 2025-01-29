@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Literal
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default, get
@@ -50,7 +50,7 @@ class MgmtMixin:
         return default(self.node_config.ipv6_mgmt_gateway, self.inputs.ipv6_mgmt_gateway)
 
     @cached_property
-    def default_mgmt_method(self: SharedUtils) -> str | None:
+    def default_mgmt_method(self: SharedUtils) -> Literal["oob", "inband"] | None:
         """
         This is only executed if some protocol looks for the default value, so we can raise here to ensure a working config.
 

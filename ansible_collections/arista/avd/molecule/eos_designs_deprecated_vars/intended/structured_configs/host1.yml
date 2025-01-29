@@ -25,6 +25,11 @@ ethernet_interfaces:
 hostname: host1
 ip_igmp_snooping:
   globally_enabled: true
+ip_name_servers:
+- ip_address: 192.168.200.5
+  vrf: MGMT
+- ip_address: 8.8.8.8
+  vrf: MGMT
 ip_routing: true
 is_deployed: true
 loopback_interfaces:

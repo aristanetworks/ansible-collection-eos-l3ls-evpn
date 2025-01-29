@@ -5,6 +5,7 @@
 - [Management](#management)
   - [Management Interfaces](#management-interfaces)
   - [IP Name Servers](#ip-name-servers)
+  - [Domain Lookup](#domain-lookup)
   - [NTP](#ntp)
   - [Management API HTTP](#management-api-http)
 - [Authentication](#authentication)
@@ -82,6 +83,20 @@ interface Management1
 ```eos
 ip name-server vrf MGMT 8.8.8.8
 ip name-server vrf MGMT 192.168.200.5
+```
+
+### Domain Lookup
+
+#### DNS Domain Lookup Summary
+
+| Source interface | vrf |
+| ---------------- | --- |
+| Management1 | MGMT |
+
+#### DNS Domain Lookup Device Configuration
+
+```eos
+ip domain lookup vrf MGMT source-interface Management1
 ```
 
 ### NTP

@@ -13,9 +13,6 @@ daemon_terminattr:
   smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
 dhcp_servers:
 - vrf: default
-  dns_servers_ipv4:
-  - 1.1.1.1
-  - 8.8.8.8
   tftp_server:
     file_ipv4: https://www.arista.io/ztp/bootstrap
   ipv4_vendor_options:
@@ -65,9 +62,9 @@ ethernet_interfaces:
 hostname: inband-mgmt-spine1-ztp
 ip_name_servers:
 - ip_address: 1.1.1.1
-  vrf: MGMT
+  vrf: default
 - ip_address: 8.8.8.8
-  vrf: MGMT
+  vrf: default
 ip_routing: true
 is_deployed: true
 loopback_interfaces:

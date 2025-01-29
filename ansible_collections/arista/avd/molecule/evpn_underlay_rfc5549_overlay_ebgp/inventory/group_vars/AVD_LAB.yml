@@ -24,9 +24,10 @@ terminattr_disable_aaa: false
 mgmt_gateway: 192.168.200.5
 
 # dns servers.
-name_servers:
-  - 192.168.200.5
-  - 8.8.8.8
+dns_settings:
+  servers:
+    - ip_address: 192.168.200.5
+    - ip_address: 8.8.8.8
 
 # NTP Servers IP or DNS name, first NTP server will be preferred and sourced from Management
 ntp_settings:
