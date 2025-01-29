@@ -192,19 +192,19 @@ class MlagMixin(Protocol):
         return self.mlag_peer_ip
 
     @cached_property
-    def use_separate_peer_group_for_mlag_vrfs(self: SharedUtils) -> bool:
+    def use_separate_peer_group_for_mlag_vrfs(self: SharedUtilsProtocol) -> bool:
         return bool(
             self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer
             and self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name != self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
         )
 
     @cached_property
-    def mlag_vrfs_peer_group_name(self: SharedUtils) -> str:
+    def mlag_vrfs_peer_group_name(self: SharedUtilsProtocol) -> str:
         if self.use_separate_peer_group_for_mlag_vrfs:
             return self.inputs.bgp_peer_groups.mlag_ipv4_vrfs_peer.name
         return self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
 
-    def get_router_bgp_with_mlag_peer_group(self: SharedUtils, custom_structured_configs: StructCfgs) -> EosCliConfigGen.RouterBgp:
+    def get_router_bgp_with_mlag_peer_group(self: SharedUtilsProtocol, custom_structured_configs: StructCfgs) -> EosCliConfigGen.RouterBgp:
         """
         Return a partial router_bgp structured_config covering the MLAG peer_group(s) and associated address_family activations.
 
@@ -231,7 +231,7 @@ class MlagMixin(Protocol):
         return router_bgp
 
     def get_mlag_peer_group(
-        self: SharedUtils,
+        self: SharedUtilsProtocol,
         bgp_peer_group: EosDesigns.BgpPeerGroups.MlagIpv4UnderlayPeer | EosDesigns.BgpPeerGroups.MlagIpv4VrfsPeer,
         custom_structured_configs: StructCfgs,
     ) -> EosCliConfigGen.RouterBgp.PeerGroupsItem:
@@ -260,7 +260,7 @@ class MlagMixin(Protocol):
         return peer_group
 
     def get_mlag_peer_group_address_familiy_ipv4(
-        self: SharedUtils,
+        self: SharedUtilsProtocol,
         bgp_peer_group: EosDesigns.BgpPeerGroups.MlagIpv4UnderlayPeer | EosDesigns.BgpPeerGroups.MlagIpv4VrfsPeer,
         rfc5549: bool,
     ) -> EosCliConfigGen.RouterBgp.AddressFamilyIpv4.PeerGroupsItem:
