@@ -33,8 +33,8 @@ ansible-playbook playbooks/fabric-validate.yaml --check
 
 Figure 1 below provides a visualization of the role's inputs, outputs, and tasks in order executed by the role.
 
-![Figure 1: Ansible Role eos_validate_state](../../docs/_media/eos_validate_state_dark.svg#only-dark)
-![Figure 1: Ansible Role eos_validate_state](../../docs/_media/eos_validate_state_light.svg#only-light)
+![Figure 1: Ansible Role eos_validate_state](../../../../../docs/_media/eos_validate_state_dark.svg#only-dark)
+![Figure 1: Ansible Role eos_validate_state](../../../../../docs/_media/eos_validate_state_light.svg#only-light)
 
 **Inputs:**
 
@@ -217,7 +217,7 @@ The variable `only_failed_tests` is used to limit the number of tests shown in t
 
 ## Requirements
 
-Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#python-requirements-installation)
+Requirements are located here: [avd-requirements](../../../../../docs/installation/collection-installation.md#python-requirements-installation)
 
 ## Custom ANTA catalog
 
@@ -353,7 +353,7 @@ ansible-playbook playbooks/pb_validate_yml --inventory inventory/inventory.yml
 
 ## License
 
-Project is published under [Apache 2.0 License](../../LICENSE)
+Project is published under [Apache 2.0 License](https://github.com/aristanetworks/avd/blob/devel/LICENSE)
 
 ## Known issues
 

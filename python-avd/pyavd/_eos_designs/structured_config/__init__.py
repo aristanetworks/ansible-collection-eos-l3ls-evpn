@@ -36,6 +36,10 @@ AVD_STRUCTURED_CONFIG_CLASSES: list[type[StructuredConfigGenerator]] = [
     AvdStructuredConfigNetworkServices,
     AvdStructuredConfigConnectedEndpoints,
     AvdStructuredConfigInbandManagement,
+    # The classes below this have the property ignore_avd_eos_designs_enforce_duplication_checks_across_all_models = True
+    # This lets the classes inspect structured config, and since their output is not at risk of generating duplicate
+    # objects like interfaces, we can ignore that here.
+    #
     # The Flows module must be rendered after others contributing interfaces,
     # since it parses those interfaces for sFlow or flow tracking (ipfix) config.
     AvdStructuredConfigFlows,

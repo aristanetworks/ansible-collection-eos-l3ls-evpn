@@ -1,6 +1,7 @@
 mkdocs
 mkdocs-material<10
 mkdocs-material-extensions
+mkdocs-same-dir
 pymdown-extensions
 mdx_truly_sane_lists
 mike==1.1.2

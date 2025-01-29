@@ -185,54 +185,6 @@ ethernet_interfaces:
   peer_type: l3_interface
   switchport:
     enabled: false
-- name: Ethernet24
-  description: PC
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 800
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  peer_type: network_port
-  port_profile: DOT1X_PORT_PROFILE
-  switchport:
-    enabled: true
-- name: Ethernet25
-  description: PC
-  shutdown: false
-  dot1x:
-    port_control: auto
-    reauthentication: true
-    pae:
-      mode: authenticator
-    authentication_failure:
-      action: allow
-      allow_vlan: 800
-    host_mode:
-      mode: multi-host
-      multi_host_authenticated: true
-    mac_based_authentication:
-      enabled: true
-    timeout:
-      reauth_period: server
-      tx_period: 3
-    reauthorization_request_limit: 3
-  peer_type: network_port
-  port_profile: DOT1X_PORT_PROFILE
-  switchport:
-    enabled: true
 - name: Ethernet10
   description: server01_MLAG_Eth2
   shutdown: false
@@ -293,6 +245,54 @@ ethernet_interfaces:
   peer_interface: Eth0
   peer_type: phone
   port_profile: PHONE_WITH_PC
+- name: Ethernet24
+  description: PC
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 800
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  peer_type: network_port
+  port_profile: DOT1X_PORT_PROFILE
+  switchport:
+    enabled: true
+- name: Ethernet25
+  description: PC
+  shutdown: false
+  dot1x:
+    port_control: auto
+    reauthentication: true
+    pae:
+      mode: authenticator
+    authentication_failure:
+      action: allow
+      allow_vlan: 800
+    host_mode:
+      mode: multi-host
+      multi_host_authenticated: true
+    mac_based_authentication:
+      enabled: true
+    timeout:
+      reauth_period: server
+      tx_period: 3
+    reauthorization_request_limit: 3
+  peer_type: network_port
+  port_profile: DOT1X_PORT_PROFILE
+  switchport:
+    enabled: true
 hardware:
   speed_groups:
   - speed_group: '1'

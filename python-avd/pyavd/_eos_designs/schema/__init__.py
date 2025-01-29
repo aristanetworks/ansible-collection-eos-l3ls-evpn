@@ -6984,32 +6984,8 @@ class EosDesigns(EosDesignsRootModel):
 
         TrunkGroups._item_type = str
 
-        class Flowcontrol(AvdModel):
+        class Flowcontrol(EosCliConfigGen.EthernetInterfacesItem.Flowcontrol):
             """Subclass of AvdModel."""
-
-            _fields: ClassVar[dict] = {"received": {"type": str}, "_custom_data": {"type": dict}}
-            received: Literal["received", "send", "on"] | None
-            _custom_data: dict[str, Any]
-
-            if TYPE_CHECKING:
-
-                def __init__(
-                    self,
-                    *,
-                    received: Literal["received", "send", "on"] | None | UndefinedType = Undefined,
-                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
-                ) -> None:
-                    """
-                    Flowcontrol.
-
-
-                    Subclass of AvdModel.
-
-                    Args:
-                        received: received
-                        _custom_data: _custom_data
-
-                    """
 
         class Ptp(AvdModel):
             """Subclass of AvdModel."""
@@ -7766,7 +7742,12 @@ class EosDesigns(EosDesignsRootModel):
 
                             """
 
-                _fields: ClassVar[dict] = {"mode": {"type": str}, "individual": {"type": Individual}, "timeout": {"type": int}, "_custom_data": {"type": dict}}
+                _fields: ClassVar[dict] = {
+                    "mode": {"type": str},
+                    "individual": {"type": Individual},
+                    "timeout": {"type": int, "default": 90},
+                    "_custom_data": {"type": dict},
+                }
                 mode: Literal["static", "individual"] | None
                 """
                 Either static or individual mode is supported.
@@ -7780,8 +7761,12 @@ class EosDesigns(EosDesignsRootModel):
 
                 Subclass of AvdModel.
                 """
-                timeout: int | None
-                """Timeout in seconds. EOS default is 90 seconds."""
+                timeout: int
+                """
+                Timeout in seconds.
+
+                Default value: `90`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -7791,7 +7776,7 @@ class EosDesigns(EosDesignsRootModel):
                         *,
                         mode: Literal["static", "individual"] | None | UndefinedType = Undefined,
                         individual: Individual | UndefinedType = Undefined,
-                        timeout: int | None | UndefinedType = Undefined,
+                        timeout: int | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -7810,7 +7795,7 @@ class EosDesigns(EosDesignsRootModel):
                                "individual".
 
                                Subclass of AvdModel.
-                            timeout: Timeout in seconds. EOS default is 90 seconds.
+                            timeout: Timeout in seconds.
                             _custom_data: _custom_data
 
                         """
@@ -8234,11 +8219,11 @@ class EosDesigns(EosDesignsRootModel):
 
         For more
         details and examples of the `range_expand` syntax, see the [`arista.avd.range_expand`
-        documentation](../../../docs/plugins/Filter_plugins/range_expand.md).
+        documentation](../../../../../../docs/plugins/Filter_plugins/range_expand.md).
 
 
-        Subclass of AvdList with
-        `str` items.
+        Subclass of AvdList
+        with `str` items.
         """
         description: str | None
         """
@@ -8492,11 +8477,11 @@ class EosDesigns(EosDesignsRootModel):
 
                        For more
                        details and examples of the `range_expand` syntax, see the [`arista.avd.range_expand`
-                       documentation](../../../docs/plugins/Filter_plugins/range_expand.md).
+                       documentation](../../../../../../docs/plugins/Filter_plugins/range_expand.md).
 
 
-                       Subclass of AvdList with
-                       `str` items.
+                       Subclass of AvdList
+                       with `str` items.
                     description:
                        Description or description template to be used on all ports.
                        This can be a template using the AVD
@@ -10878,32 +10863,8 @@ class EosDesigns(EosDesignsRootModel):
 
         TrunkGroups._item_type = str
 
-        class Flowcontrol(AvdModel):
+        class Flowcontrol(EosCliConfigGen.EthernetInterfacesItem.Flowcontrol):
             """Subclass of AvdModel."""
-
-            _fields: ClassVar[dict] = {"received": {"type": str}, "_custom_data": {"type": dict}}
-            received: Literal["received", "send", "on"] | None
-            _custom_data: dict[str, Any]
-
-            if TYPE_CHECKING:
-
-                def __init__(
-                    self,
-                    *,
-                    received: Literal["received", "send", "on"] | None | UndefinedType = Undefined,
-                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
-                ) -> None:
-                    """
-                    Flowcontrol.
-
-
-                    Subclass of AvdModel.
-
-                    Args:
-                        received: received
-                        _custom_data: _custom_data
-
-                    """
 
         class Ptp(AvdModel):
             """Subclass of AvdModel."""
@@ -11660,7 +11621,12 @@ class EosDesigns(EosDesignsRootModel):
 
                             """
 
-                _fields: ClassVar[dict] = {"mode": {"type": str}, "individual": {"type": Individual}, "timeout": {"type": int}, "_custom_data": {"type": dict}}
+                _fields: ClassVar[dict] = {
+                    "mode": {"type": str},
+                    "individual": {"type": Individual},
+                    "timeout": {"type": int, "default": 90},
+                    "_custom_data": {"type": dict},
+                }
                 mode: Literal["static", "individual"] | None
                 """
                 Either static or individual mode is supported.
@@ -11674,8 +11640,12 @@ class EosDesigns(EosDesignsRootModel):
 
                 Subclass of AvdModel.
                 """
-                timeout: int | None
-                """Timeout in seconds. EOS default is 90 seconds."""
+                timeout: int
+                """
+                Timeout in seconds.
+
+                Default value: `90`
+                """
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -11685,7 +11655,7 @@ class EosDesigns(EosDesignsRootModel):
                         *,
                         mode: Literal["static", "individual"] | None | UndefinedType = Undefined,
                         individual: Individual | UndefinedType = Undefined,
-                        timeout: int | None | UndefinedType = Undefined,
+                        timeout: int | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -11704,7 +11674,7 @@ class EosDesigns(EosDesignsRootModel):
                                "individual".
 
                                Subclass of AvdModel.
-                            timeout: Timeout in seconds. EOS default is 90 seconds.
+                            timeout: Timeout in seconds.
                             _custom_data: _custom_data
 
                         """
@@ -17904,32 +17874,8 @@ class EosDesigns(EosDesignsRootModel):
 
                     TrunkGroups._item_type = str
 
-                    class Flowcontrol(AvdModel):
+                    class Flowcontrol(EosCliConfigGen.EthernetInterfacesItem.Flowcontrol):
                         """Subclass of AvdModel."""
-
-                        _fields: ClassVar[dict] = {"received": {"type": str}, "_custom_data": {"type": dict}}
-                        received: Literal["received", "send", "on"] | None
-                        _custom_data: dict[str, Any]
-
-                        if TYPE_CHECKING:
-
-                            def __init__(
-                                self,
-                                *,
-                                received: Literal["received", "send", "on"] | None | UndefinedType = Undefined,
-                                _custom_data: dict[str, Any] | UndefinedType = Undefined,
-                            ) -> None:
-                                """
-                                Flowcontrol.
-
-
-                                Subclass of AvdModel.
-
-                                Args:
-                                    received: received
-                                    _custom_data: _custom_data
-
-                                """
 
                     class Ptp(AvdModel):
                         """Subclass of AvdModel."""
@@ -18694,7 +18640,7 @@ class EosDesigns(EosDesignsRootModel):
                             _fields: ClassVar[dict] = {
                                 "mode": {"type": str},
                                 "individual": {"type": Individual},
-                                "timeout": {"type": int},
+                                "timeout": {"type": int, "default": 90},
                                 "_custom_data": {"type": dict},
                             }
                             mode: Literal["static", "individual"] | None
@@ -18710,8 +18656,12 @@ class EosDesigns(EosDesignsRootModel):
 
                             Subclass of AvdModel.
                             """
-                            timeout: int | None
-                            """Timeout in seconds. EOS default is 90 seconds."""
+                            timeout: int
+                            """
+                            Timeout in seconds.
+
+                            Default value: `90`
+                            """
                             _custom_data: dict[str, Any]
 
                             if TYPE_CHECKING:
@@ -18721,7 +18671,7 @@ class EosDesigns(EosDesignsRootModel):
                                     *,
                                     mode: Literal["static", "individual"] | None | UndefinedType = Undefined,
                                     individual: Individual | UndefinedType = Undefined,
-                                    timeout: int | None | UndefinedType = Undefined,
+                                    timeout: int | UndefinedType = Undefined,
                                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                                 ) -> None:
                                     """
@@ -18740,7 +18690,7 @@ class EosDesigns(EosDesignsRootModel):
                                            "individual".
 
                                            Subclass of AvdModel.
-                                        timeout: Timeout in seconds. EOS default is 90 seconds.
+                                        timeout: Timeout in seconds.
                                         _custom_data: _custom_data
 
                                     """
@@ -54841,6 +54791,7 @@ class EosDesigns(EosDesignsRootModel):
         "application_classification": {"type": ApplicationClassification},
         "avd_data_validation_mode": {"type": str, "default": "error"},
         "avd_eos_designs_debug": {"type": bool, "default": False},
+        "avd_eos_designs_enforce_duplication_checks_across_all_models": {"type": bool, "default": False},
         "avd_eos_designs_structured_config": {"type": bool, "default": True},
         "avd_eos_designs_unset_facts": {"type": bool, "default": True},
         "bfd_multihop": {"type": BfdMultihop, "default": lambda cls: coerce_type({"interval": 300, "min_rx": 300, "multiplier": 3}, target_type=cls)},
@@ -55217,6 +55168,24 @@ class EosDesigns(EosDesignsRootModel):
     avd_eos_designs_debug: bool
     """
     Dump all vars and facts per device after generating `avd_switch_facts`.
+
+    Default value: `False`
+    """
+    avd_eos_designs_enforce_duplication_checks_across_all_models: bool
+    """
+    PREVIEW: This option is marked as "preview", while we refactor the code to conform to the described
+    behavior.
+    When this is enabled, the generation of Structured Config in `eos_designs` will prevent
+    duplicate objects generated
+    by different input models. This will also improve performance since
+    `eos_designs` will not maintain separate copied of the Structured Configuration.
+    As an example, if
+    you define an Ethernet interface under `l3_edge` and use the same interface for connectivity under
+    `servers`:
+    - With this option disabled (default), AVD will merge these configurations together for
+    the interface and not raise an error.
+    - With this option enabled, AVD will raise an error about
+    duplicate interface definitions.
 
     Default value: `False`
     """
@@ -56082,7 +56051,7 @@ class EosDesigns(EosDesignsRootModel):
     Depending on the values of vrf_id /
     vrf_vni it may be required to adjust the base_vlan to avoid overlaps or invalid vlan ids.
     The SVI ip
-    address derived from mlag_l3_peer_ipv4_pool is re-used across all iBGP peerings.
+    address derived from mlag_l3_peer_ipv4_pool is reused across all iBGP peerings.
 
 
     Subclass of
@@ -56962,6 +56931,7 @@ class EosDesigns(EosDesignsRootModel):
             application_classification: ApplicationClassification | UndefinedType = Undefined,
             avd_data_validation_mode: Literal["error", "warning"] | UndefinedType = Undefined,
             avd_eos_designs_debug: bool | UndefinedType = Undefined,
+            avd_eos_designs_enforce_duplication_checks_across_all_models: bool | UndefinedType = Undefined,
             avd_eos_designs_structured_config: bool | UndefinedType = Undefined,
             avd_eos_designs_unset_facts: bool | UndefinedType = Undefined,
             bfd_multihop: BfdMultihop | UndefinedType = Undefined,
@@ -57173,6 +57143,20 @@ class EosDesigns(EosDesignsRootModel):
                    task.
                    "warning" will produce warning messages.
                 avd_eos_designs_debug: Dump all vars and facts per device after generating `avd_switch_facts`.
+                avd_eos_designs_enforce_duplication_checks_across_all_models:
+                   PREVIEW: This option is marked as "preview", while we refactor the code to conform to the described
+                   behavior.
+                   When this is enabled, the generation of Structured Config in `eos_designs` will prevent
+                   duplicate objects generated
+                   by different input models. This will also improve performance since
+                   `eos_designs` will not maintain separate copied of the Structured Configuration.
+                   As an example, if
+                   you define an Ethernet interface under `l3_edge` and use the same interface for connectivity under
+                   `servers`:
+                   - With this option disabled (default), AVD will merge these configurations together for
+                   the interface and not raise an error.
+                   - With this option enabled, AVD will raise an error about
+                   duplicate interface definitions.
                 avd_eos_designs_structured_config: Generate structured configuration per device.
                 avd_eos_designs_unset_facts:
                    Unset `avd_switch_facts` to gain a small performance improvement since Ansible needs to handle fewer
@@ -57779,7 +57763,7 @@ class EosDesigns(EosDesignsRootModel):
                    Depending on the values of vrf_id /
                    vrf_vni it may be required to adjust the base_vlan to avoid overlaps or invalid vlan ids.
                    The SVI ip
-                   address derived from mlag_l3_peer_ipv4_pool is re-used across all iBGP peerings.
+                   address derived from mlag_l3_peer_ipv4_pool is reused across all iBGP peerings.
 
 
                    Subclass of
