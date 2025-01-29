@@ -270,10 +270,10 @@ class ActionModule(ActionBase):
                         else:
                             in_interesting_context = False
 
-                    structured_config = load("".join(structured_config_lines), Loader=YamlLoader)  # noqa: S506 TODO: Consider safeload
+                    structured_config = load("".join(structured_config_lines), Loader=YamlLoader) or {}  # noqa: S506 TODO: Consider safeload
                 else:
                     # Load as JSON
-                    structured_config = json.load(structured_config_stream)
+                    structured_config = json.load(structured_config_stream) or {}
         else:
             # No structured config file.
             structured_config = {}

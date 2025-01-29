@@ -12,7 +12,6 @@ from pyavd._cv.api.arista.studio.v1 import (
     InputsConfig,
     InputsConfigServiceStub,
     InputsConfigSetRequest,
-    InputsConfigSetSomeRequest,
     InputsConfigStreamRequest,
     InputsKey,
     InputsRequest,
@@ -38,8 +37,6 @@ if TYPE_CHECKING:
     from . import CVClient
 
 LOGGER = getLogger(__name__)
-
-TOPOLOGY_STUDIO_ID = "TOPOLOGY"
 
 
 class StudioMixin:
@@ -371,135 +368,3 @@ class StudioMixin:
             raise get_cv_client_exception(e, f"Studio ID '{studio_id}, Workspace ID '{workspace_id}', Path '{input_path}'") or e
 
         return response.value
-
-    async def get_topology_studio_inputs(
-        self: CVClient,
-        workspace_id: str,
-        device_ids: list[str] | None = None,
-        time: datetime | None = None,
-        timeout: float = DEFAULT_API_TIMEOUT,
-    ) -> list[dict]:
-        """
-        Get Topology Studio Inputs using arista.studio.v1.InputsService.GetAll and arista.studio.v1.InputsConfigService.GetAll APIs.
-
-        Parameters:
-            workspace_id: Unique identifier of the Workspace for which the information is fetched. Use "" for mainline.
-            device_ids: List of Device IDs / Serial numbers to get inputs for. If not given, all devices are returned.
-            time: Timestamp from which the information is fetched. `now()` if not set.
-            timeout: Timeout in seconds.
-
-        Returns:
-            TopologyInput objects for the requested devices.
-        """
-        topology_inputs: list[dict] = []
-        studio_inputs: dict = await self.get_studio_inputs(
-            studio_id=TOPOLOGY_STUDIO_ID,
-            workspace_id=workspace_id,
-            default_value={},
-            time=time,
-            timeout=timeout,
-        )
-        for device_entry in studio_inputs.get("devices", []):
-            if not isinstance(device_entry, dict):
-                continue
-            device_id = str(device_entry.get("tags", {}).get("query", "")).removeprefix("device:")
-
-            # Ignore the device if it is not one of the requested devices.
-            if device_ids and device_id not in device_ids:
-                continue
-
-            device_info: dict = device_entry.get("inputs", {}).get("device", {})
-            interfaces: list[dict] = device_info.get("interfaces", [])
-            topology_inputs.append(
-                {
-                    "device_id": device_id,
-                    "hostname": device_info.get("hostname"),
-                    "mac_address": device_info.get("macAddress"),
-                    "model_name": device_info.get("modelName"),
-                    "interfaces": [
-                        {
-                            "name": str(interface.get("tags", {}).get("query", "")).removeprefix("interface:").split("@", maxsplit=1)[0],
-                            "neighbor_device_id": interface.get("inputs", {}).get("interface", {}).get("neighborDeviceId"),
-                            "neighbor_interface_name": interface.get("inputs", {}).get("interface", {}).get("neighborInterfaceName"),
-                        }
-                        for interface in interfaces
-                    ],
-                },
-            )
-        return topology_inputs
-
-    async def set_topology_studio_inputs(
-        self: CVClient,
-        workspace_id: str,
-        device_inputs: list[tuple[str, str, str]],
-        timeout: float = DEFAULT_API_TIMEOUT,
-    ) -> list[InputsKey]:
-        """
-        Set Topology Studio Inputs using arista.studio.v1.InputsConfigService.Set API.
-
-        Parameters:
-            workspace_id: Unique identifier of the Workspace for which the information is set.
-            device_inputs: List of Tuples with the format (<device_id>, <hostname>, <system_mac>).
-            timeout: Base timeout in seconds. 0.1 second will be added per device.
-        """
-        device_inputs_by_id = {device_id: {"hostname": hostname, "macAddress": system_mac} for device_id, hostname, system_mac in device_inputs}
-
-        # We need to get all the devices to make sure we get the correct index of devices.
-        studio_inputs: dict = await self.get_studio_inputs(studio_id=TOPOLOGY_STUDIO_ID, workspace_id=workspace_id, default_value={}, timeout=timeout)
-
-        request = InputsConfigSetSomeRequest(values=[])
-
-        for device_index, device_entry in enumerate(studio_inputs.get("devices", [])):
-            if not isinstance(device_entry, dict):
-                continue
-
-            device_id = str(device_entry.get("tags", {}).get("query", "")).removeprefix("device:")
-
-            # Ignore the device if it is not one of the requested devices.
-            if device_id not in device_inputs_by_id:
-                continue
-
-            # Update the given fields for the device and add a separate SetSome entry for this device.
-            device_info: dict = device_entry.get("inputs", {}).get("device", {})
-            device_info.update(device_inputs_by_id.pop(device_id))
-
-            request.values.append(
-                InputsConfig(
-                    key=InputsKey(
-                        studio_id=TOPOLOGY_STUDIO_ID,
-                        workspace_id=workspace_id,
-                        path=RepeatedString(values=["devices", str(device_index), "inputs", "device"]),
-                    ),
-                    inputs=json.dumps(device_info),
-                ),
-            )
-
-        index_offset = len(studio_inputs.get("devices", []))
-        # Add any devices not part of the topology studio already.
-        for index, device in enumerate(device_inputs_by_id.items()):
-            device_id, device_inputs = device
-            device_index = index + index_offset
-            device_entry = {
-                "inputs": {"device": {**device_inputs, "modelName": "", "interfaces": []}},
-                "tags": {"query": f"device:{device_id}"},
-            }
-            request.values.append(
-                InputsConfig(
-                    key=InputsKey(
-                        studio_id=TOPOLOGY_STUDIO_ID,
-                        workspace_id=workspace_id,
-                        path=RepeatedString(values=["devices", str(device_index)]),
-                    ),
-                    inputs=json.dumps(device_entry),
-                ),
-            )
-
-        input_keys = []
-        client = InputsConfigServiceStub(self._channel)
-        try:
-            responses = client.set_some(request, metadata=self._metadata, timeout=timeout + len(request.values) * 0.1)
-            input_keys = [response.key async for response in responses]
-        except Exception as e:
-            raise get_cv_client_exception(e, f"Studio ID '{TOPOLOGY_STUDIO_ID}, Workspace ID '{workspace_id}', Devices '{device_inputs}'") or e
-
-        return input_keys
