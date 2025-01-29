@@ -6,7 +6,8 @@ from __future__ import annotations
 from functools import cached_property
 from ipaddress import ip_network
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import strip_empties_from_dict
 
@@ -58,20 +59,14 @@ class AvdStructuredConfigInbandManagement(StructuredConfigGenerator):
                     return True
         return False
 
-    @cached_property
-    def static_routes(self) -> list | None:
+    @structured_config_contributor
+    def static_routes(self) -> None:
         if not self.shared_utils.configure_inband_mgmt or self.shared_utils.inband_mgmt_gateway is None:
-            return None
-
-        return [
-            strip_empties_from_dict(
-                {
-                    "destination_address_prefix": "0.0.0.0/0",
-                    "gateway": self.shared_utils.inband_mgmt_gateway,
-                    "vrf": self.shared_utils.inband_mgmt_vrf,
-                },
-            ),
-        ]
+            return
+        static_route = EosCliConfigGen.StaticRoutesItem(
+            destination_address_prefix="0.0.0.0/0", gateway=self.shared_utils.inband_mgmt_gateway, vrf=self.shared_utils.inband_mgmt_vrf
+        )
+        self.structured_config.static_routes.append(static_route)
 
     @cached_property
     def ipv6_static_routes(self) -> list | None:

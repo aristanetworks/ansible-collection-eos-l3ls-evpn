@@ -1057,6 +1057,15 @@ static_routes:
 - destination_address_prefix: 10.50.9.1/32
   gateway: 172.31.0.1
   name: IE-ZSCALER-TER
+- destination_address_prefix: 10.37.121.1/32
+  gateway: 172.31.0.1
+  name: IE-ZSCALER-PRI
+- destination_address_prefix: 10.39.77.1/32
+  gateway: 172.31.0.1
+  name: IE-ZSCALER-SEC
+- destination_address_prefix: 10.50.9.1/32
+  gateway: 172.31.0.1
+  name: IE-ZSCALER-TER
 stun:
   client:
     server_profiles:
