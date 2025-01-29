@@ -20,6 +20,10 @@ sflow_settings:
 fabric_sflow:
   l3_interfaces: true
 
+bgp_peer_groups:
+  mlag_ipv4_vrfs_peer:
+    name: MLAG-IPv4-VRFS-PEER
+
 tenants:
   - name: Tenant_A
     mac_vrf_vni_base: 10000
@@ -475,6 +479,7 @@ tenants:
       # Only router multicast on LEAF2
       # No transit
       - name: TEN_E_PEG_L3_MULTICAST_ENABLED
+        enable_mlag_ibgp_peering_vrfs: false
         description: "PEG_L3_MULTICAST_ENABLED in Tenant E"
         vtep_diagnostic:
           loopback: 51

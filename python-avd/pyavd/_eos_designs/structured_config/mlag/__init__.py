@@ -307,7 +307,7 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
 
         # MLAG Peer group
         peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
-        router_bgp = self._router_bgp_mlag_peer_group()
+        router_bgp = self.shared_utils.get_router_bgp_with_mlag_peer_group(self.custom_structured_configs)._as_dict()
 
         vlan = default(self.shared_utils.mlag_peer_l3_vlan, self.shared_utils.node_config.mlag_peer_vlan)
         interface_name = f"Vlan{vlan}"
@@ -346,51 +346,3 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
             ]
 
         return strip_empties_from_dict(router_bgp)
-
-    def _router_bgp_mlag_peer_group(self) -> dict:
-        """
-        Return a partial router_bgp structured_config covering the MLAG peer_group and associated address_family activations.
-
-        TODO: Duplicated in network_services. Should be moved to a common class
-        """
-        peer_group_name = self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name
-        router_bgp = {}
-        peer_group = {
-            "name": peer_group_name,
-            "type": "ipv4",
-            "remote_as": self.shared_utils.bgp_as,
-            "next_hop_self": True,
-            "description": AvdStringFormatter().format(self.inputs.mlag_bgp_peer_group_description, mlag_peer=self.shared_utils.mlag_peer),
-            "password": self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.password,
-            "bfd": self.inputs.bgp_peer_groups.ipv4_underlay_peers.bfd or None,
-            "maximum_routes": 12000,
-            "send_community": "all",
-        }
-
-        if self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config:
-            self.custom_structured_configs.nested.router_bgp.peer_groups.obtain(peer_group_name)._deepmerge(
-                self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
-            )
-
-        if self.shared_utils.node_config.mlag_ibgp_origin_incomplete:
-            peer_group["route_map_in"] = "RM-MLAG-PEER-IN"
-
-        router_bgp["peer_groups"] = [strip_empties_from_dict(peer_group)]
-
-        if self.shared_utils.underlay_ipv6:
-            router_bgp["address_family_ipv6"] = {
-                "peer_groups": [
-                    {
-                        "name": peer_group_name,
-                        "activate": True,
-                    },
-                ],
-            }
-
-        address_family_ipv4_peer_group = {"name": peer_group_name, "activate": True}
-        if self.inputs.underlay_rfc5549:
-            address_family_ipv4_peer_group["next_hop"] = {"address_family_ipv6": {"enabled": True, "originate": True}}
-
-        router_bgp["address_family_ipv4"] = {"peer_groups": [address_family_ipv4_peer_group]}
-
-        return router_bgp

@@ -24,6 +24,11 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "bgp_peer_groups.ipv4_underlay_peers.password") | String |  |  |  | Type 7 encrypted password. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bfd</samp>](## "bgp_peer_groups.ipv4_underlay_peers.bfd") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;structured_config</samp>](## "bgp_peer_groups.ipv4_underlay_peers.structured_config") | Dictionary |  |  |  | Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen. |
+    | [<samp>&nbsp;&nbsp;mlag_ipv4_vrfs_peer</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer") | Dictionary |  |  |  | Set this peer group name to use a different peer-group for MLAG peerings in VRFs.<br>By default AVD uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFs.<br><br>If `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same,<br>then all the attributes set here are ignored. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer.name") | String | Required |  |  | Name of peer group. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer.password") | String |  |  |  | Type 7 encrypted password. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;bfd</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer.bfd") | Boolean |  | `False` |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;structured_config</samp>](## "bgp_peer_groups.mlag_ipv4_vrfs_peer.structured_config") | Dictionary |  |  |  | Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen. |
     | [<samp>&nbsp;&nbsp;mlag_ipv4_underlay_peer</samp>](## "bgp_peer_groups.mlag_ipv4_underlay_peer") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "bgp_peer_groups.mlag_ipv4_underlay_peer.name") | String |  | `MLAG-IPv4-UNDERLAY-PEER` |  | Name of peer group. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;password</samp>](## "bgp_peer_groups.mlag_ipv4_underlay_peer.password") | String |  |  |  | Type 7 encrypted password. |
@@ -119,6 +124,23 @@
 
         # Name of peer group.
         name: <str; default="IPv4-UNDERLAY-PEERS">
+
+        # Type 7 encrypted password.
+        password: <str>
+        bfd: <bool; default=False>
+
+        # Custom structured config added under router_bgp.peer_groups.[name=<name>] for eos_cli_config_gen.
+        structured_config: <dict>
+
+      # Set this peer group name to use a different peer-group for MLAG peerings in VRFs.
+      # By default AVD uses the `mlag_ipv4_underlay_peer` peer group for the Underlay and for all the VRFs.
+      #
+      # If `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the same,
+      # then all the attributes set here are ignored.
+      mlag_ipv4_vrfs_peer:
+
+        # Name of peer group.
+        name: <str; required>
 
         # Type 7 encrypted password.
         password: <str>
