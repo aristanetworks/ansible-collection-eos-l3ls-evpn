@@ -39,8 +39,9 @@ class DpsInterfacesMixin(UtilsMixin):
         # TODO: do IPv6 when needed - for now no easy way in AVD to detect if this is needed
         # When needed - need a default value if different than IPv4
 
-        if (dps_flow := self.shared_utils.get_flow_tracker(self.inputs.fabric_flow_tracking.dps_interfaces)) is not None:
-            dps1.flow_tracker.hardware = dps_flow.get("hardware")
-            dps1.flow_tracker.sampled = dps_flow.get("sampled")
+        flow_tracker = self.shared_utils.new_get_flow_tracker(
+            self.inputs.fabric_flow_tracking.dps_interfaces, output_type=EosCliConfigGen.DpsInterfacesItem.FlowTracker
+        )
+        dps1._update(flow_tracker=flow_tracker)
 
         self.structured_config.dps_interfaces.append(dps1)
