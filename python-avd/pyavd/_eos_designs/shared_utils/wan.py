@@ -86,7 +86,11 @@ class WanMixin(Protocol):
 
     @cached_property
     def wan_port_channels(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels:
-        """Interfaces under node config l3_port_channels can be considered as WAN-facing port-channel interfaces."""
+        """
+        Returns the list of the device Port-Channels which are WAN interfaces.
+        
+        Interfaces under node config l3_port_channels where wan_carrier is set are considered as WAN interfaces.
+        """
         if not self.is_wan_router:
             return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels()
 
@@ -114,7 +118,7 @@ class WanMixin(Protocol):
         """
         if not self.is_wan_router:
             return []
-        # We would like to combine carrier info from both L3 Interfaces and L3 Port-Channels configured as wan interfaces
+        # Combining WAN carrier information from both L3 Interfaces and L3 Port-Channels configured as WAN interfaces.
         if not self.wan_interfaces and (not self.wan_port_channels):
             msg = (
                 "At least one WAN interface must be configured on a WAN router. "
@@ -163,7 +167,6 @@ class WanMixin(Protocol):
                     },
                 ),
             )
-        return local_carriers_dict
 
     @cached_property
     def wan_local_path_groups(self: SharedUtilsProtocol) -> EosDesigns.WanPathGroups:
