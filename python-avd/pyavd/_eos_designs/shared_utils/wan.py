@@ -118,20 +118,24 @@ class WanMixin(Protocol):
         """
         if not self.is_wan_router:
             return []
+
         # Combining WAN carrier information from both L3 Interfaces and L3 Port-Channels configured as WAN interfaces.
-        if not self.wan_interfaces and (not self.wan_port_channels):
+        if not self.wan_interfaces and not self.wan_port_channels:
             msg = (
                 "At least one WAN interface must be configured on a WAN router. "
                 "Add WAN interfaces under 'l3_interfaces' or 'l3_port_channels' node setting with 'wan_carrier' set."
             )
             raise AristaAvdError(msg)
-        carriers_dict = {}
-        self.get_wan_local_carriers(carriers_dict, self.wan_interfaces)
-        # modify carriers dictionary from above step with carrier info for L3 port-channel based wan interfaces
-        self.get_wan_local_carriers(carriers_dict, self.wan_port_channels)
-        return list(carriers_dict.values())
 
-    def get_wan_local_carriers(
+        wan_carriers_dict = {}
+        # Collect WAN carriers information for WAN l3_interfaces
+        self.update_wan_local_carriers(wan_carriers_dict, self.wan_interfaces)
+        # Collect WAN carriers information for WAN l3_port_channels
+        self.update_wan_local_carriers(wan_carriers_dict, self.wan_port_channels)
+
+        return list(wan_carriers_dict.values())
+
+    def update_wan_local_carriers(
         self: SharedUtilsProtocol,
         local_carriers_dict: dict,
         l3_generic_interfaces: (
@@ -149,15 +153,15 @@ class WanMixin(Protocol):
                 public_ip: ... (for route-servers the IP may come from wan_route_servers) and so on.
         """
         for interface in l3_generic_interfaces:
-            interface_carrier: str = interface.wan_carrier
-            if interface_carrier not in local_carriers_dict:
-                if interface_carrier not in self.inputs.wan_carriers:
-                    msg = f"WAN carrier {interface_carrier} is not in the available carriers defined in `wan_carriers`"
+            if interface.wan_carrier not in local_carriers_dict:
+                if interface.wan_carrier not in self.inputs.wan_carriers:
+                    msg = f"WAN carrier {interface.wan_carrier} is not in the available carriers defined in `wan_carriers`"
                     raise AristaAvdInvalidInputsError(msg)
-                local_carriers_dict[interface_carrier] = self.inputs.wan_carriers[interface_carrier]._as_dict(include_default_values=True)
-                local_carriers_dict[interface_carrier]["interfaces"] = []
 
-            local_carriers_dict[interface_carrier]["interfaces"].append(
+                local_carriers_dict[interface.wan_carrier] = self.inputs.wan_carriers[interface.wan_carrier]._as_dict(include_default_values=True)
+                local_carriers_dict[interface.wan_carrier]["interfaces"] = []
+
+            local_carriers_dict[interface.wan_carrier]["interfaces"].append(
                 strip_empties_from_dict(
                     {
                         "name": interface.name,
