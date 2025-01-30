@@ -4,13 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import EosDesignsFacts
+    from . import EosDesignsFactsProtocol
 
 
-class OverlayMixin:
+class OverlayMixin(Protocol):
     """
     Mixin Class used to generate some of the EosDesignsFacts.
 
@@ -19,17 +19,17 @@ class OverlayMixin:
     """
 
     @cached_property
-    def evpn_role(self: EosDesignsFacts) -> str | None:
+    def evpn_role(self: EosDesignsFactsProtocol) -> str | None:
         """Exposed in avd_switch_facts."""
         return self.shared_utils.evpn_role
 
     @cached_property
-    def mpls_overlay_role(self: EosDesignsFacts) -> str | None:
+    def mpls_overlay_role(self: EosDesignsFactsProtocol) -> str | None:
         """Exposed in avd_switch_facts."""
         return self.shared_utils.mpls_overlay_role
 
     @cached_property
-    def evpn_route_servers(self: EosDesignsFacts) -> list:
+    def evpn_route_servers(self: EosDesignsFactsProtocol) -> list:
         """
         Exposed in avd_switch_facts.
 
@@ -43,7 +43,7 @@ class OverlayMixin:
         return []
 
     @cached_property
-    def mpls_route_reflectors(self: EosDesignsFacts) -> list | None:
+    def mpls_route_reflectors(self: EosDesignsFactsProtocol) -> list | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.underlay_router is True and (
             self.mpls_overlay_role in ["client", "server"] or (self.evpn_role in ["client", "server"] and self.overlay["evpn_mpls"])
@@ -52,7 +52,7 @@ class OverlayMixin:
         return None
 
     @cached_property
-    def overlay(self: EosDesignsFacts) -> dict | None:
+    def overlay(self: EosDesignsFactsProtocol) -> dict | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.underlay_router is True:
             return {
@@ -62,7 +62,7 @@ class OverlayMixin:
         return None
 
     @cached_property
-    def vtep_ip(self: EosDesignsFacts) -> str | None:
+    def vtep_ip(self: EosDesignsFactsProtocol) -> str | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.vtep:
             return self.shared_utils.vtep_ip

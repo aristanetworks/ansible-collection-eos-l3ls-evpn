@@ -5,17 +5,17 @@ from __future__ import annotations
 
 from functools import cached_property
 from ipaddress import ip_network
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get
 from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class InbandManagementMixin:
+class InbandManagementMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -24,37 +24,37 @@ class InbandManagementMixin:
     """
 
     @cached_property
-    def configure_inband_mgmt(self: SharedUtils) -> bool:
+    def configure_inband_mgmt(self: SharedUtilsProtocol) -> bool:
         return bool(self.uplink_type == "port-channel" and self.inband_mgmt_ip)
 
     @cached_property
-    def configure_inband_mgmt_ipv6(self: SharedUtils) -> bool:
+    def configure_inband_mgmt_ipv6(self: SharedUtilsProtocol) -> bool:
         return bool(self.uplink_type == "port-channel" and self.inband_mgmt_ipv6_address)
 
     @cached_property
-    def configure_parent_for_inband_mgmt(self: SharedUtils) -> bool:
+    def configure_parent_for_inband_mgmt(self: SharedUtilsProtocol) -> bool:
         return self.configure_inband_mgmt and not self.node_config.inband_mgmt_ip
 
     @cached_property
-    def configure_parent_for_inband_mgmt_ipv6(self: SharedUtils) -> bool:
+    def configure_parent_for_inband_mgmt_ipv6(self: SharedUtilsProtocol) -> bool:
         return self.configure_inband_mgmt_ipv6 and not self.node_config.inband_mgmt_ipv6_address
 
     @cached_property
-    def inband_mgmt_mtu(self: SharedUtils) -> int | None:
+    def inband_mgmt_mtu(self: SharedUtilsProtocol) -> int | None:
         if not self.platform_settings.feature_support.per_interface_mtu:
             return None
 
         return self.node_config.inband_mgmt_mtu
 
     @cached_property
-    def inband_mgmt_vrf(self: SharedUtils) -> str | None:
+    def inband_mgmt_vrf(self: SharedUtilsProtocol) -> str | None:
         if (inband_mgmt_vrf := self.node_config.inband_mgmt_vrf) != "default":
             return inband_mgmt_vrf
 
         return None
 
     @cached_property
-    def inband_mgmt_gateway(self: SharedUtils) -> str | None:
+    def inband_mgmt_gateway(self: SharedUtilsProtocol) -> str | None:
         """
         Inband management gateway.
 
@@ -77,7 +77,7 @@ class InbandManagementMixin:
         return f"{subnet[1]!s}"
 
     @cached_property
-    def inband_mgmt_ipv6_gateway(self: SharedUtils) -> str | None:
+    def inband_mgmt_ipv6_gateway(self: SharedUtilsProtocol) -> str | None:
         """
         Inband management ipv6 gateway.
 
@@ -100,7 +100,7 @@ class InbandManagementMixin:
         return f"{subnet[1]!s}"
 
     @cached_property
-    def inband_mgmt_ip(self: SharedUtils) -> str | None:
+    def inband_mgmt_ip(self: SharedUtilsProtocol) -> str | None:
         """
         Inband management IP.
 
@@ -124,7 +124,7 @@ class InbandManagementMixin:
         return f"{inband_mgmt_ip}/{subnet.prefixlen}"
 
     @cached_property
-    def inband_mgmt_ipv6_address(self: SharedUtils) -> str | None:
+    def inband_mgmt_ipv6_address(self: SharedUtilsProtocol) -> str | None:
         """
         Inband management IPv6 Address.
 
@@ -148,7 +148,7 @@ class InbandManagementMixin:
         return f"{inband_mgmt_ipv6_address}/{subnet.prefixlen}"
 
     @cached_property
-    def inband_mgmt_interface(self: SharedUtils) -> str | None:
+    def inband_mgmt_interface(self: SharedUtilsProtocol) -> str | None:
         """
         Inband management Interface used only to set as source interface on various management protocols.
 
@@ -164,7 +164,7 @@ class InbandManagementMixin:
         return None
 
     @cached_property
-    def inband_management_parent_vlans(self: SharedUtils) -> dict:
+    def inband_management_parent_vlans(self: SharedUtilsProtocol) -> dict:
         if not self.underlay_router:
             return {}
 

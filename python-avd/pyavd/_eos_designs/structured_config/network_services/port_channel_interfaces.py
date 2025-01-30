@@ -5,17 +5,15 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate, short_esi_to_route_target
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class PortChannelInterfacesMixin(UtilsMixin):
+class PortChannelInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def port_channel_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def port_channel_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for port_channel_interfaces.
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from collections import ChainMap
 from collections.abc import Iterator, Mapping
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, TypeVar
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._schema.store import create_store
@@ -19,14 +19,16 @@ from .input_path import InputPath
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
+    T = TypeVar("T", bound="EosDesignsRootModel")
+
 SKIP_KEYS = ["custom_structured_configuration_list_merge", "custom_structured_configuration_prefix"]
 
 
 class EosDesignsRootModel(AvdModel):
     @classmethod
     def _from_dict(
-        cls: type[EosDesigns], data: Mapping, data_source: InputPath | None = None, *, keep_extra_keys: bool = False, load_custom_structured_config: bool = True
-    ) -> EosDesigns:
+        cls: type[T], data: Mapping, data_source: InputPath | None = None, *, keep_extra_keys: bool = False, load_custom_structured_config: bool = True
+    ) -> T:
         """
         Returns a new instance loaded with the data from the given dict.
 
@@ -59,7 +61,7 @@ class EosDesignsRootModel(AvdModel):
         return super()._from_dict(ChainMap(root_data, data), data_source=data_source or InputPath(), keep_extra_keys=keep_extra_keys)
 
     @classmethod
-    def _get_csc_items(cls: type[EosDesigns], data: Mapping) -> Iterator[EosDesigns._CustomStructuredConfigurationsItem]:
+    def _get_csc_items(cls, data: Mapping) -> Iterator[EosDesigns._CustomStructuredConfigurationsItem]:
         """
         Returns a list of _CustomStructuredConfigurationsItem objects containing each custom structured configuration extracted from the inputs.
 
@@ -83,7 +85,7 @@ class EosDesignsRootModel(AvdModel):
                 yield cls._CustomStructuredConfigurationsItem(key=key, value=EosCliConfigGen._from_dict({key[prefix_length:]: data[key]}))
 
     @classmethod
-    def _get_dynamic_keys(cls: type[EosDesigns], data: Mapping) -> EosDesigns._DynamicKeys:
+    def _get_dynamic_keys(cls, data: Mapping) -> EosDesigns._DynamicKeys:
         """
         Returns the DynamicKeys object which holds a list for each dynamic key.
 

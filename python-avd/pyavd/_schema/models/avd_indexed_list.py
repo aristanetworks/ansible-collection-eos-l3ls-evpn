@@ -16,6 +16,8 @@ from .input_path import InputPath, PathIndexedListKey
 from .type_vars import T_AvdModel, T_PrimaryKey
 
 if TYPE_CHECKING:
+    from typing import Any
+
     from typing_extensions import Self
 
     from .avd_model import AvdModel

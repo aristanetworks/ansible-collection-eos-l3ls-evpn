@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate, strip_empties_from_list
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class RouteMapsMixin(UtilsMixin):
+class RouteMapsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouteMapsMixin(UtilsMixin):
     """
 
     @cached_property
-    def route_maps(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def route_maps(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for route_maps.
 
@@ -82,7 +80,7 @@ class RouteMapsMixin(UtilsMixin):
         return None
 
     @cached_property
-    def _route_maps_vrf_default(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def _route_maps_vrf_default(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Route-maps for EVPN services in VRF "default".
 
@@ -107,7 +105,7 @@ class RouteMapsMixin(UtilsMixin):
 
         return route_maps or None
 
-    def _bgp_mlag_peer_group_route_map(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _bgp_mlag_peer_group_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         """
         Return dict with one route-map.
 
@@ -127,7 +125,7 @@ class RouteMapsMixin(UtilsMixin):
             ],
         }
 
-    def _connected_to_bgp_vrfs_route_map(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _connected_to_bgp_vrfs_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         """
         Return dict with one route-map.
 
@@ -148,7 +146,7 @@ class RouteMapsMixin(UtilsMixin):
             ],
         }
 
-    def _evpn_export_vrf_default_route_map(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _evpn_export_vrf_default_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Match the following prefixes to be exported in EVPN for VRF default.
 
@@ -191,7 +189,7 @@ class RouteMapsMixin(UtilsMixin):
 
         return {"name": "RM-EVPN-EXPORT-VRF-DEFAULT", "sequence_numbers": sequence_numbers}
 
-    def _bgp_underlay_peers_route_map(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _bgp_underlay_peers_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         For non WAN routers filter EVPN routes away from underlay.
 
@@ -233,7 +231,7 @@ class RouteMapsMixin(UtilsMixin):
 
         return {"name": "RM-BGP-UNDERLAY-PEERS-OUT", "sequence_numbers": sequence_numbers}
 
-    def _redistribute_connected_to_bgp_route_map(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _redistribute_connected_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Append network services relevant entries to the route-map used to redistribute connected subnets in BGP.
 
@@ -261,7 +259,7 @@ class RouteMapsMixin(UtilsMixin):
 
         return {"name": "RM-CONN-2-BGP", "sequence_numbers": sequence_numbers}
 
-    def _redistribute_static_to_bgp_route_map(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _redistribute_static_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Append network services relevant entries to the route-map used to redistribute static routes to BGP."""
         if not (self.shared_utils.wan_role and self._vrf_default_ipv4_static_routes["redistribute_in_overlay"]):
             return None
