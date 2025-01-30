@@ -634,6 +634,7 @@ class UtilsWanMixin:
             if not local_wan_l3_interfaces:
                 # No local interface for this policy
                 # implies policy present in input yml, but not associated with any interface yet
+                # TODO: Decide if we should raise here instead
                 continue
             # fetch connections associated with given internet exit policy that
             # applies to one or more wan interfaces
