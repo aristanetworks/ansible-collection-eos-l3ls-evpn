@@ -26854,36 +26854,121 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Tunnel(AvdModel):
             """Subclass of AvdModel."""
 
-            _fields: ClassVar[dict] = {"termination_model": {"type": str}, "termination_php_model": {"type": str}, "_custom_data": {"type": dict}}
-            termination_model: Literal["ttl pipe dscp pipe", "ttl pipe dscp uniform", "ttl uniform dscp pipe", "ttl uniform dscp uniform"] | None
+            class Termination(AvdModel):
+                """Subclass of AvdModel."""
+
+                class Model(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"ttl": {"type": str}, "dscp": {"type": str}, "_custom_data": {"type": dict}}
+                    ttl: Literal["pipe", "uniform"]
+                    dscp: Literal["pipe", "uniform"]
+                    """DSCP model `uniform` supported with ttl model `uniform` on some platforms."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            ttl: Literal["pipe", "uniform"] | UndefinedType = Undefined,
+                            dscp: Literal["pipe", "uniform"] | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Model.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                ttl: ttl
+                                dscp: DSCP model `uniform` supported with ttl model `uniform` on some platforms.
+                                _custom_data: _custom_data
+
+                            """
+
+                class PhpModel(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"ttl": {"type": str}, "dscp": {"type": str}, "_custom_data": {"type": dict}}
+                    ttl: Literal["pipe", "uniform"]
+                    dscp: Literal["pipe"]
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            ttl: Literal["pipe", "uniform"] | UndefinedType = Undefined,
+                            dscp: Literal["pipe"] | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            PhpModel.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                ttl: ttl
+                                dscp: dscp
+                                _custom_data: _custom_data
+
+                            """
+
+                _fields: ClassVar[dict] = {"model": {"type": Model}, "php_model": {"type": PhpModel}, "_custom_data": {"type": dict}}
+                model: Model
+                """Subclass of AvdModel."""
+                php_model: PhpModel
+                """
+                Used on PHP router in the absence of any VPN routes and explicit null VRF labels.
+
+                Subclass of
+                AvdModel.
+                """
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        model: Model | UndefinedType = Undefined,
+                        php_model: PhpModel | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Termination.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            model: Subclass of AvdModel.
+                            php_model:
+                               Used on PHP router in the absence of any VPN routes and explicit null VRF labels.
+
+                               Subclass of
+                               AvdModel.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {"termination": {"type": Termination}, "_custom_data": {"type": dict}}
+            termination: Termination
             """
-            TTL and DSCP configuration as a string.
-            Make sure to check for compatibility with your Platform.
-            Example:
-            - "ttl pipe dscp pipe"
-            """
-            termination_php_model: Literal["ttl pipe dscp pipe", "ttl pipe dscp uniform", "ttl uniform dscp pipe", "ttl uniform dscp uniform"] | None
-            """
-            TTL and DSCP configuration as a string.
-            Make sure to check for compatibility with your Platform.
-            Example:
-            - "ttl pipe dscp pipe"
+            Controls selection of the TTL/DSCP values by LER when decapsulating MPLS packets.
+
+            Subclass of
+            AvdModel.
             """
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
 
-                def __init__(
-                    self,
-                    *,
-                    termination_model: Literal["ttl pipe dscp pipe", "ttl pipe dscp uniform", "ttl uniform dscp pipe", "ttl uniform dscp uniform"]
-                    | None
-                    | UndefinedType = Undefined,
-                    termination_php_model: Literal["ttl pipe dscp pipe", "ttl pipe dscp uniform", "ttl uniform dscp pipe", "ttl uniform dscp uniform"]
-                    | None
-                    | UndefinedType = Undefined,
-                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
-                ) -> None:
+                def __init__(self, *, termination: Termination | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
                     """
                     Tunnel.
 
@@ -26891,16 +26976,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Subclass of AvdModel.
 
                     Args:
-                        termination_model:
-                           TTL and DSCP configuration as a string.
-                           Make sure to check for compatibility with your Platform.
-                           Example:  # fmt: skip
-                           - "ttl pipe dscp pipe"
-                        termination_php_model:
-                           TTL and DSCP configuration as a string.
-                           Make sure to check for compatibility with your Platform.
-                           Example:  # fmt: skip
-                           - "ttl pipe dscp pipe"
+                        termination:
+                           Controls selection of the TTL/DSCP values by LER when decapsulating MPLS packets.
+
+                           Subclass of
+                           AvdModel.
                         _custom_data: _custom_data
 
                     """
@@ -26927,7 +27007,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """Subclass of AvdModel."""
         tunnel: Tunnel
         """
-        Configure tunnel termination model.
+        Configure MPLS tunnel.
 
         Subclass of AvdModel.
         """
@@ -26961,7 +27041,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                        of AvdModel.
                     rsvp: Subclass of AvdModel.
                     tunnel:
-                       Configure tunnel termination model.
+                       Configure MPLS tunnel.
 
                        Subclass of AvdModel.
                     _custom_data: _custom_data

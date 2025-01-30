@@ -67,9 +67,14 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;p2mp</samp>](## "mpls.rsvp.p2mp") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "mpls.rsvp.p2mp.enabled") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;shutdown</samp>](## "mpls.rsvp.shutdown") | Boolean |  |  |  | Make `shutdown` key false for `no shutdown` cli. |
-    | [<samp>&nbsp;&nbsp;tunnel</samp>](## "mpls.tunnel") | Dictionary |  |  |  | Configure tunnel termination model. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;termination_model</samp>](## "mpls.tunnel.termination_model") | String |  |  | Valid Values:<br>- <code>ttl pipe dscp pipe</code><br>- <code>ttl pipe dscp uniform</code><br>- <code>ttl uniform dscp pipe</code><br>- <code>ttl uniform dscp uniform</code> | TTL and DSCP configuration as a string.<br>Make sure to check for compatibility with your Platform.<br>Example:<br>- "ttl pipe dscp pipe"<br> |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;termination_php_model</samp>](## "mpls.tunnel.termination_php_model") | String |  |  | Valid Values:<br>- <code>ttl pipe dscp pipe</code><br>- <code>ttl pipe dscp uniform</code><br>- <code>ttl uniform dscp pipe</code><br>- <code>ttl uniform dscp uniform</code> | TTL and DSCP configuration as a string.<br>Make sure to check for compatibility with your Platform.<br>Example:<br>- "ttl pipe dscp pipe"<br> |
+    | [<samp>&nbsp;&nbsp;tunnel</samp>](## "mpls.tunnel") | Dictionary |  |  |  | Configure MPLS tunnel. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;termination</samp>](## "mpls.tunnel.termination") | Dictionary |  |  |  | Controls selection of the TTL/DSCP values by LER when decapsulating MPLS packets. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model</samp>](## "mpls.tunnel.termination.model") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ttl</samp>](## "mpls.tunnel.termination.model.ttl") | String | Required |  | Valid Values:<br>- <code>pipe</code><br>- <code>uniform</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp</samp>](## "mpls.tunnel.termination.model.dscp") | String | Required |  | Valid Values:<br>- <code>pipe</code><br>- <code>uniform</code> | DSCP model `uniform` supported with ttl model `uniform` on some platforms. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;php_model</samp>](## "mpls.tunnel.termination.php_model") | Dictionary |  |  |  | Used on PHP router in the absence of any VPN routes and explicit null VRF labels. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ttl</samp>](## "mpls.tunnel.termination.php_model.ttl") | String | Required |  | Valid Values:<br>- <code>pipe</code><br>- <code>uniform</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp</samp>](## "mpls.tunnel.termination.php_model.dscp") | String | Required |  | Valid Values:<br>- <code>pipe</code> |  |
 
 === "YAML"
 
@@ -220,18 +225,19 @@
         # Make `shutdown` key false for `no shutdown` cli.
         shutdown: <bool>
 
-      # Configure tunnel termination model.
+      # Configure MPLS tunnel.
       tunnel:
 
-        # TTL and DSCP configuration as a string.
-        # Make sure to check for compatibility with your Platform.
-        # Example:
-        # - "ttl pipe dscp pipe"
-        termination_model: <str; "ttl pipe dscp pipe" | "ttl pipe dscp uniform" | "ttl uniform dscp pipe" | "ttl uniform dscp uniform">
+        # Controls selection of the TTL/DSCP values by LER when decapsulating MPLS packets.
+        termination:
+          model:
+            ttl: <str; "pipe" | "uniform"; required>
 
-        # TTL and DSCP configuration as a string.
-        # Make sure to check for compatibility with your Platform.
-        # Example:
-        # - "ttl pipe dscp pipe"
-        termination_php_model: <str; "ttl pipe dscp pipe" | "ttl pipe dscp uniform" | "ttl uniform dscp pipe" | "ttl uniform dscp uniform">
+            # DSCP model `uniform` supported with ttl model `uniform` on some platforms.
+            dscp: <str; "pipe" | "uniform"; required>
+
+          # Used on PHP router in the absence of any VPN routes and explicit null VRF labels.
+          php_model:
+            ttl: <str; "pipe" | "uniform"; required>
+            dscp: <str; "pipe"; required>
     ```
