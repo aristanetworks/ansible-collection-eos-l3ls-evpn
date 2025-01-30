@@ -144,8 +144,8 @@ zscaler_endpoints:
 
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for Hosts.
-  {'name': 'IE-Tunnel100', 'description': 'Internet Exit ZSCALER-EXIT-POLICY-2 PRI',
-  'ip': '10.37.121.1', 'local_interfaces': 'SET-Tunnel100', 'address_only': False,
-  'url': 'http://gateway.zscalerbeta.net/vpntest'} conflicts with {'name': 'IE-Tunnel100',
-  'description': 'Internet Exit ZSCALER-EXIT-POLICY-1 PRI', 'ip': '10.37.121.1',
+  {'name': 'IE-Tunnel100', 'description': 'Internet Exit ZSCALER-EXIT-POLICY-2 PRI', 'ip': '10.37.121.1',
+  'local_interfaces': 'SET-Tunnel100', 'address_only': False, 'url': 'http://gateway.zscalerbeta.net/vpntest'}
+  conflicts with
+  {'name': 'IE-Tunnel100', 'description': 'Internet Exit ZSCALER-EXIT-POLICY-1 PRI', 'ip': '10.37.121.1',
   'local_interfaces': 'SET-Tunnel100', 'address_only': False, 'url': 'http://gateway.zscalerbeta.net/vpntest'}.
