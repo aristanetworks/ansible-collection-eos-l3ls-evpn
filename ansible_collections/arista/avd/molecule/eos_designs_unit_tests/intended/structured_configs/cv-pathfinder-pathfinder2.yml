@@ -14,9 +14,6 @@ application_traffic_recognition:
     - name: microsoft-teams
   field_sets:
     l4_ports:
-    - name: TCP-SRC-3
-      port_values:
-      - '400'
     - name: TCP-SRC-2
       port_values:
       - '42'
@@ -41,10 +38,6 @@ application_traffic_recognition:
       dest_prefix_set_name: CUSTOM-DEST-PREFIX-1
       protocols:
       - tcp
-    - name: CUSTOM-APPLICATION-3
-      protocols:
-      - tcp
-      tcp_src_port_set_name: TCP-SRC-3
     - name: CUSTOM-APPLICATION-2
       protocols:
       - tcp
@@ -72,8 +65,6 @@ application_traffic_recognition:
     - name: CUSTOM-VOICE-APPLICATION
   - name: MPLS-ONLY
   - name: CRITICAL-APP
-    applications:
-    - name: CUSTOM-APPLICATION-3
   - name: APP-PROFILE-CONTROL-PLANE
     applications:
     - name: APP-CONTROL-PLANE
@@ -454,8 +445,6 @@ metadata:
         - name: CUSTOM-VOICE-APPLICATION
       - name: MPLS-ONLY
       - name: CRITICAL-APP
-        user_defined_applications:
-        - name: CUSTOM-APPLICATION-3
       - name: APP-PROFILE-CONTROL-PLANE
         user_defined_applications:
         - name: APP-CONTROL-PLANE

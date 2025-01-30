@@ -105,8 +105,8 @@ wan_router:
     # cv-pathfinder-edge is not configured on cv-pathfinder-edge1
     - group: Site511
       uplink_type: p2p-vrfs
-      uplink_switches: [ site-ha-disabled-leaf ]
-      uplink_interfaces: [ Ethernet52 ]
+      uplink_switches: [site-ha-disabled-leaf]
+      uplink_interfaces: [Ethernet52]
       cv_pathfinder_region: AVD_Land_East
       cv_pathfinder_site: Site511
       wan_ha:
@@ -250,7 +250,7 @@ wan_router:
                 enabled: true
             - # Port-Channel with 1 member ports
               name: Port-Channel450
-              mode: 'on'
+              mode: "on"
               member_interfaces:
                 - name: Ethernet1/10
                   speed: "forced 10000full"
@@ -298,8 +298,8 @@ wan_router:
       cv_pathfinder_region: AVD_Land_West
       cv_pathfinder_site: Site423
       uplink_type: p2p-vrfs
-      uplink_switches: [ site-ha-enabled-leaf2A, site-ha-enabled-leaf2B ]
-      uplink_interfaces: [ Ethernet52, Ethernet53 ]
+      uplink_switches: [site-ha-enabled-leaf2A, site-ha-enabled-leaf2B]
+      uplink_interfaces: [Ethernet52, Ethernet53]
       wan_ha:
         enabled: true # TODO AVD4.8.0: Remove once WAN HA is GA.
       nodes:
@@ -329,8 +329,8 @@ wan_router:
         always_include_vrfs_in_tenants: [TenantA, TenantB]
       uplink_ipv4_pool: 172.17.0.0/16
       uplink_type: p2p-vrfs
-      uplink_switches: [ site-ha-enabled-leaf1 ]
-      uplink_interfaces: [ Ethernet52 ]
+      uplink_switches: [site-ha-enabled-leaf1]
+      uplink_interfaces: [Ethernet52]
       cv_pathfinder_transit_mode: region
       # Disable HA IPsec
       wan_ha:
@@ -755,7 +755,6 @@ application_classification:
         # This profile makes use of internet exit policy of type Zscaler with
         # Port-Channel as tunnel source interface.
         # Device 'cv-pathfinder-edge1' uses this.
-        - name: CUSTOM-APPLICATION-3
     - name: VOICE
       applications:
         # Testing applications in application-profiles filtering
@@ -785,9 +784,6 @@ application_classification:
         protocols: [tcp]
         tcp_src_port_set_name: TCP-SRC-2
         tcp_dest_port_set_name: TCP-DEST-2
-      - name: CUSTOM-APPLICATION-3
-        protocols: [tcp]
-        tcp_src_port_set_name: TCP-SRC-3
       - name: CUSTOM-voice-APPLICATION
         protocols: [udp]
         udp_src_port_set_name: UDP-SRC-VOICE
@@ -814,9 +810,6 @@ application_classification:
       - name: TCP-SRC-2
         port_values:
           - 42
-      - name: TCP-SRC-3
-        port_values:
-          - 400
       - name: TCP-DEST-2
         port_values:
           - 666
