@@ -67,7 +67,6 @@ class UtilsMixin(Protocol):
             context: A string representing the adapter under which the profile should be applied.
                      Used for error message.
         """
-
         if profile_name not in self.inputs.port_profiles:
             msg = f"Profile '{profile_name}' applied under '{context}' does not exist in `port_profiles`."
             raise AristaAvdInvalidInputsError(msg)
