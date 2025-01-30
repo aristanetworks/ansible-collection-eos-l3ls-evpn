@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import strip_empties_from_dict
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigBase
+    from . import AvdStructuredConfigBaseProtocol
 
 
-class RouterGeneralMixin(UtilsMixin):
+class RouterGeneralMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouterGeneralMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_general(self: AvdStructuredConfigBase) -> dict | None:
+    def router_general(self: AvdStructuredConfigBaseProtocol) -> dict | None:
         if self.inputs.use_router_general_for_router_id:
             return strip_empties_from_dict(
                 {

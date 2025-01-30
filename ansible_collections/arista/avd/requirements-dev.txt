@@ -1,5 +1,7 @@
 # pyavd minimal requirements when running from source
-anta>=1.1.0
+# anta is set to latest version to make sure developers run with the latest version
+# when generating molecule artifacts.
+anta==1.2.0
 cvprac>=1.4.0
 netaddr>=0.7.19
 PyYAML>=6.0.0

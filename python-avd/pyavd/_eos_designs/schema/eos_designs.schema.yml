@@ -49,6 +49,28 @@ keys:
     type: bool
     default: false
     description: Dump all vars and facts per device after generating `avd_switch_facts`.
+  avd_eos_designs_enforce_duplication_checks_across_all_models:
+    documentation_options:
+      table: role-settings
+    type: bool
+    default: false
+    description: 'PREVIEW: This option is marked as "preview", while we refactor the
+      code to conform to the described behavior.
+
+      When this is enabled, the generation of Structured Config in `eos_designs` will
+      prevent duplicate objects generated
+
+      by different input models. This will also improve performance since `eos_designs`
+      will not maintain separate copied of the Structured Configuration.
+
+      As an example, if you define an Ethernet interface under `l3_edge` and use the
+      same interface for connectivity under `servers`:
+
+      - With this option disabled (default), AVD will merge these configurations together
+      for the interface and not raise an error.
+
+      - With this option enabled, AVD will raise an error about duplicate interface
+      definitions.'
   avd_eos_designs_structured_config:
     documentation_options:
       table: role-settings
@@ -127,6 +149,8 @@ keys:
       The default value is 4 except for WAN Routers where the default value is unset
       (falls back to EOS default).'
     type: int
+    min: 1
+    max: 600
     convert_types:
     - str
   bgp_graceful_restart:
@@ -166,7 +190,7 @@ keys:
     convert_types:
     - str
     min: 1
-    max: 512
+    max: 600
   bgp_mesh_pes:
     documentation_options:
       table: overlay-settings
@@ -196,6 +220,38 @@ keys:
             type: str
             default: IPv4-UNDERLAY-PEERS
             description: Name of peer group.
+          password:
+            type: str
+            description: Type 7 encrypted password.
+          bfd:
+            type: bool
+            default: false
+          structured_config:
+            type: dict
+            relaxed_validation: true
+            description: Custom structured config added under router_bgp.peer_groups.[name=<name>]
+              for eos_cli_config_gen.
+            documentation_options:
+              hide_keys: true
+            $ref: eos_cli_config_gen#/keys/router_bgp/keys/peer_groups/items
+      mlag_ipv4_vrfs_peer:
+        type: dict
+        description: 'Set this peer group name to use a different peer-group for MLAG
+          peerings in VRFs.
+
+          By default AVD uses the `mlag_ipv4_underlay_peer` peer group for the Underlay
+          and for all the VRFs.
+
+
+          If `mlag_ipv4_vrfs_peer.name` and `mlag_ipv4_underlay_peer.name` are the
+          same,
+
+          then all the attributes set here are ignored.'
+        keys:
+          name:
+            type: str
+            description: Name of peer group.
+            required: true
           password:
             type: str
             description: Type 7 encrypted password.
@@ -2186,7 +2242,7 @@ keys:
       Depending on the values of vrf_id / vrf_vni it may be required to adjust the
       base_vlan to avoid overlaps or invalid vlan ids.
 
-      The SVI ip address derived from mlag_l3_peer_ipv4_pool is re-used across all
+      The SVI ip address derived from mlag_l3_peer_ipv4_pool is reused across all
       iBGP peerings.
 
       '
@@ -2320,12 +2376,24 @@ keys:
             '
           items:
             type: str
+        platforms:
+          type: list
+          min_length: 1
+          description: "Regex matching the full platform name of one or more switches.
+            If used in combination with switch hostname matching, both criteria must
+            match for configuration.\nIf you need to add custom platforms to match
+            specific port quantities, create them under `custom_platform_settings`.
+            Entries under `custom_platform_settings` should\nmatch the platform match
+            criteria.\n\nFor example, `720XP-48Y6` would require a custom platform
+            type:\n\nplatforms:\n  - 720XP\n  - 720XP-48Y6"
+          items:
+            type: str
         switch_ports:
           type: list
           description: "List of ranges using AVD range_expand syntax.\nFor example:\n\nswitch_ports:\n
             \ - Ethernet1\n  - Ethernet2-48\n\nAll switch_ports ranges are expanded
             into individual port configurations.\n\nFor more details and examples
-            of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../docs/plugins/Filter_plugins/range_expand.md).\n"
+            of the `range_expand` syntax, see the [`arista.avd.range_expand` documentation](../../../../../../docs/plugins/Filter_plugins/range_expand.md).\n"
           items:
             type: str
         description:
@@ -5280,13 +5348,7 @@ $defs:
         - 'false'
       flowcontrol:
         type: dict
-        keys:
-          received:
-            type: str
-            valid_values:
-            - received
-            - send
-            - 'on'
+        $ref: eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/flowcontrol
       qos_profile:
         type: str
         description: QOS profile name.
@@ -5627,7 +5689,8 @@ $defs:
                 type: int
                 convert_types:
                 - str
-                description: Timeout in seconds. EOS default is 90 seconds.
+                description: Timeout in seconds.
+                default: 90
           lacp_timer:
             type: dict
             description: LACP timer configuration. Applies only when Port-channel
@@ -5852,7 +5915,9 @@ $defs:
               description: P2P pool name.
             ipv4_pool:
               type: str
-              description: IPv4 address/Mask.
+              description: Comma separated list of prefixes (IPv4 address/Mask) or
+                ranges (IPv4_address-IPv4_address).
+              format: ipv4_pool
             prefix_size:
               type: int
               convert_types:
@@ -6106,7 +6171,9 @@ $defs:
               type: bool
             underlay_l2_multicast_group_ipv4_pool:
               type: str
-              description: IPv4_address/Mask.
+              description: Comma separated list of prefixes (IPv4 address/Mask) or
+                ranges (IPv4_address-IPv4_address).
+              format: ipv4_pool
             underlay_l2_multicast_group_ipv4_pool_offset:
               type: int
               default: 0
@@ -6157,7 +6224,9 @@ $defs:
               type: bool
             evpn_underlay_l3_multicast_group_ipv4_pool:
               type: str
-              description: IPv4_address/Mask.
+              description: Comma separated list of prefixes (IPv4 address/Mask) or
+                ranges (IPv4_address-IPv4_address).
+              format: ipv4_pool
               required: true
             evpn_underlay_l3_multicast_group_ipv4_pool_offset:
               type: int
@@ -6369,17 +6438,15 @@ $defs:
                   separator which will override the full RT.\n"
               mlag_ibgp_peering_ipv4_pool:
                 type: str
-                description: 'IPv4_address/Mask
+                description: 'Comma separated list of prefixes (IPv4 address/Mask)
+                  or ranges (IPv4_address-IPv4_address).
 
-                  The subnet used for iBGP peering in the VRF.
-
-                  Each MLAG pair will be assigned a subnet based on the ID of the
-                  primary MLAG switch.
+                  The subnet used for the iBGP peering in the VRF is derived from
+                  this pool based on the ID of the first MLAG switch.
 
                   If not set, "mlag_peer_l3_ipv4_pool" or "mlag_peer_ipv4_pool" will
-                  be used.
-
-                  '
+                  be used.'
+                format: ipv4_pool
               ip_helpers:
                 type: list
                 primary_key: ip_helper
@@ -6506,10 +6573,14 @@ $defs:
                           description: POD name.
                         ipv4_pool:
                           type: str
-                          description: IPv4_address/Mask.
+                          description: Comma separated list of prefixes (IPv4 address/Mask)
+                            or ranges (IPv4_address-IPv4_address).
+                          format: ipv4_pool
                         ipv6_pool:
                           type: str
-                          description: IPv6_address/Mask.
+                          description: Comma separated list of prefixes (IPv6 address/Mask)
+                            or ranges (IPv6_address-IPv6_address).
+                          format: ipv6_pool
               ospf:
                 documentation_options:
                   table: network-services-vrfs-ospf-settings
@@ -7874,9 +7945,15 @@ $defs:
           uplink_ipv4_pool:
             documentation_options:
               table: node-type-uplink-configuration
-            description: IPv4 subnet to use to connect to uplink switches.
+            description: 'Comma separated list of prefixes (IPv4 address/Mask) or
+              ranges (IPv4_address-IPv4_address).
+
+              IPv4 subnets used to connect to uplink switches will be deviced from
+              this pool based on the node id,
+
+              uplink interface index, ''max_uplink_switches'' and ''max_parallel_uplinks''.'
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           uplink_interfaces:
             documentation_options:
               table: node-type-uplink-configuration
@@ -8184,9 +8261,13 @@ $defs:
           loopback_ipv4_pool:
             documentation_options:
               table: node-type-loopback-vtep-configuration
-            description: IPv4 subnet for Loopback0 allocation.
+            description: 'Comma separated list of prefixes (IPv4 address/Mask) or
+              ranges (IPv4_address-IPv4_address).
+
+              The IPv4 address used for Loopback0 will be derived from this pool based
+              on the node id and ''loopback_ipv4_offset''.'
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           loopback_ipv4_address:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -8201,9 +8282,11 @@ $defs:
           vtep_loopback_ipv4_pool:
             documentation_options:
               table: node-type-loopback-vtep-configuration
-            description: IPv4 subnet for VTEP-Loopback allocation.
+            description: Comma separated list of prefixes (IPv4 address/Mask) or ranges
+              (IPv4_address-IPv4_address). The IPv4 address used for VTEP-Loopback
+              will be derived from this pool based on the node id and 'loopback_ipv4_offset'.
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           vtep_loopback_ipv4_address:
             documentation_options:
               table: node-type-loopback-vtep-configuration
@@ -8220,8 +8303,8 @@ $defs:
               table: node-type-loopback-vtep-configuration
             description: 'Offset all assigned loopback IP addresses.
 
-              Required when the < loopback_ipv4_pool > is same for 2 different node_types
-              (like spine and l3leaf) to avoid over-lapping IPs.
+              Required when the ''loopback_ipv4_pool'' is the same for 2 different
+              node_types (like spine and l3leaf) to avoid overlapping IPs.
 
               For example, set the minimum offset l3leaf.defaults.loopback_ipv4_offset:
               < total # spine switches > or vice versa.
@@ -8234,15 +8317,17 @@ $defs:
           loopback_ipv6_pool:
             documentation_options:
               table: node-type-loopback-vtep-configuration
-            description: IPv6 subnet for Loopback0 allocation.
+            description: Comma separated list of prefixes (IPv6 address/Mask) or ranges
+              (IPv6_address-IPv6_address). The IPv6 address used for Loopback0 will
+              be derived from this pool based on the node id and 'loopback_ipv6_offset'.
             type: str
-            format: ipv6_cidr
+            format: ipv6_pool
           loopback_ipv6_offset:
             documentation_options:
               table: node-type-loopback-vtep-configuration
             description: 'Offset all assigned loopback IPv6 addresses.
 
-              Required when the < loopback_ipv6_pool > is same for 2 different node_types
+              Required when the ''loopback_ipv6_pool'' is same for 2 different node_types
               (like spine and l3leaf) to avoid overlapping IPs.
 
               For example, set the minimum offset l3leaf.defaults.loopback_ipv6_offset:
@@ -8611,15 +8696,18 @@ $defs:
           mlag_peer_l3_ipv4_pool:
             documentation_options:
               table: node-type-l2-mlag-configuration
-            description: 'IP address pool used for MLAG underlay L3 peering. IP is
-              derived from the node id.
+            description: 'Comma separated list of prefixes (IPv4 address/Mask) or
+              ranges (IPv4_address-IPv4_address).
+
+              The IPv4 subnet used for MLAG underlay L3 peering is derived from this
+              pool based on the node id of the first MLAG switch.
 
               Required when MLAG leafs present in topology and they are using a separate
               L3 peering VLAN.
 
               '
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           mlag_peer_vlan:
             documentation_options:
               table: node-type-l2-mlag-configuration
@@ -8652,21 +8740,27 @@ $defs:
           mlag_peer_ipv4_pool:
             documentation_options:
               table: node-type-l2-mlag-configuration
-            description: 'IPv4 address pool used for MLAG Peer Link (control link).
-              IP is derived from the node id.
+            description: 'Comma separated list of prefixes (IPv4 address/Mask) or
+              ranges (IPv4_address-IPv4_address).
+
+              The IPv4 address used for MLAG Peer Link (control link) is derived from
+              this pool based on the node id of the first MLAG switch.
 
               Required for MLAG leafs when `mlag_peer_address_family` is `ipv4` (default).'
             type: str
-            format: ipv4_cidr
+            format: ipv4_pool
           mlag_peer_ipv6_pool:
             documentation_options:
               table: node-type-l2-mlag-configuration
-            description: 'IPv6 address pool used for MLAG Peer Link (control link).
-              IP is derived from the node id.
+            description: 'Comma separated list of prefixes (IPv6 address/Mask) or
+              ranges (IPv6_address-IPv6_address).
+
+              The IPv6 address used for MLAG Peer Link (control link) is derived from
+              this pool based on the node id of the first MLAG switch.
 
               Required for MLAG leafs when `mlag_peer_address_family` is `ipv6`.'
             type: str
-            format: ipv6_cidr
+            format: ipv6_pool
           mlag_port_channel_id:
             documentation_options:
               table: node-type-l2-mlag-configuration
@@ -9022,6 +9116,13 @@ $defs:
                 type: str
                 description: "Default available profiles are:\n  - \"aes67\"\n  -
                   \"aes67-r16-2016\"\n  - \"smpte2059-2\""
+              uplinks:
+                type: list
+                items:
+                  type: str
+                  description: 'Limit PTP to the specified uplink interfaces.
+
+                    Only considered when `uplink_type` is `p2p`.'
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when
                   PTP is enabled. By default PTP will not be configured on the MLAG
@@ -9308,13 +9409,15 @@ $defs:
                   type: str
                   pattern: Ethernet[\d/]+
               ha_ipv4_pool:
-                description: 'IP address pool used for WAN HA connectivity.
+                description: 'Comma separated list of prefixes (IPv4 address/Mask)
+                  or ranges (IPv4_address-IPv4_address).
 
-                  IP is derived from the node ID.
+                  The IPv4 subnet used for direct WAN HA connectivity is derived from
+                  this pool based on the node ID of the first WAN router.
 
                   Not used for uplink interfaces.'
                 type: str
-                format: ipv4_cidr
+                format: ipv4_pool
               max_ha_interfaces:
                 type: int
                 convert_types:
@@ -9449,9 +9552,13 @@ $defs:
                 keys:
                   ipv4_pool:
                     type: str
-                    format: ipv4_cidr
-                    description: IPv4 pool from which subnets will be allocated for
-                      links to downlink switches.
+                    format: ipv4_pool
+                    description: 'Comma separated list of prefixes (IPv4 address/Mask)
+                      or ranges (IPv4_address-IPv4_address).
+
+                      IPv4 subnets used for links to downlink switches will be derived
+                      from this pool based on index the peer''s uplink interface''s
+                      index in ''downlink_interfaces''.'
                   downlink_interfaces:
                     type: list
                     description: List of downlink interfaces or ranges of interfaces

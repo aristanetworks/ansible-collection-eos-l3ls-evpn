@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class IpVirtualRouterMacAddressMixin(UtilsMixin):
+class IpVirtualRouterMacAddressMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -20,7 +18,7 @@ class IpVirtualRouterMacAddressMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_virtual_router_mac_address(self: AvdStructuredConfigNetworkServices) -> str | None:
+    def ip_virtual_router_mac_address(self: AvdStructuredConfigNetworkServicesProtocol) -> str | None:
         """Return structured config for ip_virtual_router_mac_address."""
         if (
             self.shared_utils.network_services_l2

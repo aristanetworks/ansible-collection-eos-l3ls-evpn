@@ -1,6 +1,5 @@
 ---
 ### interface default all knobs
-
 interface_defaults:
   ethernet:
     shutdown: true

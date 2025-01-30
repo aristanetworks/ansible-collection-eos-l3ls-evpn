@@ -709,10 +709,10 @@ interaction to help understand how everything fits together. This diagram
 represents the common scenario for a single router, without any LAN. It will be
 reused when adding LAN protocols to help understand the changes.
 
-<!-- ![Figure 1: WAN LAN Common design](../../../media/wan_lan_common.png) -->
+<!-- ![Figure 1: WAN LAN Common design](../../../../../../docs/_media/wan_lan_common.png) -->
 
 <div style="text-align:center">
-  <img src="../../../../media/wan_lan_common.png" alt="WAN LAN Common design"/>
+  <img src="../../../../../../../docs/_media/wan_lan_common.png" alt="WAN LAN Common design"/>
 </div>
 
 #### LAN HA common configuration
@@ -781,10 +781,10 @@ From a configuration standpoint:
 
 The following diagram represents this scenario:
 
-<!-- ![Figure 2: WAN Direct HA](../../../media/wan_direct_ha_no_lan.png) -->
+<!-- ![Figure 2: WAN Direct HA](../../../../../../docs/_media/wan_direct_ha_no_lan.png) -->
 
 <div style="text-align:center">
-  <img src="../../../../media/wan_direct_ha_no_lan.png" alt="WAN Direct HA"/>
+  <img src="../../../../../../../docs/_media/wan_direct_ha_no_lan.png" alt="WAN Direct HA"/>
 </div>
 
 #### EBGP LAN
@@ -800,10 +800,10 @@ The following diagram represents this scenario:
 
 The following diagram shows the additional route-maps configured to support eBGP on LAN:
 
-<!-- ![Figure 3: WAN eBGP LAN Single Router](../../../media/wan_ebgp_lan_single_router.png) -->
+<!-- ![Figure 3: WAN eBGP LAN Single Router](../../../../../../docs/_media/wan_ebgp_lan_single_router.png) -->
 
 <div style="text-align:center">
-  <img src="../../../../media/wan_ebgp_lan_single_router.png" alt="WAN eBGP LAN Single Router"/>
+  <img src="../../../../../../../docs/_media/wan_ebgp_lan_single_router.png" alt="WAN eBGP LAN Single Router"/>
 </div>
 
 ##### HA (PREVIEW)
@@ -825,20 +825,20 @@ for eBGP LAN routing protocol the following is done to enable HA:
 
 This is described in the following diagram:
 
-<!-- ![Figure 4: WAN eBGP LAN with HA](../../../media/wan_ebgp_lan_ha.png) -->
+<!-- ![Figure 4: WAN eBGP LAN with HA](../../../../../../docs/_media/wan_ebgp_lan_ha.png) -->
 
 <div style="text-align:center">
-  <img src="../../../../media/wan_ebgp_lan_ha.png" alt="WAN eBGP LAN with HA"/>
+  <img src="../../../../../../../docs/_media/wan_ebgp_lan_ha.png" alt="WAN eBGP LAN with HA"/>
 </div>
 
 ##### HA with Direct Link (PREVIEW)
 
 In the situation where the LAN is EBGP but HA is configured over a direct link, there is no peering with the HA peer required via the LAN and the configuration is simplified as follow:
 
-<!-- ![Figure 5: WAN eBGP LAN with Direct HA link](../../../media/wan_ebgp_lan_ha_direct.png) -->
+<!-- ![Figure 5: WAN eBGP LAN with Direct HA link](../../../../../../docs/_media/wan_ebgp_lan_ha_direct.png) -->
 
 <div style="text-align:center">
-  <img src="../../../../media/wan_ebgp_lan_ha_direct.png" alt="WAN eBGP LAN with Direct HA link"/>
+  <img src="../../../../../../../docs/_media/wan_ebgp_lan_ha_direct.png" alt="WAN eBGP LAN with Direct HA link"/>
 </div>
 
 !!! warning
@@ -906,7 +906,7 @@ The tags will only be generated when `wan_mode` is set to `cv-pathfinder`.
 As described in the design principles, the goal is to be able to distribute the
 WAN routers in separate Ansible inventories.
 
-When leveraging multiple inventories, the arista.avd collection provide capabilities to create [global variables](../../../../docs/plugins/Vars_plugins/global_vars.md).
+When leveraging multiple inventories, the arista.avd collection provide capabilities to create [global variables](../../../../../../../docs/plugins/Vars_plugins/global_vars.md).
 The following example will be leveraging this capability to share required WAN variables across multiple inventories.
 
 This example contains contains two sites, SITE1 and SITE2 and a dedicate inventory for pathfinder nodes.

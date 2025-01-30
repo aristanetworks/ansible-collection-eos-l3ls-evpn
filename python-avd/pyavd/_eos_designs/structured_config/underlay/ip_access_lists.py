@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate
 from pyavd.j2filters import natural_sort
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class IpAccesslistsMixin(UtilsMixin):
+class IpAccesslistsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class IpAccesslistsMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_access_lists(self: AvdStructuredConfigUnderlay) -> list | None:
+    def ip_access_lists(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
         """
         Return structured config for ip_access_lists.
 

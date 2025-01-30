@@ -1,0 +1,8 @@
+---
+sflow:
+  run: false
+  interface:
+    egress:
+      enable_default: true
+      unmodified: false
+  source: 1.1.1.1

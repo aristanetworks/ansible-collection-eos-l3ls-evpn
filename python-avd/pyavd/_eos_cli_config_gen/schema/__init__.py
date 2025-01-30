@@ -2782,6 +2782,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "cos": {"type": str},
                 "ip": {"type": Ip},
                 "ipv6": {"type": Ipv6},
+                "dscp": {"type": str},
+                "ecn": {"type": str},
                 "_custom_data": {"type": dict},
             }
             name: str
@@ -2794,6 +2796,26 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """Subclass of AvdModel."""
             ipv6: Ipv6
             """Subclass of AvdModel."""
+            dscp: str | None
+            """
+            Match packets based on the DSCP value(s).
+            Accepted formats:
+              - Single AF/CS/EF DSCP name like
+            "af12".
+              - Single decimal DSCP value. Example: "23".
+              - Range of decimal DSCP values. Examples:
+            "1,3-10".
+            """
+            ecn: Literal["ce", "ect", "ect-ce", "non-ect"] | None
+            """
+            Match packets based on the ECN value.
+            Accepted values:
+              - non-ect (matches 00).
+              - ect (matches 01
+            an 10).
+              - ce (matches 11).
+              - ect-ce (matches 01, 10 and 11).
+            """
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -2806,6 +2828,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     cos: str | None | UndefinedType = Undefined,
                     ip: Ip | UndefinedType = Undefined,
                     ipv6: Ipv6 | UndefinedType = Undefined,
+                    dscp: str | None | UndefinedType = Undefined,
+                    ecn: Literal["ce", "ect", "ect-ce", "non-ect"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -2820,6 +2844,22 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         cos: CoS value(s) or range(s) of CoS values.
                         ip: Subclass of AvdModel.
                         ipv6: Subclass of AvdModel.
+                        dscp:
+                           Match packets based on the DSCP value(s).
+                           Accepted formats:
+                             - Single AF/CS/EF DSCP name like
+                           "af12".
+                             - Single decimal DSCP value. Example: "23".
+                             - Range of decimal DSCP values. Examples:  # fmt: skip
+                           "1,3-10".
+                        ecn:
+                           Match packets based on the ECN value.
+                           Accepted values:
+                             - non-ect (matches 00).
+                             - ect (matches 01
+                           an 10).
+                             - ce (matches 11).
+                             - ect-ce (matches 01, 10 and 11).
                         _custom_data: _custom_data
 
                     """
@@ -2835,7 +2875,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         pbr: Pbr
         """Subclass of AvdIndexedList with `PbrItem` items. Primary key is `name` (`str`)."""
         qos: Qos
-        """Subclass of AvdIndexedList with `QosItem` items. Primary key is `name` (`str`)."""
+        """
+        The keys `vlan`, `cos`, `ip`, `ipv6`, `dscp`, `ecn` are mutually exclusive,
+        except `dscp` and `ecn`
+        which can be given separate or together.
+
+        Subclass of AvdIndexedList with `QosItem` items. Primary
+        key is `name` (`str`).
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -2851,7 +2898,13 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Args:
                     pbr: Subclass of AvdIndexedList with `PbrItem` items. Primary key is `name` (`str`).
-                    qos: Subclass of AvdIndexedList with `QosItem` items. Primary key is `name` (`str`).
+                    qos:
+                       The keys `vlan`, `cos`, `ip`, `ipv6`, `dscp`, `ecn` are mutually exclusive,
+                       except `dscp` and `ecn`
+                       which can be given separate or together.
+
+                       Subclass of AvdIndexedList with `QosItem` items. Primary
+                       key is `name` (`str`).
                     _custom_data: _custom_data
 
                 """
@@ -15855,6 +15908,98 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 """
 
+    class IpNameServerGroupsItem(AvdModel):
+        """Subclass of AvdModel."""
+
+        class NameServersItem(AvdModel):
+            """Subclass of AvdModel."""
+
+            _fields: ClassVar[dict] = {"ip_address": {"type": str}, "vrf": {"type": str}, "priority": {"type": int}, "_custom_data": {"type": dict}}
+            ip_address: str
+            """IPv4 or IPv6 address for DNS server."""
+            vrf: str
+            """VRF Name."""
+            priority: int | None
+            """Priority value (lower is first)."""
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    ip_address: str | UndefinedType = Undefined,
+                    vrf: str | UndefinedType = Undefined,
+                    priority: int | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    NameServersItem.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        ip_address: IPv4 or IPv6 address for DNS server.
+                        vrf: VRF Name.
+                        priority: Priority value (lower is first).
+                        _custom_data: _custom_data
+
+                    """
+
+        class NameServers(AvdList[NameServersItem]):
+            """Subclass of AvdList with `NameServersItem` items."""
+
+        NameServers._item_type = NameServersItem
+
+        _fields: ClassVar[dict] = {
+            "name": {"type": str},
+            "name_servers": {"type": NameServers},
+            "dns_domain": {"type": str},
+            "ip_domain_list": {"type": str},
+            "_custom_data": {"type": dict},
+        }
+        name: str
+        name_servers: NameServers
+        """Subclass of AvdList with `NameServersItem` items."""
+        dns_domain: str | None
+        ip_domain_list: str | None
+        """Set domain names to complete unqualified host names."""
+        _custom_data: dict[str, Any]
+
+        if TYPE_CHECKING:
+
+            def __init__(
+                self,
+                *,
+                name: str | UndefinedType = Undefined,
+                name_servers: NameServers | UndefinedType = Undefined,
+                dns_domain: str | None | UndefinedType = Undefined,
+                ip_domain_list: str | None | UndefinedType = Undefined,
+                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+            ) -> None:
+                """
+                IpNameServerGroupsItem.
+
+
+                Subclass of AvdModel.
+
+                Args:
+                    name: name
+                    name_servers: Subclass of AvdList with `NameServersItem` items.
+                    dns_domain: dns_domain
+                    ip_domain_list: Set domain names to complete unqualified host names.
+                    _custom_data: _custom_data
+
+                """
+
+    class IpNameServerGroups(AvdIndexedList[str, IpNameServerGroupsItem]):
+        """Subclass of AvdIndexedList with `IpNameServerGroupsItem` items. Primary key is `name` (`str`)."""
+
+        _primary_key: ClassVar[str] = "name"
+
+    IpNameServerGroups._item_type = IpNameServerGroupsItem
+
     class IpNameServersItem(AvdModel):
         """Subclass of AvdModel."""
 
@@ -18425,7 +18570,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         _fields: ClassVar[dict] = {
             "timer": {"type": int},
-            "timer_reinitialization": {"type": str},
+            "timer_reinitialization": {"type": int},
             "holdtime": {"type": int},
             "management_address": {"type": str},
             "vrf": {"type": str},
@@ -18435,7 +18580,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "_custom_data": {"type": dict},
         }
         timer: int | None
-        timer_reinitialization: str | None
+        timer_reinitialization: int | None
         holdtime: int | None
         management_address: str | None
         vrf: str | None
@@ -18451,7 +18596,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 self,
                 *,
                 timer: int | None | UndefinedType = Undefined,
-                timer_reinitialization: str | None | UndefinedType = Undefined,
+                timer_reinitialization: int | None | UndefinedType = Undefined,
                 holdtime: int | None | UndefinedType = Undefined,
                 management_address: str | None | UndefinedType = Undefined,
                 vrf: str | None | UndefinedType = Undefined,
@@ -18734,14 +18879,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "name": {"type": str},
                     "protocol": {"type": str, "default": "udp"},
                     "ports": {"type": Ports},
+                    "ssl_profile": {"type": str},
                     "_custom_data": {"type": dict},
                 }
                 name: str
                 """Syslog server name."""
-                protocol: Literal["tcp", "udp"]
+                protocol: Literal["tcp", "udp", "tls"]
                 """Default value: `"udp"`"""
                 ports: Ports
                 """Subclass of AvdList with `int` items."""
+                ssl_profile: str | None
+                """Used when host protocol is 'tls'. Profiles are defined under `management_security.ssl_profiles`."""
                 _custom_data: dict[str, Any]
 
                 if TYPE_CHECKING:
@@ -18750,8 +18898,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         self,
                         *,
                         name: str | UndefinedType = Undefined,
-                        protocol: Literal["tcp", "udp"] | UndefinedType = Undefined,
+                        protocol: Literal["tcp", "udp", "tls"] | UndefinedType = Undefined,
                         ports: Ports | UndefinedType = Undefined,
+                        ssl_profile: str | None | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
                         """
@@ -18764,6 +18913,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             name: Syslog server name.
                             protocol: protocol
                             ports: Subclass of AvdList with `int` items.
+                            ssl_profile: Used when host protocol is 'tls'. Profiles are defined under `management_security.ssl_profiles`.
                             _custom_data: _custom_data
 
                         """
@@ -20815,6 +20965,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         _fields: ClassVar[dict] = {
             "enable_http": {"type": bool},
             "enable_https": {"type": bool},
+            "enable_unix": {"type": bool},
             "https_ssl_profile": {"type": str},
             "default_services": {"type": bool},
             "enable_vrfs": {"type": EnableVrfs},
@@ -20823,6 +20974,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         }
         enable_http: bool | None
         enable_https: bool | None
+        enable_unix: bool | None
         https_ssl_profile: str | None
         """SSL Profile Name."""
         default_services: bool | None
@@ -20840,6 +20992,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 *,
                 enable_http: bool | None | UndefinedType = Undefined,
                 enable_https: bool | None | UndefinedType = Undefined,
+                enable_unix: bool | None | UndefinedType = Undefined,
                 https_ssl_profile: str | None | UndefinedType = Undefined,
                 default_services: bool | None | UndefinedType = Undefined,
                 enable_vrfs: EnableVrfs | UndefinedType = Undefined,
@@ -20855,6 +21008,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Args:
                     enable_http: enable_http
                     enable_https: enable_https
+                    enable_unix: enable_unix
                     https_ssl_profile: SSL Profile Name.
                     default_services: Enable default services: capi-doc and tapagg.
                     enable_vrfs: Subclass of AvdIndexedList with `EnableVrfsItem` items. Primary key is `name` (`str`).
@@ -24689,6 +24843,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             "local_interfaces": {"type": str},
             "address_only": {"type": bool, "default": True},
             "hosts": {"type": Hosts},
+            "name_server_group": {"type": str},
             "vrfs": {"type": Vrfs},
             "_custom_data": {"type": dict},
         }
@@ -24709,6 +24864,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """
         hosts: Hosts
         """Subclass of AvdIndexedList with `HostsItem` items. Primary key is `name` (`str`)."""
+        name_server_group: str | None
+        """Set name-server group."""
         vrfs: Vrfs
         """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
         _custom_data: dict[str, Any]
@@ -24724,6 +24881,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 local_interfaces: str | None | UndefinedType = Undefined,
                 address_only: bool | UndefinedType = Undefined,
                 hosts: Hosts | UndefinedType = Undefined,
+                name_server_group: str | None | UndefinedType = Undefined,
                 vrfs: Vrfs | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
@@ -24745,6 +24903,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                        When set to `false`, the probe uses the
                        interface to exit the device.
                     hosts: Subclass of AvdIndexedList with `HostsItem` items. Primary key is `name` (`str`).
+                    name_server_group: Set name-server group.
                     vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                     _custom_data: _custom_data
 
@@ -26788,7 +26947,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "vrf": {"type": str},
                 "_custom_data": {"type": dict},
             }
-            name: str | None
+            name: str
             """IP or hostname e.g., 2.2.2.55, 2001:db8::55, ie.pool.ntp.org."""
             burst: bool | None
             iburst: bool | None
@@ -26810,7 +26969,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 def __init__(
                     self,
                     *,
-                    name: str | None | UndefinedType = Undefined,
+                    name: str | UndefinedType = Undefined,
                     burst: bool | None | UndefinedType = Undefined,
                     iburst: bool | None | UndefinedType = Undefined,
                     key: int | None | UndefinedType = Undefined,
@@ -26843,8 +27002,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        class Servers(AvdList[ServersItem]):
-            """Subclass of AvdList with `ServersItem` items."""
+        class Servers(AvdIndexedList[str, ServersItem]):
+            """Subclass of AvdIndexedList with `ServersItem` items. Primary key is `name` (`str`)."""
+
+            _primary_key: ClassVar[str] = "name"
 
         Servers._item_type = ServersItem
 
@@ -26860,8 +27021,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             }
             id: int
             """Key identifier."""
-            hash_algorithm: Literal["md5", "sha1"] | None
-            key: str | None
+            hash_algorithm: Literal["md5", "sha1"]
+            key: str
             """Obfuscated key."""
             key_type: Literal["0", "7", "8a"] | None
             _custom_data: dict[str, Any]
@@ -26872,8 +27033,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     self,
                     *,
                     id: int | UndefinedType = Undefined,
-                    hash_algorithm: Literal["md5", "sha1"] | None | UndefinedType = Undefined,
-                    key: str | None | UndefinedType = Undefined,
+                    hash_algorithm: Literal["md5", "sha1"] | UndefinedType = Undefined,
+                    key: str | UndefinedType = Undefined,
                     key_type: Literal["0", "7", "8a"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
@@ -26911,7 +27072,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         local_interface: LocalInterface
         """Subclass of AvdModel."""
         servers: Servers
-        """Subclass of AvdList with `ServersItem` items."""
+        """Subclass of AvdIndexedList with `ServersItem` items. Primary key is `name` (`str`)."""
         authenticate: bool | None
         authenticate_servers_only: bool | None
         authentication_keys: AuthenticationKeys
@@ -26941,7 +27102,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Args:
                     local_interface: Subclass of AvdModel.
-                    servers: Subclass of AvdList with `ServersItem` items.
+                    servers: Subclass of AvdIndexedList with `ServersItem` items. Primary key is `name` (`str`).
                     authenticate: authenticate
                     authenticate_servers_only: authenticate_servers_only
                     authentication_keys: Subclass of AvdIndexedList with `AuthenticationKeysItem` items. Primary key is `id` (`int`).
@@ -41069,6 +41230,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "default_route": {"type": DefaultRoute},
                     "domain_remote": {"type": bool},
                     "encapsulation": {"type": str},
+                    "next_hop_self_source_interface": {"type": str},
                     "additional_paths": {"type": AdditionalPaths},
                     "_custom_data": {"type": dict},
                 }
@@ -41094,6 +41256,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 domain_remote: bool | None
                 encapsulation: Literal["vxlan", "mpls", "path-selection"] | None
                 """Transport encapsulation for the peer-group."""
+                next_hop_self_source_interface: str | None
+                """Source interface name for MPLS encapsulation. Requires `encapsulation` to be set as `mpls`."""
                 additional_paths: AdditionalPaths
                 """Subclass of AvdModel."""
                 _custom_data: dict[str, Any]
@@ -41112,6 +41276,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         default_route: DefaultRoute | UndefinedType = Undefined,
                         domain_remote: bool | None | UndefinedType = Undefined,
                         encapsulation: Literal["vxlan", "mpls", "path-selection"] | None | UndefinedType = Undefined,
+                        next_hop_self_source_interface: str | None | UndefinedType = Undefined,
                         additional_paths: AdditionalPaths | UndefinedType = Undefined,
                         _custom_data: dict[str, Any] | UndefinedType = Undefined,
                     ) -> None:
@@ -41135,6 +41300,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             default_route: Subclass of AvdModel.
                             domain_remote: domain_remote
                             encapsulation: Transport encapsulation for the peer-group.
+                            next_hop_self_source_interface: Source interface name for MPLS encapsulation. Requires `encapsulation` to be set as `mpls`.
                             additional_paths: Subclass of AvdModel.
                             _custom_data: _custom_data
 
@@ -70587,6 +70753,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         "ip_http_client_source_interfaces": {"type": IpHttpClientSourceInterfaces},
         "ip_icmp_redirect": {"type": bool},
         "ip_igmp_snooping": {"type": IpIgmpSnooping},
+        "ip_name_server_groups": {"type": IpNameServerGroups},
         "ip_name_servers": {"type": IpNameServers},
         "ip_nat": {"type": IpNat},
         "ip_radius_source_interfaces": {"type": IpRadiusSourceInterfaces},
@@ -70958,6 +71125,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     ip_icmp_redirect: bool | None
     ip_igmp_snooping: IpIgmpSnooping
     """Subclass of AvdModel."""
+    ip_name_server_groups: IpNameServerGroups
+    """Subclass of AvdIndexedList with `IpNameServerGroupsItem` items. Primary key is `name` (`str`)."""
     ip_name_servers: IpNameServers
     """Subclass of AvdList with `IpNameServersItem` items."""
     ip_nat: IpNat
@@ -71325,6 +71494,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             ip_http_client_source_interfaces: IpHttpClientSourceInterfaces | UndefinedType = Undefined,
             ip_icmp_redirect: bool | None | UndefinedType = Undefined,
             ip_igmp_snooping: IpIgmpSnooping | UndefinedType = Undefined,
+            ip_name_server_groups: IpNameServerGroups | UndefinedType = Undefined,
             ip_name_servers: IpNameServers | UndefinedType = Undefined,
             ip_nat: IpNat | UndefinedType = Undefined,
             ip_radius_source_interfaces: IpRadiusSourceInterfaces | UndefinedType = Undefined,
@@ -71620,6 +71790,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 ip_http_client_source_interfaces: Subclass of AvdList with `IpHttpClientSourceInterfacesItem` items.
                 ip_icmp_redirect: ip_icmp_redirect
                 ip_igmp_snooping: Subclass of AvdModel.
+                ip_name_server_groups: Subclass of AvdIndexedList with `IpNameServerGroupsItem` items. Primary key is `name` (`str`).
                 ip_name_servers: Subclass of AvdList with `IpNameServersItem` items.
                 ip_nat: Subclass of AvdModel.
                 ip_radius_source_interfaces: Subclass of AvdList with `IpRadiusSourceInterfacesItem` items.

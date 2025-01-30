@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
@@ -14,10 +14,10 @@ from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class UtilsMixin:
+class UtilsMixin(Protocol):
     """
     Mixin Class with internal functions.
 
@@ -25,7 +25,7 @@ class UtilsMixin:
     """
 
     @cached_property
-    def _avd_peers(self: AvdStructuredConfigUnderlay) -> list:
+    def _avd_peers(self: AvdStructuredConfigUnderlayProtocol) -> list:
         """
         Returns a list of peers.
 
@@ -35,7 +35,7 @@ class UtilsMixin:
         return natural_sort(get(self._hostvars, f"avd_topology_peers..{self.shared_utils.hostname}", separator="..", default=[]))
 
     @cached_property
-    def _underlay_filter_peer_as_route_maps_asns(self: AvdStructuredConfigUnderlay) -> list:
+    def _underlay_filter_peer_as_route_maps_asns(self: AvdStructuredConfigUnderlayProtocol) -> list:
         """Filtered ASNs."""
         if not self.inputs.underlay_filter_peer_as:
             return []
@@ -44,7 +44,7 @@ class UtilsMixin:
         return natural_sort({link["peer_bgp_as"] for link in self._underlay_links if link["type"] == "underlay_p2p"})
 
     @cached_property
-    def _underlay_links(self: AvdStructuredConfigUnderlay) -> list:
+    def _underlay_links(self: AvdStructuredConfigUnderlayProtocol) -> list:
         """Returns the list of underlay links for this device."""
         underlay_links = []
         underlay_links.extend(self._uplinks)
@@ -116,7 +116,7 @@ class UtilsMixin:
         return natural_sort(underlay_links, "interface")
 
     @cached_property
-    def _underlay_vlan_trunk_groups(self: AvdStructuredConfigUnderlay) -> list:
+    def _underlay_vlan_trunk_groups(self: AvdStructuredConfigUnderlayProtocol) -> list:
         """Returns a list of trunk groups to configure on the underlay link."""
         if self.inputs.enable_trunk_groups is not True:
             return []
@@ -143,11 +143,11 @@ class UtilsMixin:
         return []
 
     @cached_property
-    def _uplinks(self: AvdStructuredConfigUnderlay) -> list:
+    def _uplinks(self: AvdStructuredConfigUnderlayProtocol) -> list:
         return get(self._hostvars, "switch.uplinks")
 
     def _get_l3_interface_cfg(
-        self: AvdStructuredConfigUnderlay, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
+        self: AvdStructuredConfigUnderlayProtocol, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
     ) -> dict | None:
         """Returns structured_configuration for one L3 interface."""
         # build common portion of the interface cfg
@@ -193,7 +193,7 @@ class UtilsMixin:
         return strip_empties_from_dict(interface)
 
     def _get_l3_port_channel_cfg(
-        self: AvdStructuredConfigUnderlay, l3_port_channel: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
+        self: AvdStructuredConfigUnderlayProtocol, l3_port_channel: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
     ) -> dict | None:
         """Returns structured_configuration for one L3 Port-Channel."""
         # build common portion of the interface cfg
@@ -237,12 +237,10 @@ class UtilsMixin:
         return strip_empties_from_dict(interface)
 
     def _get_l3_common_interface_cfg(
-        self: AvdStructuredConfigUnderlay,
-        l3_generic_interface: (
-            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
-            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
-        ),
-    ) -> dict | None:
+        self: AvdStructuredConfigUnderlayProtocol,
+        l3_generic_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
+        | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem,
+    ) -> dict:
         """Returns common structured_configuration for L3 interface or L3 Port-Channel."""
         # variables being set for constructing appropriate validation error
         if isinstance(l3_generic_interface, EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem):
@@ -282,7 +280,7 @@ class UtilsMixin:
 
     # only being called for l3_port_channel which is not a sub-interface
     def _get_l3_port_channel_member_ports_cfg(
-        self: AvdStructuredConfigUnderlay, l3_port_channel: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
+        self: AvdStructuredConfigUnderlayProtocol, l3_port_channel: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
     ) -> list:
         """Returns structured_configuration (list of ethernet interfaces) representing member ports for one L3 Port-Channel."""
         ethernet_interfaces = []
@@ -321,7 +319,7 @@ class UtilsMixin:
             ethernet_interfaces.append(strip_empties_from_dict(ethernet_interface))
         return ethernet_interfaces
 
-    def _get_l3_uplink_with_l2_as_subint(self: AvdStructuredConfigUnderlay, link: dict) -> tuple[dict, list[dict]]:
+    def _get_l3_uplink_with_l2_as_subint(self: AvdStructuredConfigUnderlayProtocol, link: dict) -> tuple[dict, list[dict]]:
         """Return a tuple with main uplink interface, list of subinterfaces representing each SVI."""
         vlans = [int(vlan) for vlan in range_expand(link["vlans"])]
 
@@ -353,7 +351,7 @@ class UtilsMixin:
         return main_interface, [interface for interface in interfaces if interface["name"] != link["interface"]]
 
     def _get_l2_as_subint(
-        self: AvdStructuredConfigUnderlay,
+        self: AvdStructuredConfigUnderlayProtocol,
         link: dict,
         svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
@@ -413,7 +411,7 @@ class UtilsMixin:
         return strip_empties_from_dict(subinterface)
 
     @cached_property
-    def _l3_interface_acls(self: AvdStructuredConfigUnderlay) -> dict[str, dict[str, dict]]:
+    def _l3_interface_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, dict]]:
         """
         Return dict of l3 interface ACLs.
 
@@ -427,7 +425,7 @@ class UtilsMixin:
         return self._get_l3_generic_interface_acls(self.shared_utils.l3_interfaces)
 
     @cached_property
-    def _l3_port_channel_acls(self: AvdStructuredConfigUnderlay) -> dict[str, dict[str, dict]]:
+    def _l3_port_channel_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, dict]]:
         """
         Return dict of l3 Port-Channel ACLs.
 
@@ -441,7 +439,7 @@ class UtilsMixin:
         return self._get_l3_generic_interface_acls(self.shared_utils.node_config.l3_port_channels)
 
     def _get_l3_generic_interface_acls(
-        self: AvdStructuredConfigUnderlay,
+        self: AvdStructuredConfigUnderlayProtocol,
         l3_generic_interfaces: (
             EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
             | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
