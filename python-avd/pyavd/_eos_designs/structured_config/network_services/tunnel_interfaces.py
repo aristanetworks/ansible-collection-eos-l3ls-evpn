@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class TunnelInterfacesMixin(UtilsMixin):
+class TunnelInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class TunnelInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def tunnel_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def tunnel_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for tunnel_interfaces.
 

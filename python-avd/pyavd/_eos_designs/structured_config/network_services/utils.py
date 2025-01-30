@@ -6,22 +6,19 @@ from __future__ import annotations
 import ipaddress
 from functools import cached_property
 from re import fullmatch as re_fullmatch
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, get, get_ip_from_ip_prefix
 from pyavd.j2filters import natural_sort
 
-from .utils_wan import UtilsWanMixin
-from .utils_zscaler import UtilsZscalerMixin
-
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
+class UtilsMixin(Protocol):
     """
     Mixin Class with internal functions.
 
@@ -29,11 +26,11 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
     """
 
     @cached_property
-    def _local_endpoint_trunk_groups(self: AvdStructuredConfigNetworkServices) -> set:
+    def _local_endpoint_trunk_groups(self: AvdStructuredConfigNetworkServicesProtocol) -> set:
         return set(get(self._hostvars, "switch.local_endpoint_trunk_groups", default=[]))
 
     @cached_property
-    def _vrf_default_evpn(self: AvdStructuredConfigNetworkServices) -> bool:
+    def _vrf_default_evpn(self: AvdStructuredConfigNetworkServicesProtocol) -> bool:
         """Return boolean telling if VRF "default" is running EVPN or not."""
         if not (
             self.shared_utils.network_services_l3 and ((self.shared_utils.overlay_vtep and self.shared_utils.overlay_evpn) or self.shared_utils.is_wan_router)
@@ -53,7 +50,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return False
 
     @cached_property
-    def _vrf_default_ipv4_subnets(self: AvdStructuredConfigNetworkServices) -> list[str]:
+    def _vrf_default_ipv4_subnets(self: AvdStructuredConfigNetworkServicesProtocol) -> list[str]:
         """Return list of ipv4 subnets in VRF "default"."""
         subnets = []
         for tenant in self.shared_utils.filtered_tenants:
@@ -72,7 +69,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return subnets
 
     @cached_property
-    def _vrf_default_ipv4_static_routes(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _vrf_default_ipv4_static_routes(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         """
         Finds static routes defined under VRF "default" and find out if they should be redistributed in underlay and/or overlay.
 
@@ -120,7 +117,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         }
 
     def _mlag_ibgp_peering_enabled(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> bool:
@@ -138,7 +135,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return bool((vrf.name != "default" or self.shared_utils.underlay_routing_protocol == "none") and mlag_ibgp_peering)
 
     def _mlag_ibgp_peering_vlan_vrf(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> int | None:
@@ -164,7 +161,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return vlan_id
 
     def _exclude_mlag_ibgp_peering_from_redistribute(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> bool:
@@ -179,7 +176,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return False
 
     @cached_property
-    def _configure_bgp_mlag_peer_group(self: AvdStructuredConfigNetworkServices) -> bool:
+    def _configure_bgp_mlag_peer_group(self: AvdStructuredConfigNetworkServicesProtocol) -> bool:
         """
         Flag set during creating of BGP VRFs if an MLAG peering is needed.
 
@@ -204,7 +201,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return False
 
     @cached_property
-    def _rt_admin_subfield(self: AvdStructuredConfigNetworkServices) -> str | None:
+    def _rt_admin_subfield(self: AvdStructuredConfigNetworkServicesProtocol) -> str | None:
         """
         Return a string with the route-target admin subfield unless set to "vrf_id" or "vrf_vni" or "id".
 
@@ -224,7 +221,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return None
 
     def get_vlan_mac_vrf_id(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
@@ -239,7 +236,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return mac_vrf_id_base + vlan.id
 
     def get_vlan_mac_vrf_vni(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
@@ -254,7 +251,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return mac_vrf_vni_base + vlan.id
 
     def get_vlan_rd(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
@@ -277,7 +274,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return f"{self.shared_utils.overlay_rd_type_admin_subfield}:{assigned_number_subfield}"
 
     def get_vlan_rt(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
@@ -311,7 +308,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return f"{admin_subfield}:{assigned_number_subfield}"
 
     @cached_property
-    def _vrf_rt_admin_subfield(self: AvdStructuredConfigNetworkServices) -> str | None:
+    def _vrf_rt_admin_subfield(self: AvdStructuredConfigNetworkServicesProtocol) -> str | None:
         """
         Return a string with the VRF route-target admin subfield unless set to "vrf_id" or "vrf_vni" or "id".
 
@@ -327,7 +324,9 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
 
         return None
 
-    def get_vrf_rd(self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> str:
+    def get_vrf_rd(
+        self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+    ) -> str:
         """Return a string with the route-destinguisher for one VRF."""
         rd_override = vrf.rd_override
 
@@ -339,7 +338,9 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
 
         return f"{self.shared_utils.overlay_rd_type_vrf_admin_subfield}:{self.shared_utils.get_vrf_id(vrf)}"
 
-    def get_vrf_rt(self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> str:
+    def get_vrf_rt(
+        self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+    ) -> str:
         """Return a string with the route-target for one VRF."""
         rt_override = vrf.rt_override
 
@@ -360,7 +361,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return f"{admin_subfield}:{self.shared_utils.get_vrf_id(vrf)}"
 
     def get_vlan_aware_bundle_rd(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         id: int,  # noqa: A002
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         is_vrf: bool,
@@ -379,7 +380,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return f"{admin_subfield}:{bundle_number}"
 
     def get_vlan_aware_bundle_rt(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         id: int,  # noqa: A002
         vni: int,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
@@ -406,7 +407,7 @@ class UtilsMixin(UtilsWanMixin, UtilsZscalerMixin):
         return f"{admin_subfield}:{bundle_number}"
 
     def get_vrf_router_id(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         router_id: str,
         tenant_name: str,

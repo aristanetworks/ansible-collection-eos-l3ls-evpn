@@ -5,17 +5,15 @@ from __future__ import annotations
 
 from functools import cached_property
 from ipaddress import IPv4Network
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd.j2filters import natural_sort
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class PrefixListsMixin(UtilsMixin):
+class PrefixListsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class PrefixListsMixin(UtilsMixin):
     """
 
     @cached_property
-    def prefix_lists(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def prefix_lists(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for prefix_lists.
 
@@ -46,7 +44,7 @@ class PrefixListsMixin(UtilsMixin):
 
         return None
 
-    def _prefix_lists_vrf_default(self: AvdStructuredConfigNetworkServices) -> list:
+    def _prefix_lists_vrf_default(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
         """prefix_lists for EVPN services in VRF "default"."""
         if not self._vrf_default_evpn:
             return []
@@ -73,7 +71,7 @@ class PrefixListsMixin(UtilsMixin):
         return prefix_lists
 
     @cached_property
-    def _mlag_ibgp_peering_subnets_without_redistribution(self: AvdStructuredConfigNetworkServices) -> list:
+    def _mlag_ibgp_peering_subnets_without_redistribution(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
         """Return sorted list of MLAG peerings for VRFs where MLAG iBGP peering should not be redistributed."""
         mlag_prefixes = set()
         for tenant in self.shared_utils.filtered_tenants:

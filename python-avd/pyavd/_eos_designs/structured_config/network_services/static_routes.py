@@ -5,15 +5,13 @@ from __future__ import annotations
 
 import ipaddress
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class StaticRoutesMixin(UtilsMixin):
+class StaticRoutesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -21,7 +19,7 @@ class StaticRoutesMixin(UtilsMixin):
     """
 
     @cached_property
-    def static_routes(self: AvdStructuredConfigNetworkServices) -> list[dict] | None:
+    def static_routes(self: AvdStructuredConfigNetworkServicesProtocol) -> list[dict] | None:
         """
         Returns structured config for static_routes.
 

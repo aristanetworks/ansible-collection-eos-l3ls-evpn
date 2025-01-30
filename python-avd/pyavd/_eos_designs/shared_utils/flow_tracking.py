@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._utils import Undefined, UndefinedType, default
@@ -14,7 +14,7 @@ if TYPE_CHECKING:
 
     from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
     FlowTracking = (
         EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.FlowTracking
@@ -37,7 +37,7 @@ if TYPE_CHECKING:
     )
 
 
-class FlowTrackingMixin:
+class FlowTrackingMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -46,11 +46,11 @@ class FlowTrackingMixin:
     """
 
     @cached_property
-    def flow_tracking_type(self: SharedUtils) -> Literal["sampled", "hardware"]:
+    def flow_tracking_type(self: SharedUtilsProtocol) -> Literal["sampled", "hardware"]:
         default_flow_tracker_type = self.node_type_key_data.default_flow_tracker_type
         return self.node_config.flow_tracker_type or default_flow_tracker_type
 
-    def get_flow_tracker(self: SharedUtils, flow_tracking: FlowTracking) -> dict[str, str] | None:
+    def get_flow_tracker(self: SharedUtilsProtocol, flow_tracking: FlowTracking) -> dict[str, str] | None:
         """Return flow_tracking settings for a link, falling back to the fabric flow_tracking_settings if not defined."""
         match flow_tracking:
             case EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.FlowTracking():
@@ -86,7 +86,7 @@ class FlowTrackingMixin:
         return {self.flow_tracking_type: name}
 
     def new_get_flow_tracker(
-        self: SharedUtils,
+        self: SharedUtilsProtocol,
         flow_tracking: FlowTracking,
         output_type: type[T_FlowTracker],
     ) -> T_FlowTracker | UndefinedType:

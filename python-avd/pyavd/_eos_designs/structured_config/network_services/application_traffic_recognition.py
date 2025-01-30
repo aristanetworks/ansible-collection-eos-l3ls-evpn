@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property, partial
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, get, get_item, strip_empties_from_dict
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class ApplicationTrafficRecognitionMixin(UtilsMixin):
+class ApplicationTrafficRecognitionMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class ApplicationTrafficRecognitionMixin(UtilsMixin):
     """
 
     @cached_property
-    def application_traffic_recognition(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def application_traffic_recognition(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Return structured config for application_traffic_recognition if wan router."""
         if not self.shared_utils.is_wan_router:
             return None
@@ -36,18 +34,18 @@ class ApplicationTrafficRecognitionMixin(UtilsMixin):
 
     #  self._wan_control_plane_application_profile is defined in utils.py
     @cached_property
-    def _wan_control_plane_application(self: AvdStructuredConfigNetworkServices) -> str:
+    def _wan_control_plane_application(self: AvdStructuredConfigNetworkServicesProtocol) -> str:
         return "APP-CONTROL-PLANE"
 
     @cached_property
-    def _wan_cp_app_dst_prefix(self: AvdStructuredConfigNetworkServices) -> str:
+    def _wan_cp_app_dst_prefix(self: AvdStructuredConfigNetworkServicesProtocol) -> str:
         return "PFX-PATHFINDERS"
 
     @cached_property
-    def _wan_cp_app_src_prefix(self: AvdStructuredConfigNetworkServices) -> str:
+    def _wan_cp_app_src_prefix(self: AvdStructuredConfigNetworkServicesProtocol) -> str:
         return "PFX-LOCAL-VTEP-IP"
 
-    def _generate_control_plane_application_profile(self: AvdStructuredConfigNetworkServices, app_dict: dict) -> None:
+    def _generate_control_plane_application_profile(self: AvdStructuredConfigNetworkServicesProtocol, app_dict: dict) -> None:
         """
         Generate an application profile using a single application matching.
 
@@ -135,7 +133,7 @@ class ApplicationTrafficRecognitionMixin(UtilsMixin):
                 {"name": self._wan_cp_app_src_prefix, "prefix_values": [f"{self.shared_utils.vtep_ip}/32"]},
             )
 
-    def _filtered_application_classification(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _filtered_application_classification(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         """
         Based on the filtered policies local to the device, filter which application profiles should be configured on the device.
 

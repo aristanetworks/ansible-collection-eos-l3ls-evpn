@@ -3,18 +3,16 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class DpsInterfacesMixin(UtilsMixin):
+class DpsInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class DpsInterfacesMixin(UtilsMixin):
     """
 
     @structured_config_contributor
-    def dps_interfaces(self: AvdStructuredConfigNetworkServices) -> None:
+    def dps_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
         Returns structured config for dps_interfaces.
 

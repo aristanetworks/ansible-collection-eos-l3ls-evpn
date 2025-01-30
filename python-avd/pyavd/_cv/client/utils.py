@@ -3,15 +3,15 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol
 
 if TYPE_CHECKING:
     from collections.abc import Callable
 
-    from . import CVClient
+    from . import CVClientProtocol
 
 
-class UtilsMixin:
+class UtilsMixin(Protocol):
     """Only to be used as mixin on CVClient class."""
 
     @staticmethod
@@ -43,7 +43,7 @@ class UtilsMixin:
 
         lst.append(itm)
 
-    def _set_value_from_path(self: CVClient, path: list[str], data: list | dict, value: Any) -> None:
+    def _set_value_from_path(self: CVClientProtocol, path: list[str], data: list | dict, value: Any) -> None:
         """
         Recursive function to walk through data to set value on path, creating any level needed.
 
@@ -103,7 +103,7 @@ class UtilsMixin:
             msg = f"Path '{path}', value type '{type(value)}' cannot be set on data of type '{type(data)}'"
             raise TypeError(msg)
 
-    def _get_value_from_path(self: CVClient, path: list[str], data: list | dict, default_value: Any = None) -> Any:
+    def _get_value_from_path(self: CVClientProtocol, path: list[str], data: list | dict, default_value: Any = None) -> Any:
         """
         Recursive function to walk through data to get a value from the given path.
 
