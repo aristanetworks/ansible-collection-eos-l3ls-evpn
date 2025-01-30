@@ -585,7 +585,7 @@ class WanMixin(Protocol):
 
         return self.inputs.wan_stun_dtls_profile_name
 
-    def is_wan_vrf(self: SharedUtils, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
+    def is_wan_vrf(self: SharedUtilsProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
         """Returns True is the VRF is a WAN VRF."""
         if not self.is_wan_router:
             return False
