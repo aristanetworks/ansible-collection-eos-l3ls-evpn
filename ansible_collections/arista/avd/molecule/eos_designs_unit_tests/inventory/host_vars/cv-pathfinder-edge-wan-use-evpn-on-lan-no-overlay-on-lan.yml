@@ -2,7 +2,7 @@
 # Testing CV pathfinder edge using new toggle wan_use_evpn_node_settings_for_lan
 wan_use_evpn_node_settings_for_lan: true
 # not enabling any overlay protocol on WAN to see impact on "LAN only VRFs"
-# none is alreeady the default
+# none is already the default
 overlay_routing_protocol: none
 
 bgp_as: 65000
