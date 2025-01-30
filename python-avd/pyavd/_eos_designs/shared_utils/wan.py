@@ -88,7 +88,7 @@ class WanMixin(Protocol):
     def wan_port_channels(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels:
         """
         Returns the list of the device Port-Channels which are WAN interfaces.
-        
+
         Interfaces under node config l3_port_channels where wan_carrier is set are considered as WAN interfaces.
         """
         if not self.is_wan_router:
