@@ -65,6 +65,7 @@ keys:
                 - none
                 - start-stop
                 - stop-only
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -93,6 +94,7 @@ keys:
                 - none
                 - start-stop
                 - stop-only
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -114,6 +116,7 @@ keys:
                 valid_values:
                 - start-stop
                 - stop-only
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -159,6 +162,7 @@ keys:
                   - none
                   - start-stop
                   - stop-only
+                  required: true
                 group:
                   description: Group Name.
                   type: str
@@ -192,6 +196,7 @@ keys:
                   - none
                   - start-stop
                   - stop-only
+                  required: true
                 group:
                   description: Group Name.
                   type: str

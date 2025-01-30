@@ -53,6 +53,7 @@ keys:
               type:
                 type: str
                 valid_values: ["none", "start-stop", "stop-only"]
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -78,6 +79,7 @@ keys:
               type:
                 type: str
                 valid_values: ["none", "start-stop", "stop-only"]
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -97,6 +99,7 @@ keys:
               type:
                 type: str
                 valid_values: ["start-stop", "stop-only"]
+                required: true
               group:
                 description: Group Name.
                 type: str
@@ -136,6 +139,7 @@ keys:
                 type:
                   type: str
                   valid_values: ["none", "start-stop", "stop-only"]
+                  required: true
                 group:
                   description: Group Name.
                   type: str
@@ -165,6 +169,7 @@ keys:
                 type:
                   type: str
                   valid_values: ["none", "start-stop", "stop-only"]
+                  required: true
                 group:
                   description: Group Name.
                   type: str
