@@ -9288,8 +9288,8 @@ router bfd
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 | ICMP Fragmentation-Needed Tunneling Enabled | True |
-| Tunnel Termination Model | ttl uniform dscp uniform |
-| Tunnel Termination PHP Model | ttl pipe dscp pipe |
+| Tunnel Termination Model | TTL: uniform, DSCP: uniform |
+| Tunnel Termination PHP Model | TTL: pipe, DSCP: pipe |
 
 ### MPLS Interfaces
 
