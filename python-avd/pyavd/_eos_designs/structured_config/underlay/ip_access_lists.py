@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
+from itertools import chain
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate
@@ -31,7 +32,7 @@ class IpAccesslistsMixin(Protocol):
             return None
 
         ip_access_lists = []
-        merged_l3_interface_acls = {**self._l3_interface_acls, **self._l3_port_channel_acls}
+        merged_l3_interface_acls = dict(chain(self._l3_interface_acls.items(), self._l3_port_channel_acls.items()))
         context_str = "IPv4 Access lists for node l3_interfaces or l3_port_channels"
         for interface_acls in merged_l3_interface_acls.values():
             for acl in interface_acls.values():

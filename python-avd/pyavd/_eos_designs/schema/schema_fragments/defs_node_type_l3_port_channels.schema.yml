@@ -18,7 +18,7 @@ $defs:
           description: |-
             Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
             For a Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
-          pattern: "Port-Channel[\\d/]+(.[\\d]+)?"
+          pattern: "Port-Channel[\\d/]+(\\.[\\d]+)?"
         description:
           type: str
           description: |-

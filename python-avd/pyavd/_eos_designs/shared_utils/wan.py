@@ -72,10 +72,9 @@ class WanMixin(Protocol):
     @cached_property
     def wan_interfaces(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces:
         """
-        As a first approach, only interfaces under node config l3_interfaces can be considered as WAN interfaces.
+        Returns the list of the device L3 interfaces (not including port-channels) which are WAN interfaces.
 
-        This may need to be made wider.
-        This also may require a different format for the dictionaries inside the list.
+        Interfaces under node config l3_interfaces where wan_carrier is set are considered as WAN interfaces.
         """
         if not self.is_wan_router:
             return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces()

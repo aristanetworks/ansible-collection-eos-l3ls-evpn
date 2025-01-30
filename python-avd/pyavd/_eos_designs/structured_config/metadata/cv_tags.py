@@ -218,6 +218,8 @@ class CvTagsMixin(Protocol):
             return self._get_cv_pathfinder_wan_interface_tags(wan_port_channel_intf)
         # Check if input eth interface is member of any L3 Port-Channel wan interface
         # if so, skip generation of interface tags for such member interface.
+        # TODO: Consider if we should skip this for all port-channel members,
+        # since we would now set it on the port-channel instead.
         if generic_interface.name in self.shared_utils._wan_port_channel_member_interfaces:
             return []
         return [self._tag_dict("Type", "lan")]

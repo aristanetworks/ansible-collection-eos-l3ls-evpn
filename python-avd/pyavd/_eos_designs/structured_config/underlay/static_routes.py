@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
+from itertools import chain
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
@@ -28,8 +29,7 @@ class StaticRoutesMixin(Protocol):
         - static_routes configured under node type l3_interfaces and l3_port_channels
         """
         static_routes = []
-
-        for l3_generic_interface in [*self.shared_utils.l3_interfaces, *self.shared_utils.node_config.l3_port_channels]:
+        for l3_generic_interface in chain(self.shared_utils.l3_interfaces, self.shared_utils.node_config.l3_port_channels):
             if not l3_generic_interface.static_routes:
                 continue
 
