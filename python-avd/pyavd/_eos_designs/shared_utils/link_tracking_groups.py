@@ -4,15 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import default, strip_empties_from_list
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class LinkTrackingGroupsMixin:
+class LinkTrackingGroupsMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -21,7 +21,7 @@ class LinkTrackingGroupsMixin:
     """
 
     @cached_property
-    def link_tracking_groups(self: SharedUtils) -> list | None:
+    def link_tracking_groups(self: SharedUtilsProtocol) -> list | None:
         if self.node_config.link_tracking.enabled:
             link_tracking_groups = []
             default_recovery_delay = default(self.platform_settings.reload_delay.mlag, 300)

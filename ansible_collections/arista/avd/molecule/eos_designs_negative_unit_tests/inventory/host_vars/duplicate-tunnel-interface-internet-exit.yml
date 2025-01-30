@@ -143,9 +143,9 @@ zscaler_endpoints:
     ip_address: 10.37.121.1 # Not the correct address
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for Tunnel interface for Internet Exit policy.
-  {'name': 'Tunnel100', 'description': 'Internet Exit ZSCALER-EXIT-POLICY-2 PRI',
-  'ipsec_profile': 'IE-ZSCALER-EXIT-POLICY-2-PROFILE', 'source_interface': 'Ethernet2'}
-  conflicts with
-  {'name': 'Tunnel100', 'description': 'Internet Exit ZSCALER-EXIT-POLICY-1 PRI',
-  'ipsec_profile': 'IE-ZSCALER-EXIT-POLICY-1-PROFILE', 'source_interface': 'Ethernet1'}.
+  Found duplicate objects with conflicting data while generating configuration for Hosts.
+  {'name': 'IE-Tunnel100', 'description': 'Internet Exit ZSCALER-EXIT-POLICY-2 PRI',
+  'ip': '10.37.121.1', 'local_interfaces': 'SET-Tunnel100', 'address_only': False,
+  'url': 'http://gateway.zscalerbeta.net/vpntest'} conflicts with {'name': 'IE-Tunnel100',
+  'description': 'Internet Exit ZSCALER-EXIT-POLICY-1 PRI', 'ip': '10.37.121.1',
+  'local_interfaces': 'SET-Tunnel100', 'address_only': False, 'url': 'http://gateway.zscalerbeta.net/vpntest'}.

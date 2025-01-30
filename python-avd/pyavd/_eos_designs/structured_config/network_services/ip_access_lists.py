@@ -4,19 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._errors import AristaAvdError
 from pyavd._utils import append_if_not_duplicate, get_ip_from_ip_prefix
 from pyavd.j2filters import natural_sort
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class IpAccesslistsMixin(UtilsMixin):
+class IpAccesslistsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -24,7 +22,7 @@ class IpAccesslistsMixin(UtilsMixin):
     """
 
     @cached_property
-    def _acl_internet_exit_zscaler(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _acl_internet_exit_zscaler(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         return {
             "name": self.get_internet_exit_nat_acl_name("zscaler"),
             "entries": [
@@ -39,7 +37,7 @@ class IpAccesslistsMixin(UtilsMixin):
         }
 
     @cached_property
-    def _acl_internet_exit_direct(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _acl_internet_exit_direct(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         interface_ips = set()
         for ie_policy, connections in self._filtered_internet_exit_policies_and_connections:
             if ie_policy.type == "direct":
@@ -76,7 +74,9 @@ class IpAccesslistsMixin(UtilsMixin):
             }
         return None
 
-    def _acl_internet_exit_user_defined(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> list[dict] | None:
+    def _acl_internet_exit_user_defined(
+        self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]
+    ) -> list[dict] | None:
         acl_name = self.get_internet_exit_nat_acl_name(internet_exit_policy_type)
         if acl_name not in self.inputs.ipv4_acls:
             # TODO: Evaluate if we should continue so we raise when there is no ACL.
@@ -93,7 +93,7 @@ class IpAccesslistsMixin(UtilsMixin):
         msg = f"ipv4_acls[name={acl_name}] field substitution is not supported for internet exit access lists"
         raise AristaAvdError(msg)
 
-    def _acl_internet_exit(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> list[dict] | None:
+    def _acl_internet_exit(self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]) -> list[dict] | None:
         acls = self._acl_internet_exit_user_defined(internet_exit_policy_type)
         if acls:
             return acls
@@ -105,7 +105,7 @@ class IpAccesslistsMixin(UtilsMixin):
         return None
 
     @cached_property
-    def ip_access_lists(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def ip_access_lists(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """Return structured config for ip_access_lists."""
         ip_access_lists = []
         if self._svi_acls:

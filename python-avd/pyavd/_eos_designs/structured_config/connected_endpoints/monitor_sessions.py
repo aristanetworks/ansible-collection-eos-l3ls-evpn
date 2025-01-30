@@ -5,21 +5,19 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, groupby_obj, strip_null_from_data
 from pyavd.j2filters import range_expand
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigConnectedEndpoints
+    from . import AvdStructuredConfigConnectedEndpointsProtocol
 
 
-class MonitorSessionsMixin(UtilsMixin):
+class MonitorSessionsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -27,7 +25,7 @@ class MonitorSessionsMixin(UtilsMixin):
     """
 
     @cached_property
-    def monitor_sessions(self: AvdStructuredConfigConnectedEndpoints) -> list | None:
+    def monitor_sessions(self: AvdStructuredConfigConnectedEndpointsProtocol) -> list | None:
         """Return structured_config for monitor_sessions."""
         if not self._monitor_session_configs:
             return None
@@ -87,7 +85,7 @@ class MonitorSessionsMixin(UtilsMixin):
 
     @cached_property
     def _monitor_session_configs(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
     ) -> list[EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.MonitorSessionsItem]:
         """Return list of monitor session configs extracted from every interface."""
         monitor_session_configs = []

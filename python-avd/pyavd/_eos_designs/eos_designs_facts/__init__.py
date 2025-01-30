@@ -4,8 +4,9 @@
 from __future__ import annotations
 
 from functools import cached_property
+from typing import Protocol
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.avdfacts import AvdFacts, AvdFactsProtocol
 from pyavd._errors import AristaAvdError
 
 from .mlag import MlagMixin
@@ -16,14 +17,7 @@ from .vlans import VlansMixin
 from .wan import WanMixin
 
 
-class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin, UplinksMixin, VlansMixin):
-    """
-    `EosDesignsFacts` is based on `AvdFacts`, so make sure to read the description there first.
-
-    The class is instantiated once per device. Methods may use references to other device instances using `hostvars.avd_switch_facts`,
-    which is a dict of `EosDesignsfacts` instances covering all devices.
-    """
-
+class EosDesignsFactsProtocol(MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin, UplinksMixin, VlansMixin, AvdFactsProtocol, Protocol):
     @cached_property
     def id(self) -> int | None:
         """Exposed in avd_switch_facts."""
@@ -233,3 +227,12 @@ class EosDesignsFacts(AvdFacts, MlagMixin, ShortEsiMixin, OverlayMixin, WanMixin
         Used for fabric docs
         """
         return [{"profile": profile.profile, "parent_profile": profile.parent_profile} for profile in self.inputs.port_profiles]
+
+
+class EosDesignsFacts(AvdFacts, EosDesignsFactsProtocol):
+    """
+    `EosDesignsFacts` is based on `AvdFacts`, so make sure to read the description there first.
+
+    The class is instantiated once per device. Methods may use references to other device instances using `hostvars.avd_switch_facts`,
+    which is a dict of `EosDesignsfacts` instances covering all devices.
+    """
