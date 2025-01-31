@@ -3,10 +3,9 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import strip_empties_from_dict
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigBaseProtocol
@@ -19,16 +18,8 @@ class RouterGeneralMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def router_general(self: AvdStructuredConfigBaseProtocol) -> dict | None:
+    @structured_config_contributor
+    def router_general(self: AvdStructuredConfigBaseProtocol) -> None:
         if self.inputs.use_router_general_for_router_id:
-            return strip_empties_from_dict(
-                {
-                    "router_id": {
-                        "ipv4": self.shared_utils.router_id,
-                        "ipv6": self.shared_utils.ipv6_router_id,
-                    }
-                }
-            )
-
-        return None
+            self.structured_config.router_general.router_id.ipv4 = self.shared_utils.router_id
+            self.structured_config.router_general.router_id.ipv6 = self.shared_utils.ipv6_router_id
