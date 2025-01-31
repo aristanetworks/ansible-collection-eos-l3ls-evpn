@@ -1,0 +1,63 @@
+# Copyright (c) 2023-2025 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  platform_sfe_interface:
+    type: dict
+    description: Configure interface related settings for Sfe platform.
+    keys:
+      profile:
+        type: list
+        primary_key: name
+        description: |-
+          Configure one or more Receive Side Scaling (RSS) interface profiles.
+          This is supported on select platforms.
+        items:
+          type: dict
+          keys:
+            name:
+              type: str
+              description: RSS interface profile-name.
+            interfaces:
+              type: list
+              description: Interfaces within RSS profile.
+              primary_key: name
+              items:
+                type: dict
+                keys:
+                  name:
+                    type: str
+                    description: Interface name such as 'Ethernet2'.
+                    # pattern: "Ethernet[\\d/]+"
+                  rx_queue:
+                    type: dict
+                    description: Receive queue parameters for the selected interface.
+                    keys:
+                      count:
+                        type: int
+                        min: 1
+                        convert_types:
+                          - str
+                        description: |-
+                          Number of receive queues.
+                          The maximum value is platform dependent.
+                      worker:
+                        type: str
+                        description: |-
+                          Worker ids specified as combination of range and/or comma separated values
+                          such as 0-4,7.
+                      mode:
+                        type: str
+                        description: Mode applicable to the workers. Default mode is 'shared'.
+                        valid_values:
+                          - shared
+                          - exclusive
+      interface_profile:
+        type: str
+        description: |-
+          RSS profile name to apply for the platform.
+          Needs system reload or Sfe agent restart for change to take effect.

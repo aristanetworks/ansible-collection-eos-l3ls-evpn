@@ -28028,6 +28028,196 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 """
 
+    class PlatformSfeInterface(AvdModel):
+        """Subclass of AvdModel."""
+
+        class ProfileItem(AvdModel):
+            """Subclass of AvdModel."""
+
+            class InterfacesItem(AvdModel):
+                """Subclass of AvdModel."""
+
+                class RxQueue(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}, "_custom_data": {"type": dict}}
+                    count: int | None
+                    """
+                    Number of receive queues.
+                    The maximum value is platform dependent.
+                    """
+                    worker: str | None
+                    """
+                    Worker ids specified as combination of range and/or comma separated values
+                    such as 0-4,7.
+                    """
+                    mode: Literal["shared", "exclusive"] | None
+                    """Mode applicable to the workers. Default mode is 'shared'."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            count: int | None | UndefinedType = Undefined,
+                            worker: str | None | UndefinedType = Undefined,
+                            mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            RxQueue.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                count:
+                                   Number of receive queues.
+                                   The maximum value is platform dependent.
+                                worker:
+                                   Worker ids specified as combination of range and/or comma separated values
+                                   such as 0-4,7.
+                                mode: Mode applicable to the workers. Default mode is 'shared'.
+                                _custom_data: _custom_data
+
+                            """
+
+                _fields: ClassVar[dict] = {"name": {"type": str}, "rx_queue": {"type": RxQueue}, "_custom_data": {"type": dict}}
+                name: str
+                """Interface name such as 'Ethernet2'."""
+                rx_queue: RxQueue
+                """
+                Receive queue parameters for the selected interface.
+
+                Subclass of AvdModel.
+                """
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        name: str | UndefinedType = Undefined,
+                        rx_queue: RxQueue | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        InterfacesItem.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            name: Interface name such as 'Ethernet2'.
+                            rx_queue:
+                               Receive queue parameters for the selected interface.
+
+                               Subclass of AvdModel.
+                            _custom_data: _custom_data
+
+                        """
+
+            class Interfaces(AvdIndexedList[str, InterfacesItem]):
+                """Subclass of AvdIndexedList with `InterfacesItem` items. Primary key is `name` (`str`)."""
+
+                _primary_key: ClassVar[str] = "name"
+
+            Interfaces._item_type = InterfacesItem
+
+            _fields: ClassVar[dict] = {"name": {"type": str}, "interfaces": {"type": Interfaces}, "_custom_data": {"type": dict}}
+            name: str
+            """RSS interface profile-name."""
+            interfaces: Interfaces
+            """
+            Interfaces within RSS profile.
+
+            Subclass of AvdIndexedList with `InterfacesItem` items. Primary key
+            is `name` (`str`).
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    name: str | UndefinedType = Undefined,
+                    interfaces: Interfaces | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    ProfileItem.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        name: RSS interface profile-name.
+                        interfaces:
+                           Interfaces within RSS profile.
+
+                           Subclass of AvdIndexedList with `InterfacesItem` items. Primary key
+                           is `name` (`str`).
+                        _custom_data: _custom_data
+
+                    """
+
+        class Profile(AvdIndexedList[str, ProfileItem]):
+            """Subclass of AvdIndexedList with `ProfileItem` items. Primary key is `name` (`str`)."""
+
+            _primary_key: ClassVar[str] = "name"
+
+        Profile._item_type = ProfileItem
+
+        _fields: ClassVar[dict] = {"profile": {"type": Profile}, "interface_profile": {"type": str}, "_custom_data": {"type": dict}}
+        profile: Profile
+        """
+        Configure one or more Receive Side Scaling (RSS) interface profiles.
+        This is supported on select
+        platforms.
+
+        Subclass of AvdIndexedList with `ProfileItem` items. Primary key is `name` (`str`).
+        """
+        interface_profile: str | None
+        """
+        RSS profile name to apply for the platform.
+        Needs system reload or Sfe agent restart for change to
+        take effect.
+        """
+        _custom_data: dict[str, Any]
+
+        if TYPE_CHECKING:
+
+            def __init__(
+                self,
+                *,
+                profile: Profile | UndefinedType = Undefined,
+                interface_profile: str | None | UndefinedType = Undefined,
+                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+            ) -> None:
+                """
+                PlatformSfeInterface.
+
+
+                Subclass of AvdModel.
+
+                Args:
+                    profile:
+                       Configure one or more Receive Side Scaling (RSS) interface profiles.
+                       This is supported on select
+                       platforms.
+
+                       Subclass of AvdIndexedList with `ProfileItem` items. Primary key is `name` (`str`).
+                    interface_profile:
+                       RSS profile name to apply for the platform.
+                       Needs system reload or Sfe agent restart for change to
+                       take effect.
+                    _custom_data: _custom_data
+
+                """
+
     class Poe(AvdModel):
         """Subclass of AvdModel."""
 
@@ -70815,6 +71005,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         "patch_panel": {"type": PatchPanel},
         "peer_filters": {"type": PeerFilters},
         "platform": {"type": Platform},
+        "platform_sfe_interface": {"type": PlatformSfeInterface},
         "poe": {"type": Poe},
         "policy_maps": {"type": PolicyMaps},
         "port_channel_interfaces": {"type": PortChannelInterfaces},
@@ -71271,6 +71462,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     Subclass of AvdModel.
     """
+    platform_sfe_interface: PlatformSfeInterface
+    """
+    Configure interface related settings for Sfe platform.
+
+    Subclass of AvdModel.
+    """
     poe: Poe
     """Subclass of AvdModel."""
     policy_maps: PolicyMaps
@@ -71556,6 +71753,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             patch_panel: PatchPanel | UndefinedType = Undefined,
             peer_filters: PeerFilters | UndefinedType = Undefined,
             platform: Platform | UndefinedType = Undefined,
+            platform_sfe_interface: PlatformSfeInterface | UndefinedType = Undefined,
             poe: Poe | UndefinedType = Undefined,
             policy_maps: PolicyMaps | UndefinedType = Undefined,
             port_channel_interfaces: PortChannelInterfaces | UndefinedType = Undefined,
@@ -71867,6 +72065,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 peer_filters: Subclass of AvdIndexedList with `PeerFiltersItem` items. Primary key is `name` (`str`).
                 platform:
                    Every key below this point is platform dependent.
+
+                   Subclass of AvdModel.
+                platform_sfe_interface:
+                   Configure interface related settings for Sfe platform.
 
                    Subclass of AvdModel.
                 poe: Subclass of AvdModel.
