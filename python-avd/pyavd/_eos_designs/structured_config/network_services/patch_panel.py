@@ -22,7 +22,7 @@ class PatchPanelMixin(Protocol):
 
     @structured_config_contributor
     def patch_panel(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
-        """Return structured config for patch_panel."""
+        """Set structured config for patch_panel."""
         if not self.shared_utils.network_services_l1:
             return
 
