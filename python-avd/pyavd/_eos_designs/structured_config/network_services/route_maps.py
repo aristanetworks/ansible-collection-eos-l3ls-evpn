@@ -68,7 +68,9 @@ class RouteMapsMixin(Protocol):
         if (route_maps_vrf_default := self._route_maps_vrf_default) is not None:
             route_maps.extend(route_maps_vrf_default)
 
-        if self._configure_bgp_mlag_peer_group and self.shared_utils.node_config.mlag_ibgp_origin_incomplete:
+        # Note we check the 'flag need_mlag_peer_group' here which is being set by router_bgp logic. So this must run after.
+        # TODO: Move this logic to a single place instead.
+        if self.need_mlag_peer_group and self.shared_utils.node_config.mlag_ibgp_origin_incomplete:
             route_maps.append(self._bgp_mlag_peer_group_route_map())
 
         if self._mlag_ibgp_peering_subnets_without_redistribution:

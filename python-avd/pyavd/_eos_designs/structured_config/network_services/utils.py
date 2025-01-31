@@ -174,31 +174,6 @@ class UtilsMixin(Protocol):
         return False
 
     @cached_property
-    def _configure_bgp_mlag_peer_group(self: AvdStructuredConfigNetworkServicesProtocol) -> bool:
-        """
-        Flag set during creating of BGP VRFs if an MLAG peering is needed.
-
-        Decides if MLAG BGP peer-group should be configured.
-        Catches cases where underlay is not BGP but we still need MLAG iBGP peering.
-        """
-        if self.shared_utils.underlay_bgp:
-            return False
-
-        # Checking neighbors directly under BGP to cover VRF default case.
-        for neighbor_settings in get(self._router_bgp_vrfs, "neighbors", default=[]):
-            if neighbor_settings.get("peer_group") == self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name:
-                return True
-
-        for bgp_vrf in get(self._router_bgp_vrfs, "vrfs", default=[]):
-            if "neighbors" not in bgp_vrf:
-                continue
-            for neighbor_settings in bgp_vrf["neighbors"]:
-                if neighbor_settings.get("peer_group") == self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name:
-                    return True
-
-        return False
-
-    @cached_property
     def _rt_admin_subfield(self: AvdStructuredConfigNetworkServicesProtocol) -> str | None:
         """
         Return a string with the route-target admin subfield unless set to "vrf_id" or "vrf_vni" or "id".
