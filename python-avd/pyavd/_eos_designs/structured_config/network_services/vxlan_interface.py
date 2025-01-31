@@ -25,7 +25,6 @@ class VxlanInterfaceMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-
     @cached_property
     def _multi_vtep(self: AvdStructuredConfigNetworkServicesProtocol) -> bool:
         return self.shared_utils.mlag is True and self.shared_utils.evpn_multicast is True
@@ -237,10 +236,11 @@ class VxlanInterfaceMixin(Protocol):
 
         return overlay_her_flood_lists
 
-    def _check_for_duplicate(self: AvdStructuredConfigNetworkServicesProtocol,
+    def _check_for_duplicate(
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan_or_vrf: EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem | EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem,
         vnis: dict[int, EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem | EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem],
-                             ) -> None:
+    ) -> None:
         """
         Raise an exception if the passed vlan or VRF object VNI is already in the vnis dictionary.
 
