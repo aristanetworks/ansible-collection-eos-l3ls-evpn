@@ -276,7 +276,7 @@ class UtilsMixin(Protocol):
         )
 
         if flowtracker := link.get("flow_tracker"):
-            ## TODO: When link has been refactored to a class this should be changed.
+            # TODO: When link has been refactored to a class this should be changed.
             subinterface.flow_tracker._update(**flowtracker)
 
         if svi.structured_config:
