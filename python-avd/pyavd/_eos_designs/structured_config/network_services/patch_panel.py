@@ -81,11 +81,9 @@ class PatchPanelMixin(Protocol):
                             ),
                         )
                         if point_to_point_service.type == "vpws-pseudowire":
-                            patch.connectors.append(
-                                EosCliConfigGen.PatchPanel.PatchesItem.ConnectorsItem(
-                                    id="2",
-                                    type="pseudowire",
-                                    endpoint=f"bgp vpws {tenant.name} pseudowire {point_to_point_service.name}",
-                                ),
+                            patch.connectors.append_new(
+                                id="2",
+                                type="pseudowire",
+                                endpoint=f"bgp vpws {tenant.name} pseudowire {point_to_point_service.name}",
                             )
                         self.structured_config.patch_panel.patches.append(patch)
