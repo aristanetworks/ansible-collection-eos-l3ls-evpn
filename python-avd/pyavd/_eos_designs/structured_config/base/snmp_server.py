@@ -3,14 +3,12 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from hashlib import sha1
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
-from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
-from pyavd._utils import strip_null_from_data
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd.j2filters import natural_sort, snmp_hash
 
 if TYPE_CHECKING:
@@ -52,13 +50,13 @@ class SnmpServerMixin(Protocol):
         self._snmp_local_interfaces(source_interfaces_inputs)
 
         self.structured_config.snmp_server._update(
-                contact=snmp_settings.contact,
-                communities=snmp_settings.communities,
-                ipv4_acls=snmp_settings.ipv4_acls._cast_as(EosCliConfigGen.SnmpServer.Ipv4Acls),
-                ipv6_acls=snmp_settings.ipv6_acls._cast_as(EosCliConfigGen.SnmpServer.Ipv6Acls),
-                views=snmp_settings.views._cast_as(EosCliConfigGen.SnmpServer.Views),
-                groups=snmp_settings.groups._cast_as(EosCliConfigGen.SnmpServer.Groups),
-                traps=snmp_settings.traps,
+            contact=snmp_settings.contact,
+            communities=snmp_settings.communities,
+            ipv4_acls=snmp_settings.ipv4_acls._cast_as(EosCliConfigGen.SnmpServer.Ipv4Acls),
+            ipv6_acls=snmp_settings.ipv6_acls._cast_as(EosCliConfigGen.SnmpServer.Ipv6Acls),
+            views=snmp_settings.views._cast_as(EosCliConfigGen.SnmpServer.Views),
+            groups=snmp_settings.groups._cast_as(EosCliConfigGen.SnmpServer.Groups),
+            traps=snmp_settings.traps,
         )
 
     def _snmp_engine_ids(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> None:
@@ -68,7 +66,7 @@ class SnmpServerMixin(Protocol):
         Otherwise return None.
         """
         if not snmp_settings.compute_local_engineid:
-            return None
+            return
 
         compute_source = snmp_settings.compute_local_engineid_source
         if compute_source == "hostname_and_ip":
@@ -87,7 +85,7 @@ class SnmpServerMixin(Protocol):
             raise AristaAvdError(msg)
 
         self.structured_config.snmp_server.engine_ids.local = local_engine_id
-  
+
     def _snmp_location(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
         Return location if "snmp_settings.location" is True.
@@ -95,7 +93,7 @@ class SnmpServerMixin(Protocol):
         Otherwise return None.
         """
         if not snmp_settings.location:
-            return None
+            return
 
         location_elements = [
             self.shared_utils.fabric_name,
@@ -117,7 +115,7 @@ class SnmpServerMixin(Protocol):
         """
         if not (users := snmp_settings.users):
             # Empty list or None
-            return None
+            return
 
         engine_ids = self.structured_config.snmp_server.engine_ids
         compute_v3_user_localized_key = engine_ids and engine_ids.local and snmp_settings.compute_v3_user_localized_key
