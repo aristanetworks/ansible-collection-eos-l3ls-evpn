@@ -149,8 +149,7 @@ expected_error_message: >-
   'destination': '10.37.121.1', 'ipsec_profile': 'IE-ZSCALER-EXIT-POLICY-2-PROFILE',
   'nat_profile': 'NAT-IE-ZSCALER'}
   conflicts with
-  {'name': 'Tunnel100',
-  'description': 'Internet Exit ZSCALER-EXIT-POLICY-1 PRI', 'mtu': 1394,
+  {'name': 'Tunnel100', 'description': 'Internet Exit ZSCALER-EXIT-POLICY-1 PRI', 'mtu': 1394,
   'ip_address': 'unnumbered Loopback0', 'tunnel_mode': 'ipsec', 'source_interface': 'Ethernet1',
   'destination': '10.37.121.1', 'ipsec_profile': 'IE-ZSCALER-EXIT-POLICY-1-PROFILE',
   'nat_profile': 'NAT-IE-ZSCALER'}.
