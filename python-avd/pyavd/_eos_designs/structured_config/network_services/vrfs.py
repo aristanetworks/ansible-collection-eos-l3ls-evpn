@@ -52,7 +52,7 @@ class VrfsMixin(Protocol):
 
                 if vrf.description:
                     new_vrf.description = vrf.description
-                self.structured_config.vrfs.append(new_vrf)
+                self.structured_config.vrfs.append(new_vrf, ignore_fields=("tenant",))
 
     def _has_ipv6(
         self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
