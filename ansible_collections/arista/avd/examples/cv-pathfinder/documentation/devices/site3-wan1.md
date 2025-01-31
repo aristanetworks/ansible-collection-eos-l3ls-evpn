@@ -432,6 +432,7 @@ interface Dps1
 | Ethernet1.42 | RED-TEST | - | 10.42.3.1/24 | RED | - | False | - | - |
 | Ethernet1.666 | BLUE-TEST | - | 10.66.3.1/24 | BLUE | - | False | - | - |
 | Ethernet4 | inet-cloud_Ethernet8 | 4 | *dhcp | **default | **- | *False | *ACL-INTERNET-IN_Port-Channel4 | **- |
+| Ethernet5 | inet-cloud_Ethernet9 | 4 | *dhcp | **default | **- | *False | *ACL-INTERNET-IN_Port-Channel4 | **- |
 
 *Inherited from Port-Channel Interface
 
@@ -463,6 +464,11 @@ interface Ethernet1.666
 !
 interface Ethernet4
    description inet-cloud_Ethernet8
+   no shutdown
+   channel-group 4 mode active
+!
+interface Ethernet5
+   description inet-cloud_Ethernet9
    no shutdown
    channel-group 4 mode active
 ```

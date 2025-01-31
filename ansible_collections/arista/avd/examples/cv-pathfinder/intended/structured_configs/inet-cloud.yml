@@ -61,6 +61,12 @@ ethernet_interfaces:
     id: 8
     mode: active
   peer_type: l3_port_channel_member
+- name: Ethernet9
+  shutdown: false
+  channel_group:
+    id: 8
+    mode: active
+  peer_type: l3_port_channel_member
 hostname: inet-cloud
 ip_name_servers:
 - ip_address: 192.168.17.1

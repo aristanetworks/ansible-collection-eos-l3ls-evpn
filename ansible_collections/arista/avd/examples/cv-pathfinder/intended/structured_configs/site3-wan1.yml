@@ -122,6 +122,15 @@ ethernet_interfaces:
   peer: inet-cloud
   peer_interface: Ethernet8
   peer_type: l3_port_channel_member
+- name: Ethernet5
+  description: inet-cloud_Ethernet9
+  shutdown: false
+  channel_group:
+    id: 4
+    mode: active
+  peer: inet-cloud
+  peer_interface: Ethernet9
+  peer_type: l3_port_channel_member
 flow_tracking:
   hardware:
     trackers:

@@ -56,6 +56,7 @@ spine:
           description: site3-wan1-Port-Channel4
           member_interfaces:
             - name: Ethernet8
+            - name: Ethernet9
           ip_address: 100.64.30.1/24
           structured_config:
             dhcp_server_ipv4: true

@@ -308,6 +308,7 @@ vlan internal order ascending range 1006 1199
 | Ethernet6 | site1-wan2-Ethernet4 | - | 100.64.11.1/24 | default | - | False | - | - |
 | Ethernet7 | site2-wan2-Ethernet4 | - | 100.64.21.1/24 | default | - | False | - | - |
 | Ethernet8 | - | 8 | *100.64.30.1/24 | **default | **- | *False | **- | **- |
+| Ethernet9 | - | 8 | *100.64.30.1/24 | **default | **- | *False | **- | **- |
 
 *Inherited from Port-Channel Interface
 
@@ -348,6 +349,10 @@ interface Ethernet7
    ip address 100.64.21.1/24
 !
 interface Ethernet8
+   no shutdown
+   channel-group 8 mode active
+!
+interface Ethernet9
    no shutdown
    channel-group 8 mode active
 ```

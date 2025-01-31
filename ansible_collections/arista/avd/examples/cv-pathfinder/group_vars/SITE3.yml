@@ -29,6 +29,8 @@ wan_router:
           member_interfaces:
             - name: Ethernet4
               peer_interface: Ethernet8
+            - name: Ethernet5
+              peer_interface: Ethernet9
           peer: inet-cloud
           ip_address: dhcp
           dhcp_ip: 100.64.30.2
