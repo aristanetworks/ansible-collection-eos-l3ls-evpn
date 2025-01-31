@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
-from pyavd._utils import default, get, get_ip_from_ip_prefix, get_item, strip_empties_from_dict
+from pyavd._utils import Undefined, default, get, get_ip_from_ip_prefix, get_item, strip_empties_from_dict
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import natural_sort, range_expand
 
@@ -229,7 +229,7 @@ class UtilsMixin(Protocol):
                     if svi.id not in vlans:
                         continue
 
-                    interfaces.append(self._get_l2_as_subint(link, svi, vrf))
+                    interfaces.append(self._get_l2_as_subint(link, svi, vrf)._as_dict())
 
         # If we have the main interface covered, we can just exclude it from the list and return as main interface.
         # Otherwise we return an almost empty dict as the main interface since it was already covered by the calling function.
@@ -250,7 +250,7 @@ class UtilsMixin(Protocol):
         link: dict,
         svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
-    ) -> dict:
+    ) -> EosCliConfigGen.EthernetInterfacesItem:
         """
         Return structured config for one subinterface representing the given SVI.
 
@@ -258,23 +258,26 @@ class UtilsMixin(Protocol):
         """
         is_native = svi.id == link.get("native_vlan")
         interface_name = link["interface"] if is_native else f"{link['interface']}.{svi.id}"
-        subinterface = {
-            "name": interface_name,
-            "peer": link["peer"],
-            "peer_interface": f"{link['peer_interface']} VLAN {svi.id}",
-            "peer_type": link["peer_type"],
-            "description": default(svi.description, svi.name),
-            "shutdown": not default(svi.enabled, False),  # noqa: FBT003
-            "switchport": {"enabled": False if is_native else None},
-            "encapsulation_dot1q": {"vlan": None if is_native else svi.id},
-            "vrf": vrf.name if vrf.name != "default" else None,
-            "ip_address": svi.ip_address,
-            "ipv6_address": svi.ipv6_address,
-            "ipv6_enable": svi.ipv6_enable,
-            "mtu": svi.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
-            "eos_cli": svi.raw_eos_cli,
-            "flow_tracker": link.get("flow_tracker"),
-        }
+        subinterface = EosCliConfigGen.EthernetInterfacesItem(
+            name=interface_name,
+            peer=link["peer"],
+            peer_interface=f"{link['peer_interface']} VLAN {svi.id}",
+            peer_type=link["peer_type"],
+            description=default(svi.description, svi.name),
+            shutdown=not default(svi.enabled, False),  # noqa: FBT003
+            switchport=EosCliConfigGen.EthernetInterfacesItem.Switchport(enabled=False) if is_native else Undefined,
+            encapsulation_dot1q=EosCliConfigGen.EthernetInterfacesItem.EncapsulationDot1q(vlan=svi.id) if not is_native else Undefined,
+            vrf=vrf.name if vrf.name != "default" else None,
+            ip_address=svi.ip_address,
+            ipv6_address=svi.ipv6_address,
+            ipv6_enable=svi.ipv6_enable,
+            mtu=svi.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
+            eos_cli=svi.raw_eos_cli,
+        )
+
+        if flowtracker := link.get("flow_tracker"):
+            # TODO: When link has been refactored to a class this should be changed.
+            subinterface.flow_tracker._update(**flowtracker)
 
         if svi.structured_config:
             self.custom_structured_configs.nested.ethernet_interfaces.obtain(interface_name)._deepmerge(
@@ -282,28 +285,28 @@ class UtilsMixin(Protocol):
                 list_merge=self.custom_structured_configs.list_merge_strategy,
             )
 
-        if (mtu := subinterface["mtu"]) is not None and subinterface["mtu"] > self.shared_utils.p2p_uplinks_mtu:
+        if subinterface.mtu and self.shared_utils.p2p_uplinks_mtu and subinterface.mtu > self.shared_utils.p2p_uplinks_mtu:
             msg = (
-                f"MTU '{self.shared_utils.p2p_uplinks_mtu}' set for 'p2p_uplinks_mtu' must be larger or equal to MTU '{mtu}' "
+                f"MTU '{self.shared_utils.p2p_uplinks_mtu}' set for 'p2p_uplinks_mtu' must be larger or equal to MTU '{subinterface.mtu}' "
                 f"set on the SVI '{svi.id}'."
                 "Either adjust the MTU on the SVI or p2p_uplinks_mtu."
             )
             raise AristaAvdError(msg)
 
         # Only set VRRPv4 if ip_address is set
-        if subinterface["ip_address"] is not None:
+        if subinterface.ip_address:
             # TODO: in separate PR adding VRRP support for SVIs
             pass
 
         # Only set VRRPv6 if ipv6_address is set
-        if subinterface["ipv6_address"] is not None:
+        if subinterface.ipv6_address:
             # TODO: in separate PR adding VRRP support for SVIs
             pass
 
         # Adding IP helpers and OSPF via a common function also used for SVIs on L3 switches.
         self.shared_utils.get_additional_svi_config(subinterface, svi, vrf)
 
-        return strip_empties_from_dict(subinterface)
+        return subinterface
 
     @cached_property
     def _l3_interface_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, dict]]:
