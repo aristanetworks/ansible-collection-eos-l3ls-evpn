@@ -22,7 +22,7 @@ class TunnelInterfacesMixin(Protocol):
     @structured_config_contributor
     def tunnel_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Return structured config for tunnel_interfaces.
+        Set structured config for tunnel_interfaces.
 
         Only used for CV Pathfinder edge routers today
         """
