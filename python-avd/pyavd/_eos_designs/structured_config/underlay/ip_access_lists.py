@@ -32,9 +32,8 @@ class IpAccesslistsMixin(Protocol):
             return None
 
         ip_access_lists = []
-        merged_l3_interface_acls = dict(chain(self._l3_interface_acls.items(), self._l3_port_channel_acls.items()))
         context_str = "IPv4 Access lists for node l3_interfaces or l3_port_channels"
-        for interface_acls in merged_l3_interface_acls.values():
+        for interface_acls in chain(self._l3_interface_acls.values(), self._l3_port_channel_acls.values()):
             for acl in interface_acls.values():
                 append_if_not_duplicate(ip_access_lists, "name", acl, context=context_str, context_keys=["name"])
 
