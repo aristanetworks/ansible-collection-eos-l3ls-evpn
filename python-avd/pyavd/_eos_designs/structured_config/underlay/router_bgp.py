@@ -3,10 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._utils import get
 
 if TYPE_CHECKING:
@@ -20,7 +20,7 @@ class RouterBgpMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
+    @structured_config_contributor
     def router_bgp(self: AvdStructuredConfigUnderlayProtocol) -> None:
         """Return the structured config for router_bgp."""
         if not self.shared_utils.underlay_bgp:
