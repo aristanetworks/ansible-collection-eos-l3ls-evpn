@@ -25,7 +25,7 @@ class SnmpServerMixin(Protocol):
     """
 
     @structured_config_contributor
-    def snmp_server(self: AvdStructuredConfigBase) -> None:
+    def snmp_server(self: AvdStructuredConfigBaseProtocol) -> None:
         """
         snmp_server set based on snmp_settings data-model, using various snmp_settings information.
 
@@ -59,7 +59,7 @@ class SnmpServerMixin(Protocol):
             traps=snmp_settings.traps,
         )
 
-    def _snmp_engine_ids(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> None:
+    def _snmp_engine_ids(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
         Return dict of engine ids if "snmp_settings.compute_local_engineid" is True.
 
@@ -85,8 +85,8 @@ class SnmpServerMixin(Protocol):
             raise AristaAvdError(msg)
 
         self.structured_config.snmp_server.engine_ids.local = local_engine_id
-
-    def _snmp_location(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> None:
+  
+    def _snmp_location(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
         Return location if "snmp_settings.location" is True.
 
@@ -105,7 +105,7 @@ class SnmpServerMixin(Protocol):
         location_elements = [location for location in location_elements if location not in [None, ""]]
         self.structured_config.snmp_server.location = " ".join(location_elements)
 
-    def _snmp_users(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> None:
+    def _snmp_users(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
         Return users if "snmp_settings.users" is set.
 
@@ -148,7 +148,7 @@ class SnmpServerMixin(Protocol):
 
             self.structured_config.snmp_server.users.append(user_dict)
 
-    def _snmp_hosts(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> None:
+    def _snmp_hosts(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
         Return hosts if "snmp_settings.hosts" is set.
 
@@ -195,7 +195,7 @@ class SnmpServerMixin(Protocol):
 
         self.structured_config.snmp_server.hosts = snmp_hosts
 
-    def _snmp_local_interfaces(self: AvdStructuredConfigBase, source_interfaces_inputs: EosDesigns.SourceInterfaces.Snmp) -> None:
+    def _snmp_local_interfaces(self: AvdStructuredConfigBaseProtocol, source_interfaces_inputs: EosDesigns.SourceInterfaces.Snmp) -> None:
         """
         Return local_interfaces if "source_interfaces.snmp" is set.
 
