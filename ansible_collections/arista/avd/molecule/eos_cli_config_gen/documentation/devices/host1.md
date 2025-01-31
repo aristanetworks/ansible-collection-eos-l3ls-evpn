@@ -10701,6 +10701,66 @@ ipv6 address virtual source-nat vrf TEST_04 address 2001:db8:85a3::8a2e:370:7335
 | -------- | ----- |
 | Maximum CPU Allocation | 42 |
 
+##### Platform Software Forwarding Engine Interface Summary
+
+###### RSS Profile to apply
+
+####### TestProfile1
+
+###### RSS Profiles
+
+####### TestProfile1
+
+| Interface | Rx-Queue Count | Rx-Queue Worker | Rx-Queue Mode |
+| --------- | -------------- | --------------- | ------------- |
+| Ethernet1/1 | 4 | 0-2,5 | - |
+| Ethernet1/2 | 2 | - | shared |
+| Ethernet1/4 | 1 | - | - |
+| Ethernet1/5 | 2 | 3,4 | exclusive |
+
+####### TestProfile2
+
+| Interface | Rx-Queue Count | Rx-Queue Worker | Rx-Queue Mode |
+| --------- | -------------- | --------------- | ------------- |
+| Ethernet1 | 3 | 2 | - |
+| Ethernet9 | - | - | - |
+
+####### TestProfile3
+
+##### Platform Software Forwarding Engine Interface Device Configuration
+
+```eos
+!
+platform sfe interface
+   interface profile TestProfile1
+   !
+   profile TestProfile1
+      interface Ethernet1/1
+         rx-queue count 4
+         rx-queue worker 0-2,5
+      !
+      interface Ethernet1/2
+         rx-queue count 2
+         rx-queue mode shared
+      !
+      interface Ethernet1/4
+         rx-queue count 1
+      !
+      interface Ethernet1/5
+         rx-queue count 2
+         rx-queue worker 3,4
+         rx-queue mode exclusive
+   !
+   profile TestProfile2
+      interface Ethernet1
+         rx-queue count 3
+         rx-queue worker 2
+      !
+      interface Ethernet9
+   !
+   profile TestProfile3
+```
+
 ### Platform Device Configuration
 
 ```eos
