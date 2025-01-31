@@ -6,7 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from ipaddress import ip_network
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import strip_empties_from_dict
 
@@ -88,15 +88,14 @@ class AvdStructuredConfigInbandManagement(StructuredConfigGenerator):
             ),
         ]
 
-    @cached_property
-    def vrfs(self) -> list | None:
+    @structured_config_contributor
+    def vrfs(self) -> None:
         if self.shared_utils.inband_mgmt_vrf is None:
-            return None
+            return
 
         if not self.shared_utils.inband_management_parent_vlans and not self.shared_utils.configure_inband_mgmt:
-            return None
-
-        return [{"name": self.shared_utils.inband_mgmt_vrf}]
+            return
+        self.structured_config.vrfs.append_new(name=self.shared_utils.inband_mgmt_vrf)
 
     @cached_property
     def ip_virtual_router_mac_address(self) -> str | None:
