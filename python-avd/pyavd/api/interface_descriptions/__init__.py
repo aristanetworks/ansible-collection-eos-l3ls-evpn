@@ -12,7 +12,7 @@ from pyavd._eos_designs.avdfacts import AvdFacts
 from pyavd._utils import AvdStringFormatter, default, strip_null_from_data
 
 if TYPE_CHECKING:
-    from pyavd._eos_designs.shared_utils import SharedUtils
+    from pyavd._eos_designs.shared_utils import SharedUtilsProtocol
 
 
 class AvdInterfaceDescriptions(AvdFacts):
@@ -485,7 +485,7 @@ class InterfaceDescriptionData:
     - Breaking changes may happen between major releases.
     """
 
-    _shared_utils: SharedUtils
+    _shared_utils: SharedUtilsProtocol
     description: str | None
     """Set description for interface"""
     interface: str | None
@@ -517,7 +517,7 @@ class InterfaceDescriptionData:
 
     def __init__(
         self,
-        shared_utils: SharedUtils,
+        shared_utils: SharedUtilsProtocol,
         description: str | None = None,
         interface: str | None = None,
         link_type: str | None = None,

@@ -4,21 +4,19 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, default, get, strip_empties_from_dict
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class VlanInterfacesMixin(UtilsMixin):
+class VlanInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -26,7 +24,7 @@ class VlanInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def vlan_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def vlan_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for vlan_interfaces.
 
@@ -70,7 +68,7 @@ class VlanInterfacesMixin(UtilsMixin):
         return None
 
     def _get_vlan_interface_config_for_svi(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
     ) -> dict:
@@ -165,7 +163,7 @@ class VlanInterfacesMixin(UtilsMixin):
         return strip_empties_from_dict(vlan_interface_config)
 
     def _get_vlan_interface_config_for_mlag_peering(
-        self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem, vlan_id: int
+        self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem, vlan_id: int
     ) -> dict:
         """Build full config for MLAG peering SVI for the given VRF."""
         vlan_interface_config = {
@@ -182,7 +180,7 @@ class VlanInterfacesMixin(UtilsMixin):
         return vlan_interface_config
 
     def _get_vlan_ip_config_for_mlag_peering(
-        self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+        self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
     ) -> dict:
         """
         Build IP config for MLAG peering SVI for the given VRF.

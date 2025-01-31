@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate, strip_empties_from_dict
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class MonitorConnectivityMixin(UtilsMixin):
+class MonitorConnectivityMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class MonitorConnectivityMixin(UtilsMixin):
     """
 
     @cached_property
-    def monitor_connectivity(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def monitor_connectivity(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Return structured config for monitor_connectivity.
 

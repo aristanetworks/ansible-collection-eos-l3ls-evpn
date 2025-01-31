@@ -3,17 +3,15 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigBase
+    from . import AvdStructuredConfigBaseProtocol
 
 
-class RouterGeneralMixin(UtilsMixin):
+class RouterGeneralMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -21,7 +19,7 @@ class RouterGeneralMixin(UtilsMixin):
     """
 
     @structured_config_contributor
-    def router_general(self: AvdStructuredConfigBase) -> None:
+    def router_general(self: AvdStructuredConfigBaseProtocol) -> None:
         if self.inputs.use_router_general_for_router_id:
             self.structured_config.router_general.router_id.ipv4 = self.shared_utils.router_id
             self.structured_config.router_general.router_id.ipv6 = self.shared_utils.ipv6_router_id

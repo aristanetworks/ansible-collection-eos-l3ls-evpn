@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
@@ -14,13 +14,11 @@ from pyavd._utils import Undefined, short_esi_to_route_target, strip_null_from_d
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigConnectedEndpoints
+    from . import AvdStructuredConfigConnectedEndpointsProtocol
 
 
-class PortChannelInterfacesMixin(UtilsMixin):
+class PortChannelInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -28,7 +26,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
     """
 
     @structured_config_contributor
-    def port_channel_interfaces(self: AvdStructuredConfigConnectedEndpoints) -> None:
+    def port_channel_interfaces(self: AvdStructuredConfigConnectedEndpointsProtocol) -> None:
         """
         Return structured config for port_channel_interfaces.
 
@@ -103,7 +101,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
             self.structured_config.port_channel_interfaces.extend(network_ports_port_channel_interfaces)
 
     def _get_port_channel_interface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         port_channel_interface_name: str,
         channel_group_id: int,
@@ -212,7 +210,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
         return port_channel_interface
 
     def _get_port_channel_subinterface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         subinterface: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.PortChannel.SubinterfacesItem,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         port_channel_subinterface_name: str,
