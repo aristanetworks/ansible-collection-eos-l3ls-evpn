@@ -85,7 +85,7 @@ class SnmpServerMixin(Protocol):
             raise AristaAvdError(msg)
 
         self.structured_config.snmp_server.engine_ids.local = local_engine_id
-  
+
     def _snmp_location(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
         Return location if "snmp_settings.location" is True.
