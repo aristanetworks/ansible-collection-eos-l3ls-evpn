@@ -147,6 +147,10 @@ prefix_lists:
     action: permit 192.168.255.0/24 eq 32
   - sequence: 20
     action: permit 192.168.254.0/24 eq 32
+- name: PL-MLAG-PEER-VRFS
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.255.251.14/31
 route_maps:
 - name: RM-MLAG-PEER-IN
   sequence_numbers:
@@ -165,6 +169,14 @@ route_maps:
     type: permit
     match:
     - ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
+- name: RM-CONN-2-BGP-VRFS
+  sequence_numbers:
+  - sequence: 10
+    type: deny
+    match:
+    - ip address prefix-list PL-MLAG-PEER-VRFS
+  - sequence: 20
+    type: permit
 router_bfd:
   multihop:
     interval: 1200
@@ -190,6 +202,14 @@ router_bgp:
     description: DC1-LEAF3B
     next_hop_self: true
     password: arwUnrq9ydqIhjfTwRhAlg==
+    send_community: all
+    maximum_routes: 12000
+    route_map_in: RM-MLAG-PEER-IN
+  - name: MLAG_VRFS_PEER
+    type: ipv4
+    remote_as: '65106'
+    description: DC1-LEAF3B
+    next_hop_self: true
     send_community: all
     maximum_routes: 12000
     route_map_in: RM-MLAG-PEER-IN
@@ -315,6 +335,8 @@ router_bgp:
         address_family_ipv6:
           enabled: true
           originate: true
+    - name: MLAG_VRFS_PEER
+      activate: true
     - name: UNDERLAY_PEERS
       activate: true
       next_hop:
@@ -342,10 +364,11 @@ router_bgp:
         route_targets:
         - '12:12'
     router_id: 192.168.255.12
-    neighbor_interfaces:
-    - name: Vlan3011
-      remote_as: '65106'
-      peer_group: MLAG_PEER
+    updates:
+      wait_install: true
+    neighbors:
+    - ip_address: 10.255.251.15
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF3B_Vlan3011
     redistribute:
       connected:
@@ -363,10 +386,11 @@ router_bgp:
         route_targets:
         - '13:13'
     router_id: 192.168.255.12
-    neighbor_interfaces:
-    - name: Vlan3012
-      remote_as: '65106'
-      peer_group: MLAG_PEER
+    updates:
+      wait_install: true
+    neighbors:
+    - ip_address: 10.255.251.15
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF3B_Vlan3012
     redistribute:
       connected:
@@ -384,10 +408,11 @@ router_bgp:
         route_targets:
         - '10:10'
     router_id: 192.168.255.12
-    neighbor_interfaces:
-    - name: Vlan3009
-      remote_as: '65106'
-      peer_group: MLAG_PEER
+    updates:
+      wait_install: true
+    neighbors:
+    - ip_address: 10.255.251.15
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF3B_Vlan3009
     redistribute:
       connected:
@@ -405,10 +430,11 @@ router_bgp:
         route_targets:
         - '11:11'
     router_id: 192.168.255.12
-    neighbor_interfaces:
-    - name: Vlan3010
-      remote_as: '65106'
-      peer_group: MLAG_PEER
+    updates:
+      wait_install: true
+    neighbors:
+    - ip_address: 10.255.251.15
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF3B_Vlan3010
     redistribute:
       connected:
@@ -426,10 +452,11 @@ router_bgp:
         route_targets:
         - '20:20'
     router_id: 192.168.255.12
-    neighbor_interfaces:
-    - name: Vlan3019
-      remote_as: '65106'
-      peer_group: MLAG_PEER
+    updates:
+      wait_install: true
+    neighbors:
+    - ip_address: 10.255.251.15
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF3B_Vlan3019
     redistribute:
       connected:
@@ -447,10 +474,11 @@ router_bgp:
         route_targets:
         - '30:30'
     router_id: 192.168.255.12
-    neighbor_interfaces:
-    - name: Vlan2
-      remote_as: '65106'
-      peer_group: MLAG_PEER
+    updates:
+      wait_install: true
+    neighbors:
+    - ip_address: 10.255.251.15
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF3B_Vlan2
     redistribute:
       connected:
@@ -506,7 +534,7 @@ vlan_interfaces:
   description: MLAG_L3_VRF_Tenant_A_APP_Zone
   shutdown: false
   vrf: Tenant_A_APP_Zone
-  ipv6_enable: true
+  ip_address: 10.255.251.14/31
   mtu: 1500
   tenant: Tenant_A
   type: underlay_peering
@@ -531,7 +559,7 @@ vlan_interfaces:
   description: MLAG_L3_VRF_Tenant_A_DB_Zone
   shutdown: false
   vrf: Tenant_A_DB_Zone
-  ipv6_enable: true
+  ip_address: 10.255.251.14/31
   mtu: 1500
   tenant: Tenant_A
   type: underlay_peering
@@ -559,7 +587,7 @@ vlan_interfaces:
   description: MLAG_L3_VRF_Tenant_A_OP_Zone
   shutdown: false
   vrf: Tenant_A_OP_Zone
-  ipv6_enable: true
+  ip_address: 10.255.251.14/31
   mtu: 1500
   tenant: Tenant_A
   type: underlay_peering
@@ -589,7 +617,7 @@ vlan_interfaces:
   description: MLAG_L3_VRF_Tenant_A_WEB_Zone
   shutdown: false
   vrf: Tenant_A_WEB_Zone
-  ipv6_enable: true
+  ip_address: 10.255.251.14/31
   mtu: 1500
   tenant: Tenant_A
   type: underlay_peering
@@ -613,7 +641,7 @@ vlan_interfaces:
   description: MLAG_L3_VRF_Tenant_B_OP_Zone
   shutdown: false
   vrf: Tenant_B_OP_Zone
-  ipv6_enable: true
+  ip_address: 10.255.251.14/31
   mtu: 1500
   tenant: Tenant_B
   type: underlay_peering
@@ -637,7 +665,7 @@ vlan_interfaces:
   description: MLAG_L3_VRF_Tenant_C_OP_Zone
   shutdown: false
   vrf: Tenant_C_OP_Zone
-  ipv6_enable: true
+  ip_address: 10.255.251.14/31
   mtu: 1500
   tenant: Tenant_C
   type: underlay_peering
@@ -733,28 +761,22 @@ vrfs:
 - name: MGMT
   ip_routing: false
 - name: Tenant_A_APP_Zone
-  ipv6_routing: true
-  ip_routing_ipv6_interfaces: true
+  ip_routing: true
   tenant: Tenant_A
 - name: Tenant_A_DB_Zone
-  ipv6_routing: true
-  ip_routing_ipv6_interfaces: true
+  ip_routing: true
   tenant: Tenant_A
 - name: Tenant_A_OP_Zone
-  ipv6_routing: true
-  ip_routing_ipv6_interfaces: true
+  ip_routing: true
   tenant: Tenant_A
 - name: Tenant_A_WEB_Zone
-  ipv6_routing: true
-  ip_routing_ipv6_interfaces: true
+  ip_routing: true
   tenant: Tenant_A
 - name: Tenant_B_OP_Zone
-  ipv6_routing: true
-  ip_routing_ipv6_interfaces: true
+  ip_routing: true
   tenant: Tenant_B
 - name: Tenant_C_OP_Zone
-  ipv6_routing: true
-  ip_routing_ipv6_interfaces: true
+  ip_routing: true
   tenant: Tenant_C
 vxlan_interface:
   vxlan1:

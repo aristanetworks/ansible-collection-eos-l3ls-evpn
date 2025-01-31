@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import default, get
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigCoreInterfacesAndL3Edge
+    from . import AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol
 
 
-class PortChannelInterfacesMixin(UtilsMixin):
+class PortChannelInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def port_channel_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3Edge) -> list | None:
+    def port_channel_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> list | None:
         """Return structured config for port_channel_interfaces."""
         port_channel_interfaces = []
         for p2p_link, p2p_link_data in self._filtered_p2p_links:
@@ -44,7 +42,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
         return None
 
-    def _p2p_link_port_channel_description(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link_data: dict) -> str:
+    def _p2p_link_port_channel_description(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol, p2p_link_data: dict) -> str:
         return self.shared_utils.interface_descriptions.underlay_port_channel_interface(
             InterfaceDescriptionData(
                 shared_utils=self.shared_utils,

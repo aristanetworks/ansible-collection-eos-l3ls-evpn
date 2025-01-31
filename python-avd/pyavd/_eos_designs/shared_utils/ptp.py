@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default
@@ -12,10 +12,10 @@ from pyavd._utils import default
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class PtpMixin:
+class PtpMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -24,17 +24,17 @@ class PtpMixin:
     """
 
     @cached_property
-    def ptp_enabled(self: SharedUtils) -> bool:
+    def ptp_enabled(self: SharedUtilsProtocol) -> bool:
         default_ptp_enabled = self.inputs.ptp_settings.enabled
         return bool(default(self.node_config.ptp.enabled, default_ptp_enabled))
 
     @cached_property
-    def ptp_profile_name(self: SharedUtils) -> str:
+    def ptp_profile_name(self: SharedUtilsProtocol) -> str:
         default_ptp_profile = self.inputs.ptp_settings.profile
         return self.node_config.ptp.profile or default_ptp_profile
 
     @cached_property
-    def ptp_profile(self: SharedUtils) -> EosDesigns.PtpProfilesItem:
+    def ptp_profile(self: SharedUtilsProtocol) -> EosDesigns.PtpProfilesItem:
         if self.ptp_profile_name not in self.inputs.ptp_profiles:
             msg = f"PTP Profile '{self.ptp_profile_name}' referenced under `ptp.profile` node variables does not exist in `ptp_profiles`."
             raise AristaAvdInvalidInputsError(msg)

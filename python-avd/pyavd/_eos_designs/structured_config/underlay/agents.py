@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class AgentsMixin(UtilsMixin):
+class AgentsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -20,7 +18,7 @@ class AgentsMixin(UtilsMixin):
     """
 
     @cached_property
-    def agents(self: AvdStructuredConfigUnderlay) -> list | None:
+    def agents(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
         """Return structured config for agents."""
         if not self.shared_utils.is_wan_router:
             return None

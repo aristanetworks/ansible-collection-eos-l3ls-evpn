@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import get, get_ip_from_ip_prefix
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
+    from . import AvdStructuredConfigOverlayProtocol
 
 
-class CvxMixin(UtilsMixin):
+class CvxMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class CvxMixin(UtilsMixin):
     """
 
     @cached_property
-    def cvx(self: AvdStructuredConfigOverlay) -> dict | None:
+    def cvx(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
         """Detect if this is a CVX server for overlay and configure service & peer hosts accordingly."""
         if not self.shared_utils.overlay_cvx:
             return None

@@ -4,15 +4,36 @@
 from __future__ import annotations
 
 from functools import cached_property
+from typing import Protocol
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, StructuredConfigGeneratorProtocol
 from pyavd._utils import strip_empties_from_dict
 
 from .cv_pathfinder import CvPathfinderMixin
 from .cv_tags import CvTagsMixin
 
 
-class AvdStructuredConfigMetadata(StructuredConfigGenerator, CvTagsMixin, CvPathfinderMixin):
+class AvdStructuredConfigMetadataProtocol(CvTagsMixin, CvPathfinderMixin, StructuredConfigGeneratorProtocol, Protocol):
+    """Protocol for the AvdStructuredConfigMetadata Class."""
+
+    ignore_avd_eos_designs_enforce_duplication_checks_across_all_models = True
+
+    @cached_property
+    def metadata(self) -> dict | None:
+        metadata = {
+            "platform": self.shared_utils.platform,
+            "system_mac_address": self.shared_utils.system_mac_address,
+            "cv_tags": self._cv_tags(),
+            "cv_pathfinder": self._cv_pathfinder(),
+            "rack": self.shared_utils.node_config.rack,
+            "pod_name": self.inputs.pod_name,
+            "dc_name": self.inputs.dc_name,
+            "fabric_name": self.shared_utils.fabric_name,
+        }
+        return strip_empties_from_dict(metadata) or None
+
+
+class AvdStructuredConfigMetadata(StructuredConfigGenerator, AvdStructuredConfigMetadataProtocol):
     """
     This returns the metadata data structure as per the below example.
 
@@ -50,19 +71,3 @@ class AvdStructuredConfigMetadata(StructuredConfigGenerator, CvTagsMixin, CvPath
         }
     }.
     """
-
-    ignore_avd_eos_designs_enforce_duplication_checks_across_all_models = True
-
-    @cached_property
-    def metadata(self) -> dict | None:
-        metadata = {
-            "platform": self.shared_utils.platform,
-            "system_mac_address": self.shared_utils.system_mac_address,
-            "cv_tags": self._cv_tags(),
-            "cv_pathfinder": self._cv_pathfinder(),
-            "rack": self.shared_utils.node_config.rack,
-            "pod_name": self.inputs.pod_name,
-            "dc_name": self.inputs.dc_name,
-            "fabric_name": self.shared_utils.fabric_name,
-        }
-        return strip_empties_from_dict(metadata) or None

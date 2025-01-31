@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from logging import getLogger
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 from uuid import uuid4
 
 from pyavd._cv.api.arista.workspace.v1 import (
@@ -28,7 +28,8 @@ from .exceptions import get_cv_client_exception
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from . import CVClient
+    from . import CVClientProtocol
+
 
 LOGGER = getLogger(__name__)
 
@@ -42,13 +43,13 @@ REQUEST_MAP = {
 }
 
 
-class WorkspaceMixin:
+class WorkspaceMixin(Protocol):
     """Only to be used as mixin on CVClient class."""
 
     workspace_api_version: Literal["v1"] = "v1"
 
     async def get_workspace(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         time: datetime | None = None,
         timeout: float = DEFAULT_API_TIMEOUT,
@@ -80,7 +81,7 @@ class WorkspaceMixin:
         return response.value
 
     async def create_workspace(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         display_name: str | None = None,
         description: str | None = None,
@@ -110,7 +111,7 @@ class WorkspaceMixin:
         return response.value
 
     async def abandon_workspace(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         timeout: float = DEFAULT_API_TIMEOUT,
     ) -> WorkspaceConfig:
@@ -138,7 +139,7 @@ class WorkspaceMixin:
         return response.value
 
     async def build_workspace(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         timeout: float = DEFAULT_API_TIMEOUT,
     ) -> WorkspaceConfig:
@@ -166,7 +167,7 @@ class WorkspaceMixin:
         return response.value
 
     async def delete_workspace(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         timeout: float = DEFAULT_API_TIMEOUT,
     ) -> WorkspaceKey:
@@ -186,7 +187,7 @@ class WorkspaceMixin:
         return response.key
 
     async def submit_workspace(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         force: bool = False,
         timeout: float = DEFAULT_API_TIMEOUT,
@@ -215,7 +216,7 @@ class WorkspaceMixin:
         return response.value
 
     async def wait_for_workspace_response(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         request_id: str,
         timeout: float = 3600.0,

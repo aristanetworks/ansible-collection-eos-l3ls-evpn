@@ -5,17 +5,15 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class PatchPanelMixin(UtilsMixin):
+class PatchPanelMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class PatchPanelMixin(UtilsMixin):
     """
 
     @cached_property
-    def patch_panel(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def patch_panel(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Return structured config for patch_panel."""
         if not self.shared_utils.network_services_l1:
             return None

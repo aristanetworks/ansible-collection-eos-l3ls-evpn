@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class StaticRoutesMixin(UtilsMixin):
+class StaticRoutesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class StaticRoutesMixin(UtilsMixin):
     """
 
     @cached_property
-    def static_routes(self: AvdStructuredConfigUnderlay) -> list[dict] | None:
+    def static_routes(self: AvdStructuredConfigUnderlayProtocol) -> list[dict] | None:
         """
         Returns structured config for static_routes.
 

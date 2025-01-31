@@ -39,6 +39,11 @@ bgp_peer_groups:
     # Custom structured config added under router_bgp.peer_groups.<name> for eos_cli_config_gen
     structured_config:
       description: Description for mlag_ipv4_underlay_peer via structured_config
+  mlag_ipv4_vrfs_peer:
+    name: MLAG-IPv4-VRFS-PEER
+    bfd: false
+    structured_config:
+      description: Description for mlag_ipv4_vrfs_peer via structured_config
   evpn_overlay_peers:
     bfd: false
     # Custom structured config added under router_bgp.peer_groups.<name> for eos_cli_config_gen

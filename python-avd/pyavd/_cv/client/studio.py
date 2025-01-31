@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import json
 from logging import getLogger
-from typing import TYPE_CHECKING, Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, Protocol
 
 from pyavd._cv.api.arista.studio.v1 import (
     Inputs,
@@ -35,20 +35,21 @@ from .exceptions import CVResourceNotFound, get_cv_client_exception
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from . import CVClient
+    from . import CVClientProtocol
+
 
 LOGGER = getLogger(__name__)
 
 TOPOLOGY_STUDIO_ID = "TOPOLOGY"
 
 
-class StudioMixin:
+class StudioMixin(Protocol):
     """Only to be used as mixin on CVClient class."""
 
     studio_api_version: Literal["v1"] = "v1"
 
     async def get_studio(
-        self: CVClient,
+        self: CVClientProtocol,
         studio_id: str,
         workspace_id: str,
         time: datetime | None = None,
@@ -126,7 +127,7 @@ class StudioMixin:
         return response.value
 
     async def get_studio_inputs(
-        self: CVClient,
+        self: CVClientProtocol,
         studio_id: str,
         workspace_id: str,
         default_value: Any = None,
@@ -232,7 +233,7 @@ class StudioMixin:
         return studio_inputs or default_value
 
     async def get_studio_inputs_with_path(
-        self: CVClient,
+        self: CVClientProtocol,
         studio_id: str,
         workspace_id: str,
         input_path: list[str],
@@ -332,7 +333,7 @@ class StudioMixin:
         return default_value
 
     async def set_studio_inputs(
-        self: CVClient,
+        self: CVClientProtocol,
         studio_id: str,
         workspace_id: str,
         inputs: Any,
@@ -373,7 +374,7 @@ class StudioMixin:
         return response.value
 
     async def get_topology_studio_inputs(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         device_ids: list[str] | None = None,
         time: datetime | None = None,
@@ -429,7 +430,7 @@ class StudioMixin:
         return topology_inputs
 
     async def set_topology_studio_inputs(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         device_inputs: list[tuple[str, str, str]],
         timeout: float = DEFAULT_API_TIMEOUT,

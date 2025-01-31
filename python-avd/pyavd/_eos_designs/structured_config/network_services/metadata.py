@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import get, get_all, strip_empties_from_list, strip_null_from_data
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class MetadataMixin(UtilsMixin):
+class MetadataMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class MetadataMixin(UtilsMixin):
     """
 
     @cached_property
-    def metadata(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def metadata(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Generate metadata.cv_pathfinder for CV Pathfinder routers.
 
@@ -43,7 +41,7 @@ class MetadataMixin(UtilsMixin):
 
         return {"cv_pathfinder": cv_pathfinder_metadata}
 
-    def get_cv_pathfinder_metadata_internet_exit_policies(self: AvdStructuredConfigNetworkServices) -> list[dict] | None:
+    def get_cv_pathfinder_metadata_internet_exit_policies(self: AvdStructuredConfigNetworkServicesProtocol) -> list[dict] | None:
         """Generate metadata.cv_pathfinder.internet_exit_policies if available."""
         if not self._filtered_internet_exit_policies_and_connections:
             return None
@@ -86,7 +84,7 @@ class MetadataMixin(UtilsMixin):
 
         return strip_empties_from_list(internet_exit_polices, (None, [], {}))
 
-    def get_cv_pathfinder_metadata_applications(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def get_cv_pathfinder_metadata_applications(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Generate metadata.cv_pathfinder.applications if available."""
         if not self.shared_utils.is_cv_pathfinder_server or self.application_traffic_recognition is None:
             return None

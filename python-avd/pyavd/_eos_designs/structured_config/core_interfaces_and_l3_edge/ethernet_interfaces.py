@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigCoreInterfacesAndL3Edge
+    from . import AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol
 
 
-class EthernetInterfacesMixin(UtilsMixin):
+class EthernetInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class EthernetInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def ethernet_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3Edge) -> list | None:
+    def ethernet_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> list | None:
         """Return structured config for ethernet_interfaces."""
         ethernet_interfaces = []
 
@@ -67,7 +65,7 @@ class EthernetInterfacesMixin(UtilsMixin):
 
         return None
 
-    def _p2p_link_ethernet_description(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link_data: dict) -> str:
+    def _p2p_link_ethernet_description(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol, p2p_link_data: dict) -> str:
         return self.shared_utils.interface_descriptions.underlay_ethernet_interface(
             InterfaceDescriptionData(
                 shared_utils=self.shared_utils,
@@ -79,7 +77,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             ),
         )
 
-    def _port_channel_member_description(self: AvdStructuredConfigCoreInterfacesAndL3Edge, p2p_link_data: dict, member: dict) -> str:
+    def _port_channel_member_description(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol, p2p_link_data: dict, member: dict) -> str:
         return self.shared_utils.interface_descriptions.underlay_ethernet_interface(
             InterfaceDescriptionData(
                 shared_utils=self.shared_utils,

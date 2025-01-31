@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd.j2filters import natural_sort
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
+    from . import AvdStructuredConfigOverlayProtocol
 
 
-class RouteMapsMixin(UtilsMixin):
+class RouteMapsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouteMapsMixin(UtilsMixin):
     """
 
     @cached_property
-    def route_maps(self: AvdStructuredConfigOverlay) -> list | None:
+    def route_maps(self: AvdStructuredConfigOverlayProtocol) -> list | None:
         """Return structured config for route_maps."""
         if self.shared_utils.overlay_cvx:
             return None

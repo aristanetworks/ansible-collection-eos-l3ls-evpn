@@ -4,19 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._utils import append_if_not_duplicate, get, short_esi_to_route_target, strip_null_from_data
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class PortChannelInterfacesMixin(UtilsMixin):
+class PortChannelInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -24,7 +22,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def port_channel_interfaces(self: AvdStructuredConfigUnderlay) -> list | None:
+    def port_channel_interfaces(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
         """Return structured config for port_channel_interfaces."""
         port_channel_interfaces = []
         port_channel_list = []
@@ -128,7 +126,7 @@ class PortChannelInterfacesMixin(UtilsMixin):
 
         return None
 
-    def _get_direct_ha_port_channel_interface(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def _get_direct_ha_port_channel_interface(self: AvdStructuredConfigUnderlayProtocol) -> dict | None:
         """Return a dict containing the port-channel interface for direct HA."""
         if not self.shared_utils.use_port_channel_for_direct_ha:
             return None

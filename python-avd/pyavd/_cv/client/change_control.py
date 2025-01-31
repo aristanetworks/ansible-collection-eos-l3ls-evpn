@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from logging import getLogger
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._cv.api.arista.changecontrol.v1 import (
     ApproveConfig,
@@ -32,7 +32,8 @@ if TYPE_CHECKING:
 
     from aristaproto import _DateTime
 
-    from . import CVClient
+    from . import CVClientProtocol
+
 
 LOGGER = getLogger(__name__)
 
@@ -44,13 +45,13 @@ CHANGE_CONTROL_STATUS_MAP = {
 }
 
 
-class ChangeControlMixin:
+class ChangeControlMixin(Protocol):
     """Only to be used as mixin on CVClient class."""
 
     workspace_api_version: Literal["v1"] = "v1"
 
     async def get_change_control(
-        self: CVClient,
+        self: CVClientProtocol,
         change_control_id: str,
         time: datetime | None = None,
         timeout: float = DEFAULT_API_TIMEOUT,
@@ -80,7 +81,7 @@ class ChangeControlMixin:
         return response.value
 
     async def set_change_control(
-        self: CVClient,
+        self: CVClientProtocol,
         change_control_id: str,
         name: str | None = None,
         description: str | None = None,
@@ -115,7 +116,7 @@ class ChangeControlMixin:
         return response.value
 
     async def approve_change_control(
-        self: CVClient,
+        self: CVClientProtocol,
         change_control_id: str,
         timestamp: _DateTime,
         description: str | None = None,
@@ -152,7 +153,7 @@ class ChangeControlMixin:
         return response.value
 
     async def start_change_control(
-        self: CVClient,
+        self: CVClientProtocol,
         change_control_id: str,
         description: str | None = None,
         timeout: float = DEFAULT_API_TIMEOUT,
@@ -184,7 +185,7 @@ class ChangeControlMixin:
         return response.value
 
     async def wait_for_change_control_state(
-        self: CVClient,
+        self: CVClientProtocol,
         cc_id: str,
         state: Literal["completed", "unspecified", "running", "scheduled"],
         timeout: float = 3600.0,

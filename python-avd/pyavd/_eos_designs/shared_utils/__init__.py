@@ -1,6 +1,8 @@
 # Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
+from typing import Protocol
+
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._schema.avdschema import AvdSchema
 
@@ -27,7 +29,7 @@ from .utils import UtilsMixin
 from .wan import WanMixin
 
 
-class SharedUtils(
+class SharedUtilsProtocol(
     FilteredTenantsMixin,
     InbandManagementMixin,
     InterfaceDescriptionsMixin,
@@ -49,7 +51,17 @@ class SharedUtils(
     UnderlayMixin,
     UtilsMixin,
     FlowTrackingMixin,
+    Protocol,
 ):
+    """Protocol for the SharedUtils Class with commonly used methods / cached_properties to be shared between all the python modules loaded in eos_designs."""
+
+    hostvars: dict
+    inputs: EosDesigns
+    templar: object
+    schema: AvdSchema
+
+
+class SharedUtils(SharedUtilsProtocol):
     """
     Class with commonly used methods / cached_properties to be shared between all the python modules loaded in eos_designs.
 
@@ -60,8 +72,6 @@ class SharedUtils(
     Since these methods / cached_properties will not be rendered automatically, we can avoid some of the
     general conditions and just return the value. We expect the logic that determines the relevancy of the
     value to be handled in calling function.
-
-    The class cannot be overridden.
     """
 
     def __init__(self, hostvars: dict, inputs: EosDesigns, templar: object, schema: AvdSchema) -> None:

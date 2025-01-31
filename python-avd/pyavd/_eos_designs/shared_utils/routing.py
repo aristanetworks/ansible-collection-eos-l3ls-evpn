@@ -4,16 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class RoutingMixin:
+class RoutingMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -22,24 +22,24 @@ class RoutingMixin:
     """
 
     @cached_property
-    def underlay_routing_protocol(self: SharedUtils) -> str:
+    def underlay_routing_protocol(self: SharedUtilsProtocol) -> str:
         default_underlay_routing_protocol = self.node_type_key_data.default_underlay_routing_protocol
         return (self.inputs.underlay_routing_protocol or default_underlay_routing_protocol).lower()
 
     @cached_property
-    def overlay_routing_protocol(self: SharedUtils) -> str:
+    def overlay_routing_protocol(self: SharedUtilsProtocol) -> str:
         default_overlay_routing_protocol = self.node_type_key_data.default_overlay_routing_protocol
         return (self.inputs.overlay_routing_protocol or default_overlay_routing_protocol).lower()
 
     @cached_property
-    def overlay_address_families(self: SharedUtils) -> list[str]:
+    def overlay_address_families(self: SharedUtilsProtocol) -> list[str]:
         if self.overlay_routing_protocol in ["ebgp", "ibgp"]:
             default_overlay_address_families = self.node_type_key_data.default_overlay_address_families
             return self.node_config.overlay_address_families._as_list() or default_overlay_address_families._as_list()
         return []
 
     @cached_property
-    def bgp(self: SharedUtils) -> bool:
+    def bgp(self: SharedUtilsProtocol) -> bool:
         """Boolean telling if BGP Routing should be configured."""
         if not self.underlay_router:
             return False
@@ -57,28 +57,28 @@ class RoutingMixin:
         ) or bool(self.l3_interfaces_bgp_neighbors)
 
     @cached_property
-    def router_id(self: SharedUtils) -> str | None:
+    def router_id(self: SharedUtilsProtocol) -> str | None:
         """Render IP address for router_id."""
         if self.underlay_router:
             return self.ip_addressing.router_id()
         return None
 
     @cached_property
-    def ipv6_router_id(self: SharedUtils) -> str | None:
+    def ipv6_router_id(self: SharedUtilsProtocol) -> str | None:
         """Render IPv6 address for router_id."""
         if self.underlay_router and self.underlay_ipv6:
             return self.ip_addressing.ipv6_router_id()
         return None
 
     @cached_property
-    def isis_instance_name(self: SharedUtils) -> str | None:
+    def isis_instance_name(self: SharedUtilsProtocol) -> str | None:
         if self.underlay_router and self.underlay_routing_protocol in ["isis", "isis-ldp", "isis-sr", "isis-sr-ldp"]:
             default_isis_instance_name = "CORE" if self.mpls_lsr else "EVPN_UNDERLAY"
             return self.inputs.underlay_isis_instance_name or default_isis_instance_name
         return None
 
     @cached_property
-    def bgp_as(self: SharedUtils) -> str | None:
+    def bgp_as(self: SharedUtilsProtocol) -> str | None:
         """
         Get global bgp_as or fabric_topology bgp_as.
 

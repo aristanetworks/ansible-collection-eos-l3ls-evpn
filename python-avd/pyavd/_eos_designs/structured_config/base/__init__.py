@@ -4,9 +4,9 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, StructuredConfigGeneratorProtocol
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, strip_empties_from_dict, strip_null_from_data
 from pyavd.j2filters import natural_sort
@@ -14,14 +14,15 @@ from pyavd.j2filters import natural_sort
 from .ntp import NtpMixin
 from .router_general import RouterGeneralMixin
 from .snmp_server import SnmpServerMixin
+from .utils import UtilsMixin
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
 
-class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
+class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMixin, UtilsMixin, StructuredConfigGeneratorProtocol, Protocol):
     """
-    The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
+    Protocol for the AvdStructuredConfig Class, which is imported by "get_structured_config" to render parts of the structured config.
 
     "get_structured_config" imports, instantiates and run the .render() method on the class.
     .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
@@ -762,3 +763,18 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     def struct_cfgs(self) -> None:
         if self.shared_utils.platform_settings.structured_config:
             self.custom_structured_configs.root.append(self.shared_utils.platform_settings.structured_config)
+
+
+class AvdStructuredConfigBase(StructuredConfigGenerator, AvdStructuredConfigBaseProtocol):
+    """
+    The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
+
+    "get_structured_config" imports, instantiates and run the .render() method on the class.
+    .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
+    a dict with the name of the method as key. This means that each key in the final dict corresponds to a method.
+
+    The Class uses StructuredConfigGenerator, as the base class, to inherit the _hostvars, keys and other attributes.
+    Other methods are included as "Mixins" to make the files more manageable.
+
+    The order of the @cached_properties methods imported from Mixins will also control the order in the output.
+    """

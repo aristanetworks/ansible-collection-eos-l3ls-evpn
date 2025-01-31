@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import ssl
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from grpclib.client import Channel
 from requests import JSONDecodeError, get, post
@@ -26,16 +26,19 @@ if TYPE_CHECKING:
     from typing_extensions import Self
 
 
-class CVClient(
+class CVClientProtocol(
     ChangeControlMixin,
     ConfigletMixin,
     InventoryMixin,
     StudioMixin,
     SwgMixin,
     TagMixin,
-    UtilsMixin,
     WorkspaceMixin,
+    UtilsMixin,
+    Protocol,
 ):
+    """Protocol for the CVClient class."""
+
     _channel: Channel | None = None
     _metadata: dict
     _servers: list[str]
@@ -45,40 +48,6 @@ class CVClient(
     _username: str | None
     _password: str | None
     _cv_version: CvVersion | None = None
-
-    def __init__(
-        self,
-        servers: str | list[str],
-        token: str | None = None,
-        username: str | None = None,
-        password: str | None = None,
-        port: int = 443,
-        verify_certs: bool = True,
-    ) -> None:
-        """
-        CVClient is a high-level API library for using CloudVision Resource APIs.
-
-        Use CVClient as an async context manager like:
-            `async with CVClient(servers="myserver", token="mytoken") as cv_client:`
-
-        Parameters:
-            servers: A single FQDN for CVaaS or a list of FQDNs for one CVP cluster.
-            token: Token defined in CloudVision under service-accounts.
-            username: Username to use for authentication if token is not set.
-            password: Password to use for authentication if token is not set.
-            port: TCP port to use for the connection.
-            verify_certs: Disables SSL certificate verification if set to False. Not recommended for production.
-        """
-        if isinstance(servers, list):
-            self._servers = servers
-        else:
-            self._servers = [servers]
-
-        self._port = port
-        self._token = token
-        self._username = username
-        self._password = password
-        self._verify_certs = verify_certs
 
     async def __aenter__(self) -> Self:
         """Using asynchronous context manager since grpclib must be initialized inside an asyncio loop."""
@@ -176,3 +145,39 @@ class CVClient(
         except (KeyError, JSONDecodeError) as e:
             msg = f"Unable to get version from CloudVision server. Got {response.text}"
             raise CVClientException(msg) from e
+
+
+class CVClient(CVClientProtocol):
+    def __init__(
+        self,
+        servers: str | list[str],
+        token: str | None = None,
+        username: str | None = None,
+        password: str | None = None,
+        port: int = 443,
+        verify_certs: bool = True,
+    ) -> None:
+        """
+        CVClient is a high-level API library for using CloudVision Resource APIs.
+
+        Use CVClient as an async context manager like:
+            `async with CVClient(servers="myserver", token="mytoken") as cv_client:`
+
+        Parameters:
+            servers: A single FQDN for CVaaS or a list of FQDNs for one CVP cluster.
+            token: Token defined in CloudVision under service-accounts.
+            username: Username to use for authentication if token is not set.
+            password: Password to use for authentication if token is not set.
+            port: TCP port to use for the connection.
+            verify_certs: Disables SSL certificate verification if set to False. Not recommended for production.
+        """
+        if isinstance(servers, list):
+            self._servers = servers
+        else:
+            self._servers = [servers]
+
+        self._port = port
+        self._token = token
+        self._username = username
+        self._password = password
+        self._verify_certs = verify_certs

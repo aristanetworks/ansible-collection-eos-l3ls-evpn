@@ -5,22 +5,20 @@ from __future__ import annotations
 
 from functools import cached_property
 from hashlib import sha1
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import strip_null_from_data
 from pyavd.j2filters import natural_sort, snmp_hash
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigBase
+    from . import AvdStructuredConfigBaseProtocol
 
 
-class SnmpServerMixin(UtilsMixin):
+class SnmpServerMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -28,7 +26,7 @@ class SnmpServerMixin(UtilsMixin):
     """
 
     @cached_property
-    def snmp_server(self: AvdStructuredConfigBase) -> dict | None:
+    def snmp_server(self: AvdStructuredConfigBaseProtocol) -> dict | None:
         """
         snmp_server set based on snmp_settings data-model, using various snmp_settings information.
 
@@ -69,7 +67,7 @@ class SnmpServerMixin(UtilsMixin):
             },
         )
 
-    def _snmp_engine_ids(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> dict | None:
+    def _snmp_engine_ids(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> dict | None:
         """
         Return dict of engine ids if "snmp_settings.compute_local_engineid" is True.
 
@@ -95,7 +93,7 @@ class SnmpServerMixin(UtilsMixin):
 
         return {"local": local_engine_id}
 
-    def _snmp_location(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> str | None:
+    def _snmp_location(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> str | None:
         """
         Return location if "snmp_settings.location" is True.
 
@@ -114,7 +112,7 @@ class SnmpServerMixin(UtilsMixin):
         location_elements = [location for location in location_elements if location not in [None, ""]]
         return " ".join(location_elements)
 
-    def _snmp_users(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings, engine_ids: dict | None) -> list | None:
+    def _snmp_users(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings, engine_ids: dict | None) -> list | None:
         """
         Return users if "snmp_settings.users" is set.
 
@@ -159,7 +157,7 @@ class SnmpServerMixin(UtilsMixin):
 
         return snmp_users or None
 
-    def _snmp_hosts(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> EosCliConfigGen.SnmpServer.Hosts:
+    def _snmp_hosts(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> EosCliConfigGen.SnmpServer.Hosts:
         """
         Return hosts if "snmp_settings.hosts" is set.
 
@@ -206,7 +204,7 @@ class SnmpServerMixin(UtilsMixin):
 
         return snmp_hosts
 
-    def _snmp_local_interfaces(self: AvdStructuredConfigBase, source_interfaces_inputs: EosDesigns.SourceInterfaces.Snmp) -> list | None:
+    def _snmp_local_interfaces(self: AvdStructuredConfigBaseProtocol, source_interfaces_inputs: EosDesigns.SourceInterfaces.Snmp) -> list | None:
         """
         Return local_interfaces if "source_interfaces.snmp" is set.
 
@@ -219,7 +217,7 @@ class SnmpServerMixin(UtilsMixin):
         local_interfaces = self._build_source_interfaces(source_interfaces_inputs.mgmt_interface, source_interfaces_inputs.inband_mgmt_interface, "SNMP")
         return local_interfaces or None
 
-    def _snmp_vrfs(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> EosDesigns.SnmpSettings.Vrfs:
+    def _snmp_vrfs(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> EosDesigns.SnmpSettings.Vrfs:
         """
         Return list of dicts for enabling/disabling SNMP for VRFs.
 

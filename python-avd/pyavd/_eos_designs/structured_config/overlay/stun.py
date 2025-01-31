@@ -5,17 +5,15 @@ from __future__ import annotations
 
 import itertools
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import strip_empties_from_dict
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
+    from . import AvdStructuredConfigOverlayProtocol
 
 
-class StunMixin(UtilsMixin):
+class StunMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class StunMixin(UtilsMixin):
     """
 
     @cached_property
-    def stun(self: AvdStructuredConfigOverlay) -> dict | None:
+    def stun(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
         """Return structured config for stun."""
         if not self.shared_utils.is_wan_router:
             return None

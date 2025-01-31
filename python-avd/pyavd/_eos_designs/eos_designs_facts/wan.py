@@ -4,13 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import EosDesignsFacts
+    from . import EosDesignsFactsProtocol
 
 
-class WanMixin:
+class WanMixin(Protocol):
     """
     Mixin Class providing a subset of EosDesignsFacts.
 
@@ -19,7 +19,7 @@ class WanMixin:
     """
 
     @cached_property
-    def wan_path_groups(self: EosDesignsFacts) -> list | None:
+    def wan_path_groups(self: EosDesignsFactsProtocol) -> list | None:
         """
         Return the list of WAN path_groups directly connected to this router.
 

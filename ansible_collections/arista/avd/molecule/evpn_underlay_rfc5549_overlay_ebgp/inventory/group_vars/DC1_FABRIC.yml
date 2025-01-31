@@ -36,6 +36,8 @@ bgp_peer_groups:
   mlag_ipv4_underlay_peer:
     name: "MLAG_PEER"
     password: "arwUnrq9ydqIhjfTwRhAlg=="
+  mlag_ipv4_vrfs_peer:
+    name: "MLAG_VRFS_PEER"
 
 # Spine Switches
 spine:
@@ -166,6 +168,8 @@ l3leaf:
       uplink_switches: ['DC1-SPINE5', 'DC1-SPINE5']
       loopback_ipv6_pool: 2001:1::/64
       loopback_ipv6_offset: 4
+      # since this device is not using rfc5549 for overlay, we need mlag_peer_l3_ipv4_pool set specifically.
+      mlag_peer_l3_ipv4_pool: 10.255.251.0/24
       nodes:
         - name: DC1-LEAF3A
           id: 8

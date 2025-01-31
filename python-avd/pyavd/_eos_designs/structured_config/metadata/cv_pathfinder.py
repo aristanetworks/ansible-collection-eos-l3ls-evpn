@@ -3,23 +3,23 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default, strip_empties_from_list
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigMetadata
+    from . import AvdStructuredConfigMetadataProtocol
 
 
-class CvPathfinderMixin:
+class CvPathfinderMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    def _cv_pathfinder(self: AvdStructuredConfigMetadata) -> dict | None:
+    def _cv_pathfinder(self: AvdStructuredConfigMetadataProtocol) -> dict | None:
         """
         Generate metadata for CV Pathfinder feature.
 
@@ -61,7 +61,7 @@ class CvPathfinderMixin:
             "pathfinders": self._metadata_pathfinder_vtep_ips(),
         }
 
-    def _metadata_interfaces(self: AvdStructuredConfigMetadata) -> list:
+    def _metadata_interfaces(self: AvdStructuredConfigMetadataProtocol) -> list:
         return [
             {
                 "name": interface["name"],
@@ -74,7 +74,7 @@ class CvPathfinderMixin:
             for interface in carrier["interfaces"]
         ]
 
-    def _metadata_pathgroups(self: AvdStructuredConfigMetadata) -> list:
+    def _metadata_pathgroups(self: AvdStructuredConfigMetadataProtocol) -> list:
         return [
             {
                 "name": pathgroup.name,
@@ -96,7 +96,7 @@ class CvPathfinderMixin:
             for pathgroup in self.inputs.wan_path_groups
         ]
 
-    def _metadata_regions(self: AvdStructuredConfigMetadata) -> list:
+    def _metadata_regions(self: AvdStructuredConfigMetadataProtocol) -> list:
         if not self.inputs.cv_pathfinder_regions:
             msg = "'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'."
             raise AristaAvdInvalidInputsError(msg)
@@ -125,7 +125,7 @@ class CvPathfinderMixin:
             for region in regions
         ]
 
-    def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadata) -> list:
+    def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadataProtocol) -> list:
         return [
             {
                 "vtep_ip": wan_route_server.vtep_ip,
@@ -133,7 +133,7 @@ class CvPathfinderMixin:
             for wan_route_server in self.shared_utils.filtered_wan_route_servers
         ]
 
-    def _metadata_vrfs(self: AvdStructuredConfigMetadata) -> list:
+    def _metadata_vrfs(self: AvdStructuredConfigMetadataProtocol) -> list:
         """Extracting metadata for VRFs by parsing the generated structured config and flatten it a bit (like hiding load-balance policies)."""
         if not (avt_vrfs := self.structured_config.router_adaptive_virtual_topology.vrfs):
             return []
@@ -203,7 +203,7 @@ class CvPathfinderMixin:
 
         return strip_empties_from_list(metadata_vrfs)
 
-    def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadata, vrf_name: str) -> int:
+    def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadataProtocol, vrf_name: str) -> int:
         if vrf_name not in self.inputs.wan_virtual_topologies.vrfs or (wan_vni := self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni) is None:
             if vrf_name == "default":
                 return 1

@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from datetime import datetime
 from logging import getLogger
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._cv.api.arista.swg.v1 import (
     EndpointConfig,
@@ -22,7 +22,7 @@ from .constants import DEFAULT_API_TIMEOUT
 from .exceptions import get_cv_client_exception
 
 if TYPE_CHECKING:
-    from . import CVClient
+    from . import CVClientProtocol
 
 LOGGER = getLogger(__name__)
 
@@ -32,13 +32,13 @@ ELEMENT_TYPE_MAP = {
 }
 
 
-class SwgMixin:
+class SwgMixin(Protocol):
     """Only to be used as mixin on CVClient class."""
 
     swg_api_version: Literal["v1"] = "v1"
 
     async def set_swg_device(
-        self: CVClient,
+        self: CVClientProtocol,
         device_id: str,
         service: Literal["zscaler"],
         location: str,
@@ -74,7 +74,7 @@ class SwgMixin:
         return response.time, response.value
 
     async def wait_for_swg_endpoint_status(
-        self: CVClient,
+        self: CVClientProtocol,
         device_id: str,
         service: Literal["zscaler"],
         start_time: datetime | None = None,

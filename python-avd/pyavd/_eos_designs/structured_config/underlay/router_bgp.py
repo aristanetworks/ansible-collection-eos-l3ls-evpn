@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate, get, strip_empties_from_dict
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class RouterBgpMixin(UtilsMixin):
+class RouterBgpMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouterBgpMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_bgp(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def router_bgp(self: AvdStructuredConfigUnderlayProtocol) -> dict | None:
         """Return the structured config for router_bgp."""
         if not self.shared_utils.underlay_bgp:
             return None

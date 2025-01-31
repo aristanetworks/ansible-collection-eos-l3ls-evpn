@@ -1,0 +1,214 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_ptp-tests-spine1_Ethernet17
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.1.9/31
+  ptp:
+    enable: true
+    announce:
+      interval: 0
+      timeout: 3
+    delay_req: -3
+    sync_message:
+      interval: -3
+    transport: ipv4
+  peer: ptp-tests-spine1
+  peer_interface: Ethernet17
+  peer_type: spine
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_ptp-tests-spine2_Ethernet17
+  shutdown: false
+  mtu: 9214
+  ip_address: 192.168.1.11/31
+  peer: ptp-tests-spine2
+  peer_interface: Ethernet17
+  peer_type: spine
+  switchport:
+    enabled: false
+hostname: ptp-tests-leaf5
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.3.3/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.2.3/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+metadata:
+  fabric_name: PTP_TESTS
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.3.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.2.0/24 eq 32
+ptp:
+  mode: boundary
+  clock_identity: 00:1C:73:1e:00:03
+  priority1: 30
+  priority2: 3
+  domain: 127
+  monitor:
+    enabled: true
+    threshold:
+      offset_from_master: 250
+      mean_path_delay: 1500
+    missing_message:
+      sequence_ids:
+        enabled: true
+        announce: 3
+        delay_resp: 3
+        follow_up: 3
+        sync: 3
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '65010'
+  router_id: 192.168.3.3
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 192.168.1.8
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65200'
+    peer: ptp-tests-spine1
+    description: ptp-tests-spine1_Ethernet17
+  - ip_address: 192.168.1.10
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65200'
+    peer: ptp-tests-spine2
+    description: ptp-tests-spine2_Ethernet17
+  - ip_address: 10.255.0.1
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65200'
+    peer: ptp-tests-spine1
+    description: ptp-tests-spine1_Loopback0
+  - ip_address: 10.255.0.2
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65200'
+    peer: ptp-tests-spine2
+    description: ptp-tests-spine2_Loopback0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  vlans:
+  - id: 11
+    tenant: PTP
+    rd: 192.168.3.3:10011
+    route_targets:
+      both:
+      - 10011:10011
+    redistribute_routes:
+    - learned
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: VRF1
+    rd: 192.168.3.3:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+    router_id: 192.168.3.3
+    redistribute:
+      connected:
+        enabled: true
+service_routing_protocols_model: multi-agent
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.0.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_interfaces:
+- name: Vlan11
+  description: VLAN11
+  shutdown: false
+  vrf: VRF1
+  tenant: PTP
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vlans:
+- id: 11
+  name: VLAN11
+  tenant: PTP
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: VRF1
+  ip_routing: true
+  tenant: PTP
+vxlan_interface:
+  vxlan1:
+    description: ptp-tests-leaf5_VTEP
+    vxlan:
+      source_interface: Loopback1
+      udp_port: 4789
+      vlans:
+      - id: 11
+        vni: 10011
+      vrfs:
+      - name: VRF1
+        vni: 1

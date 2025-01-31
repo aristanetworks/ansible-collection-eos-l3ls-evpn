@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._cv.api.arista.inventory.v1 import Device, DeviceKey, DeviceServiceStub, DeviceStreamRequest
 from pyavd._cv.api.arista.time import TimeBounds
@@ -14,16 +14,16 @@ from .exceptions import get_cv_client_exception
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from . import CVClient
+    from . import CVClientProtocol
 
 
-class InventoryMixin:
+class InventoryMixin(Protocol):
     """Only to be used as mixin on CVClient class."""
 
     inventory_api_version: Literal["v1"] = "v1"
 
     async def get_inventory_devices(
-        self: CVClient,
+        self: CVClientProtocol,
         devices: list[tuple[str, str, str]] | None = None,
         time: datetime | None = None,
         timeout: float = DEFAULT_API_TIMEOUT,

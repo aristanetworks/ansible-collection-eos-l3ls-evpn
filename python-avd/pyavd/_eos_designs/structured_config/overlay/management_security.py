@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
+    from . import AvdStructuredConfigOverlayProtocol
 
 
-class ManagementSecurityMixin(UtilsMixin):
+class ManagementSecurityMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -20,7 +18,7 @@ class ManagementSecurityMixin(UtilsMixin):
     """
 
     @cached_property
-    def management_security(self: AvdStructuredConfigOverlay) -> dict | None:
+    def management_security(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
         """
         Return structured config for management_security.
 

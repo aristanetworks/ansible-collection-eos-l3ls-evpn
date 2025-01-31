@@ -5,15 +5,13 @@ from __future__ import annotations
 
 from collections import defaultdict
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class IpNatMixin(UtilsMixin):
+class IpNatMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -21,7 +19,7 @@ class IpNatMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_nat(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def ip_nat(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Returns structured config for ip_nat."""
         if not self.shared_utils.is_cv_pathfinder_client:
             return None

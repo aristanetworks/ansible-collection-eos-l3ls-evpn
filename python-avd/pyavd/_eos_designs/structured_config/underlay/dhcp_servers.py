@@ -6,18 +6,16 @@ from __future__ import annotations
 import re
 from functools import cached_property
 from ipaddress import AddressValueError, IPv4Address, ip_network
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
+
+if TYPE_CHECKING:
+    from . import AvdStructuredConfigUnderlayProtocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get
 
-from .utils import UtilsMixin
 
-if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
-
-
-class DhcpServersMixin(UtilsMixin):
+class DhcpServersMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -25,7 +23,7 @@ class DhcpServersMixin(UtilsMixin):
     """
 
     @cached_property
-    def _subnets(self: AvdStructuredConfigUnderlay) -> list:
+    def _subnets(self: AvdStructuredConfigUnderlayProtocol) -> list:
         """
         Returns a list of dhcp subnets for downstream p2p interfaces.
 
@@ -53,7 +51,7 @@ class DhcpServersMixin(UtilsMixin):
         return subnets
 
     @cached_property
-    def _ipv4_ztp_boot_file(self: AvdStructuredConfigUnderlay) -> str | None:
+    def _ipv4_ztp_boot_file(self: AvdStructuredConfigUnderlayProtocol) -> str | None:
         """Returns the file name to allow for ZTP to CV. TODO: Add inband_ztp_bootstrap_file to schema."""
         if custom_bootfile := get(self._hostvars, "inband_ztp_bootstrap_file"):
             return custom_bootfile
@@ -67,7 +65,7 @@ class DhcpServersMixin(UtilsMixin):
         return f"https://{cvp_instance_ips[0]}/ztp/bootstrap"
 
     @cached_property
-    def _ntp_servers(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def _ntp_servers(self: AvdStructuredConfigUnderlayProtocol) -> dict | None:
         """Returns the list of NTP servers."""
         ntp_servers_settings = self.inputs.ntp_settings.servers
         if not ntp_servers_settings:
@@ -88,7 +86,7 @@ class DhcpServersMixin(UtilsMixin):
         raise AristaAvdInvalidInputsError(msg)
 
     @cached_property
-    def dhcp_servers(self: AvdStructuredConfigUnderlay) -> list | None:
+    def dhcp_servers(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
         """Return structured config for dhcp_server."""
         dhcp_servers = []
         # Set subnets for DHCP server

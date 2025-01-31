@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
@@ -13,10 +13,10 @@ from pyavd._utils.password_utils.password import simple_7_encrypt
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class UtilsWanMixin:
+class UtilsWanMixin(Protocol):
     """
     Mixin Class with internal functions for WAN.
 
@@ -24,7 +24,7 @@ class UtilsWanMixin:
     """
 
     @cached_property
-    def _filtered_wan_vrfs(self: AvdStructuredConfigNetworkServices) -> EosDesigns.WanVirtualTopologies.Vrfs:
+    def _filtered_wan_vrfs(self: AvdStructuredConfigNetworkServicesProtocol) -> EosDesigns.WanVirtualTopologies.Vrfs:
         """Loop through all the VRFs defined under `wan_virtual_topologies.vrfs` and returns a list of mode."""
         wan_vrfs = EosDesigns.WanVirtualTopologies.Vrfs(
             vrf for vrf in self.inputs.wan_virtual_topologies.vrfs if vrf.name in self.shared_utils.vrfs or self.shared_utils.is_wan_server
@@ -37,7 +37,7 @@ class UtilsWanMixin:
         return wan_vrfs
 
     @cached_property
-    def _wan_virtual_topologies_policies(self: AvdStructuredConfigNetworkServices) -> EosDesigns.WanVirtualTopologies.Policies:
+    def _wan_virtual_topologies_policies(self: AvdStructuredConfigNetworkServicesProtocol) -> EosDesigns.WanVirtualTopologies.Policies:
         """This function parses the input data and append the default-policy if not already present."""
         # If not overwritten, inject the default policy in case it is required for one of the VRFs
         if self._default_wan_policy_name in self.inputs.wan_virtual_topologies.policies:
@@ -48,7 +48,7 @@ class UtilsWanMixin:
         return policies
 
     @cached_property
-    def _filtered_wan_policies(self: AvdStructuredConfigNetworkServices) -> list:
+    def _filtered_wan_policies(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
         """
         Loop through all the VRFs defined under `wan_virtual_topologies.vrfs` and returns a list of policies to configure on this device.
 
@@ -88,7 +88,7 @@ class UtilsWanMixin:
 
         return filtered_policies
 
-    def _update_policy_match_statements(self: AvdStructuredConfigNetworkServices, policy: dict) -> None:
+    def _update_policy_match_statements(self: AvdStructuredConfigNetworkServicesProtocol, policy: dict) -> None:
         """
         Update the policy dict with two keys: `matches` and `default_match`.
 
@@ -219,7 +219,7 @@ class UtilsWanMixin:
         policy["matches"] = matches
         policy["default_match"] = default_match
 
-    def _generate_wan_load_balance_policy(self: AvdStructuredConfigNetworkServices, name: str, input_dict: dict, context_path: str) -> dict | None:
+    def _generate_wan_load_balance_policy(self: AvdStructuredConfigNetworkServicesProtocol, name: str, input_dict: dict, context_path: str) -> dict | None:
         """
         Generate and return a router path-selection load-balance policy.
 
@@ -290,7 +290,7 @@ class UtilsWanMixin:
 
         return wan_load_balance_policy
 
-    def _path_group_preference_to_eos_priority(self: AvdStructuredConfigNetworkServices, path_group_preference: int | str, context_path: str) -> int:
+    def _path_group_preference_to_eos_priority(self: AvdStructuredConfigNetworkServicesProtocol, path_group_preference: int | str, context_path: str) -> int:
         """
         Convert "preferred" to 1 and "alternate" to 2. Everything else is returned as is.
 
@@ -320,12 +320,12 @@ class UtilsWanMixin:
         return priority
 
     @cached_property
-    def _default_wan_policy_name(self: AvdStructuredConfigNetworkServices) -> str:
+    def _default_wan_policy_name(self: AvdStructuredConfigNetworkServicesProtocol) -> str:
         """TODO: make this configurable."""
         return "DEFAULT-POLICY"
 
     @cached_property
-    def _default_policy_path_group_names(self: AvdStructuredConfigNetworkServices) -> list[str]:
+    def _default_policy_path_group_names(self: AvdStructuredConfigNetworkServicesProtocol) -> list[str]:
         """
         Return a list of path group names for the default policy.
 
@@ -344,7 +344,7 @@ class UtilsWanMixin:
         return natural_sort(path_group_names)
 
     @cached_property
-    def _default_wan_policy(self: AvdStructuredConfigNetworkServices) -> EosDesigns.WanVirtualTopologies.PoliciesItem:
+    def _default_wan_policy(self: AvdStructuredConfigNetworkServicesProtocol) -> EosDesigns.WanVirtualTopologies.PoliciesItem:
         """
         Returning policy containing all path groups not excluded from default policy.
 
@@ -366,7 +366,7 @@ class UtilsWanMixin:
             ),
         )
 
-    def _default_profile_name(self: AvdStructuredConfigNetworkServices, profile_name: str, application_profile: str) -> str:
+    def _default_profile_name(self: AvdStructuredConfigNetworkServicesProtocol, profile_name: str, application_profile: str) -> str:
         """
         Helper function to consistently return the default name of a profile.
 
@@ -375,7 +375,7 @@ class UtilsWanMixin:
         return f"{profile_name}-{application_profile}"
 
     @cached_property
-    def _wan_control_plane_virtual_topology(self: AvdStructuredConfigNetworkServices) -> EosDesigns.WanVirtualTopologies.ControlPlaneVirtualTopology:
+    def _wan_control_plane_virtual_topology(self: AvdStructuredConfigNetworkServicesProtocol) -> EosDesigns.WanVirtualTopologies.ControlPlaneVirtualTopology:
         """
         Return the Control plane virtual topology or the default one.
 
@@ -399,18 +399,18 @@ class UtilsWanMixin:
         )
 
     @cached_property
-    def _wan_control_plane_profile_name(self: AvdStructuredConfigNetworkServices) -> str:
+    def _wan_control_plane_profile_name(self: AvdStructuredConfigNetworkServicesProtocol) -> str:
         """Control plane profile name."""
         vrf_default_policy_name = self._filtered_wan_vrfs["default"].policy
         return self._wan_control_plane_virtual_topology.name or f"{vrf_default_policy_name}-CONTROL-PLANE"
 
     @cached_property
-    def _wan_control_plane_application_profile_name(self: AvdStructuredConfigNetworkServices) -> str:
+    def _wan_control_plane_application_profile_name(self: AvdStructuredConfigNetworkServicesProtocol) -> str:
         """Control plane application profile name."""
         return self.inputs.wan_virtual_topologies.control_plane_virtual_topology.application_profile
 
     @cached_property
-    def _local_path_groups_connected_to_pathfinder(self: AvdStructuredConfigNetworkServices) -> list:
+    def _local_path_groups_connected_to_pathfinder(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
         """Return list of names of local path_groups connected to pathfinder."""
         return [
             path_group.name
@@ -419,7 +419,7 @@ class UtilsWanMixin:
         ]
 
     @cached_property
-    def _svi_acls(self: AvdStructuredConfigNetworkServices) -> dict[str, dict[str, dict]] | None:
+    def _svi_acls(self: AvdStructuredConfigNetworkServicesProtocol) -> dict[str, dict[str, dict]] | None:
         """
         Returns a dict of SVI ACLs.
 
@@ -463,16 +463,16 @@ class UtilsWanMixin:
 
         return svi_acls
 
-    def get_internet_exit_nat_profile_name(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> str:
+    def get_internet_exit_nat_profile_name(self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]) -> str:
         if internet_exit_policy_type == "zscaler":
             return "NAT-IE-ZSCALER"
         return "NAT-IE-DIRECT"
 
-    def get_internet_exit_nat_acl_name(self: AvdStructuredConfigNetworkServices, internet_exit_policy_type: Literal["zscaler", "direct"]) -> str:
+    def get_internet_exit_nat_acl_name(self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]) -> str:
         return f"ACL-{self.get_internet_exit_nat_profile_name(internet_exit_policy_type)}"
 
     def get_internet_exit_nat_pool_and_profile(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         internet_exit_policy_type: Literal["zscaler", "direct"],
     ) -> tuple[dict | None, dict | None]:
         if internet_exit_policy_type == "zscaler":
@@ -517,11 +517,11 @@ class UtilsWanMixin:
         return None
 
     @cached_property
-    def _filtered_internet_exit_policy_types(self: AvdStructuredConfigNetworkServices) -> list:
+    def _filtered_internet_exit_policy_types(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
         return sorted({internet_exit_policy.type for internet_exit_policy, _connections in self._filtered_internet_exit_policies_and_connections})
 
     @cached_property
-    def _l3_interface_acls(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _l3_interface_acls(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Returns a dict of interfaces and ACLs set on the interfaces.
 
@@ -569,7 +569,7 @@ class UtilsWanMixin:
 
     @cached_property
     def _filtered_internet_exit_policies_and_connections(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
     ) -> list[tuple[EosDesigns.CvPathfinderInternetExitPoliciesItem, list[dict]]]:
         """
         Only supported for CV Pathfinder Edge routers. Returns an empty list for pathfinders.
@@ -642,7 +642,7 @@ class UtilsWanMixin:
         return internet_exit_policies
 
     def get_internet_exit_connections(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         internet_exit_policy: EosDesigns.CvPathfinderInternetExitPoliciesItem,
         local_interfaces: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces,
     ) -> list:
@@ -661,7 +661,7 @@ class UtilsWanMixin:
         raise AristaAvdError(msg)
 
     def get_direct_internet_exit_connections(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         internet_exit_policy: EosDesigns.CvPathfinderInternetExitPoliciesItem,
         local_interfaces: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces,
     ) -> list[dict]:
@@ -708,7 +708,7 @@ class UtilsWanMixin:
         return connections
 
     def get_zscaler_internet_exit_connections(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         internet_exit_policy: EosDesigns.CvPathfinderInternetExitPoliciesItem,
         local_interfaces: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces,
     ) -> list:
@@ -783,7 +783,7 @@ class UtilsWanMixin:
         return connections
 
     def _get_ipsec_credentials(
-        self: AvdStructuredConfigNetworkServices, internet_exit_policy: EosDesigns.CvPathfinderInternetExitPoliciesItem
+        self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy: EosDesigns.CvPathfinderInternetExitPoliciesItem
     ) -> tuple[str, str]:
         """Returns ufqdn, shared_key based on various details from the given internet_exit_policy."""
         if not internet_exit_policy.zscaler.domain_name:
@@ -798,7 +798,7 @@ class UtilsWanMixin:
         ufqdn = f"{self.shared_utils.hostname}_{internet_exit_policy.name}@{internet_exit_policy.zscaler.domain_name}"
         return ufqdn, ipsec_key
 
-    def _generate_ipsec_key(self: AvdStructuredConfigNetworkServices, name: str, salt: str) -> str:
+    def _generate_ipsec_key(self: AvdStructuredConfigNetworkServicesProtocol, name: str, salt: str) -> str:
         """
         Build a secret containing various components for this policy and device.
 

@@ -4,17 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
-    from . import AvdIpAddressing
+    from . import AvdIpAddressingProtocol
 
 
-class UtilsMixin:
+class UtilsMixin(Protocol):
     """
     Mixin Class with internal functions.
 
@@ -22,83 +22,83 @@ class UtilsMixin:
     """
 
     @cached_property
-    def _mlag_primary_id(self: AvdIpAddressing) -> int:
+    def _mlag_primary_id(self: AvdIpAddressingProtocol) -> int:
         if self.shared_utils.mlag_switch_ids is None or self.shared_utils.mlag_switch_ids.get("primary") is None:
             msg = "'mlag_switch_ids' is required to calculate MLAG IP addresses."
             raise AristaAvdInvalidInputsError(msg)
         return self.shared_utils.mlag_switch_ids["primary"]
 
     @cached_property
-    def _mlag_secondary_id(self: AvdIpAddressing) -> int:
+    def _mlag_secondary_id(self: AvdIpAddressingProtocol) -> int:
         if self.shared_utils.mlag_switch_ids is None or self.shared_utils.mlag_switch_ids.get("secondary") is None:
             msg = "'mlag_switch_ids' is required to calculate MLAG IP addresses."
             raise AristaAvdInvalidInputsError(msg)
         return self.shared_utils.mlag_switch_ids["secondary"]
 
     @cached_property
-    def _mlag_peer_ipv4_pool(self: AvdIpAddressing) -> str:
+    def _mlag_peer_ipv4_pool(self: AvdIpAddressingProtocol) -> str:
         return self.shared_utils.mlag_peer_ipv4_pool
 
     @cached_property
-    def _mlag_peer_ipv6_pool(self: AvdIpAddressing) -> str:
+    def _mlag_peer_ipv6_pool(self: AvdIpAddressingProtocol) -> str:
         return self.shared_utils.mlag_peer_ipv6_pool
 
     @cached_property
-    def _mlag_peer_l3_ipv4_pool(self: AvdIpAddressing) -> str:
+    def _mlag_peer_l3_ipv4_pool(self: AvdIpAddressingProtocol) -> str:
         return self.shared_utils.mlag_peer_l3_ipv4_pool
 
     @cached_property
-    def _uplink_ipv4_pool(self: AvdIpAddressing) -> str:
+    def _uplink_ipv4_pool(self: AvdIpAddressingProtocol) -> str:
         if self.shared_utils.node_config.uplink_ipv4_pool is None:
             msg = "'uplink_ipv4_pool' is required to calculate uplink IP addresses."
             raise AristaAvdInvalidInputsError(msg)
         return self.shared_utils.node_config.uplink_ipv4_pool
 
     @cached_property
-    def _id(self: AvdIpAddressing) -> int:
+    def _id(self: AvdIpAddressingProtocol) -> int:
         if self.shared_utils.id is None:
             msg = "'id' is required to calculate IP addresses."
             raise AristaAvdInvalidInputsError(msg)
         return self.shared_utils.id
 
     @cached_property
-    def _max_uplink_switches(self: AvdIpAddressing) -> int:
+    def _max_uplink_switches(self: AvdIpAddressingProtocol) -> int:
         return self.shared_utils.max_uplink_switches
 
     @cached_property
-    def _max_parallel_uplinks(self: AvdIpAddressing) -> int:
+    def _max_parallel_uplinks(self: AvdIpAddressingProtocol) -> int:
         return self.shared_utils.node_config.max_parallel_uplinks
 
     @cached_property
-    def _loopback_ipv4_address(self: AvdIpAddressing) -> str | None:
+    def _loopback_ipv4_address(self: AvdIpAddressingProtocol) -> str | None:
         return self.shared_utils.node_config.loopback_ipv4_address
 
     @cached_property
-    def _loopback_ipv4_pool(self: AvdIpAddressing) -> str:
+    def _loopback_ipv4_pool(self: AvdIpAddressingProtocol) -> str:
         return self.shared_utils.loopback_ipv4_pool
 
     @cached_property
-    def _loopback_ipv4_offset(self: AvdIpAddressing) -> int:
+    def _loopback_ipv4_offset(self: AvdIpAddressingProtocol) -> int:
         return self.shared_utils.node_config.loopback_ipv4_offset
 
     @cached_property
-    def _loopback_ipv6_pool(self: AvdIpAddressing) -> str:
+    def _loopback_ipv6_pool(self: AvdIpAddressingProtocol) -> str:
         return self.shared_utils.loopback_ipv6_pool
 
     @cached_property
-    def _loopback_ipv6_offset(self: AvdIpAddressing) -> int:
+    def _loopback_ipv6_offset(self: AvdIpAddressingProtocol) -> int:
         return self.shared_utils.node_config.loopback_ipv6_offset
 
     @cached_property
-    def _vtep_loopback_ipv4_address(self: AvdIpAddressing) -> str | None:
+    def _vtep_loopback_ipv4_address(self: AvdIpAddressingProtocol) -> str | None:
         return self.shared_utils.node_config.vtep_loopback_ipv4_address
 
     @cached_property
-    def _vtep_loopback_ipv4_pool(self: AvdIpAddressing) -> str:
+    def _vtep_loopback_ipv4_pool(self: AvdIpAddressingProtocol) -> str:
         return self.shared_utils.vtep_loopback_ipv4_pool
 
     @cached_property
-    def _mlag_odd_id_based_offset(self: AvdIpAddressing) -> int:
+    def _mlag_odd_id_based_offset(self: AvdIpAddressingProtocol) -> int:
         """
         Return the subnet offset for an MLAG pair based on odd id.
 
@@ -115,7 +115,7 @@ class UtilsMixin:
 
         return int((odd_id - 1) / 2)
 
-    def _get_downlink_ipv4_pool_and_offset(self: AvdIpAddressing, uplink_switch_index: int) -> tuple[str, int]:
+    def _get_downlink_ipv4_pool_and_offset(self: AvdIpAddressingProtocol, uplink_switch_index: int) -> tuple[str, int]:
         """
         Returns the downlink IP pool and offset as a tuple according to the uplink_switch_index.
 
@@ -144,7 +144,7 @@ class UtilsMixin:
         )
         raise AristaAvdError(msg)
 
-    def _get_p2p_ipv4_pool_and_offset(self: AvdIpAddressing, uplink_switch_index: int) -> tuple[str, int]:
+    def _get_p2p_ipv4_pool_and_offset(self: AvdIpAddressingProtocol, uplink_switch_index: int) -> tuple[str, int]:
         """
         Returns IP pool and offset as a tuple according to the uplink_switch_index.
 

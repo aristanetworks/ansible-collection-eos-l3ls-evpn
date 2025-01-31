@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError
 from pyavd._utils import get, get_ip_from_ip_prefix, strip_empties_from_dict
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
+    from . import AvdStructuredConfigOverlayProtocol
 
 
-class RouterPathSelectionMixin(UtilsMixin):
+class RouterPathSelectionMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class RouterPathSelectionMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_path_selection(self: AvdStructuredConfigOverlay) -> dict | None:
+    def router_path_selection(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
         """Return structured config for router path-selection (DPS)."""
         if not self.shared_utils.is_wan_router:
             return None
@@ -39,7 +37,7 @@ class RouterPathSelectionMixin(UtilsMixin):
         return strip_empties_from_dict(router_path_selection)
 
     @cached_property
-    def _dp_ipsec_profile_name(self: AvdStructuredConfigOverlay) -> str:
+    def _dp_ipsec_profile_name(self: AvdStructuredConfigOverlayProtocol) -> str:
         """Returns the IPsec profile name to use for Data-Plane.
 
         If no data-plane config is present for IPsec, default to the control-plane profile-name.
@@ -48,7 +46,7 @@ class RouterPathSelectionMixin(UtilsMixin):
             return self.inputs.wan_ipsec_profiles.data_plane.profile_name
         return self.inputs.wan_ipsec_profiles.control_plane.profile_name
 
-    def _get_path_groups(self: AvdStructuredConfigOverlay) -> list:
+    def _get_path_groups(self: AvdStructuredConfigOverlayProtocol) -> list:
         """Generate the required path-groups locally."""
         path_groups = []
 
@@ -96,7 +94,7 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return path_groups
 
-    def _generate_ha_path_group(self: AvdStructuredConfigOverlay) -> dict:
+    def _generate_ha_path_group(self: AvdStructuredConfigOverlayProtocol) -> dict:
         """Called only when self.shared_utils.wan_ha is True or on Pathfinders."""
         ha_path_group = {
             "name": self.inputs.wan_ha.lan_ha_path_group_name,
@@ -130,15 +128,15 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return ha_path_group
 
-    def _wan_ha_interfaces(self: AvdStructuredConfigOverlay) -> list:
+    def _wan_ha_interfaces(self: AvdStructuredConfigOverlayProtocol) -> list:
         """Return list of interfaces for HA."""
         return [uplink for uplink in self.shared_utils.get_switch_fact("uplinks") if get(uplink, "vrf") is None]
 
-    def _wan_ha_peer_vtep_ip(self: AvdStructuredConfigOverlay) -> str:
+    def _wan_ha_peer_vtep_ip(self: AvdStructuredConfigOverlayProtocol) -> str:
         peer_facts = self.shared_utils.get_peer_facts(self.shared_utils.wan_ha_peer, required=True)
         return get(peer_facts, "vtep_ip", required=True)
 
-    def _get_path_group_id(self: AvdStructuredConfigOverlay, path_group_name: str, config_id: int | None = None) -> int:
+    def _get_path_group_id(self: AvdStructuredConfigOverlayProtocol, path_group_name: str, config_id: int | None = None) -> int:
         """
         Get path group id.
 
@@ -151,7 +149,7 @@ class RouterPathSelectionMixin(UtilsMixin):
             return config_id
         return 500
 
-    def _get_local_interfaces_for_path_group(self: AvdStructuredConfigOverlay, path_group_name: str) -> list:
+    def _get_local_interfaces_for_path_group(self: AvdStructuredConfigOverlayProtocol, path_group_name: str) -> list:
         """
         Generate the router_path_selection.local_interfaces list.
 
@@ -173,7 +171,7 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return local_interfaces
 
-    def _get_dynamic_peers(self: AvdStructuredConfigOverlay, disable_ipsec: bool) -> dict | None:
+    def _get_dynamic_peers(self: AvdStructuredConfigOverlayProtocol, disable_ipsec: bool) -> dict | None:
         """TODO: support ip_local ?"""
         if not self.shared_utils.is_wan_client:
             return None
@@ -183,7 +181,7 @@ class RouterPathSelectionMixin(UtilsMixin):
             dynamic_peers["ipsec"] = False
         return dynamic_peers
 
-    def _get_static_peers_for_path_group(self: AvdStructuredConfigOverlay, path_group_name: str) -> list | None:
+    def _get_static_peers_for_path_group(self: AvdStructuredConfigOverlayProtocol, path_group_name: str) -> list | None:
         """Retrieves the static peers to configure for a given path-group based on the connected nodes."""
         if not self.shared_utils.is_wan_router:
             return None

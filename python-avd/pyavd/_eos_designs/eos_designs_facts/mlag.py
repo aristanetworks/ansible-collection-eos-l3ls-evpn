@@ -4,13 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import EosDesignsFacts
+    from . import EosDesignsFactsProtocol
 
 
-class MlagMixin:
+class MlagMixin(Protocol):
     """
     Mixin Class used to generate some of the EosDesignsFacts.
 
@@ -19,35 +19,35 @@ class MlagMixin:
     """
 
     @cached_property
-    def mlag_peer(self: EosDesignsFacts) -> str | None:
+    def mlag_peer(self: EosDesignsFactsProtocol) -> str | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.mlag:
             return self.shared_utils.mlag_peer
         return None
 
     @cached_property
-    def mlag_port_channel_id(self: EosDesignsFacts) -> int | None:
+    def mlag_port_channel_id(self: EosDesignsFactsProtocol) -> int | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.mlag:
             return self.shared_utils.mlag_port_channel_id
         return None
 
     @cached_property
-    def mlag_interfaces(self: EosDesignsFacts) -> list | None:
+    def mlag_interfaces(self: EosDesignsFactsProtocol) -> list | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.mlag:
             return self.shared_utils.mlag_interfaces
         return None
 
     @cached_property
-    def mlag_ip(self: EosDesignsFacts) -> str | None:
+    def mlag_ip(self: EosDesignsFactsProtocol) -> str | None:
         """Exposed in avd_switch_facts."""
         if self.shared_utils.mlag:
             return self.shared_utils.mlag_ip
         return None
 
     @cached_property
-    def mlag_l3_ip(self: EosDesignsFacts) -> str | None:
+    def mlag_l3_ip(self: EosDesignsFactsProtocol) -> str | None:
         """
         Exposed in avd_switch_facts.
 
@@ -62,7 +62,7 @@ class MlagMixin:
         return None
 
     @cached_property
-    def mlag_switch_ids(self: EosDesignsFacts) -> dict | None:
+    def mlag_switch_ids(self: EosDesignsFactsProtocol) -> dict | None:
         """
         Exposed in avd_switch_facts.
 

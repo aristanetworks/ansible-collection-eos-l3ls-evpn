@@ -6,15 +6,15 @@ from __future__ import annotations
 import re
 from functools import cached_property
 from hashlib import sha256
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import default
 
 if TYPE_CHECKING:
-    from . import EosDesignsFacts
+    from . import EosDesignsFactsProtocol
 
 
-class ShortEsiMixin:
+class ShortEsiMixin(Protocol):
     """
     Mixin Class used to generate some of the EosDesignsFacts.
 
@@ -23,7 +23,7 @@ class ShortEsiMixin:
     """
 
     @cached_property
-    def _short_esi(self: EosDesignsFacts) -> str | None:
+    def _short_esi(self: EosDesignsFactsProtocol) -> str | None:
         """
         If short_esi is set to "auto" we will use sha256 to create a unique short_esi value based on various uplink information.
 

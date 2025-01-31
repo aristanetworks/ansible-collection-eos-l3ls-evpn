@@ -183,6 +183,14 @@ router_bgp:
     send_community: all
     maximum_routes: 12000
     route_map_in: RM-MLAG-PEER-IN
+  - name: MLAG_VRFS_PEER
+    type: ipv4
+    remote_as: '65107'
+    description: DC1-LEAF4B
+    next_hop_self: true
+    send_community: all
+    maximum_routes: 12000
+    route_map_in: RM-MLAG-PEER-IN
   - name: UNDERLAY_PEERS
     type: ipv4
     password: af6F4WLl4wUrWRZcwbEwkQ==
@@ -300,6 +308,12 @@ router_bgp:
         address_family_ipv6:
           enabled: true
           originate: true
+    - name: MLAG_VRFS_PEER
+      activate: true
+      next_hop:
+        address_family_ipv6:
+          enabled: true
+          originate: true
     - name: UNDERLAY_PEERS
       activate: true
       next_hop:
@@ -330,7 +344,7 @@ router_bgp:
     neighbor_interfaces:
     - name: Vlan3011
       remote_as: '65107'
-      peer_group: MLAG_PEER
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF4B_Vlan3011
     redistribute:
       connected:
@@ -351,7 +365,7 @@ router_bgp:
     neighbor_interfaces:
     - name: Vlan3012
       remote_as: '65107'
-      peer_group: MLAG_PEER
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF4B_Vlan3012
     redistribute:
       connected:
@@ -372,7 +386,7 @@ router_bgp:
     neighbor_interfaces:
     - name: Vlan3009
       remote_as: '65107'
-      peer_group: MLAG_PEER
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF4B_Vlan3009
     redistribute:
       connected:
@@ -393,7 +407,7 @@ router_bgp:
     neighbor_interfaces:
     - name: Vlan3010
       remote_as: '65107'
-      peer_group: MLAG_PEER
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF4B_Vlan3010
     redistribute:
       connected:
@@ -414,7 +428,7 @@ router_bgp:
     neighbor_interfaces:
     - name: Vlan3019
       remote_as: '65107'
-      peer_group: MLAG_PEER
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF4B_Vlan3019
     redistribute:
       connected:
@@ -435,7 +449,7 @@ router_bgp:
     neighbor_interfaces:
     - name: Vlan2
       remote_as: '65107'
-      peer_group: MLAG_PEER
+      peer_group: MLAG_VRFS_PEER
       description: DC1-LEAF4B_Vlan2
     redistribute:
       connected:

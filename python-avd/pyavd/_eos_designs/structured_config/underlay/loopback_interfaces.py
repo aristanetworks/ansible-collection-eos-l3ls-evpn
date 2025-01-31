@@ -4,19 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class LoopbackInterfacesMixin(UtilsMixin):
+class LoopbackInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -24,7 +22,7 @@ class LoopbackInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def loopback_interfaces(self: AvdStructuredConfigUnderlay) -> list | None:
+    def loopback_interfaces(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
         """Return structured config for loopback_interfaces."""
         if not self.shared_utils.underlay_router:
             return None
@@ -103,7 +101,7 @@ class LoopbackInterfacesMixin(UtilsMixin):
         return loopback_interfaces
 
     @cached_property
-    def _node_sid(self: AvdStructuredConfigUnderlay) -> int:
+    def _node_sid(self: AvdStructuredConfigUnderlayProtocol) -> int:
         if self.shared_utils.id is None:
             msg = f"'id' is not set on '{self.shared_utils.hostname}' and is required to set node SID"
             raise AristaAvdInvalidInputsError(msg)

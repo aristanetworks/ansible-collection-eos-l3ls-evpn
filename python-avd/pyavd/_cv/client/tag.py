@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._cv.api.arista.tag.v2 import (
     CreatorType,
@@ -33,7 +33,8 @@ from .exceptions import get_cv_client_exception
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from . import CVClient
+    from . import CVClientProtocol
+
 
 ELEMENT_TYPE_MAP = {
     "device": ElementType.DEVICE,
@@ -49,14 +50,14 @@ CREATOR_TYPE_MAP = {
 }
 
 
-class TagMixin:
+class TagMixin(Protocol):
     """Only to be used as mixin on CVClient class."""
 
     tags_api_version: Literal["v2"] = "v2"
     # TODO: Ensure the to document that we only support v2 of this api - hence only the CV versions supporting that.
 
     async def get_tags(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         element_type: Literal["device", "interface"] | None = None,
         creator_type: Literal["user", "system", "external"] | None = None,
@@ -126,7 +127,7 @@ class TagMixin:
         return tags
 
     async def set_tags(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         tags: list[tuple[str, str]],
         element_type: Literal["device", "interface"],
@@ -170,7 +171,7 @@ class TagMixin:
         return tag_keys
 
     async def get_tag_assignments(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         element_type: Literal["device", "interface"] | None = None,
         creator_type: Literal["user", "system", "external"] | None = None,
@@ -240,7 +241,7 @@ class TagMixin:
         return tag_assignments
 
     async def set_tag_assignments(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         tag_assignments: list[tuple[str, str, str, str | None]],
         element_type: Literal["device", "interface"],
@@ -285,7 +286,7 @@ class TagMixin:
         return tag_assignment_keys
 
     async def delete_tag_assignments(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         tag_assignments: list[tuple[str, str, str, str | None]],
         element_type: Literal["device", "interface"],

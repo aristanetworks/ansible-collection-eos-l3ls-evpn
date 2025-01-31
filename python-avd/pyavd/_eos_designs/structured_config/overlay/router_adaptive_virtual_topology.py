@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
+    from . import AvdStructuredConfigOverlayProtocol
 
 
-class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
+class RouterAdaptiveVirtualTopologyMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouterAdaptiveVirtualTopologyMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_adaptive_virtual_topology(self: AvdStructuredConfigOverlay) -> dict | None:
+    def router_adaptive_virtual_topology(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
         """Return structured config for router adaptive-virtual-topology (AVT)."""
         if not self.shared_utils.is_cv_pathfinder_router:
             return None

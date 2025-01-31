@@ -15,5 +15,11 @@ class-map type qos match-any {{ class_map.name }}
    match ip access-group {{ class_map.ip.access_group }}
 {%     elif class_map.ipv6.access_group is arista.avd.defined %}
    match ipv6 access-group {{ class_map.ipv6.access_group }}
+{%     elif class_map.dscp is arista.avd.defined and class_map.ecn is arista.avd.defined %}
+   match dscp {{ class_map.dscp }} ecn {{ class_map.ecn }}
+{%     elif class_map.dscp is arista.avd.defined %}
+   match dscp {{ class_map.dscp }}
+{%     elif class_map.ecn is arista.avd.defined %}
+   match ecn {{ class_map.ecn }}
 {%     endif %}
 {% endfor %}

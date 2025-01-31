@@ -27,7 +27,6 @@ ignore = [
   "TD002",   # We don't have require authors in TODO
   "TD003",   # We don't have an issue link for all TODOs today
   "FIX002",  # Line contains TODO - ignoring for ruff for now
-  "F821",    # Disable undefined-name until resolution of #10451
   "SLF001",  # Accessing private members - TODO: Improve code
   "D100",    # Missing docstring in public module - TODO: Improve code
   "D101",    # Missing docstring in public class - TODO: Improve code

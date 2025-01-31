@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default, strip_empties_from_dict
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class RouterIsisMixin(UtilsMixin):
+class RouterIsisMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class RouterIsisMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_isis(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def router_isis(self: AvdStructuredConfigUnderlayProtocol) -> dict | None:
         """Return structured config for router_isis."""
         if self.shared_utils.underlay_isis is not True:
             return None
@@ -68,7 +66,7 @@ class RouterIsisMixin(UtilsMixin):
         return strip_empties_from_dict(router_isis)
 
     @cached_property
-    def _isis_net(self: AvdStructuredConfigUnderlay) -> str | None:
+    def _isis_net(self: AvdStructuredConfigUnderlayProtocol) -> str | None:
         if self.inputs.isis_system_id_format == "node_id":
             isis_system_id_prefix = self.shared_utils.node_config.isis_system_id_prefix
             if self.shared_utils.underlay_isis is True and isis_system_id_prefix is None:
@@ -89,7 +87,7 @@ class RouterIsisMixin(UtilsMixin):
         return f"{isis_area_id}.{system_id}.00"
 
     @cached_property
-    def _is_type(self: AvdStructuredConfigUnderlay) -> str:
+    def _is_type(self: AvdStructuredConfigUnderlayProtocol) -> str:
         return default(self.shared_utils.node_config.is_type, self.inputs.isis_default_is_type)
 
     @staticmethod

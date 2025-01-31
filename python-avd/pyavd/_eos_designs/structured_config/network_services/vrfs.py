@@ -4,19 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate
-
-from .utils import UtilsMixin
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class VrfsMixin(UtilsMixin):
+class VrfsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -24,7 +22,7 @@ class VrfsMixin(UtilsMixin):
     """
 
     @cached_property
-    def vrfs(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def vrfs(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for vrfs.
 
@@ -75,7 +73,9 @@ class VrfsMixin(UtilsMixin):
 
         return None
 
-    def _has_ipv6(self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
+    def _has_ipv6(
+        self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+    ) -> bool:
         """
         Return bool if IPv6 is configured in the given VRF.
 
