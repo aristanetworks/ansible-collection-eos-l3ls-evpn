@@ -4,20 +4,18 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import AvdStringFormatter, append_if_not_duplicate
 from pyavd.j2filters import natural_sort
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class VlansMixin(UtilsMixin):
+class VlansMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -25,7 +23,7 @@ class VlansMixin(UtilsMixin):
     """
 
     @cached_property
-    def vlans(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def vlans(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for vlans.
 
@@ -91,7 +89,7 @@ class VlansMixin(UtilsMixin):
         return None
 
     def _get_vlan_config(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
     ) -> dict:

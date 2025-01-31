@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from functools import cached_property
 from hashlib import sha1
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
@@ -13,15 +13,13 @@ from pyavd._eos_designs.structured_config.structured_config_generator import str
 from pyavd._utils import strip_null_from_data
 from pyavd.j2filters import natural_sort, snmp_hash
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigBase
+    from . import AvdStructuredConfigBaseProtocol
 
 
-class SnmpServerMixin(UtilsMixin):
+class SnmpServerMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -212,7 +210,7 @@ class SnmpServerMixin(UtilsMixin):
         for local_interface in local_interfaces:
             self.structured_config.snmp_server.local_interfaces.append(EosCliConfigGen.SnmpServer.LocalInterfacesItem(**local_interface))
 
-    def _snmp_vrfs(self: AvdStructuredConfigBase, snmp_settings: EosDesigns.SnmpSettings) -> EosDesigns.SnmpSettings.Vrfs:
+    def _snmp_vrfs(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> EosDesigns.SnmpSettings.Vrfs:
         """
         Return list of dicts for enabling/disabling SNMP for VRFs.
 

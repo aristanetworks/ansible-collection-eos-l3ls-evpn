@@ -4,19 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import AvdStringFormatter, append_if_not_duplicate, default, strip_empties_from_dict
-
-from .utils import UtilsMixin
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class LoopbackInterfacesMixin(UtilsMixin):
+class LoopbackInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -24,7 +22,7 @@ class LoopbackInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def loopback_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def loopback_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for loopback_interfaces.
 
@@ -80,7 +78,7 @@ class LoopbackInterfacesMixin(UtilsMixin):
         return None
 
     def _get_vtep_diagnostic_loopback_for_vrf(
-        self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+        self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
     ) -> dict | None:
         if (loopback := vrf.vtep_diagnostic.loopback) is None:
             return None

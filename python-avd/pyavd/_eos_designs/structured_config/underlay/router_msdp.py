@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import get
 from pyavd.j2filters import natural_sort
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class RouterMsdpMixin(UtilsMixin):
+class RouterMsdpMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class RouterMsdpMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_msdp(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def router_msdp(self: AvdStructuredConfigUnderlayProtocol) -> dict | None:
         """
         Return structured config for router_msdp.
 

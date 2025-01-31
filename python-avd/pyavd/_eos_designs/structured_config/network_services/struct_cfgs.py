@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class StructCfgsMixin(UtilsMixin):
+class StructCfgsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -20,7 +18,7 @@ class StructCfgsMixin(UtilsMixin):
     """
 
     @cached_property
-    def struct_cfgs(self: AvdStructuredConfigNetworkServices) -> None:
+    def struct_cfgs(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """Return the combined structured config from VRFs."""
         if not self.shared_utils.network_services_l3:
             return None

@@ -6,16 +6,16 @@ from __future__ import annotations
 from functools import cached_property
 from ipaddress import ip_address
 from re import fullmatch
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import default
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class OverlayMixin:
+class OverlayMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -24,38 +24,38 @@ class OverlayMixin:
     """
 
     @cached_property
-    def vtep_loopback(self: SharedUtils) -> str:
+    def vtep_loopback(self: SharedUtilsProtocol) -> str:
         """The default is Loopback1 except for WAN devices where the default is Dps1."""
         default_vtep_loopback = "Dps1" if self.is_wan_router else "Loopback1"
         return default(self.node_config.vtep_loopback, default_vtep_loopback)
 
     @cached_property
-    def evpn_role(self: SharedUtils) -> str | None:
+    def evpn_role(self: SharedUtilsProtocol) -> str | None:
         if self.underlay_router:
             default_evpn_role = self.node_type_key_data.default_evpn_role
             return default(self.node_config.evpn_role, default_evpn_role)
         return None
 
     @cached_property
-    def mpls_overlay_role(self: SharedUtils) -> str | None:
+    def mpls_overlay_role(self: SharedUtilsProtocol) -> str | None:
         if self.underlay_router:
             default_mpls_overlay_role = self.node_type_key_data.default_mpls_overlay_role
             return default(self.node_config.mpls_overlay_role, default_mpls_overlay_role)
         return None
 
     @cached_property
-    def overlay_rd_type_admin_subfield(self: SharedUtils) -> str:
+    def overlay_rd_type_admin_subfield(self: SharedUtilsProtocol) -> str:
         admin_subfield = self.inputs.overlay_rd_type.admin_subfield
         admin_subfield_offset = self.inputs.overlay_rd_type.admin_subfield_offset
         return self.get_rd_admin_subfield_value(admin_subfield, admin_subfield_offset)
 
     @cached_property
-    def overlay_rd_type_vrf_admin_subfield(self: SharedUtils) -> str:
+    def overlay_rd_type_vrf_admin_subfield(self: SharedUtilsProtocol) -> str:
         vrf_admin_subfield: str = default(self.inputs.overlay_rd_type.vrf_admin_subfield, self.inputs.overlay_rd_type.admin_subfield)
         vrf_admin_subfield_offset: int = default(self.inputs.overlay_rd_type.vrf_admin_subfield_offset, self.inputs.overlay_rd_type.admin_subfield_offset)
         return self.get_rd_admin_subfield_value(vrf_admin_subfield, vrf_admin_subfield_offset)
 
-    def get_rd_admin_subfield_value(self: SharedUtils, admin_subfield: str, admin_subfield_offset: int) -> str:
+    def get_rd_admin_subfield_value(self: SharedUtilsProtocol, admin_subfield: str, admin_subfield_offset: int) -> str:
         if admin_subfield in ["router_id", "overlay_loopback_ip"]:
             return self.router_id
 
@@ -82,7 +82,7 @@ class OverlayMixin:
         return admin_subfield
 
     @cached_property
-    def overlay_routing_protocol_address_family(self: SharedUtils) -> str:
+    def overlay_routing_protocol_address_family(self: SharedUtilsProtocol) -> str:
         overlay_routing_protocol_address_family = self.inputs.overlay_routing_protocol_address_family
         if overlay_routing_protocol_address_family == "ipv6" and not (self.underlay_ipv6 is True and self.inputs.underlay_rfc5549):
             msg = "'overlay_routing_protocol_address_family: ipv6' is only supported in combination with 'underlay_ipv6: True' and 'underlay_rfc5549: True'"
@@ -90,12 +90,12 @@ class OverlayMixin:
         return overlay_routing_protocol_address_family
 
     @cached_property
-    def evpn_encapsulation(self: SharedUtils) -> str:
+    def evpn_encapsulation(self: SharedUtilsProtocol) -> str:
         """EVPN encapsulation based on fabric_evpn_encapsulation and node default_evpn_encapsulation."""
         return default(self.inputs.fabric_evpn_encapsulation, self.node_type_key_data.default_evpn_encapsulation)
 
     @cached_property
-    def evpn_soo(self: SharedUtils) -> str:
+    def evpn_soo(self: SharedUtilsProtocol) -> str:
         """
         Site-Of-Origin used as BGP extended community.
 
@@ -129,7 +129,7 @@ class OverlayMixin:
         return f"{self.router_id}:1"
 
     @cached_property
-    def overlay_evpn(self: SharedUtils) -> bool:
+    def overlay_evpn(self: SharedUtilsProtocol) -> bool:
         # Set overlay_evpn to enable EVPN on the node
         return (
             self.bgp
@@ -139,21 +139,21 @@ class OverlayMixin:
         )
 
     @cached_property
-    def overlay_mpls(self: SharedUtils) -> bool:
+    def overlay_mpls(self: SharedUtilsProtocol) -> bool:
         """Set overlay_mpls to enable MPLS as the primary overlay."""
         return any([self.overlay_evpn_mpls, self.overlay_vpn_ipv4, self.overlay_vpn_ipv6]) and not self.overlay_evpn_vxlan
 
     @cached_property
-    def overlay_ipvpn_gateway(self: SharedUtils) -> bool:
+    def overlay_ipvpn_gateway(self: SharedUtilsProtocol) -> bool:
         # Set overlay_ipvpn_gateway to trigger ipvpn interworking configuration.
         return self.overlay_evpn and self.node_config.ipvpn_gateway.enabled
 
     @cached_property
-    def overlay_ler(self: SharedUtils) -> bool:
+    def overlay_ler(self: SharedUtilsProtocol) -> bool:
         return self.underlay_mpls and (self.mpls_overlay_role in ["client", "server"] or self.evpn_role in ["client", "server"]) and (self.any_network_services)
 
     @cached_property
-    def overlay_vtep(self: SharedUtils) -> bool:
+    def overlay_vtep(self: SharedUtilsProtocol) -> bool:
         # Set overlay_vtep to enable VXLAN VTEP
         return (
             self.overlay_routing_protocol in ["ebgp", "ibgp", "her", "cvx"]
@@ -164,7 +164,7 @@ class OverlayMixin:
         )
 
     @cached_property
-    def overlay_vpn_ipv4(self: SharedUtils) -> bool:
+    def overlay_vpn_ipv4(self: SharedUtilsProtocol) -> bool:
         # Set overlay_vpn_ipv4 enable IP-VPN configuration on the node.
         if self.bgp is not True:
             return False
@@ -174,7 +174,7 @@ class OverlayMixin:
         )
 
     @cached_property
-    def overlay_vpn_ipv6(self: SharedUtils) -> bool:
+    def overlay_vpn_ipv6(self: SharedUtilsProtocol) -> bool:
         # Set overlay_vpn_ipv4 to enable IP-VPN configuration on the node.
         if self.bgp is not True:
             return False
@@ -184,7 +184,7 @@ class OverlayMixin:
         )
 
     @cached_property
-    def overlay_peering_address(self: SharedUtils) -> str | None:
+    def overlay_peering_address(self: SharedUtilsProtocol) -> str | None:
         if not self.underlay_router:
             return None
 
@@ -194,22 +194,22 @@ class OverlayMixin:
         return self.router_id
 
     @cached_property
-    def overlay_cvx(self: SharedUtils) -> bool:
+    def overlay_cvx(self: SharedUtilsProtocol) -> bool:
         return self.overlay_routing_protocol == "cvx"
 
     @cached_property
-    def overlay_her(self: SharedUtils) -> bool:
+    def overlay_her(self: SharedUtilsProtocol) -> bool:
         return self.overlay_routing_protocol == "her"
 
     @cached_property
-    def overlay_dpath(self: SharedUtils) -> bool:
+    def overlay_dpath(self: SharedUtilsProtocol) -> bool:
         # Set dpath based on ipvpn_gateway parameters
         return self.overlay_ipvpn_gateway and self.node_config.ipvpn_gateway.enable_d_path
 
     @cached_property
-    def overlay_evpn_vxlan(self: SharedUtils) -> bool:
+    def overlay_evpn_vxlan(self: SharedUtilsProtocol) -> bool:
         return self.overlay_evpn and self.evpn_encapsulation == "vxlan"
 
     @cached_property
-    def overlay_evpn_mpls(self: SharedUtils) -> bool:
+    def overlay_evpn_mpls(self: SharedUtilsProtocol) -> bool:
         return self.overlay_evpn and self.evpn_encapsulation == "mpls"
