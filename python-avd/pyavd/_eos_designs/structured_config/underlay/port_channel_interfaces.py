@@ -10,6 +10,7 @@ from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, get, short_esi_to_route_target, strip_null_from_data
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
+from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigUnderlayProtocol
@@ -137,7 +138,10 @@ class PortChannelInterfacesMixin(Protocol):
 
         # Sanity check if there are any sub-interfaces for which parent Port-channel is not explicitly specified
         if missing_parent_port_channels := subif_parent_port_channel_names.difference(regular_l3_port_channel_names):
-            msg = f"One or more L3 Port-Channels '{missing_parent_port_channels}' need to be specified as they have sub-interfaces referencing them."
+            msg = (
+                f"One or more L3 Port-Channels '{', '.join(natural_sort(missing_parent_port_channels))}' "
+                "need to be specified as they have sub-interfaces referencing them."
+            )
             raise AristaAvdInvalidInputsError(msg)
 
         # Now that validation is complete, we can make another pass at all l3_port_channels
