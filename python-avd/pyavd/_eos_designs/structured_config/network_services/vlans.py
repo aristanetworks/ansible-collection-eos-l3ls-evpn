@@ -3,10 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._utils import AvdStringFormatter
 from pyavd.j2filters import natural_sort
 
@@ -23,8 +23,8 @@ class VlansMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def vlans(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
+    @structured_config_contributor
+    def vlans(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
         Return structured config for vlans.
 
@@ -34,9 +34,8 @@ class VlansMixin(Protocol):
         SVIs in all VRFs and L2VLANs deployed on this device.
         """
         if not self.shared_utils.network_services_l2:
-            return None
+            return
 
-        vlans = []
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 for svi in vrf.svis:
@@ -58,11 +57,6 @@ class VlansMixin(Protocol):
             # L2 Vlans per Tenant
             for l2vlan in tenant.l2vlans:
                 self.structured_config.vlans.append(self._get_vlan_config(l2vlan), ignore_fields=("tenant",))
-
-        if vlans:
-            return vlans
-
-        return None
 
     def _get_vlan_config(
         self: AvdStructuredConfigNetworkServicesProtocol,
