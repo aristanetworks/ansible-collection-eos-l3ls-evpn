@@ -1113,6 +1113,7 @@ $defs:
                 documentation_options:
                   table: network-services-vrfs-bgp-settings
                 type: list
+                primary_key: name
                 description: |
                   List of BGP peer groups definitions.
                   This will configure BGP peer groups to be used inside the tenant VRF for peering with external devices.

@@ -82,6 +82,10 @@ class AvdBase(ABC):
             (For AvdIndexedList this works the same as prepend_unique)
         """
 
+    @abstractmethod
+    def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
+        """Compare two instances. Optionally ignoring fields for the outermost AvdModel."""
+
     def _deepmerged(
         self, other: Self, list_merge: Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"] = "append_unique"
     ) -> Self:

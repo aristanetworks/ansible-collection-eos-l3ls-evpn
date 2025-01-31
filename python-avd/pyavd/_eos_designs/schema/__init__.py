@@ -41124,7 +41124,7 @@ class EosDesigns(EosDesignsRootModel):
                             "ttl_maximum_hops": {"type": int},
                             "_custom_data": {"type": dict},
                         }
-                        name: str | None
+                        name: str
                         """BGP peer group name."""
                         nodes: Nodes
                         """
@@ -41233,7 +41233,7 @@ class EosDesigns(EosDesignsRootModel):
                             def __init__(
                                 self,
                                 *,
-                                name: str | None | UndefinedType = Undefined,
+                                name: str | UndefinedType = Undefined,
                                 nodes: Nodes | UndefinedType = Undefined,
                                 address_family_ipv4: AddressFamilyIpv4 | UndefinedType = Undefined,
                                 address_family_ipv6: AddressFamilyIpv6 | UndefinedType = Undefined,
@@ -41350,8 +41350,10 @@ class EosDesigns(EosDesignsRootModel):
 
                                 """
 
-                    class BgpPeerGroups(AvdList[BgpPeerGroupsItem]):
-                        """Subclass of AvdList with `BgpPeerGroupsItem` items."""
+                    class BgpPeerGroups(AvdIndexedList[str, BgpPeerGroupsItem]):
+                        """Subclass of AvdIndexedList with `BgpPeerGroupsItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
 
                     BgpPeerGroups._item_type = BgpPeerGroupsItem
 
@@ -41672,8 +41674,8 @@ class EosDesigns(EosDesignsRootModel):
                     peer_group names should not overlap between VRFs.
 
 
-                    Subclass of AvdList
-                    with `BgpPeerGroupsItem` items.
+                    Subclass of
+                    AvdIndexedList with `BgpPeerGroupsItem` items. Primary key is `name` (`str`).
                     """
                     additional_route_targets: AdditionalRouteTargets
                     """
@@ -41902,8 +41904,8 @@ class EosDesigns(EosDesignsRootModel):
                                    peer_group names should not overlap between VRFs.
 
 
-                                   Subclass of AvdList
-                                   with `BgpPeerGroupsItem` items.
+                                   Subclass of
+                                   AvdIndexedList with `BgpPeerGroupsItem` items. Primary key is `name` (`str`).
                                 additional_route_targets:
                                    Configuration of extra route-targets for this VRF. Useful for route-leaking or gateway between
                                    address families.

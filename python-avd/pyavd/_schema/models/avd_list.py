@@ -236,3 +236,19 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
         new_instance._created_from_null = self._created_from_null
 
         return new_instance
+
+    def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
+        cls = type(self)
+        if not isinstance(other, cls):
+            msg = f"Unable to compare '{cls}' with a '{type(other)}' class."
+            raise TypeError(msg)
+
+        if len(self) != len(other):
+            return False
+
+        if issubclass(self._item_type, AvdBase):
+            items = cast(list[AvdBase], self._items)
+            other_items = cast(list[AvdBase], other._items)
+            return all(item._compare(other_items[index], ignore_fields=ignore_fields) for index, item in enumerate(items))
+
+        return self._items == other._items

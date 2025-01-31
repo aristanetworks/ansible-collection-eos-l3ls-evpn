@@ -282,3 +282,14 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         new_instance._block_inheritance = self._block_inheritance
 
         return new_instance
+
+    def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
+        cls = type(self)
+        if not isinstance(other, cls):
+            msg = f"Unable to compare '{cls}' with a '{type(other)}' class."
+            raise TypeError(msg)
+
+        if set(self.keys()) != set(other.keys()):
+            return False
+
+        return all(item._compare(other[key], ignore_fields=ignore_fields) for key, item in self.items())
