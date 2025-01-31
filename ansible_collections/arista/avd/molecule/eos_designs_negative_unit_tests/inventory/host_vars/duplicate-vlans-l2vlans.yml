@@ -18,5 +18,5 @@ tenants:
         name: duplicate_vlan
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for L2VLANs.
+  Found duplicate objects with conflicting data while generating configuration for Vlans.
   {'id': 1, 'name': 'duplicate_vlan', 'tenant': 'TenantB'} conflicts with {'id': 1, 'name': 'vlan', 'tenant': 'TenantA'}.
