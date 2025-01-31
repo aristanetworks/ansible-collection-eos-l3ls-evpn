@@ -56,8 +56,9 @@ class SnmpServerMixin(Protocol):
             ipv6_acls=snmp_settings.ipv6_acls._cast_as(EosCliConfigGen.SnmpServer.Ipv6Acls),
             views=snmp_settings.views._cast_as(EosCliConfigGen.SnmpServer.Views),
             groups=snmp_settings.groups._cast_as(EosCliConfigGen.SnmpServer.Groups),
-            traps=snmp_settings.traps,
         )
+        if snmp_settings.traps.enable:
+            self.structured_config.snmp_server._update(traps=snmp_settings.traps)
 
     def _snmp_engine_ids(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
@@ -88,9 +89,8 @@ class SnmpServerMixin(Protocol):
 
     def _snmp_location(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
-        Return location if "snmp_settings.location" is True.
+        Set location if "snmp_settings.location" is True.
 
-        Otherwise return None.
         """
         if not snmp_settings.location:
             return
@@ -107,9 +107,7 @@ class SnmpServerMixin(Protocol):
 
     def _snmp_users(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
-        Return users if "snmp_settings.users" is set.
-
-        Otherwise return None.
+        Set users if "snmp_settings.users" is set.
 
         Users will have computed localized keys if configured.
         """
@@ -150,7 +148,7 @@ class SnmpServerMixin(Protocol):
 
     def _snmp_hosts(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
-        Return hosts if "snmp_settings.hosts" is set.
+        Set hosts if "snmp_settings.hosts" is set.
 
         Hosts may have management VRFs dynamically set.
         """
@@ -197,9 +195,8 @@ class SnmpServerMixin(Protocol):
 
     def _snmp_local_interfaces(self: AvdStructuredConfigBaseProtocol, source_interfaces_inputs: EosDesigns.SourceInterfaces.Snmp) -> None:
         """
-        Return local_interfaces if "source_interfaces.snmp" is set.
+        Set local_interfaces if "source_interfaces.snmp" is set.
 
-        Otherwise return None.
         """
         if not source_interfaces_inputs:
             # Empty dict or None
@@ -210,7 +207,7 @@ class SnmpServerMixin(Protocol):
 
     def _snmp_vrfs(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> EosDesigns.SnmpSettings.Vrfs:
         """
-        Return list of dicts for enabling/disabling SNMP for VRFs.
+        Set list of dicts for enabling/disabling SNMP for VRFs.
 
         Requires one of the following options to be set under snmp_settings:
         - vrfs
