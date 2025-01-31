@@ -239,13 +239,6 @@ wan_router:
                 peer_as: 64520
                 ipv4_prefix_list_in: PL2
                 ipv4_prefix_list_out: ALLOW-DEFAULT
-              # TODO: Enable this after adding EOS side support for internet exit
-              # using port-channel interface
-              # cv_pathfinder_internet_exit:
-              #   policies:
-              #    - name: ZSCALER-EXIT-POLICY-3
-              #      tunnel_interface_numbers: 200-202
-              #    - name: DIRECT-EXIT-POLICY-1
               flow_tracking:
                 enabled: true
             - # Port-Channel with 1 member ports
@@ -685,17 +678,6 @@ wan_virtual_topologies:
             - names: [MPLS]
               preference: preferred
           id: 5
-        - application_profile: CRITICAL-APP
-          path_groups:
-            - names: [INET]
-              preference: preferred
-            - names: [AWS]
-              preference: alternate
-          constraints:
-            loss_rate: 45.0
-          internet_exit:
-            policy: ZSCALER-EXIT-POLICY-3
-          id: 6
     - name: DEFAULT-AVT-POLICY
       default_virtual_topology:
         path_groups:
@@ -748,13 +730,6 @@ application_classification:
         - rtp
     - name: IT
     - name: MPLS-ONLY
-    - name: CRITICAL-APP
-      applications:
-        # CRITICAL-APP application profile is included under policy 'PROD-AVT-POLICY'
-        # (avt profile - PROD-AVT-POLICY-CRITICAL-APP).
-        # This profile makes use of internet exit policy of type Zscaler with
-        # Port-Channel as tunnel source interface.
-        # Device 'cv-pathfinder-edge1' uses this.
     - name: VOICE
       applications:
         # Testing applications in application-profiles filtering
@@ -829,12 +804,6 @@ cv_pathfinder_internet_exit_policies:
       domain_name: test.local
       ipsec_key_salt: THIS_SHOULD_BE_VAULTED
   - name: ZSCALER-EXIT-POLICY-2
-    fallback_to_system_default: false
-    type: zscaler
-    zscaler:
-      domain_name: test.local
-      ipsec_key_salt: THIS_SHOULD_BE_VAULTED
-  - name: ZSCALER-EXIT-POLICY-3
     fallback_to_system_default: false
     type: zscaler
     zscaler:

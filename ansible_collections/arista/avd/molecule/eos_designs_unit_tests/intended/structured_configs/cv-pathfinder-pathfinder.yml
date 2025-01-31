@@ -64,7 +64,6 @@ application_traffic_recognition:
     applications:
     - name: CUSTOM-VOICE-APPLICATION
   - name: MPLS-ONLY
-  - name: CRITICAL-APP
   - name: APP-PROFILE-CONTROL-PLANE
     applications:
     - name: APP-CONTROL-PLANE
@@ -358,19 +357,6 @@ metadata:
           preference: preferred
         application_profiles:
         - MPLS-ONLY
-      - constraints:
-          lossrate: '45.0'
-        id: 6
-        name: PROD-AVT-POLICY-CRITICAL-APP
-        pathgroups:
-        - name: INET
-          preference: preferred
-        - name: AWS
-          preference: alternate
-        - name: LAN_HA
-          preference: preferred
-        application_profiles:
-        - CRITICAL-APP
       - id: 1
         name: PROD-AVT-POLICY-DEFAULT
         pathgroups:
@@ -463,7 +449,6 @@ metadata:
         builtin_applications:
         - name: CUSTOM-VOICE-APPLICATION
       - name: MPLS-ONLY
-      - name: CRITICAL-APP
       - name: APP-PROFILE-CONTROL-PLANE
         user_defined_applications:
         - name: APP-CONTROL-PLANE
@@ -514,8 +499,6 @@ router_adaptive_virtual_topology:
     load_balance_policy: LB-PROD-AVT-POLICY-VIDEO
   - name: PROD-AVT-POLICY-MPLS-ONLY
     load_balance_policy: LB-PROD-AVT-POLICY-MPLS-ONLY
-  - name: PROD-AVT-POLICY-CRITICAL-APP
-    load_balance_policy: LB-PROD-AVT-POLICY-CRITICAL-APP
   - name: PROD-AVT-POLICY-DEFAULT
     load_balance_policy: LB-PROD-AVT-POLICY-DEFAULT
   - name: CUSTOM-VOICE-PROFILE-NAME
@@ -541,8 +524,6 @@ router_adaptive_virtual_topology:
       avt_profile: PROD-AVT-POLICY-VIDEO
     - application_profile: MPLS-ONLY
       avt_profile: PROD-AVT-POLICY-MPLS-ONLY
-    - application_profile: CRITICAL-APP
-      avt_profile: PROD-AVT-POLICY-CRITICAL-APP
     - application_profile: default
       avt_profile: PROD-AVT-POLICY-DEFAULT
   - name: DEFAULT-AVT-POLICY
@@ -580,8 +561,6 @@ router_adaptive_virtual_topology:
       id: 4
     - name: PROD-AVT-POLICY-MPLS-ONLY
       id: 5
-    - name: PROD-AVT-POLICY-CRITICAL-APP
-      id: 6
     - name: PROD-AVT-POLICY-DEFAULT
       id: 1
   - name: IT
@@ -769,13 +748,6 @@ router_path_selection:
   - name: LB-PROD-AVT-POLICY-MPLS-ONLY
     path_groups:
     - name: MPLS
-    - name: LAN_HA
-  - name: LB-PROD-AVT-POLICY-CRITICAL-APP
-    loss_rate: '45.0'
-    path_groups:
-    - name: INET
-    - name: AWS
-      priority: 2
     - name: LAN_HA
   - name: LB-PROD-AVT-POLICY-DEFAULT
     path_groups:

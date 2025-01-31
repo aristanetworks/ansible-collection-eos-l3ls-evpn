@@ -64,7 +64,6 @@ application_traffic_recognition:
     applications:
     - name: CUSTOM-VOICE-APPLICATION
   - name: MPLS-ONLY
-  - name: CRITICAL-APP
   - name: APP-PROFILE-CONTROL-PLANE
     applications:
     - name: APP-CONTROL-PLANE
@@ -314,8 +313,6 @@ router_adaptive_virtual_topology:
     load_balance_policy: LB-PROD-AVT-POLICY-VIDEO
   - name: PROD-AVT-POLICY-MPLS-ONLY
     load_balance_policy: LB-PROD-AVT-POLICY-MPLS-ONLY
-  - name: PROD-AVT-POLICY-CRITICAL-APP
-    load_balance_policy: LB-PROD-AVT-POLICY-CRITICAL-APP
   - name: PROD-AVT-POLICY-DEFAULT
     load_balance_policy: LB-PROD-AVT-POLICY-DEFAULT
   policies:
@@ -335,8 +332,6 @@ router_adaptive_virtual_topology:
       avt_profile: PROD-AVT-POLICY-VIDEO
     - application_profile: MPLS-ONLY
       avt_profile: PROD-AVT-POLICY-MPLS-ONLY
-    - application_profile: CRITICAL-APP
-      avt_profile: PROD-AVT-POLICY-CRITICAL-APP
     - application_profile: default
       avt_profile: PROD-AVT-POLICY-DEFAULT
   - name: DEFAULT-AVT-POLICY
@@ -364,8 +359,6 @@ router_adaptive_virtual_topology:
       id: 4
     - name: PROD-AVT-POLICY-MPLS-ONLY
       id: 5
-    - name: PROD-AVT-POLICY-CRITICAL-APP
-      id: 6
     - name: PROD-AVT-POLICY-DEFAULT
       id: 1
   - name: IT
@@ -568,11 +561,6 @@ router_path_selection:
     - name: LAN_HA
   - name: LB-PROD-AVT-POLICY-MPLS-ONLY
     path_groups:
-    - name: LAN_HA
-  - name: LB-PROD-AVT-POLICY-CRITICAL-APP
-    loss_rate: '45.0'
-    path_groups:
-    - name: INET
     - name: LAN_HA
   - name: LB-PROD-AVT-POLICY-DEFAULT
     path_groups:
