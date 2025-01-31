@@ -61,11 +61,7 @@ class SnmpServerMixin(Protocol):
             self.structured_config.snmp_server._update(traps=snmp_settings.traps)
 
     def _snmp_engine_ids(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
-        """
-        Return dict of engine ids if "snmp_settings.compute_local_engineid" is True.
-
-        Otherwise return None.
-        """
+        """Set dict of engine ids if "snmp_settings.compute_local_engineid" is True."""
         if not snmp_settings.compute_local_engineid:
             return
 
@@ -88,10 +84,7 @@ class SnmpServerMixin(Protocol):
         self.structured_config.snmp_server.engine_ids.local = local_engine_id
 
     def _snmp_location(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
-        """
-        Set location if "snmp_settings.location" is True.
-
-        """
+        """Set location if "snmp_settings.location" is True."""
         if not snmp_settings.location:
             return
 
@@ -194,10 +187,7 @@ class SnmpServerMixin(Protocol):
         self.structured_config.snmp_server.hosts = snmp_hosts
 
     def _snmp_local_interfaces(self: AvdStructuredConfigBaseProtocol, source_interfaces_inputs: EosDesigns.SourceInterfaces.Snmp) -> None:
-        """
-        Set local_interfaces if "source_interfaces.snmp" is set.
-
-        """
+        """Set local_interfaces if "source_interfaces.snmp" is set."""
         if not source_interfaces_inputs:
             # Empty dict or None
             return
