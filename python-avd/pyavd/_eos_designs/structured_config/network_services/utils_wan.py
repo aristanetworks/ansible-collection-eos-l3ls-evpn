@@ -624,19 +624,21 @@ class UtilsWanMixin(Protocol):
         internet_exit_policies = []
 
         for internet_exit_policy in candidate_internet_exit_policies:
-            local_interfaces = EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces(
+            local_wan_l3_interfaces = EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces(
                 [
                     wan_interface
                     for wan_interface in self.shared_utils.wan_interfaces
                     if internet_exit_policy.name in wan_interface.cv_pathfinder_internet_exit.policies
                 ]
             )
-            if not local_interfaces:
+            if not local_wan_l3_interfaces:
                 # No local interface for this policy
+                # implies policy present in input yml, but not associated with any interface yet
                 # TODO: Decide if we should raise here instead
                 continue
-
-            connections = self.get_internet_exit_connections(internet_exit_policy, local_interfaces)
+            # fetch connections associated with given internet exit policy that
+            # applies to one or more wan interfaces
+            connections = self.get_internet_exit_connections(internet_exit_policy, local_wan_l3_interfaces)
             internet_exit_policies.append((internet_exit_policy, connections))
 
         return internet_exit_policies

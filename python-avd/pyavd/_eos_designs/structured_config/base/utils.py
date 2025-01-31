@@ -65,7 +65,7 @@ class UtilsMixin(Protocol):
     @cached_property
     def _router_bgp_redistribute_routes(self: AvdStructuredConfigBaseProtocol) -> dict | None:
         """Return structured config for router_bgp.redistribute."""
-        if not (self.shared_utils.underlay_bgp or self.shared_utils.is_wan_router or self.shared_utils.l3_interfaces_bgp_neighbors):
+        if not (self.shared_utils.underlay_bgp or self.shared_utils.is_wan_router or self.shared_utils.l3_bgp_neighbors):
             return None
 
         if self.shared_utils.overlay_routing_protocol != "none" and self.inputs.underlay_filter_redistribute_connected:

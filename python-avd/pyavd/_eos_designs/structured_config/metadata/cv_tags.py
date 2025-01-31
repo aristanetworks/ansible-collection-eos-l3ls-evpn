@@ -11,6 +11,7 @@ from pyavd._utils import default, get_v2, strip_empties_from_dict, strip_empties
 
 if TYPE_CHECKING:
     from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+    from pyavd._eos_designs.schema import EosDesigns
 
     from . import AvdStructuredConfigMetadataProtocol
 
@@ -185,11 +186,23 @@ class CvTagsMixin(Protocol):
             if tags:
                 interface_tags.append({"interface": ethernet_interface.name, "tags": tags})
 
+        # handle tags for L3 port-channel interfaces (cv_pathfinder use case)
+        for port_channel_intf in self.structured_config.port_channel_interfaces:
+            tags = []
+            if self.shared_utils.is_cv_pathfinder_router:
+                tags.extend(self._get_cv_pathfinder_interface_tags(port_channel_intf))
+            if tags:
+                interface_tags.append({"interface": port_channel_intf.name, "tags": tags})
+
         return interface_tags
 
-    def _get_cv_pathfinder_interface_tags(self: AvdStructuredConfigMetadataProtocol, ethernet_interface: EosCliConfigGen.EthernetInterfacesItem) -> list:
+    def _get_cv_pathfinder_interface_tags(
+        self: AvdStructuredConfigMetadataProtocol, generic_interface: EosCliConfigGen.EthernetInterfacesItem | EosCliConfigGen.PortChannelInterfacesItem
+    ) -> list:
         """
-        Return list of device_tags for cv_pathfinder solution.
+        Return list of interface tags for cv_pathfinder solution.
+
+        generic_interface is either ethernet or port_channel interface.
 
         Example: [
             {"name": "Type", <"lan" or "wan">},
@@ -197,14 +210,33 @@ class CvTagsMixin(Protocol):
             {"name": "Circuit", <value copied from wan_circuit_id if this is a wan interface>}
         ].
         """
-        if ethernet_interface.name in self.shared_utils.wan_interfaces:
-            wan_interface = self.shared_utils.wan_interfaces[ethernet_interface.name]
-            return strip_empties_from_list(
-                [
-                    self._tag_dict("Type", "wan"),
-                    self._tag_dict("Carrier", wan_interface.wan_carrier),
-                    self._tag_dict("Circuit", wan_interface.wan_circuit_id),
-                ],
-            )
-
+        if generic_interface.name in self.shared_utils.wan_interfaces:
+            wan_interface = self.shared_utils.wan_interfaces[generic_interface.name]
+            return self._get_cv_pathfinder_wan_interface_tags(wan_interface)
+        if generic_interface.name in self.shared_utils.wan_port_channels:
+            wan_port_channel_intf = self.shared_utils.wan_port_channels[generic_interface.name]
+            return self._get_cv_pathfinder_wan_interface_tags(wan_port_channel_intf)
+        # Check if input eth interface is member of any L3 Port-Channel wan interface
+        # if so, skip generation of interface tags for such member interface.
+        # TODO: Consider if we should skip this for all port-channel members,
+        # since we would now set it on the port-channel instead.
+        if generic_interface.name in self.shared_utils._wan_port_channel_member_interfaces:
+            return []
         return [self._tag_dict("Type", "lan")]
+
+    # Generate wan interface tags while accounting for wan interface to be either L3 interface or L3 Port-Channel type
+    def _get_cv_pathfinder_wan_interface_tags(
+        self: AvdStructuredConfigMetadataProtocol,
+        wan_interface: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
+        ),
+    ) -> list:
+        """Return list of wan interface tags for cv_pathfinder solution for a given wan interface."""
+        return strip_empties_from_list(
+            [
+                self._tag_dict("Type", "wan"),
+                self._tag_dict("Carrier", wan_interface.wan_carrier),
+                self._tag_dict("Circuit", wan_interface.wan_circuit_id),
+            ],
+        )

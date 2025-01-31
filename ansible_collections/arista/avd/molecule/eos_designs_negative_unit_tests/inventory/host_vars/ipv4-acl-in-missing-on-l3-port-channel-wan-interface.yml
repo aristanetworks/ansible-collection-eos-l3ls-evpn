@@ -1,21 +1,21 @@
 ---
 type: wan_router
-wan_mode: autovpn
+wan_mode: cv-pathfinder
 wan_router:
   nodes:
     - bgp_as: 65000
-      name: ipv4-acl-in-missing-on-wan-interface
+      name: ipv4-acl-in-missing-on-l3-port-channel-wan-interface
       id: 1
       loopback_ipv4_pool: 192.168.0.0/24
       vtep_loopback_ipv4_pool: 192.168.1.0/24
-      l3_interfaces:
-        - name: Ethernet1
-          wan_carrier: FOO
+      l3_port_channels:
+        - name: Port-Channel5
+          wan_carrier: BAR
           ip_address: 172.16.0.2/30
           # ipv4_acl_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN Testing not setting ipv4_acl_in will raise an error.
 
 wan_carriers:
-  - name: FOO
+  - name: BAR
     path_group: INTERNET
 
 wan_path_groups:
@@ -24,4 +24,4 @@ wan_path_groups:
 
 expected_error_message: >-
   'ipv4_acl_in' must be set on WAN interfaces where 'wan_carrier' is set,
-  unless the carrier is configured as 'trusted' under 'wan_carriers'. 'ipv4_acl_in' is missing on L3 interface 'Ethernet1'.
+  unless the carrier is configured as 'trusted' under 'wan_carriers'. 'ipv4_acl_in' is missing on L3 Port-Channel 'Port-Channel5'.
