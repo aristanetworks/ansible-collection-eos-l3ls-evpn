@@ -45,13 +45,13 @@ class VrfsMixin(Protocol):
                 if self.inputs.overlay_mlag_rfc5549 and self._mlag_ibgp_peering_enabled(vrf, tenant):
                     new_vrf._update(ip_routing_ipv6_interfaces=True, ipv6_routing=True)
                 else:
-                    new_vrf._update(ip_routing=True)
+                    new_vrf.ip_routing = True
 
                 if self._has_ipv6(vrf):
-                    new_vrf._update(ipv6_routing=True)
+                    new_vrf.ipv6_routing = True
 
                 if vrf.description:
-                    new_vrf._update(description=vrf.description)
+                    new_vrf.description = vrf.description
                 self.structured_config.vrfs.append(new_vrf)
 
     def _has_ipv6(

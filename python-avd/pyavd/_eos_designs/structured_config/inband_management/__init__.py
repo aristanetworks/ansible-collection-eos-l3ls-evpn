@@ -96,8 +96,7 @@ class AvdStructuredConfigInbandManagement(StructuredConfigGenerator):
 
         if not self.shared_utils.inband_management_parent_vlans and not self.shared_utils.configure_inband_mgmt:
             return
-        vrf = EosCliConfigGen.VrfsItem(name=self.shared_utils.inband_mgmt_vrf)
-        self.structured_config.vrfs.append(vrf)
+        self.structured_config.vrfs.append_new(name=self.shared_utils.inband_mgmt_vrf)
 
     @cached_property
     def ip_virtual_router_mac_address(self) -> str | None:
