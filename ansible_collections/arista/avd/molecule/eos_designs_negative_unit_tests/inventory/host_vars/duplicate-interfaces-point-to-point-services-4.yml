@@ -28,6 +28,7 @@ tenants:
   - name: TENANT
     vrfs:
       - name: TEST
+        vrf_id: 1  # Only set to avoid the general VRF code triggering other errors.
         l3_interfaces:
           - nodes: ["duplicate-interfaces-point-to-point-services-4", "some_other_device"]
             interfaces: ["Ethernet6.1000", "some_other_interface"]
