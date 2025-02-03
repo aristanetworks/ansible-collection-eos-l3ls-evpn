@@ -305,6 +305,22 @@ class EthernetInterfacesMixin(Protocol):
                 context_keys=["name", "peer", "peer_interface"],
             )
 
+        # Member ethernet ports for Port-Channel interface
+        for l3_port_channel in self.shared_utils.node_config.l3_port_channels:
+            # sub-interface for l3_port_channel cannot have member eth ports
+            # skip any logic to generate member port config for such sub-interfaces
+            if "." in l3_port_channel.name:
+                continue
+            member_eth_intfs = self._get_l3_port_channel_member_ports_cfg(l3_port_channel)
+            for member_eth_intf in member_eth_intfs:
+                append_if_not_duplicate(
+                    list_of_dicts=ethernet_interfaces,
+                    primary_key="name",
+                    new_dict=member_eth_intf,
+                    context=f"Ethernet interface defined under 'member_interfaces' for {self.shared_utils.node_type_key_data.key} l3_port_channels",
+                    context_keys=["name", "peer", "peer_interface"],
+                )
+
         if ethernet_interfaces:
             return ethernet_interfaces
 

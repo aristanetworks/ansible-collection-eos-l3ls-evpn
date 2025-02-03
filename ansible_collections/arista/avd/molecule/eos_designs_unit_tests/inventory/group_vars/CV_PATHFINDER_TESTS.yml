@@ -15,7 +15,7 @@ ipv4_prefix_list_catalog:
       - sequence: 10
         action: permit 5.0.0.0/0
       - sequence: 20
-        action: deny 10.00.0.0/24
+        action: deny 10.0.0.0/24
 
 cv_pathfinder_regions:
   - name: AVD_Land_West
@@ -105,8 +105,8 @@ wan_router:
     # cv-pathfinder-edge is not configured on cv-pathfinder-edge1
     - group: Site511
       uplink_type: p2p-vrfs
-      uplink_switches: [ site-ha-disabled-leaf ]
-      uplink_interfaces: [ Ethernet52 ]
+      uplink_switches: [site-ha-disabled-leaf]
+      uplink_interfaces: [Ethernet52]
       cv_pathfinder_region: AVD_Land_East
       cv_pathfinder_site: Site511
       wan_ha:
@@ -212,6 +212,77 @@ wan_router:
               bgp:
                 peer_as: 64520
                 ipv4_prefix_list_out: PL2
+          l3_port_channels:
+            - # Port-Channel with 2 member ports
+              name: Port-Channel1
+              mode: active
+              member_interfaces:
+                - name: Ethernet6
+                  peer: peerDevice1
+                  peer_interface: PeerDevIntf1
+                  speed: "forced 10000full"
+                - # peer, peer_interface not set, use peer from parent L3 Port-Channel
+                  name: Ethernet7
+                  speed: "forced 10000full"
+              ip_address: 172.15.5.7/31
+              # Using peer_ip same as the one specified for Ethernet3 under l3_interfaces above.
+              # This will cause identical nexthop for Zscaler tunnel destinations to be configured via ip route.
+              # instead of multiple routes to same Zscaler destination via different nexthops.
+              peer: peerDeviceA
+              peer_ip: 172.31.0.1
+              peer_port_channel: Port-Channel2
+              wan_carrier: ATT
+              wan_circuit_id: 404
+              static_routes:
+                - prefix: 172.16.0.0/16
+              bgp:
+                peer_as: 64520
+                ipv4_prefix_list_in: PL2
+                ipv4_prefix_list_out: ALLOW-DEFAULT
+              flow_tracking:
+                enabled: true
+            - # Port-Channel with 1 member ports
+              name: Port-Channel450
+              mode: "on"
+              member_interfaces:
+                - name: Ethernet1/10
+                  speed: "forced 10000full"
+              ip_address: 172.15.5.8/31
+              peer: peerDevice10
+              peer_ip: 172.31.0.10
+              peer_port_channel: Port-Channel455
+              wan_carrier: Orange
+              connected_to_pathfinder: false
+              static_routes:
+                - prefix: 172.17.0.0/16
+              bgp:
+                peer_as: 64520
+                ipv4_prefix_list_in: PL2
+              flow_tracking:
+                enabled: false
+            - # Port-Channel with 3 member ports
+              name: Port-Channel540
+              # use default mode
+              member_interfaces:
+                - name: Ethernet1/16
+                  speed: "auto 10000full"
+                - name: Ethernet1/17
+                  # interface speed not specified
+                - name: Ethernet1/18
+                  speed: "1000full"
+              ip_address: 172.15.6.9/31
+              public_ip: 10.36.36.100
+              peer: peerDevice11
+              peer_ip: 172.31.0.11
+              peer_port_channel: Port-Channel545
+              wan_carrier: Comcast
+              connected_to_pathfinder: true
+              static_routes:
+                - prefix: 172.18.0.0/16
+              # flow_tracking not set, hence not configured
+              ipv4_acl_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN
+              ipv4_acl_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT
+
     # SITE_HA_ENABLED
     # Because HA is enabled, this allow to test that MPLS-ONLY, present on
     # cv-pathfinder-edge2B (because of Colt) is being configured on cv-pathfinder-edge2A
@@ -220,8 +291,8 @@ wan_router:
       cv_pathfinder_region: AVD_Land_West
       cv_pathfinder_site: Site423
       uplink_type: p2p-vrfs
-      uplink_switches: [ site-ha-enabled-leaf2A, site-ha-enabled-leaf2B ]
-      uplink_interfaces: [ Ethernet52, Ethernet53 ]
+      uplink_switches: [site-ha-enabled-leaf2A, site-ha-enabled-leaf2B]
+      uplink_interfaces: [Ethernet52, Ethernet53]
       wan_ha:
         enabled: true # TODO AVD4.8.0: Remove once WAN HA is GA.
       nodes:
@@ -251,8 +322,8 @@ wan_router:
         always_include_vrfs_in_tenants: [TenantA, TenantB]
       uplink_ipv4_pool: 172.17.0.0/16
       uplink_type: p2p-vrfs
-      uplink_switches: [ site-ha-enabled-leaf1 ]
-      uplink_interfaces: [ Ethernet52 ]
+      uplink_switches: [site-ha-enabled-leaf1]
+      uplink_interfaces: [Ethernet52]
       cv_pathfinder_transit_mode: region
       # Disable HA IPsec
       wan_ha:

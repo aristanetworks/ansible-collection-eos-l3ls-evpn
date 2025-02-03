@@ -218,6 +218,10 @@ metadata:
       tags:
       - name: Type
         value: lan
+    - interface: Port-Channel666
+      tags:
+      - name: Type
+        value: lan
   cv_pathfinder:
     role: transit region
     region: AVD_Land_West

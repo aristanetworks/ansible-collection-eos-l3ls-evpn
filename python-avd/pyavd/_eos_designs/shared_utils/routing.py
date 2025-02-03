@@ -54,7 +54,7 @@ class RoutingMixin(Protocol):
                 )
                 or self.bgp_in_network_services
             )
-        ) or bool(self.l3_interfaces_bgp_neighbors)
+        ) or bool(self.l3_bgp_neighbors)
 
     @cached_property
     def router_id(self: SharedUtilsProtocol) -> str | None:

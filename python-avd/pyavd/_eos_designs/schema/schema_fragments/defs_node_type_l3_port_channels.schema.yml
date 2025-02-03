@@ -6,7 +6,7 @@
 # Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
 type: dict
 $defs:
-  node_type_l3_interfaces:
+  node_type_l3_port_channels:
     type: list
     primary_key: name
     items:
@@ -14,15 +14,67 @@ $defs:
       keys:
         name:
           type: str
+          required: true
           description: |-
-            Ethernet interface name like 'Ethernet2' or subinterface name like 'Ethernet2.42'.
-            For a subinterface, the parent physical interface is automatically created.
-          pattern: "Ethernet[\\d/]+(\\.[\\d]+)?"
+            Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+            For a Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+          pattern: "Port-Channel[\\d/]+(\\.[\\d]+)?"
         description:
           type: str
           description: |-
             Interface description.
-            If not set a default description will be configured with '[<peer>[ <peer_interface>]]'.
+            If not set, a default description will be configured with '[<peer>[ <peer_port_channel>]]'.
+        mode:
+          type: str
+          description: |-
+            Port-Channel mode.
+            Should not be set on Port-Channel subinterfaces.
+          valid_values:
+            - "active"
+            - "passive"
+            - "on"
+          default: "active"
+        member_interfaces:
+          description: |-
+            Port-Channel member interfaces.
+            Should not be set on Port-Channel subinterfaces.
+          type: list
+          primary_key: name
+          items:
+            type: dict
+            keys:
+              name:
+                type: str
+                required: true
+                description: |-
+                  Ethernet interface name like 'Ethernet2'.
+                  Member interface cannot be subinterface.
+                pattern: "Ethernet[\\d/]+"
+              description:
+                type: str
+                description: |-
+                  Interface description for this member.
+                  If not set, a default description will be configured with '[<peer>[ <peer_interface>]]'.
+              peer:
+                type: str
+                description: |-
+                  The peer device name. Used for description and documentation.
+                  If not set, this inherits the peer setting on the port-channel interface.
+              peer_interface:
+                type: str
+                description: |-
+                  The peer device interface. Used for description and documentation.
+              speed:
+                type: str
+                description: |-
+                  Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
+              structured_config:
+                type: dict
+                documentation_options:
+                  hide_keys: true
+                description: |-
+                  Custom structured config for the member ethernet interface.
+                $ref: "eos_cli_config_gen#/keys/ethernet_interfaces/items"
         ip_address:
           type: str
           description: Node IPv4 address/Mask or 'dhcp'.
@@ -42,8 +94,8 @@ $defs:
             This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
             with the following preference:
               `wan_route_servers.path_groups.interfaces.ip_address`
-                  -> `l3_interfaces.public_ip`
-                      -> `l3_interfaces.ip_address`
+                  -> `l3_port_channels.public_ip`
+                      -> `l3_port_channels.ip_address`
 
             The determined Public IP is used by WAN routers when peering with this interface.
         encapsulation_dot1q_vlan:
@@ -61,18 +113,14 @@ $defs:
           type: bool
           default: true
           description: Enable or Shutdown the interface.
-        speed:
-          type: str
-          description: |-
-            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
         peer:
           type: str
           description: |-
             The peer device name. Used for description and documentation.
-        peer_interface:
+        peer_port_channel:
           type: str
           description: |-
-            The peer device interface. Used for description and documentation.
+            The peer device port-channel interface. Used for description and documentation.
         peer_ip:
           type: str
           description: |-
@@ -121,12 +169,12 @@ $defs:
           description: Configure IPv4 static routes pointing to `peer_ip`.
           type: list
           min_length: 1
+          primary_key: prefix
           items:
             type: dict
             keys:
               prefix:
                 type: str
-                required: true
                 description: IPv4_network/Mask.
         qos_profile:
           type: str
@@ -149,39 +197,39 @@ $defs:
           default: true
           description: |-
             For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
-        cv_pathfinder_internet_exit:
-          description: |-
-            PREVIEW: This key is in preview mode
-          type: dict
-          keys:
-            policies:
-              type: list
-              primary_key: name
-              description: List of Internet-exit policies using this interface as exit.
-              items:
-                type: dict
-                keys:
-                  name:
-                    type: str
-                    description: Internet-exit policy name.
-                  tunnel_interface_numbers:
-                    type: str
-                    description: |-
-                      Number range to use for Tunnel interfaces to an internet-exit service provider using this local interface.
-                      Examples: '1-3' or '100,200,300'
+        # TODO: Enable this after EOS side change to support 'direct' internet exit using port-channel interface
+        # cv_pathfinder_internet_exit:
+        #  description: |-
+        #    PREVIEW: This key is in preview mode
+        #  type: dict
+        #  keys:
+        #    policies:
+        #      type: list
+        #      primary_key: name
+        #      description: List of Internet-exit policies using this interface as exit.
+        #      items:
+        #        type: dict
+        #        keys:
+        #          name:
+        #            type: str
+        #            description: Internet-exit policy name.
+        #          tunnel_interface_numbers:
+        #            type: str
+        #            description: |-
+        #              Number range to use for Tunnel interfaces to an internet-exit service provider using this local interface.
+        #              Examples: '1-3' or '100,200,300'
         raw_eos_cli:
           type: str
-          description: EOS CLI rendered directly on the interface in the final EOS configuration.
+          description: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
         flow_tracking:
           type: dict
           $ref: "eos_designs#/$defs/flow_tracking_link"
           description: |-
-            Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
+            Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels` setting.
         structured_config:
           type: dict
-          relaxed_validation: true
           documentation_options:
             hide_keys: true
           description: |-
-            Custom structured config for the Ethernet interface.
-          $ref: "eos_cli_config_gen#/keys/ethernet_interfaces/items"
+            Custom structured config for the Port-Channel interface.
+          $ref: "eos_cli_config_gen#/keys/port_channel_interfaces/items"

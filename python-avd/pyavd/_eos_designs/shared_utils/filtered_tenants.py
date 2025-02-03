@@ -12,6 +12,8 @@ from pyavd._utils import default, unique
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
+    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+
     from . import SharedUtilsProtocol
 
 
@@ -363,7 +365,7 @@ class FilteredTenantsMixin(Protocol):
 
     @staticmethod
     def get_additional_svi_config(
-        svi_config: dict,
+        config: EosCliConfigGen.VlanInterfacesItem | EosCliConfigGen.EthernetInterfacesItem,
         svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
     ) -> None:
@@ -372,35 +374,35 @@ class FilteredTenantsMixin(Protocol):
 
         Used for SVIs and for subinterfaces when uplink_type: lan.
 
-        The given svi_config is updated in-place.
+        The given config is updated in-place.
         """
-        svi_ip_helpers = svi.ip_helpers or vrf.ip_helpers
-        if svi_ip_helpers:
-            svi_config["ip_helpers"] = [
-                {"ip_helper": svi_ip_helper.ip_helper, "source_interface": svi_ip_helper.source_interface, "vrf": svi_ip_helper.source_vrf}
-                for svi_ip_helper in svi_ip_helpers
-            ]
+        ip_helpers = svi.ip_helpers or vrf.ip_helpers
+        if ip_helpers:
+            for svi_ip_helper in ip_helpers:
+                config.ip_helpers.append_new(
+                    ip_helper=svi_ip_helper.ip_helper,
+                    source_interface=svi_ip_helper.source_interface,
+                    vrf=svi_ip_helper.source_vrf,
+                )
 
         if svi.ospf.enabled and vrf.ospf.enabled:
-            svi_config.update(
-                {
-                    "ospf_area": svi.ospf.area,
-                    "ospf_network_point_to_point": svi.ospf.point_to_point,
-                    "ospf_cost": svi.ospf.cost,
-                },
+            config._update(
+                ospf_area=svi.ospf.area,
+                ospf_network_point_to_point=svi.ospf.point_to_point,
+                ospf_cost=svi.ospf.cost,
             )
             ospf_authentication = svi.ospf.authentication
             if ospf_authentication == "simple" and (ospf_simple_auth_key := svi.ospf.simple_auth_key) is not None:
-                svi_config.update({"ospf_authentication": ospf_authentication, "ospf_authentication_key": ospf_simple_auth_key})
-            elif ospf_authentication == "message-digest" and (ospf_message_digest_keys := svi.ospf.message_digest_keys) is not None:
-                ospf_keys = []
+                config._update(ospf_authentication=ospf_authentication, ospf_authentication_key=ospf_simple_auth_key)
+            elif ospf_authentication == "message-digest" and (ospf_message_digest_keys := svi.ospf.message_digest_keys):
                 for ospf_key in ospf_message_digest_keys:
                     if not (ospf_key.id and ospf_key.key):
                         continue
 
-                    ospf_keys.append({"id": ospf_key.id, "hash_algorithm": ospf_key.hash_algorithm, "key": ospf_key.key})
-                if ospf_keys:
-                    svi_config.update({"ospf_authentication": ospf_authentication, "ospf_message_digest_keys": ospf_keys})
+                    config.ospf_message_digest_keys.append_new(id=ospf_key.id, hash_algorithm=ospf_key.hash_algorithm, key=ospf_key.key)
+
+                if config.ospf_message_digest_keys:
+                    config.ospf_authentication = ospf_authentication
 
     @cached_property
     def bgp_in_network_services(self: SharedUtilsProtocol) -> bool:
