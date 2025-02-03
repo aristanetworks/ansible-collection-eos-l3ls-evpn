@@ -164,7 +164,7 @@ class UtilsMixin(Protocol):
         output_type: type[T_StormControl],
     ) -> T_StormControl | UndefinedType:
         """Return storm_control for one adapter."""
-        if self.shared_utils.platform_settings.feature_support.interface_storm_control:
+        if self.shared_utils.platform_settings.feature_support.interface_storm_control and adapter.storm_control:
             return adapter.storm_control._cast_as(output_type)
 
         return Undefined
