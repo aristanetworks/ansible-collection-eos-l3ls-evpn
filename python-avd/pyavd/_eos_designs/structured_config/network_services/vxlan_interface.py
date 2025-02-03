@@ -54,10 +54,10 @@ class VxlanInterfaceMixin(Protocol):
             vxlan.virtual_router_encapsulation_mac_address = "mlag-system-id"
 
         if self.shared_utils.overlay_her and not self.inputs.overlay_her_flood_list_per_vni and (common := self._overlay_her_flood_lists.get("common")):
-            vxlan.flood_vteps = EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.FloodVteps(natural_sort(unique(common)))
+            vxlan.flood_vteps.extend(natural_sort(unique(common)))
 
         if self.shared_utils.overlay_cvx:
-            vxlan.controller_client = EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.ControllerClient(enabled=True)
+            vxlan.controller_client.enabled = True
 
         # TODO: maybe this could be made a class attribute?
         vnis: dict[int, EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem | EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem] = {}
