@@ -427,14 +427,16 @@ class RouterBgpMixin(Protocol):
             bgp_vlan.route_targets.import_export_evpn_domains.append_new(domain="remote", route_target=vlan_rt)
 
         vlan_evpn_l2_multicast_enabled = default(vlan.evpn_l2_multicast.enabled, tenant.evpn_l2_multicast.enabled) and self.shared_utils.evpn_multicast is True
-        if vlan_evpn_l2_multicast_enabled:
-            if isinstance(vlan, EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem):
-                # l2vlans will always redistribute IGMP
-                bgp_vlan.redistribute_routes.append("igmp")
-            elif not getattr(vrf, "_evpn_l3_multicast_enabled", False) or bool(
-                default(vlan.evpn_l2_multicast.always_redistribute_igmp, tenant.evpn_l2_multicast.always_redistribute_igmp)
-            ):
-                bgp_vlan.redistribute_routes.append("igmp")
+        # if vlan_evpn_l2_multicast_enabled we redistribute igmp if:
+        #   - This is an L2 vlan
+        #   - L3 multicast is disabled or not configured
+        #   - evpn_l2_multicast.always_redistribute_igmp is set on the vlan or tenant.
+        if vlan_evpn_l2_multicast_enabled and (
+            isinstance(vlan, EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem)
+            or not getattr(vrf, "_evpn_l3_multicast_enabled", False)
+            or bool(default(vlan.evpn_l2_multicast.always_redistribute_igmp, tenant.evpn_l2_multicast.always_redistribute_igmp))
+        ):
+            bgp_vlan.redistribute_routes.append("igmp")
 
         return bgp_vlan
 
