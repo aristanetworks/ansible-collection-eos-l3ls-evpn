@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Protocol
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import Undefined, default, get
+from pyavd._utils import default, get
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
 if TYPE_CHECKING:
@@ -46,21 +46,10 @@ class VlanInterfacesMixin(Protocol):
 
                 self.structured_config.vlan_interfaces.append(self._get_vlan_interface_config_for_mlag_peering(vrf, vlan_id), ignore_fields=("tenant",))
 
-    def _check_virtual_router_mac_address(
-        self: AvdStructuredConfigNetworkServicesProtocol, vlan_interface_config: EosCliConfigGen.VlanInterfacesItem, variables: tuple[str, ...]
-    ) -> None:
-        """
-        Error if virtual router mac address is required but missing.
-
-        Check if any variable in the list of variables is not None in vlan_interface_config
-        and if it is the case, raise an Exception if virtual_router_mac_address is None.
-
-        NOTE: SVI settings are also used for subinterfaces for uplink_type: 'lan'.
-        So any changes here may also be needed in underlay.utils.UtilsMixin._get_l2_as_subint().
-        """
-        if any(vlan_interface_config._get(var) for var in variables) and self.shared_utils.node_config.virtual_router_mac_address is None:
-            quoted_vars = [f"'{var}'" for var in variables]
-            msg = f"'virtual_router_mac_address' must be set for node '{self.shared_utils.hostname}' when using {' or '.join(quoted_vars)} under 'svi'"
+    def _check_virtual_router_mac_address(self: AvdStructuredConfigNetworkServicesProtocol, variable: str) -> None:
+        """Raise if virtual router mac address is required but missing, otherwise return None."""
+        if self.shared_utils.node_config.virtual_router_mac_address is None:
+            msg = f"'virtual_router_mac_address' must be set for node '{self.shared_utils.hostname}' when using '{variable}' under 'svi'"
             raise AristaAvdInvalidInputsError(msg)
 
     def _get_vlan_interface_config_for_svi(
@@ -68,6 +57,8 @@ class VlanInterfacesMixin(Protocol):
         svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
     ) -> EosCliConfigGen.VlanInterfacesItem:
+        pim_source_interface_needed = False
+
         interface_name = f"Vlan{svi.id}"
         vlan_interface_config = EosCliConfigGen.VlanInterfacesItem(
             name=interface_name,
@@ -90,15 +81,24 @@ class VlanInterfacesMixin(Protocol):
             )
 
         # Only set VARP if ip_address is set
-        if vlan_interface_config.ip_address:
+        if vlan_interface_config.ip_address and svi.ip_virtual_router_addresses:
             vlan_interface_config.ip_virtual_router_addresses.extend(svi.ip_virtual_router_addresses)
-            self._check_virtual_router_mac_address(vlan_interface_config, ("ip_virtual_router_addresses",))
+            self._check_virtual_router_mac_address("ip_virtual_router_addresses")
 
         # Only set Anycast GW if VARP is not set
-        if not vlan_interface_config.ip_virtual_router_addresses:
-            vlan_interface_config.ip_address_virtual = svi.ip_address_virtual
-            vlan_interface_config.ip_address_virtual_secondaries.extend(svi.ip_address_virtual_secondaries)
-            self._check_virtual_router_mac_address(vlan_interface_config, ("ip_address_virtual", "ip_address_virtual_secondaries"))
+        else:
+            # TODO: Move pim_source_interface_needed under the if svi.ip_address_virtual.
+            # Historicly we checked for presence of ip_address_virtual even if None.
+            # Fixing this will be breaking.
+            pim_source_interface_needed = True
+            if svi.ip_address_virtual:
+                vlan_interface_config.ip_address_virtual = svi.ip_address_virtual
+                self._check_virtual_router_mac_address("ip_address_virtual")
+
+            # TODO: Move this under svi.ip_address_virtual so we only add secondaries when we have a primary.
+            if svi.ip_address_virtual_secondaries:
+                vlan_interface_config.ip_address_virtual_secondaries.extend(svi.ip_address_virtual_secondaries)
+                self._check_virtual_router_mac_address("ip_address_virtual_secondaries")
 
         if default(svi.evpn_l3_multicast.enabled, getattr(vrf, "_evpn_l3_multicast_enabled", False)) is True:
             if self.shared_utils.mlag:
@@ -106,9 +106,7 @@ class VlanInterfacesMixin(Protocol):
             else:
                 vlan_interface_config.ip_igmp = True
 
-            if (
-                vlan_interface_config._get_defined_attr("ip_address_virtual") is not Undefined
-            ):  # Historic behavior of checking for mere presence of the key. TODO: Fix this but it is breaking.
+            if pim_source_interface_needed:
                 if (vrf_diagnostic_loopback := vrf.vtep_diagnostic.loopback) is None:
                     msg = (
                         f"No vtep_diagnostic loopback defined on VRF '{vrf.name}' in Tenant '{svi._tenant}'."
@@ -118,20 +116,17 @@ class VlanInterfacesMixin(Protocol):
                 vlan_interface_config.pim.ipv4.local_interface = f"Loopback{vrf_diagnostic_loopback}"
 
         # Only set VARPv6 if ipv6_address is set or ipv6_enable is set to true
-        if vlan_interface_config.ipv6_address or vlan_interface_config.ipv6_enable:
+        if (vlan_interface_config.ipv6_address or vlan_interface_config.ipv6_enable) and svi.ipv6_virtual_router_addresses:
             vlan_interface_config.ipv6_virtual_router_addresses.extend(svi.ipv6_virtual_router_addresses)
-            self._check_virtual_router_mac_address(vlan_interface_config, ("ipv6_virtual_router_addresses",))
+            self._check_virtual_router_mac_address("ipv6_virtual_router_addresses")
 
         # Only set Anycast v6 GW if VARPv6 is not set
-        if not vlan_interface_config.ipv6_virtual_router_addresses:
-            if svi.ipv6_address_virtuals:
-                vlan_interface_config.ipv6_address_virtuals.extend(svi.ipv6_address_virtuals)
+        elif svi.ipv6_address_virtuals:
+            vlan_interface_config.ipv6_address_virtuals.extend(svi.ipv6_address_virtuals)
+            self._check_virtual_router_mac_address("ipv6_address_virtuals")
 
-            self._check_virtual_router_mac_address(vlan_interface_config, ("ipv6_address_virtuals",))
-
-            if vlan_interface_config.ipv6_address_virtuals:
-                # If any anycast IPs are set, we also enable link-local IPv6 per best practice, unless specifically disabled with 'ipv6_enable: false'
-                vlan_interface_config.ipv6_enable = default(vlan_interface_config.ipv6_enable, True)  # noqa: FBT003
+            # If any anycast IPs are set, we also enable link-local IPv6 per best practice, unless specifically disabled with 'ipv6_enable: false'
+            vlan_interface_config.ipv6_enable = default(vlan_interface_config.ipv6_enable, True)  # noqa: FBT003
 
         if vrf.name != "default":
             vlan_interface_config.vrf = vrf.name
