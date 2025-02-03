@@ -3,12 +3,11 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import append_if_not_duplicate
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
+
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
 
@@ -33,8 +32,4 @@ class RouterMulticastMixin(Protocol):
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 if getattr(vrf, "_evpn_l3_multicast_enabled", False):
-                    self.structured_config.router_multicast.vrfs.append_new(
-                        name=vrf.name,
-                        ipv4=EosCliConfigGen.RouterMulticast.VrfsItem.Ipv4(routing=True)
-                        )
-                    
+                    self.structured_config.router_multicast.vrfs.append_new(name=vrf.name, ipv4=EosCliConfigGen.RouterMulticast.VrfsItem.Ipv4(routing=True))
