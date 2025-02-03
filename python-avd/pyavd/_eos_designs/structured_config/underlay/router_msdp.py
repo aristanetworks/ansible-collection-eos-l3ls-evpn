@@ -3,13 +3,12 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._utils import get
 from pyavd.j2filters import natural_sort
-from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigUnderlayProtocol
@@ -45,11 +44,13 @@ class RouterMsdpMixin(Protocol):
 
         self.structured_config.router_msdp.originator_id_local_interface = "Loopback0"
         for peer in natural_sort(peers):
-            self.structured_config.router_msdp.peers = EosCliConfigGen.RouterMsdp.Peers([
+            self.structured_config.router_msdp.peers = EosCliConfigGen.RouterMsdp.Peers(
+                [
                     EosCliConfigGen.RouterMsdp.PeersItem(
                         ipv4_address=get(self.shared_utils.get_peer_facts(peer), "router_id", required=True),
                         local_interface="Loopback0",
                         description=peer,
                         mesh_groups=EosCliConfigGen.RouterMsdp.PeersItem.MeshGroups([EosCliConfigGen.RouterMsdp.PeersItem.MeshGroupsItem(name="ANYCAST-RP")]),
-                    )]
+                    )
+                ]
             )
