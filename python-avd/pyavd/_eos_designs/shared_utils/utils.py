@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get, template_var
@@ -15,14 +15,14 @@ if TYPE_CHECKING:
     from pyavd._eos_designs.eos_designs_facts import EosDesignsFacts
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
     ADAPTER_SETTINGS = TypeVar(
         "ADAPTER_SETTINGS", EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem, EosDesigns.NetworkPortsItem
     )
 
 
-class UtilsMixin:
+class UtilsMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -30,7 +30,7 @@ class UtilsMixin:
     Using type-hint on self to get proper type-hints on attributes across all Mixins.
     """
 
-    def get_peer_facts(self: SharedUtils, peer_name: str, required: bool = True) -> EosDesignsFacts | dict | None:
+    def get_peer_facts(self: SharedUtilsProtocol, peer_name: str, required: bool = True) -> EosDesignsFacts | dict | None:
         """
         Util function to retrieve peer_facts for peer_name.
 
@@ -50,7 +50,7 @@ class UtilsMixin:
             ),
         )
 
-    def template_var(self: SharedUtils, template_file: str, template_vars: dict) -> str:
+    def template_var(self: SharedUtilsProtocol, template_file: str, template_vars: dict) -> str:
         """Run the simplified templater using the passed Ansible "templar" engine."""
         try:
             return template_var(template_file, template_vars, self.templar)
@@ -59,7 +59,7 @@ class UtilsMixin:
             raise AristaAvdError(msg) from e
 
     @lru_cache  # noqa: B019
-    def get_merged_port_profile(self: SharedUtils, profile_name: str, context: str) -> EosDesigns.PortProfilesItem:
+    def get_merged_port_profile(self: SharedUtilsProtocol, profile_name: str, context: str) -> EosDesigns.PortProfilesItem:
         """Return list of merged "port_profiles" where "parent_profile" has been applied."""
         if profile_name not in self.inputs.port_profiles:
             msg = f"Profile '{profile_name}' applied under '{context}' does not exist in `port_profiles`."
@@ -79,7 +79,7 @@ class UtilsMixin:
         delattr(port_profile, "parent_profile")
         return port_profile
 
-    def get_merged_adapter_settings(self: SharedUtils, adapter_or_network_port_settings: ADAPTER_SETTINGS) -> ADAPTER_SETTINGS:
+    def get_merged_adapter_settings(self: SharedUtilsProtocol, adapter_or_network_port_settings: ADAPTER_SETTINGS) -> ADAPTER_SETTINGS:
         """
         Applies port-profiles to the given adapter_or_network_port and returns the combined result.
 

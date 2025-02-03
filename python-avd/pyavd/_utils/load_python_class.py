@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import importlib
 
-from pyavd._errors import AristaAvdError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 
 
 def load_python_class(module_path: str, class_name: str, parent_class: type | None = None) -> type:

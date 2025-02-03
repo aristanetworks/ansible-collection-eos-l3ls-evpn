@@ -3592,6 +3592,46 @@ class EosDesigns(EosDesignsRootModel):
 
                     """
 
+        class L3PortChannels(AvdModel):
+            """Subclass of AvdModel."""
+
+            _fields: ClassVar[dict] = {
+                "enabled": {"type": bool, "default": False},
+                "name": {"type": str, "default": "FLOW-TRACKER"},
+                "_custom_data": {"type": dict},
+            }
+            enabled: bool
+            """Default value: `False`"""
+            name: str
+            """
+            Flow tracker name as defined in flow_tracking_settings.
+
+            Default value: `"FLOW-TRACKER"`
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    enabled: bool | UndefinedType = Undefined,
+                    name: str | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    L3PortChannels.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        enabled: enabled
+                        name: Flow tracker name as defined in flow_tracking_settings.
+                        _custom_data: _custom_data
+
+                    """
+
         class DpsInterfaces(AvdModel):
             """Subclass of AvdModel."""
 
@@ -3680,6 +3720,7 @@ class EosDesigns(EosDesignsRootModel):
             "core_interfaces": {"type": CoreInterfaces},
             "mlag_interfaces": {"type": MlagInterfaces},
             "l3_interfaces": {"type": L3Interfaces},
+            "l3_port_channels": {"type": L3PortChannels},
             "dps_interfaces": {"type": DpsInterfaces},
             "direct_wan_ha_links": {"type": DirectWanHaLinks},
             "_custom_data": {"type": dict},
@@ -3725,6 +3766,12 @@ class EosDesigns(EosDesignsRootModel):
         Enable flow-tracking on all node.l3_interfaces and network-services tenants.vrfs.l3_interfaces.
         Subclass of AvdModel.
         """
+        l3_port_channels: L3PortChannels
+        """
+        Enable flow-tracking on all node.l3_port_channels.
+
+        Subclass of AvdModel.
+        """
         dps_interfaces: DpsInterfaces
         """
         Enable flow-tracking on all dps_interfaces.
@@ -3751,6 +3798,7 @@ class EosDesigns(EosDesignsRootModel):
                 core_interfaces: CoreInterfaces | UndefinedType = Undefined,
                 mlag_interfaces: MlagInterfaces | UndefinedType = Undefined,
                 l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                 dps_interfaces: DpsInterfaces | UndefinedType = Undefined,
                 direct_wan_ha_links: DirectWanHaLinks | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -3788,6 +3836,10 @@ class EosDesigns(EosDesignsRootModel):
                        Subclass of AvdModel.
                     l3_interfaces:
                        Enable flow-tracking on all node.l3_interfaces and network-services tenants.vrfs.l3_interfaces.
+                       Subclass of AvdModel.
+                    l3_port_channels:
+                       Enable flow-tracking on all node.l3_port_channels.
+
                        Subclass of AvdModel.
                     dps_interfaces:
                        Enable flow-tracking on all dps_interfaces.
@@ -21535,6 +21587,550 @@ class EosDesigns(EosDesignsRootModel):
 
                     L3Interfaces._item_type = L3InterfacesItem
 
+                    class L3PortChannelsItem(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class MemberInterfacesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class StructuredConfig(EosCliConfigGen.EthernetInterfacesItem):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "name": {"type": str},
+                                "description": {"type": str},
+                                "peer": {"type": str},
+                                "peer_interface": {"type": str},
+                                "speed": {"type": str},
+                                "structured_config": {"type": StructuredConfig},
+                                "_custom_data": {"type": dict},
+                            }
+                            name: str
+                            """
+                            Ethernet interface name like 'Ethernet2'.
+                            Member interface cannot be subinterface.
+                            """
+                            description: str | None
+                            """
+                            Interface description for this member.
+                            If not set, a default description will be configured with
+                            '[<peer>[ <peer_interface>]]'.
+                            """
+                            peer: str | None
+                            """
+                            The peer device name. Used for description and documentation.
+                            If not set, this inherits the peer
+                            setting on the port-channel interface.
+                            """
+                            peer_interface: str | None
+                            """The peer device interface. Used for description and documentation."""
+                            speed: str | None
+                            """
+                            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                            <interface_speed>`.
+                            """
+                            structured_config: StructuredConfig
+                            """
+                            Custom structured config for the member ethernet interface.
+
+                            Subclass of AvdModel.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    name: str | UndefinedType = Undefined,
+                                    description: str | None | UndefinedType = Undefined,
+                                    peer: str | None | UndefinedType = Undefined,
+                                    peer_interface: str | None | UndefinedType = Undefined,
+                                    speed: str | None | UndefinedType = Undefined,
+                                    structured_config: StructuredConfig | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    MemberInterfacesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        name:
+                                           Ethernet interface name like 'Ethernet2'.
+                                           Member interface cannot be subinterface.
+                                        description:
+                                           Interface description for this member.
+                                           If not set, a default description will be configured with
+                                           '[<peer>[ <peer_interface>]]'.
+                                        peer:
+                                           The peer device name. Used for description and documentation.
+                                           If not set, this inherits the peer
+                                           setting on the port-channel interface.
+                                        peer_interface: The peer device interface. Used for description and documentation.
+                                        speed:
+                                           Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                           <interface_speed>`.
+                                        structured_config:
+                                           Custom structured config for the member ethernet interface.
+
+                                           Subclass of AvdModel.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class MemberInterfaces(AvdIndexedList[str, MemberInterfacesItem]):
+                            """Subclass of AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "name"
+
+                        MemberInterfaces._item_type = MemberInterfacesItem
+
+                        class Bgp(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "peer_as": {"type": str},
+                                "ipv4_prefix_list_in": {"type": str},
+                                "ipv4_prefix_list_out": {"type": str},
+                                "_custom_data": {"type": dict},
+                            }
+                            peer_as: str
+                            """
+                            BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                            For asdot notation in
+                            YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                            number.
+                            """
+                            ipv4_prefix_list_in: str | None
+                            """
+                            Prefix List Name. Accept routes for only these prefixes from the peer.
+                            Required for wan interfaces.
+                            """
+                            ipv4_prefix_list_out: str | None
+                            """
+                            Prefix List Name. Advertise routes for only these prefixes.
+                            If not specified, nothing would be
+                            advertised.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    peer_as: str | UndefinedType = Undefined,
+                                    ipv4_prefix_list_in: str | None | UndefinedType = Undefined,
+                                    ipv4_prefix_list_out: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Bgp.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        peer_as:
+                                           BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                           For asdot notation in
+                                           YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                           number.
+                                        ipv4_prefix_list_in:
+                                           Prefix List Name. Accept routes for only these prefixes from the peer.
+                                           Required for wan interfaces.
+                                        ipv4_prefix_list_out:
+                                           Prefix List Name. Advertise routes for only these prefixes.
+                                           If not specified, nothing would be
+                                           advertised.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"prefix": {"type": str}, "_custom_data": {"type": dict}}
+                            prefix: str
+                            """IPv4_network/Mask."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self, *, prefix: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                                ) -> None:
+                                    """
+                                    StaticRoutesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        prefix: IPv4_network/Mask.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutes(AvdIndexedList[str, StaticRoutesItem]):
+                            """Subclass of AvdIndexedList with `StaticRoutesItem` items. Primary key is `prefix` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "prefix"
+
+                        StaticRoutes._item_type = StaticRoutesItem
+
+                        class FlowTracking(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "name": {"type": str}, "_custom_data": {"type": dict}}
+                            enabled: bool | None
+                            name: str | None
+                            """Flow tracker name as defined in flow_tracking_settings."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    enabled: bool | None | UndefinedType = Undefined,
+                                    name: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    FlowTracking.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        enabled: enabled
+                                        name: Flow tracker name as defined in flow_tracking_settings.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StructuredConfig(EosCliConfigGen.PortChannelInterfacesItem):
+                            """Subclass of AvdModel."""
+
+                        _fields: ClassVar[dict] = {
+                            "name": {"type": str},
+                            "description": {"type": str},
+                            "mode": {"type": str, "default": "active"},
+                            "member_interfaces": {"type": MemberInterfaces},
+                            "ip_address": {"type": str},
+                            "dhcp_ip": {"type": str},
+                            "public_ip": {"type": str},
+                            "encapsulation_dot1q_vlan": {"type": int},
+                            "dhcp_accept_default_route": {"type": bool, "default": True},
+                            "enabled": {"type": bool, "default": True},
+                            "peer": {"type": str},
+                            "peer_port_channel": {"type": str},
+                            "peer_ip": {"type": str},
+                            "bgp": {"type": Bgp},
+                            "ipv4_acl_in": {"type": str},
+                            "ipv4_acl_out": {"type": str},
+                            "static_routes": {"type": StaticRoutes},
+                            "qos_profile": {"type": str},
+                            "wan_carrier": {"type": str},
+                            "wan_circuit_id": {"type": str},
+                            "connected_to_pathfinder": {"type": bool, "default": True},
+                            "raw_eos_cli": {"type": str},
+                            "flow_tracking": {"type": FlowTracking},
+                            "structured_config": {"type": StructuredConfig},
+                            "_custom_data": {"type": dict},
+                        }
+                        name: str
+                        """
+                        Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                        For a
+                        Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                        """
+                        description: str | None
+                        """
+                        Interface description.
+                        If not set, a default description will be configured with '[<peer>[
+                        <peer_port_channel>]]'.
+                        """
+                        mode: Literal["active", "passive", "on"]
+                        """
+                        Port-Channel mode.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Default value: `"active"`
+                        """
+                        member_interfaces: MemberInterfaces
+                        """
+                        Port-Channel member interfaces.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Subclass of
+                        AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                        """
+                        ip_address: str | None
+                        """Node IPv4 address/Mask or 'dhcp'."""
+                        dhcp_ip: str | None
+                        """
+                        When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                        IPv4 address
+                        (without mask) to be allocated on the interface if known.
+                        This is not rendered in the configuration
+                        but can be used for substitution of 'interface_ip' in the Access-list
+                        set under `ipv4_acl_in` and
+                        `ipv4_acl_out`.
+                        """
+                        public_ip: str | None
+                        """
+                        Node IPv4 address (no mask).
+
+                        This is used to get the public IP (if known) when the device is behind
+                        NAT.
+                        This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                        with the following preference:
+                          `wan_route_servers.path_groups.interfaces.ip_address`
+                              ->
+                        `l3_port_channels.public_ip`
+                                  -> `l3_port_channels.ip_address`
+
+                        The determined Public IP is
+                        used by WAN routers when peering with this interface.
+                        """
+                        encapsulation_dot1q_vlan: int | None
+                        """
+                        For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                        specified.
+                        """
+                        dhcp_accept_default_route: bool
+                        """
+                        Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+
+                        Default value: `True`
+                        """
+                        enabled: bool
+                        """
+                        Enable or Shutdown the interface.
+
+                        Default value: `True`
+                        """
+                        peer: str | None
+                        """The peer device name. Used for description and documentation."""
+                        peer_port_channel: str | None
+                        """The peer device port-channel interface. Used for description and documentation."""
+                        peer_ip: str | None
+                        """
+                        The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                        and `ip` is an IP address.
+                        """
+                        bgp: Bgp
+                        """
+                        Enforce IPv4 BGP peering for the peer
+
+                        Subclass of AvdModel.
+                        """
+                        ipv4_acl_in: str | None
+                        """
+                        Name of the IPv4 access-list to be assigned in the ingress direction.
+                        The access-list must be
+                        defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        Required
+                        for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                        `wan_carriers`.
+                        """
+                        ipv4_acl_out: str | None
+                        """
+                        Name of the IPv4 Access-list to be assigned in the egress direction.
+                        The access-list must be defined
+                        under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        """
+                        static_routes: StaticRoutes
+                        """
+                        Configure IPv4 static routes pointing to `peer_ip`.
+
+                        Subclass of AvdIndexedList with
+                        `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                        """
+                        qos_profile: str | None
+                        """QOS service profile."""
+                        wan_carrier: str | None
+                        """
+                        The WAN carrier this interface is connected to.
+                        This is used to infer the path-groups in which this
+                        interface should be configured.
+                        Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                        `ipv4_acl_in` is also required on all WAN interfaces.
+                        """
+                        wan_circuit_id: str | None
+                        """
+                        The WAN circuit ID for this interface.
+                        This is not rendered in the configuration but used for WAN
+                        designs.
+                        """
+                        connected_to_pathfinder: bool
+                        """
+                        For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+
+                        Default value: `True`
+                        """
+                        raw_eos_cli: str | None
+                        """EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration."""
+                        flow_tracking: FlowTracking
+                        """
+                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                        setting.
+
+                        Subclass of AvdModel.
+                        """
+                        structured_config: StructuredConfig
+                        """
+                        Custom structured config for the Port-Channel interface.
+
+                        Subclass of AvdModel.
+                        """
+                        _custom_data: dict[str, Any]
+
+                        if TYPE_CHECKING:
+
+                            def __init__(
+                                self,
+                                *,
+                                name: str | UndefinedType = Undefined,
+                                description: str | None | UndefinedType = Undefined,
+                                mode: Literal["active", "passive", "on"] | UndefinedType = Undefined,
+                                member_interfaces: MemberInterfaces | UndefinedType = Undefined,
+                                ip_address: str | None | UndefinedType = Undefined,
+                                dhcp_ip: str | None | UndefinedType = Undefined,
+                                public_ip: str | None | UndefinedType = Undefined,
+                                encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
+                                dhcp_accept_default_route: bool | UndefinedType = Undefined,
+                                enabled: bool | UndefinedType = Undefined,
+                                peer: str | None | UndefinedType = Undefined,
+                                peer_port_channel: str | None | UndefinedType = Undefined,
+                                peer_ip: str | None | UndefinedType = Undefined,
+                                bgp: Bgp | UndefinedType = Undefined,
+                                ipv4_acl_in: str | None | UndefinedType = Undefined,
+                                ipv4_acl_out: str | None | UndefinedType = Undefined,
+                                static_routes: StaticRoutes | UndefinedType = Undefined,
+                                qos_profile: str | None | UndefinedType = Undefined,
+                                wan_carrier: str | None | UndefinedType = Undefined,
+                                wan_circuit_id: str | None | UndefinedType = Undefined,
+                                connected_to_pathfinder: bool | UndefinedType = Undefined,
+                                raw_eos_cli: str | None | UndefinedType = Undefined,
+                                flow_tracking: FlowTracking | UndefinedType = Undefined,
+                                structured_config: StructuredConfig | UndefinedType = Undefined,
+                                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                            ) -> None:
+                                """
+                                L3PortChannelsItem.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    name:
+                                       Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                                       For a
+                                       Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                                    description:
+                                       Interface description.
+                                       If not set, a default description will be configured with '[<peer>[
+                                       <peer_port_channel>]]'.
+                                    mode:
+                                       Port-Channel mode.
+                                       Should not be set on Port-Channel subinterfaces.
+                                    member_interfaces:
+                                       Port-Channel member interfaces.
+                                       Should not be set on Port-Channel subinterfaces.
+
+                                       Subclass of
+                                       AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                                    ip_address: Node IPv4 address/Mask or 'dhcp'.
+                                    dhcp_ip:
+                                       When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                                       IPv4 address
+                                       (without mask) to be allocated on the interface if known.
+                                       This is not rendered in the configuration
+                                       but can be used for substitution of 'interface_ip' in the Access-list
+                                       set under `ipv4_acl_in` and
+                                       `ipv4_acl_out`.
+                                    public_ip:
+                                       Node IPv4 address (no mask).
+
+                                       This is used to get the public IP (if known) when the device is behind
+                                       NAT.
+                                       This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                                       with the following preference:
+                                         `wan_route_servers.path_groups.interfaces.ip_address`
+                                             ->
+                                       `l3_port_channels.public_ip`
+                                                 -> `l3_port_channels.ip_address`
+
+                                       The determined Public IP is
+                                       used by WAN routers when peering with this interface.
+                                    encapsulation_dot1q_vlan:
+                                       For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                                       specified.
+                                    dhcp_accept_default_route: Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+                                    enabled: Enable or Shutdown the interface.
+                                    peer: The peer device name. Used for description and documentation.
+                                    peer_port_channel: The peer device port-channel interface. Used for description and documentation.
+                                    peer_ip:
+                                       The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                                       and `ip` is an IP address.
+                                    bgp:
+                                       Enforce IPv4 BGP peering for the peer
+
+                                       Subclass of AvdModel.
+                                    ipv4_acl_in:
+                                       Name of the IPv4 access-list to be assigned in the ingress direction.
+                                       The access-list must be
+                                       defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                       Required
+                                       for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                                       `wan_carriers`.
+                                    ipv4_acl_out:
+                                       Name of the IPv4 Access-list to be assigned in the egress direction.
+                                       The access-list must be defined
+                                       under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                    static_routes:
+                                       Configure IPv4 static routes pointing to `peer_ip`.
+
+                                       Subclass of AvdIndexedList with
+                                       `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                                    qos_profile: QOS service profile.
+                                    wan_carrier:
+                                       The WAN carrier this interface is connected to.
+                                       This is used to infer the path-groups in which this
+                                       interface should be configured.
+                                       Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                                       `ipv4_acl_in` is also required on all WAN interfaces.
+                                    wan_circuit_id:
+                                       The WAN circuit ID for this interface.
+                                       This is not rendered in the configuration but used for WAN
+                                       designs.
+                                    connected_to_pathfinder: For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+                                    raw_eos_cli: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
+                                    flow_tracking:
+                                       Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                                       setting.
+
+                                       Subclass of AvdModel.
+                                    structured_config:
+                                       Custom structured config for the Port-Channel interface.
+
+                                       Subclass of AvdModel.
+                                    _custom_data: _custom_data
+
+                                """
+
+                    class L3PortChannels(AvdIndexedList[str, L3PortChannelsItem]):
+                        """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
+
+                    L3PortChannels._item_type = L3PortChannelsItem
+
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
                         "platform": {"type": str},
@@ -21639,6 +22235,7 @@ class EosDesigns(EosDesignsRootModel):
                         "wan_ha": {"type": WanHa},
                         "dps_mss_ipv4": {"type": str, "default": "auto"},
                         "l3_interfaces": {"type": L3Interfaces},
+                        "l3_port_channels": {"type": L3PortChannels},
                         "data_plane_cpu_allocation_max": {"type": int},
                         "flow_tracker_type": {"type": str},
                         "_custom_data": {"type": dict},
@@ -22420,11 +23017,16 @@ class EosDesigns(EosDesignsRootModel):
                     l3_interfaces: L3Interfaces
                     """
                     L3 Interfaces to configure on the node.
-                    Used to define the node for WAN interfaces when
-                    `wan_carrier` is set.
 
-                    Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                    `name` (`str`).
+                    Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                    Primary key is `name` (`str`).
+                    """
+                    l3_port_channels: L3PortChannels
+                    """
+                    L3 Port-Channel interfaces to configure on the node.
+
+                    Subclass of AvdIndexedList with
+                    `L3PortChannelsItem` items. Primary key is `name` (`str`).
                     """
                     data_plane_cpu_allocation_max: int | None
                     """
@@ -22549,6 +23151,7 @@ class EosDesigns(EosDesignsRootModel):
                             wan_ha: WanHa | UndefinedType = Undefined,
                             dps_mss_ipv4: str | UndefinedType = Undefined,
                             l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                            l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                             data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined,
                             flow_tracker_type: Literal["sampled", "hardware"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -23105,11 +23708,14 @@ class EosDesigns(EosDesignsRootModel):
                                 dps_mss_ipv4: IPv4 MSS value configured under "router path-selection" on WAN Devices.
                                 l3_interfaces:
                                    L3 Interfaces to configure on the node.
-                                   Used to define the node for WAN interfaces when
-                                   `wan_carrier` is set.
 
-                                   Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                                   `name` (`str`).
+                                   Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                                   Primary key is `name` (`str`).
+                                l3_port_channels:
+                                   L3 Port-Channel interfaces to configure on the node.
+
+                                   Subclass of AvdIndexedList with
+                                   `L3PortChannelsItem` items. Primary key is `name` (`str`).
                                 data_plane_cpu_allocation_max:
                                    Set the maximum number of CPU used for the data plane.
                                    This setting is useful on virtual Route
@@ -25080,6 +25686,550 @@ class EosDesigns(EosDesignsRootModel):
 
                         L3Interfaces._item_type = L3InterfacesItem
 
+                        class L3PortChannelsItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class MemberInterfacesItem(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                class StructuredConfig(EosCliConfigGen.EthernetInterfacesItem):
+                                    """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {
+                                    "name": {"type": str},
+                                    "description": {"type": str},
+                                    "peer": {"type": str},
+                                    "peer_interface": {"type": str},
+                                    "speed": {"type": str},
+                                    "structured_config": {"type": StructuredConfig},
+                                    "_custom_data": {"type": dict},
+                                }
+                                name: str
+                                """
+                                Ethernet interface name like 'Ethernet2'.
+                                Member interface cannot be subinterface.
+                                """
+                                description: str | None
+                                """
+                                Interface description for this member.
+                                If not set, a default description will be configured with
+                                '[<peer>[ <peer_interface>]]'.
+                                """
+                                peer: str | None
+                                """
+                                The peer device name. Used for description and documentation.
+                                If not set, this inherits the peer
+                                setting on the port-channel interface.
+                                """
+                                peer_interface: str | None
+                                """The peer device interface. Used for description and documentation."""
+                                speed: str | None
+                                """
+                                Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                <interface_speed>`.
+                                """
+                                structured_config: StructuredConfig
+                                """
+                                Custom structured config for the member ethernet interface.
+
+                                Subclass of AvdModel.
+                                """
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        name: str | UndefinedType = Undefined,
+                                        description: str | None | UndefinedType = Undefined,
+                                        peer: str | None | UndefinedType = Undefined,
+                                        peer_interface: str | None | UndefinedType = Undefined,
+                                        speed: str | None | UndefinedType = Undefined,
+                                        structured_config: StructuredConfig | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        MemberInterfacesItem.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            name:
+                                               Ethernet interface name like 'Ethernet2'.
+                                               Member interface cannot be subinterface.
+                                            description:
+                                               Interface description for this member.
+                                               If not set, a default description will be configured with
+                                               '[<peer>[ <peer_interface>]]'.
+                                            peer:
+                                               The peer device name. Used for description and documentation.
+                                               If not set, this inherits the peer
+                                               setting on the port-channel interface.
+                                            peer_interface: The peer device interface. Used for description and documentation.
+                                            speed:
+                                               Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                               <interface_speed>`.
+                                            structured_config:
+                                               Custom structured config for the member ethernet interface.
+
+                                               Subclass of AvdModel.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class MemberInterfaces(AvdIndexedList[str, MemberInterfacesItem]):
+                                """Subclass of AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`)."""
+
+                                _primary_key: ClassVar[str] = "name"
+
+                            MemberInterfaces._item_type = MemberInterfacesItem
+
+                            class Bgp(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {
+                                    "peer_as": {"type": str},
+                                    "ipv4_prefix_list_in": {"type": str},
+                                    "ipv4_prefix_list_out": {"type": str},
+                                    "_custom_data": {"type": dict},
+                                }
+                                peer_as: str
+                                """
+                                BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                For asdot notation in
+                                YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                number.
+                                """
+                                ipv4_prefix_list_in: str | None
+                                """
+                                Prefix List Name. Accept routes for only these prefixes from the peer.
+                                Required for wan interfaces.
+                                """
+                                ipv4_prefix_list_out: str | None
+                                """
+                                Prefix List Name. Advertise routes for only these prefixes.
+                                If not specified, nothing would be
+                                advertised.
+                                """
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        peer_as: str | UndefinedType = Undefined,
+                                        ipv4_prefix_list_in: str | None | UndefinedType = Undefined,
+                                        ipv4_prefix_list_out: str | None | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        Bgp.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            peer_as:
+                                               BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                               For asdot notation in
+                                               YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                               number.
+                                            ipv4_prefix_list_in:
+                                               Prefix List Name. Accept routes for only these prefixes from the peer.
+                                               Required for wan interfaces.
+                                            ipv4_prefix_list_out:
+                                               Prefix List Name. Advertise routes for only these prefixes.
+                                               If not specified, nothing would be
+                                               advertised.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class StaticRoutesItem(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {"prefix": {"type": str}, "_custom_data": {"type": dict}}
+                                prefix: str
+                                """IPv4_network/Mask."""
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self, *, prefix: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                                    ) -> None:
+                                        """
+                                        StaticRoutesItem.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            prefix: IPv4_network/Mask.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class StaticRoutes(AvdIndexedList[str, StaticRoutesItem]):
+                                """Subclass of AvdIndexedList with `StaticRoutesItem` items. Primary key is `prefix` (`str`)."""
+
+                                _primary_key: ClassVar[str] = "prefix"
+
+                            StaticRoutes._item_type = StaticRoutesItem
+
+                            class FlowTracking(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {"enabled": {"type": bool}, "name": {"type": str}, "_custom_data": {"type": dict}}
+                                enabled: bool | None
+                                name: str | None
+                                """Flow tracker name as defined in flow_tracking_settings."""
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        enabled: bool | None | UndefinedType = Undefined,
+                                        name: str | None | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        FlowTracking.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            enabled: enabled
+                                            name: Flow tracker name as defined in flow_tracking_settings.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class StructuredConfig(EosCliConfigGen.PortChannelInterfacesItem):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "name": {"type": str},
+                                "description": {"type": str},
+                                "mode": {"type": str, "default": "active"},
+                                "member_interfaces": {"type": MemberInterfaces},
+                                "ip_address": {"type": str},
+                                "dhcp_ip": {"type": str},
+                                "public_ip": {"type": str},
+                                "encapsulation_dot1q_vlan": {"type": int},
+                                "dhcp_accept_default_route": {"type": bool, "default": True},
+                                "enabled": {"type": bool, "default": True},
+                                "peer": {"type": str},
+                                "peer_port_channel": {"type": str},
+                                "peer_ip": {"type": str},
+                                "bgp": {"type": Bgp},
+                                "ipv4_acl_in": {"type": str},
+                                "ipv4_acl_out": {"type": str},
+                                "static_routes": {"type": StaticRoutes},
+                                "qos_profile": {"type": str},
+                                "wan_carrier": {"type": str},
+                                "wan_circuit_id": {"type": str},
+                                "connected_to_pathfinder": {"type": bool, "default": True},
+                                "raw_eos_cli": {"type": str},
+                                "flow_tracking": {"type": FlowTracking},
+                                "structured_config": {"type": StructuredConfig},
+                                "_custom_data": {"type": dict},
+                            }
+                            name: str
+                            """
+                            Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                            For a
+                            Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                            """
+                            description: str | None
+                            """
+                            Interface description.
+                            If not set, a default description will be configured with '[<peer>[
+                            <peer_port_channel>]]'.
+                            """
+                            mode: Literal["active", "passive", "on"]
+                            """
+                            Port-Channel mode.
+                            Should not be set on Port-Channel subinterfaces.
+
+                            Default value: `"active"`
+                            """
+                            member_interfaces: MemberInterfaces
+                            """
+                            Port-Channel member interfaces.
+                            Should not be set on Port-Channel subinterfaces.
+
+                            Subclass of
+                            AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                            """
+                            ip_address: str | None
+                            """Node IPv4 address/Mask or 'dhcp'."""
+                            dhcp_ip: str | None
+                            """
+                            When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                            IPv4 address
+                            (without mask) to be allocated on the interface if known.
+                            This is not rendered in the configuration
+                            but can be used for substitution of 'interface_ip' in the Access-list
+                            set under `ipv4_acl_in` and
+                            `ipv4_acl_out`.
+                            """
+                            public_ip: str | None
+                            """
+                            Node IPv4 address (no mask).
+
+                            This is used to get the public IP (if known) when the device is behind
+                            NAT.
+                            This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                            with the following preference:
+                              `wan_route_servers.path_groups.interfaces.ip_address`
+                                  ->
+                            `l3_port_channels.public_ip`
+                                      -> `l3_port_channels.ip_address`
+
+                            The determined Public IP is
+                            used by WAN routers when peering with this interface.
+                            """
+                            encapsulation_dot1q_vlan: int | None
+                            """
+                            For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                            specified.
+                            """
+                            dhcp_accept_default_route: bool
+                            """
+                            Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+
+                            Default value: `True`
+                            """
+                            enabled: bool
+                            """
+                            Enable or Shutdown the interface.
+
+                            Default value: `True`
+                            """
+                            peer: str | None
+                            """The peer device name. Used for description and documentation."""
+                            peer_port_channel: str | None
+                            """The peer device port-channel interface. Used for description and documentation."""
+                            peer_ip: str | None
+                            """
+                            The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                            and `ip` is an IP address.
+                            """
+                            bgp: Bgp
+                            """
+                            Enforce IPv4 BGP peering for the peer
+
+                            Subclass of AvdModel.
+                            """
+                            ipv4_acl_in: str | None
+                            """
+                            Name of the IPv4 access-list to be assigned in the ingress direction.
+                            The access-list must be
+                            defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                            Required
+                            for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                            `wan_carriers`.
+                            """
+                            ipv4_acl_out: str | None
+                            """
+                            Name of the IPv4 Access-list to be assigned in the egress direction.
+                            The access-list must be defined
+                            under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                            """
+                            static_routes: StaticRoutes
+                            """
+                            Configure IPv4 static routes pointing to `peer_ip`.
+
+                            Subclass of AvdIndexedList with
+                            `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                            """
+                            qos_profile: str | None
+                            """QOS service profile."""
+                            wan_carrier: str | None
+                            """
+                            The WAN carrier this interface is connected to.
+                            This is used to infer the path-groups in which this
+                            interface should be configured.
+                            Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                            `ipv4_acl_in` is also required on all WAN interfaces.
+                            """
+                            wan_circuit_id: str | None
+                            """
+                            The WAN circuit ID for this interface.
+                            This is not rendered in the configuration but used for WAN
+                            designs.
+                            """
+                            connected_to_pathfinder: bool
+                            """
+                            For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+
+                            Default value: `True`
+                            """
+                            raw_eos_cli: str | None
+                            """EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration."""
+                            flow_tracking: FlowTracking
+                            """
+                            Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                            setting.
+
+                            Subclass of AvdModel.
+                            """
+                            structured_config: StructuredConfig
+                            """
+                            Custom structured config for the Port-Channel interface.
+
+                            Subclass of AvdModel.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    name: str | UndefinedType = Undefined,
+                                    description: str | None | UndefinedType = Undefined,
+                                    mode: Literal["active", "passive", "on"] | UndefinedType = Undefined,
+                                    member_interfaces: MemberInterfaces | UndefinedType = Undefined,
+                                    ip_address: str | None | UndefinedType = Undefined,
+                                    dhcp_ip: str | None | UndefinedType = Undefined,
+                                    public_ip: str | None | UndefinedType = Undefined,
+                                    encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
+                                    dhcp_accept_default_route: bool | UndefinedType = Undefined,
+                                    enabled: bool | UndefinedType = Undefined,
+                                    peer: str | None | UndefinedType = Undefined,
+                                    peer_port_channel: str | None | UndefinedType = Undefined,
+                                    peer_ip: str | None | UndefinedType = Undefined,
+                                    bgp: Bgp | UndefinedType = Undefined,
+                                    ipv4_acl_in: str | None | UndefinedType = Undefined,
+                                    ipv4_acl_out: str | None | UndefinedType = Undefined,
+                                    static_routes: StaticRoutes | UndefinedType = Undefined,
+                                    qos_profile: str | None | UndefinedType = Undefined,
+                                    wan_carrier: str | None | UndefinedType = Undefined,
+                                    wan_circuit_id: str | None | UndefinedType = Undefined,
+                                    connected_to_pathfinder: bool | UndefinedType = Undefined,
+                                    raw_eos_cli: str | None | UndefinedType = Undefined,
+                                    flow_tracking: FlowTracking | UndefinedType = Undefined,
+                                    structured_config: StructuredConfig | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    L3PortChannelsItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        name:
+                                           Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                                           For a
+                                           Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                                        description:
+                                           Interface description.
+                                           If not set, a default description will be configured with '[<peer>[
+                                           <peer_port_channel>]]'.
+                                        mode:
+                                           Port-Channel mode.
+                                           Should not be set on Port-Channel subinterfaces.
+                                        member_interfaces:
+                                           Port-Channel member interfaces.
+                                           Should not be set on Port-Channel subinterfaces.
+
+                                           Subclass of
+                                           AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                                        ip_address: Node IPv4 address/Mask or 'dhcp'.
+                                        dhcp_ip:
+                                           When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                                           IPv4 address
+                                           (without mask) to be allocated on the interface if known.
+                                           This is not rendered in the configuration
+                                           but can be used for substitution of 'interface_ip' in the Access-list
+                                           set under `ipv4_acl_in` and
+                                           `ipv4_acl_out`.
+                                        public_ip:
+                                           Node IPv4 address (no mask).
+
+                                           This is used to get the public IP (if known) when the device is behind
+                                           NAT.
+                                           This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                                           with the following preference:
+                                             `wan_route_servers.path_groups.interfaces.ip_address`
+                                                 ->
+                                           `l3_port_channels.public_ip`
+                                                     -> `l3_port_channels.ip_address`
+
+                                           The determined Public IP is
+                                           used by WAN routers when peering with this interface.
+                                        encapsulation_dot1q_vlan:
+                                           For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                                           specified.
+                                        dhcp_accept_default_route: Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+                                        enabled: Enable or Shutdown the interface.
+                                        peer: The peer device name. Used for description and documentation.
+                                        peer_port_channel: The peer device port-channel interface. Used for description and documentation.
+                                        peer_ip:
+                                           The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                                           and `ip` is an IP address.
+                                        bgp:
+                                           Enforce IPv4 BGP peering for the peer
+
+                                           Subclass of AvdModel.
+                                        ipv4_acl_in:
+                                           Name of the IPv4 access-list to be assigned in the ingress direction.
+                                           The access-list must be
+                                           defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                           Required
+                                           for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                                           `wan_carriers`.
+                                        ipv4_acl_out:
+                                           Name of the IPv4 Access-list to be assigned in the egress direction.
+                                           The access-list must be defined
+                                           under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                        static_routes:
+                                           Configure IPv4 static routes pointing to `peer_ip`.
+
+                                           Subclass of AvdIndexedList with
+                                           `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                                        qos_profile: QOS service profile.
+                                        wan_carrier:
+                                           The WAN carrier this interface is connected to.
+                                           This is used to infer the path-groups in which this
+                                           interface should be configured.
+                                           Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                                           `ipv4_acl_in` is also required on all WAN interfaces.
+                                        wan_circuit_id:
+                                           The WAN circuit ID for this interface.
+                                           This is not rendered in the configuration but used for WAN
+                                           designs.
+                                        connected_to_pathfinder: For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+                                        raw_eos_cli: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
+                                        flow_tracking:
+                                           Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                                           setting.
+
+                                           Subclass of AvdModel.
+                                        structured_config:
+                                           Custom structured config for the Port-Channel interface.
+
+                                           Subclass of AvdModel.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class L3PortChannels(AvdIndexedList[str, L3PortChannelsItem]):
+                            """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "name"
+
+                        L3PortChannels._item_type = L3PortChannelsItem
+
                         _fields: ClassVar[dict] = {
                             "name": {"type": str},
                             "downlink_pools": {"type": DownlinkPools},
@@ -25186,6 +26336,7 @@ class EosDesigns(EosDesignsRootModel):
                             "wan_ha": {"type": WanHa},
                             "dps_mss_ipv4": {"type": str, "default": "auto"},
                             "l3_interfaces": {"type": L3Interfaces},
+                            "l3_port_channels": {"type": L3PortChannels},
                             "data_plane_cpu_allocation_max": {"type": int},
                             "flow_tracker_type": {"type": str},
                             "_custom_data": {"type": dict},
@@ -25977,11 +27128,16 @@ class EosDesigns(EosDesignsRootModel):
                         l3_interfaces: L3Interfaces
                         """
                         L3 Interfaces to configure on the node.
-                        Used to define the node for WAN interfaces when
-                        `wan_carrier` is set.
 
-                        Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                        `name` (`str`).
+                        Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                        Primary key is `name` (`str`).
+                        """
+                        l3_port_channels: L3PortChannels
+                        """
+                        L3 Port-Channel interfaces to configure on the node.
+
+                        Subclass of AvdIndexedList with
+                        `L3PortChannelsItem` items. Primary key is `name` (`str`).
                         """
                         data_plane_cpu_allocation_max: int | None
                         """
@@ -26108,6 +27264,7 @@ class EosDesigns(EosDesignsRootModel):
                                 wan_ha: WanHa | UndefinedType = Undefined,
                                 dps_mss_ipv4: str | UndefinedType = Undefined,
                                 l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                                l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                                 data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined,
                                 flow_tracker_type: Literal["sampled", "hardware"] | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -26671,11 +27828,14 @@ class EosDesigns(EosDesignsRootModel):
                                     dps_mss_ipv4: IPv4 MSS value configured under "router path-selection" on WAN Devices.
                                     l3_interfaces:
                                        L3 Interfaces to configure on the node.
-                                       Used to define the node for WAN interfaces when
-                                       `wan_carrier` is set.
 
-                                       Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                                       `name` (`str`).
+                                       Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                                       Primary key is `name` (`str`).
+                                    l3_port_channels:
+                                       L3 Port-Channel interfaces to configure on the node.
+
+                                       Subclass of AvdIndexedList with
+                                       `L3PortChannelsItem` items. Primary key is `name` (`str`).
                                     data_plane_cpu_allocation_max:
                                        Set the maximum number of CPU used for the data plane.
                                        This setting is useful on virtual Route
@@ -28579,6 +29739,550 @@ class EosDesigns(EosDesignsRootModel):
 
                     L3Interfaces._item_type = L3InterfacesItem
 
+                    class L3PortChannelsItem(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class MemberInterfacesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class StructuredConfig(EosCliConfigGen.EthernetInterfacesItem):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "name": {"type": str},
+                                "description": {"type": str},
+                                "peer": {"type": str},
+                                "peer_interface": {"type": str},
+                                "speed": {"type": str},
+                                "structured_config": {"type": StructuredConfig},
+                                "_custom_data": {"type": dict},
+                            }
+                            name: str
+                            """
+                            Ethernet interface name like 'Ethernet2'.
+                            Member interface cannot be subinterface.
+                            """
+                            description: str | None
+                            """
+                            Interface description for this member.
+                            If not set, a default description will be configured with
+                            '[<peer>[ <peer_interface>]]'.
+                            """
+                            peer: str | None
+                            """
+                            The peer device name. Used for description and documentation.
+                            If not set, this inherits the peer
+                            setting on the port-channel interface.
+                            """
+                            peer_interface: str | None
+                            """The peer device interface. Used for description and documentation."""
+                            speed: str | None
+                            """
+                            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                            <interface_speed>`.
+                            """
+                            structured_config: StructuredConfig
+                            """
+                            Custom structured config for the member ethernet interface.
+
+                            Subclass of AvdModel.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    name: str | UndefinedType = Undefined,
+                                    description: str | None | UndefinedType = Undefined,
+                                    peer: str | None | UndefinedType = Undefined,
+                                    peer_interface: str | None | UndefinedType = Undefined,
+                                    speed: str | None | UndefinedType = Undefined,
+                                    structured_config: StructuredConfig | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    MemberInterfacesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        name:
+                                           Ethernet interface name like 'Ethernet2'.
+                                           Member interface cannot be subinterface.
+                                        description:
+                                           Interface description for this member.
+                                           If not set, a default description will be configured with
+                                           '[<peer>[ <peer_interface>]]'.
+                                        peer:
+                                           The peer device name. Used for description and documentation.
+                                           If not set, this inherits the peer
+                                           setting on the port-channel interface.
+                                        peer_interface: The peer device interface. Used for description and documentation.
+                                        speed:
+                                           Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                           <interface_speed>`.
+                                        structured_config:
+                                           Custom structured config for the member ethernet interface.
+
+                                           Subclass of AvdModel.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class MemberInterfaces(AvdIndexedList[str, MemberInterfacesItem]):
+                            """Subclass of AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "name"
+
+                        MemberInterfaces._item_type = MemberInterfacesItem
+
+                        class Bgp(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "peer_as": {"type": str},
+                                "ipv4_prefix_list_in": {"type": str},
+                                "ipv4_prefix_list_out": {"type": str},
+                                "_custom_data": {"type": dict},
+                            }
+                            peer_as: str
+                            """
+                            BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                            For asdot notation in
+                            YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                            number.
+                            """
+                            ipv4_prefix_list_in: str | None
+                            """
+                            Prefix List Name. Accept routes for only these prefixes from the peer.
+                            Required for wan interfaces.
+                            """
+                            ipv4_prefix_list_out: str | None
+                            """
+                            Prefix List Name. Advertise routes for only these prefixes.
+                            If not specified, nothing would be
+                            advertised.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    peer_as: str | UndefinedType = Undefined,
+                                    ipv4_prefix_list_in: str | None | UndefinedType = Undefined,
+                                    ipv4_prefix_list_out: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Bgp.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        peer_as:
+                                           BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                           For asdot notation in
+                                           YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                           number.
+                                        ipv4_prefix_list_in:
+                                           Prefix List Name. Accept routes for only these prefixes from the peer.
+                                           Required for wan interfaces.
+                                        ipv4_prefix_list_out:
+                                           Prefix List Name. Advertise routes for only these prefixes.
+                                           If not specified, nothing would be
+                                           advertised.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"prefix": {"type": str}, "_custom_data": {"type": dict}}
+                            prefix: str
+                            """IPv4_network/Mask."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self, *, prefix: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                                ) -> None:
+                                    """
+                                    StaticRoutesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        prefix: IPv4_network/Mask.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutes(AvdIndexedList[str, StaticRoutesItem]):
+                            """Subclass of AvdIndexedList with `StaticRoutesItem` items. Primary key is `prefix` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "prefix"
+
+                        StaticRoutes._item_type = StaticRoutesItem
+
+                        class FlowTracking(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "name": {"type": str}, "_custom_data": {"type": dict}}
+                            enabled: bool | None
+                            name: str | None
+                            """Flow tracker name as defined in flow_tracking_settings."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    enabled: bool | None | UndefinedType = Undefined,
+                                    name: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    FlowTracking.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        enabled: enabled
+                                        name: Flow tracker name as defined in flow_tracking_settings.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StructuredConfig(EosCliConfigGen.PortChannelInterfacesItem):
+                            """Subclass of AvdModel."""
+
+                        _fields: ClassVar[dict] = {
+                            "name": {"type": str},
+                            "description": {"type": str},
+                            "mode": {"type": str, "default": "active"},
+                            "member_interfaces": {"type": MemberInterfaces},
+                            "ip_address": {"type": str},
+                            "dhcp_ip": {"type": str},
+                            "public_ip": {"type": str},
+                            "encapsulation_dot1q_vlan": {"type": int},
+                            "dhcp_accept_default_route": {"type": bool, "default": True},
+                            "enabled": {"type": bool, "default": True},
+                            "peer": {"type": str},
+                            "peer_port_channel": {"type": str},
+                            "peer_ip": {"type": str},
+                            "bgp": {"type": Bgp},
+                            "ipv4_acl_in": {"type": str},
+                            "ipv4_acl_out": {"type": str},
+                            "static_routes": {"type": StaticRoutes},
+                            "qos_profile": {"type": str},
+                            "wan_carrier": {"type": str},
+                            "wan_circuit_id": {"type": str},
+                            "connected_to_pathfinder": {"type": bool, "default": True},
+                            "raw_eos_cli": {"type": str},
+                            "flow_tracking": {"type": FlowTracking},
+                            "structured_config": {"type": StructuredConfig},
+                            "_custom_data": {"type": dict},
+                        }
+                        name: str
+                        """
+                        Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                        For a
+                        Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                        """
+                        description: str | None
+                        """
+                        Interface description.
+                        If not set, a default description will be configured with '[<peer>[
+                        <peer_port_channel>]]'.
+                        """
+                        mode: Literal["active", "passive", "on"]
+                        """
+                        Port-Channel mode.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Default value: `"active"`
+                        """
+                        member_interfaces: MemberInterfaces
+                        """
+                        Port-Channel member interfaces.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Subclass of
+                        AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                        """
+                        ip_address: str | None
+                        """Node IPv4 address/Mask or 'dhcp'."""
+                        dhcp_ip: str | None
+                        """
+                        When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                        IPv4 address
+                        (without mask) to be allocated on the interface if known.
+                        This is not rendered in the configuration
+                        but can be used for substitution of 'interface_ip' in the Access-list
+                        set under `ipv4_acl_in` and
+                        `ipv4_acl_out`.
+                        """
+                        public_ip: str | None
+                        """
+                        Node IPv4 address (no mask).
+
+                        This is used to get the public IP (if known) when the device is behind
+                        NAT.
+                        This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                        with the following preference:
+                          `wan_route_servers.path_groups.interfaces.ip_address`
+                              ->
+                        `l3_port_channels.public_ip`
+                                  -> `l3_port_channels.ip_address`
+
+                        The determined Public IP is
+                        used by WAN routers when peering with this interface.
+                        """
+                        encapsulation_dot1q_vlan: int | None
+                        """
+                        For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                        specified.
+                        """
+                        dhcp_accept_default_route: bool
+                        """
+                        Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+
+                        Default value: `True`
+                        """
+                        enabled: bool
+                        """
+                        Enable or Shutdown the interface.
+
+                        Default value: `True`
+                        """
+                        peer: str | None
+                        """The peer device name. Used for description and documentation."""
+                        peer_port_channel: str | None
+                        """The peer device port-channel interface. Used for description and documentation."""
+                        peer_ip: str | None
+                        """
+                        The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                        and `ip` is an IP address.
+                        """
+                        bgp: Bgp
+                        """
+                        Enforce IPv4 BGP peering for the peer
+
+                        Subclass of AvdModel.
+                        """
+                        ipv4_acl_in: str | None
+                        """
+                        Name of the IPv4 access-list to be assigned in the ingress direction.
+                        The access-list must be
+                        defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        Required
+                        for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                        `wan_carriers`.
+                        """
+                        ipv4_acl_out: str | None
+                        """
+                        Name of the IPv4 Access-list to be assigned in the egress direction.
+                        The access-list must be defined
+                        under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        """
+                        static_routes: StaticRoutes
+                        """
+                        Configure IPv4 static routes pointing to `peer_ip`.
+
+                        Subclass of AvdIndexedList with
+                        `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                        """
+                        qos_profile: str | None
+                        """QOS service profile."""
+                        wan_carrier: str | None
+                        """
+                        The WAN carrier this interface is connected to.
+                        This is used to infer the path-groups in which this
+                        interface should be configured.
+                        Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                        `ipv4_acl_in` is also required on all WAN interfaces.
+                        """
+                        wan_circuit_id: str | None
+                        """
+                        The WAN circuit ID for this interface.
+                        This is not rendered in the configuration but used for WAN
+                        designs.
+                        """
+                        connected_to_pathfinder: bool
+                        """
+                        For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+
+                        Default value: `True`
+                        """
+                        raw_eos_cli: str | None
+                        """EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration."""
+                        flow_tracking: FlowTracking
+                        """
+                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                        setting.
+
+                        Subclass of AvdModel.
+                        """
+                        structured_config: StructuredConfig
+                        """
+                        Custom structured config for the Port-Channel interface.
+
+                        Subclass of AvdModel.
+                        """
+                        _custom_data: dict[str, Any]
+
+                        if TYPE_CHECKING:
+
+                            def __init__(
+                                self,
+                                *,
+                                name: str | UndefinedType = Undefined,
+                                description: str | None | UndefinedType = Undefined,
+                                mode: Literal["active", "passive", "on"] | UndefinedType = Undefined,
+                                member_interfaces: MemberInterfaces | UndefinedType = Undefined,
+                                ip_address: str | None | UndefinedType = Undefined,
+                                dhcp_ip: str | None | UndefinedType = Undefined,
+                                public_ip: str | None | UndefinedType = Undefined,
+                                encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
+                                dhcp_accept_default_route: bool | UndefinedType = Undefined,
+                                enabled: bool | UndefinedType = Undefined,
+                                peer: str | None | UndefinedType = Undefined,
+                                peer_port_channel: str | None | UndefinedType = Undefined,
+                                peer_ip: str | None | UndefinedType = Undefined,
+                                bgp: Bgp | UndefinedType = Undefined,
+                                ipv4_acl_in: str | None | UndefinedType = Undefined,
+                                ipv4_acl_out: str | None | UndefinedType = Undefined,
+                                static_routes: StaticRoutes | UndefinedType = Undefined,
+                                qos_profile: str | None | UndefinedType = Undefined,
+                                wan_carrier: str | None | UndefinedType = Undefined,
+                                wan_circuit_id: str | None | UndefinedType = Undefined,
+                                connected_to_pathfinder: bool | UndefinedType = Undefined,
+                                raw_eos_cli: str | None | UndefinedType = Undefined,
+                                flow_tracking: FlowTracking | UndefinedType = Undefined,
+                                structured_config: StructuredConfig | UndefinedType = Undefined,
+                                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                            ) -> None:
+                                """
+                                L3PortChannelsItem.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    name:
+                                       Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                                       For a
+                                       Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                                    description:
+                                       Interface description.
+                                       If not set, a default description will be configured with '[<peer>[
+                                       <peer_port_channel>]]'.
+                                    mode:
+                                       Port-Channel mode.
+                                       Should not be set on Port-Channel subinterfaces.
+                                    member_interfaces:
+                                       Port-Channel member interfaces.
+                                       Should not be set on Port-Channel subinterfaces.
+
+                                       Subclass of
+                                       AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                                    ip_address: Node IPv4 address/Mask or 'dhcp'.
+                                    dhcp_ip:
+                                       When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                                       IPv4 address
+                                       (without mask) to be allocated on the interface if known.
+                                       This is not rendered in the configuration
+                                       but can be used for substitution of 'interface_ip' in the Access-list
+                                       set under `ipv4_acl_in` and
+                                       `ipv4_acl_out`.
+                                    public_ip:
+                                       Node IPv4 address (no mask).
+
+                                       This is used to get the public IP (if known) when the device is behind
+                                       NAT.
+                                       This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                                       with the following preference:
+                                         `wan_route_servers.path_groups.interfaces.ip_address`
+                                             ->
+                                       `l3_port_channels.public_ip`
+                                                 -> `l3_port_channels.ip_address`
+
+                                       The determined Public IP is
+                                       used by WAN routers when peering with this interface.
+                                    encapsulation_dot1q_vlan:
+                                       For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                                       specified.
+                                    dhcp_accept_default_route: Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+                                    enabled: Enable or Shutdown the interface.
+                                    peer: The peer device name. Used for description and documentation.
+                                    peer_port_channel: The peer device port-channel interface. Used for description and documentation.
+                                    peer_ip:
+                                       The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                                       and `ip` is an IP address.
+                                    bgp:
+                                       Enforce IPv4 BGP peering for the peer
+
+                                       Subclass of AvdModel.
+                                    ipv4_acl_in:
+                                       Name of the IPv4 access-list to be assigned in the ingress direction.
+                                       The access-list must be
+                                       defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                       Required
+                                       for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                                       `wan_carriers`.
+                                    ipv4_acl_out:
+                                       Name of the IPv4 Access-list to be assigned in the egress direction.
+                                       The access-list must be defined
+                                       under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                    static_routes:
+                                       Configure IPv4 static routes pointing to `peer_ip`.
+
+                                       Subclass of AvdIndexedList with
+                                       `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                                    qos_profile: QOS service profile.
+                                    wan_carrier:
+                                       The WAN carrier this interface is connected to.
+                                       This is used to infer the path-groups in which this
+                                       interface should be configured.
+                                       Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                                       `ipv4_acl_in` is also required on all WAN interfaces.
+                                    wan_circuit_id:
+                                       The WAN circuit ID for this interface.
+                                       This is not rendered in the configuration but used for WAN
+                                       designs.
+                                    connected_to_pathfinder: For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+                                    raw_eos_cli: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
+                                    flow_tracking:
+                                       Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                                       setting.
+
+                                       Subclass of AvdModel.
+                                    structured_config:
+                                       Custom structured config for the Port-Channel interface.
+
+                                       Subclass of AvdModel.
+                                    _custom_data: _custom_data
+
+                                """
+
+                    class L3PortChannels(AvdIndexedList[str, L3PortChannelsItem]):
+                        """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
+
+                    L3PortChannels._item_type = L3PortChannelsItem
+
                     _fields: ClassVar[dict] = {
                         "group": {"type": str},
                         "nodes": {"type": Nodes},
@@ -28685,6 +30389,7 @@ class EosDesigns(EosDesignsRootModel):
                         "wan_ha": {"type": WanHa},
                         "dps_mss_ipv4": {"type": str, "default": "auto"},
                         "l3_interfaces": {"type": L3Interfaces},
+                        "l3_port_channels": {"type": L3PortChannels},
                         "data_plane_cpu_allocation_max": {"type": int},
                         "flow_tracker_type": {"type": str},
                         "_custom_data": {"type": dict},
@@ -29479,11 +31184,16 @@ class EosDesigns(EosDesignsRootModel):
                     l3_interfaces: L3Interfaces
                     """
                     L3 Interfaces to configure on the node.
-                    Used to define the node for WAN interfaces when
-                    `wan_carrier` is set.
 
-                    Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                    `name` (`str`).
+                    Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                    Primary key is `name` (`str`).
+                    """
+                    l3_port_channels: L3PortChannels
+                    """
+                    L3 Port-Channel interfaces to configure on the node.
+
+                    Subclass of AvdIndexedList with
+                    `L3PortChannelsItem` items. Primary key is `name` (`str`).
                     """
                     data_plane_cpu_allocation_max: int | None
                     """
@@ -29610,6 +31320,7 @@ class EosDesigns(EosDesignsRootModel):
                             wan_ha: WanHa | UndefinedType = Undefined,
                             dps_mss_ipv4: str | UndefinedType = Undefined,
                             l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                            l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                             data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined,
                             flow_tracker_type: Literal["sampled", "hardware"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -30175,11 +31886,14 @@ class EosDesigns(EosDesignsRootModel):
                                 dps_mss_ipv4: IPv4 MSS value configured under "router path-selection" on WAN Devices.
                                 l3_interfaces:
                                    L3 Interfaces to configure on the node.
-                                   Used to define the node for WAN interfaces when
-                                   `wan_carrier` is set.
 
-                                   Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                                   `name` (`str`).
+                                   Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                                   Primary key is `name` (`str`).
+                                l3_port_channels:
+                                   L3 Port-Channel interfaces to configure on the node.
+
+                                   Subclass of AvdIndexedList with
+                                   `L3PortChannelsItem` items. Primary key is `name` (`str`).
                                 data_plane_cpu_allocation_max:
                                    Set the maximum number of CPU used for the data plane.
                                    This setting is useful on virtual Route
@@ -32152,6 +33866,550 @@ class EosDesigns(EosDesignsRootModel):
 
                     L3Interfaces._item_type = L3InterfacesItem
 
+                    class L3PortChannelsItem(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class MemberInterfacesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class StructuredConfig(EosCliConfigGen.EthernetInterfacesItem):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "name": {"type": str},
+                                "description": {"type": str},
+                                "peer": {"type": str},
+                                "peer_interface": {"type": str},
+                                "speed": {"type": str},
+                                "structured_config": {"type": StructuredConfig},
+                                "_custom_data": {"type": dict},
+                            }
+                            name: str
+                            """
+                            Ethernet interface name like 'Ethernet2'.
+                            Member interface cannot be subinterface.
+                            """
+                            description: str | None
+                            """
+                            Interface description for this member.
+                            If not set, a default description will be configured with
+                            '[<peer>[ <peer_interface>]]'.
+                            """
+                            peer: str | None
+                            """
+                            The peer device name. Used for description and documentation.
+                            If not set, this inherits the peer
+                            setting on the port-channel interface.
+                            """
+                            peer_interface: str | None
+                            """The peer device interface. Used for description and documentation."""
+                            speed: str | None
+                            """
+                            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                            <interface_speed>`.
+                            """
+                            structured_config: StructuredConfig
+                            """
+                            Custom structured config for the member ethernet interface.
+
+                            Subclass of AvdModel.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    name: str | UndefinedType = Undefined,
+                                    description: str | None | UndefinedType = Undefined,
+                                    peer: str | None | UndefinedType = Undefined,
+                                    peer_interface: str | None | UndefinedType = Undefined,
+                                    speed: str | None | UndefinedType = Undefined,
+                                    structured_config: StructuredConfig | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    MemberInterfacesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        name:
+                                           Ethernet interface name like 'Ethernet2'.
+                                           Member interface cannot be subinterface.
+                                        description:
+                                           Interface description for this member.
+                                           If not set, a default description will be configured with
+                                           '[<peer>[ <peer_interface>]]'.
+                                        peer:
+                                           The peer device name. Used for description and documentation.
+                                           If not set, this inherits the peer
+                                           setting on the port-channel interface.
+                                        peer_interface: The peer device interface. Used for description and documentation.
+                                        speed:
+                                           Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                           <interface_speed>`.
+                                        structured_config:
+                                           Custom structured config for the member ethernet interface.
+
+                                           Subclass of AvdModel.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class MemberInterfaces(AvdIndexedList[str, MemberInterfacesItem]):
+                            """Subclass of AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "name"
+
+                        MemberInterfaces._item_type = MemberInterfacesItem
+
+                        class Bgp(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "peer_as": {"type": str},
+                                "ipv4_prefix_list_in": {"type": str},
+                                "ipv4_prefix_list_out": {"type": str},
+                                "_custom_data": {"type": dict},
+                            }
+                            peer_as: str
+                            """
+                            BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                            For asdot notation in
+                            YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                            number.
+                            """
+                            ipv4_prefix_list_in: str | None
+                            """
+                            Prefix List Name. Accept routes for only these prefixes from the peer.
+                            Required for wan interfaces.
+                            """
+                            ipv4_prefix_list_out: str | None
+                            """
+                            Prefix List Name. Advertise routes for only these prefixes.
+                            If not specified, nothing would be
+                            advertised.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    peer_as: str | UndefinedType = Undefined,
+                                    ipv4_prefix_list_in: str | None | UndefinedType = Undefined,
+                                    ipv4_prefix_list_out: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Bgp.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        peer_as:
+                                           BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                           For asdot notation in
+                                           YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                           number.
+                                        ipv4_prefix_list_in:
+                                           Prefix List Name. Accept routes for only these prefixes from the peer.
+                                           Required for wan interfaces.
+                                        ipv4_prefix_list_out:
+                                           Prefix List Name. Advertise routes for only these prefixes.
+                                           If not specified, nothing would be
+                                           advertised.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"prefix": {"type": str}, "_custom_data": {"type": dict}}
+                            prefix: str
+                            """IPv4_network/Mask."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self, *, prefix: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                                ) -> None:
+                                    """
+                                    StaticRoutesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        prefix: IPv4_network/Mask.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutes(AvdIndexedList[str, StaticRoutesItem]):
+                            """Subclass of AvdIndexedList with `StaticRoutesItem` items. Primary key is `prefix` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "prefix"
+
+                        StaticRoutes._item_type = StaticRoutesItem
+
+                        class FlowTracking(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "name": {"type": str}, "_custom_data": {"type": dict}}
+                            enabled: bool | None
+                            name: str | None
+                            """Flow tracker name as defined in flow_tracking_settings."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    enabled: bool | None | UndefinedType = Undefined,
+                                    name: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    FlowTracking.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        enabled: enabled
+                                        name: Flow tracker name as defined in flow_tracking_settings.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StructuredConfig(EosCliConfigGen.PortChannelInterfacesItem):
+                            """Subclass of AvdModel."""
+
+                        _fields: ClassVar[dict] = {
+                            "name": {"type": str},
+                            "description": {"type": str},
+                            "mode": {"type": str, "default": "active"},
+                            "member_interfaces": {"type": MemberInterfaces},
+                            "ip_address": {"type": str},
+                            "dhcp_ip": {"type": str},
+                            "public_ip": {"type": str},
+                            "encapsulation_dot1q_vlan": {"type": int},
+                            "dhcp_accept_default_route": {"type": bool, "default": True},
+                            "enabled": {"type": bool, "default": True},
+                            "peer": {"type": str},
+                            "peer_port_channel": {"type": str},
+                            "peer_ip": {"type": str},
+                            "bgp": {"type": Bgp},
+                            "ipv4_acl_in": {"type": str},
+                            "ipv4_acl_out": {"type": str},
+                            "static_routes": {"type": StaticRoutes},
+                            "qos_profile": {"type": str},
+                            "wan_carrier": {"type": str},
+                            "wan_circuit_id": {"type": str},
+                            "connected_to_pathfinder": {"type": bool, "default": True},
+                            "raw_eos_cli": {"type": str},
+                            "flow_tracking": {"type": FlowTracking},
+                            "structured_config": {"type": StructuredConfig},
+                            "_custom_data": {"type": dict},
+                        }
+                        name: str
+                        """
+                        Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                        For a
+                        Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                        """
+                        description: str | None
+                        """
+                        Interface description.
+                        If not set, a default description will be configured with '[<peer>[
+                        <peer_port_channel>]]'.
+                        """
+                        mode: Literal["active", "passive", "on"]
+                        """
+                        Port-Channel mode.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Default value: `"active"`
+                        """
+                        member_interfaces: MemberInterfaces
+                        """
+                        Port-Channel member interfaces.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Subclass of
+                        AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                        """
+                        ip_address: str | None
+                        """Node IPv4 address/Mask or 'dhcp'."""
+                        dhcp_ip: str | None
+                        """
+                        When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                        IPv4 address
+                        (without mask) to be allocated on the interface if known.
+                        This is not rendered in the configuration
+                        but can be used for substitution of 'interface_ip' in the Access-list
+                        set under `ipv4_acl_in` and
+                        `ipv4_acl_out`.
+                        """
+                        public_ip: str | None
+                        """
+                        Node IPv4 address (no mask).
+
+                        This is used to get the public IP (if known) when the device is behind
+                        NAT.
+                        This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                        with the following preference:
+                          `wan_route_servers.path_groups.interfaces.ip_address`
+                              ->
+                        `l3_port_channels.public_ip`
+                                  -> `l3_port_channels.ip_address`
+
+                        The determined Public IP is
+                        used by WAN routers when peering with this interface.
+                        """
+                        encapsulation_dot1q_vlan: int | None
+                        """
+                        For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                        specified.
+                        """
+                        dhcp_accept_default_route: bool
+                        """
+                        Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+
+                        Default value: `True`
+                        """
+                        enabled: bool
+                        """
+                        Enable or Shutdown the interface.
+
+                        Default value: `True`
+                        """
+                        peer: str | None
+                        """The peer device name. Used for description and documentation."""
+                        peer_port_channel: str | None
+                        """The peer device port-channel interface. Used for description and documentation."""
+                        peer_ip: str | None
+                        """
+                        The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                        and `ip` is an IP address.
+                        """
+                        bgp: Bgp
+                        """
+                        Enforce IPv4 BGP peering for the peer
+
+                        Subclass of AvdModel.
+                        """
+                        ipv4_acl_in: str | None
+                        """
+                        Name of the IPv4 access-list to be assigned in the ingress direction.
+                        The access-list must be
+                        defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        Required
+                        for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                        `wan_carriers`.
+                        """
+                        ipv4_acl_out: str | None
+                        """
+                        Name of the IPv4 Access-list to be assigned in the egress direction.
+                        The access-list must be defined
+                        under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        """
+                        static_routes: StaticRoutes
+                        """
+                        Configure IPv4 static routes pointing to `peer_ip`.
+
+                        Subclass of AvdIndexedList with
+                        `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                        """
+                        qos_profile: str | None
+                        """QOS service profile."""
+                        wan_carrier: str | None
+                        """
+                        The WAN carrier this interface is connected to.
+                        This is used to infer the path-groups in which this
+                        interface should be configured.
+                        Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                        `ipv4_acl_in` is also required on all WAN interfaces.
+                        """
+                        wan_circuit_id: str | None
+                        """
+                        The WAN circuit ID for this interface.
+                        This is not rendered in the configuration but used for WAN
+                        designs.
+                        """
+                        connected_to_pathfinder: bool
+                        """
+                        For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+
+                        Default value: `True`
+                        """
+                        raw_eos_cli: str | None
+                        """EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration."""
+                        flow_tracking: FlowTracking
+                        """
+                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                        setting.
+
+                        Subclass of AvdModel.
+                        """
+                        structured_config: StructuredConfig
+                        """
+                        Custom structured config for the Port-Channel interface.
+
+                        Subclass of AvdModel.
+                        """
+                        _custom_data: dict[str, Any]
+
+                        if TYPE_CHECKING:
+
+                            def __init__(
+                                self,
+                                *,
+                                name: str | UndefinedType = Undefined,
+                                description: str | None | UndefinedType = Undefined,
+                                mode: Literal["active", "passive", "on"] | UndefinedType = Undefined,
+                                member_interfaces: MemberInterfaces | UndefinedType = Undefined,
+                                ip_address: str | None | UndefinedType = Undefined,
+                                dhcp_ip: str | None | UndefinedType = Undefined,
+                                public_ip: str | None | UndefinedType = Undefined,
+                                encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
+                                dhcp_accept_default_route: bool | UndefinedType = Undefined,
+                                enabled: bool | UndefinedType = Undefined,
+                                peer: str | None | UndefinedType = Undefined,
+                                peer_port_channel: str | None | UndefinedType = Undefined,
+                                peer_ip: str | None | UndefinedType = Undefined,
+                                bgp: Bgp | UndefinedType = Undefined,
+                                ipv4_acl_in: str | None | UndefinedType = Undefined,
+                                ipv4_acl_out: str | None | UndefinedType = Undefined,
+                                static_routes: StaticRoutes | UndefinedType = Undefined,
+                                qos_profile: str | None | UndefinedType = Undefined,
+                                wan_carrier: str | None | UndefinedType = Undefined,
+                                wan_circuit_id: str | None | UndefinedType = Undefined,
+                                connected_to_pathfinder: bool | UndefinedType = Undefined,
+                                raw_eos_cli: str | None | UndefinedType = Undefined,
+                                flow_tracking: FlowTracking | UndefinedType = Undefined,
+                                structured_config: StructuredConfig | UndefinedType = Undefined,
+                                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                            ) -> None:
+                                """
+                                L3PortChannelsItem.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    name:
+                                       Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                                       For a
+                                       Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                                    description:
+                                       Interface description.
+                                       If not set, a default description will be configured with '[<peer>[
+                                       <peer_port_channel>]]'.
+                                    mode:
+                                       Port-Channel mode.
+                                       Should not be set on Port-Channel subinterfaces.
+                                    member_interfaces:
+                                       Port-Channel member interfaces.
+                                       Should not be set on Port-Channel subinterfaces.
+
+                                       Subclass of
+                                       AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                                    ip_address: Node IPv4 address/Mask or 'dhcp'.
+                                    dhcp_ip:
+                                       When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                                       IPv4 address
+                                       (without mask) to be allocated on the interface if known.
+                                       This is not rendered in the configuration
+                                       but can be used for substitution of 'interface_ip' in the Access-list
+                                       set under `ipv4_acl_in` and
+                                       `ipv4_acl_out`.
+                                    public_ip:
+                                       Node IPv4 address (no mask).
+
+                                       This is used to get the public IP (if known) when the device is behind
+                                       NAT.
+                                       This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                                       with the following preference:
+                                         `wan_route_servers.path_groups.interfaces.ip_address`
+                                             ->
+                                       `l3_port_channels.public_ip`
+                                                 -> `l3_port_channels.ip_address`
+
+                                       The determined Public IP is
+                                       used by WAN routers when peering with this interface.
+                                    encapsulation_dot1q_vlan:
+                                       For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                                       specified.
+                                    dhcp_accept_default_route: Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+                                    enabled: Enable or Shutdown the interface.
+                                    peer: The peer device name. Used for description and documentation.
+                                    peer_port_channel: The peer device port-channel interface. Used for description and documentation.
+                                    peer_ip:
+                                       The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                                       and `ip` is an IP address.
+                                    bgp:
+                                       Enforce IPv4 BGP peering for the peer
+
+                                       Subclass of AvdModel.
+                                    ipv4_acl_in:
+                                       Name of the IPv4 access-list to be assigned in the ingress direction.
+                                       The access-list must be
+                                       defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                       Required
+                                       for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                                       `wan_carriers`.
+                                    ipv4_acl_out:
+                                       Name of the IPv4 Access-list to be assigned in the egress direction.
+                                       The access-list must be defined
+                                       under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                    static_routes:
+                                       Configure IPv4 static routes pointing to `peer_ip`.
+
+                                       Subclass of AvdIndexedList with
+                                       `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                                    qos_profile: QOS service profile.
+                                    wan_carrier:
+                                       The WAN carrier this interface is connected to.
+                                       This is used to infer the path-groups in which this
+                                       interface should be configured.
+                                       Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                                       `ipv4_acl_in` is also required on all WAN interfaces.
+                                    wan_circuit_id:
+                                       The WAN circuit ID for this interface.
+                                       This is not rendered in the configuration but used for WAN
+                                       designs.
+                                    connected_to_pathfinder: For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+                                    raw_eos_cli: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
+                                    flow_tracking:
+                                       Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                                       setting.
+
+                                       Subclass of AvdModel.
+                                    structured_config:
+                                       Custom structured config for the Port-Channel interface.
+
+                                       Subclass of AvdModel.
+                                    _custom_data: _custom_data
+
+                                """
+
+                    class L3PortChannels(AvdIndexedList[str, L3PortChannelsItem]):
+                        """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
+
+                    L3PortChannels._item_type = L3PortChannelsItem
+
                     _fields: ClassVar[dict] = {
                         "name": {"type": str},
                         "downlink_pools": {"type": DownlinkPools},
@@ -32258,6 +34516,7 @@ class EosDesigns(EosDesignsRootModel):
                         "wan_ha": {"type": WanHa},
                         "dps_mss_ipv4": {"type": str, "default": "auto"},
                         "l3_interfaces": {"type": L3Interfaces},
+                        "l3_port_channels": {"type": L3PortChannels},
                         "data_plane_cpu_allocation_max": {"type": int},
                         "flow_tracker_type": {"type": str},
                         "_custom_data": {"type": dict},
@@ -33049,11 +35308,16 @@ class EosDesigns(EosDesignsRootModel):
                     l3_interfaces: L3Interfaces
                     """
                     L3 Interfaces to configure on the node.
-                    Used to define the node for WAN interfaces when
-                    `wan_carrier` is set.
 
-                    Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                    `name` (`str`).
+                    Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                    Primary key is `name` (`str`).
+                    """
+                    l3_port_channels: L3PortChannels
+                    """
+                    L3 Port-Channel interfaces to configure on the node.
+
+                    Subclass of AvdIndexedList with
+                    `L3PortChannelsItem` items. Primary key is `name` (`str`).
                     """
                     data_plane_cpu_allocation_max: int | None
                     """
@@ -33180,6 +35444,7 @@ class EosDesigns(EosDesignsRootModel):
                             wan_ha: WanHa | UndefinedType = Undefined,
                             dps_mss_ipv4: str | UndefinedType = Undefined,
                             l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                            l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                             data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined,
                             flow_tracker_type: Literal["sampled", "hardware"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -33743,11 +36008,14 @@ class EosDesigns(EosDesignsRootModel):
                                 dps_mss_ipv4: IPv4 MSS value configured under "router path-selection" on WAN Devices.
                                 l3_interfaces:
                                    L3 Interfaces to configure on the node.
-                                   Used to define the node for WAN interfaces when
-                                   `wan_carrier` is set.
 
-                                   Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                                   `name` (`str`).
+                                   Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                                   Primary key is `name` (`str`).
+                                l3_port_channels:
+                                   L3 Port-Channel interfaces to configure on the node.
+
+                                   Subclass of AvdIndexedList with
+                                   `L3PortChannelsItem` items. Primary key is `name` (`str`).
                                 data_plane_cpu_allocation_max:
                                    Set the maximum number of CPU used for the data plane.
                                    This setting is useful on virtual Route
@@ -42580,6 +44848,550 @@ class EosDesigns(EosDesignsRootModel):
 
                     L3Interfaces._item_type = L3InterfacesItem
 
+                    class L3PortChannelsItem(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class MemberInterfacesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class StructuredConfig(EosCliConfigGen.EthernetInterfacesItem):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "name": {"type": str},
+                                "description": {"type": str},
+                                "peer": {"type": str},
+                                "peer_interface": {"type": str},
+                                "speed": {"type": str},
+                                "structured_config": {"type": StructuredConfig},
+                                "_custom_data": {"type": dict},
+                            }
+                            name: str
+                            """
+                            Ethernet interface name like 'Ethernet2'.
+                            Member interface cannot be subinterface.
+                            """
+                            description: str | None
+                            """
+                            Interface description for this member.
+                            If not set, a default description will be configured with
+                            '[<peer>[ <peer_interface>]]'.
+                            """
+                            peer: str | None
+                            """
+                            The peer device name. Used for description and documentation.
+                            If not set, this inherits the peer
+                            setting on the port-channel interface.
+                            """
+                            peer_interface: str | None
+                            """The peer device interface. Used for description and documentation."""
+                            speed: str | None
+                            """
+                            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                            <interface_speed>`.
+                            """
+                            structured_config: StructuredConfig
+                            """
+                            Custom structured config for the member ethernet interface.
+
+                            Subclass of AvdModel.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    name: str | UndefinedType = Undefined,
+                                    description: str | None | UndefinedType = Undefined,
+                                    peer: str | None | UndefinedType = Undefined,
+                                    peer_interface: str | None | UndefinedType = Undefined,
+                                    speed: str | None | UndefinedType = Undefined,
+                                    structured_config: StructuredConfig | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    MemberInterfacesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        name:
+                                           Ethernet interface name like 'Ethernet2'.
+                                           Member interface cannot be subinterface.
+                                        description:
+                                           Interface description for this member.
+                                           If not set, a default description will be configured with
+                                           '[<peer>[ <peer_interface>]]'.
+                                        peer:
+                                           The peer device name. Used for description and documentation.
+                                           If not set, this inherits the peer
+                                           setting on the port-channel interface.
+                                        peer_interface: The peer device interface. Used for description and documentation.
+                                        speed:
+                                           Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                           <interface_speed>`.
+                                        structured_config:
+                                           Custom structured config for the member ethernet interface.
+
+                                           Subclass of AvdModel.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class MemberInterfaces(AvdIndexedList[str, MemberInterfacesItem]):
+                            """Subclass of AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "name"
+
+                        MemberInterfaces._item_type = MemberInterfacesItem
+
+                        class Bgp(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "peer_as": {"type": str},
+                                "ipv4_prefix_list_in": {"type": str},
+                                "ipv4_prefix_list_out": {"type": str},
+                                "_custom_data": {"type": dict},
+                            }
+                            peer_as: str
+                            """
+                            BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                            For asdot notation in
+                            YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                            number.
+                            """
+                            ipv4_prefix_list_in: str | None
+                            """
+                            Prefix List Name. Accept routes for only these prefixes from the peer.
+                            Required for wan interfaces.
+                            """
+                            ipv4_prefix_list_out: str | None
+                            """
+                            Prefix List Name. Advertise routes for only these prefixes.
+                            If not specified, nothing would be
+                            advertised.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    peer_as: str | UndefinedType = Undefined,
+                                    ipv4_prefix_list_in: str | None | UndefinedType = Undefined,
+                                    ipv4_prefix_list_out: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Bgp.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        peer_as:
+                                           BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                           For asdot notation in
+                                           YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                           number.
+                                        ipv4_prefix_list_in:
+                                           Prefix List Name. Accept routes for only these prefixes from the peer.
+                                           Required for wan interfaces.
+                                        ipv4_prefix_list_out:
+                                           Prefix List Name. Advertise routes for only these prefixes.
+                                           If not specified, nothing would be
+                                           advertised.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"prefix": {"type": str}, "_custom_data": {"type": dict}}
+                            prefix: str
+                            """IPv4_network/Mask."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self, *, prefix: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                                ) -> None:
+                                    """
+                                    StaticRoutesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        prefix: IPv4_network/Mask.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutes(AvdIndexedList[str, StaticRoutesItem]):
+                            """Subclass of AvdIndexedList with `StaticRoutesItem` items. Primary key is `prefix` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "prefix"
+
+                        StaticRoutes._item_type = StaticRoutesItem
+
+                        class FlowTracking(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "name": {"type": str}, "_custom_data": {"type": dict}}
+                            enabled: bool | None
+                            name: str | None
+                            """Flow tracker name as defined in flow_tracking_settings."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    enabled: bool | None | UndefinedType = Undefined,
+                                    name: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    FlowTracking.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        enabled: enabled
+                                        name: Flow tracker name as defined in flow_tracking_settings.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StructuredConfig(EosCliConfigGen.PortChannelInterfacesItem):
+                            """Subclass of AvdModel."""
+
+                        _fields: ClassVar[dict] = {
+                            "name": {"type": str},
+                            "description": {"type": str},
+                            "mode": {"type": str, "default": "active"},
+                            "member_interfaces": {"type": MemberInterfaces},
+                            "ip_address": {"type": str},
+                            "dhcp_ip": {"type": str},
+                            "public_ip": {"type": str},
+                            "encapsulation_dot1q_vlan": {"type": int},
+                            "dhcp_accept_default_route": {"type": bool, "default": True},
+                            "enabled": {"type": bool, "default": True},
+                            "peer": {"type": str},
+                            "peer_port_channel": {"type": str},
+                            "peer_ip": {"type": str},
+                            "bgp": {"type": Bgp},
+                            "ipv4_acl_in": {"type": str},
+                            "ipv4_acl_out": {"type": str},
+                            "static_routes": {"type": StaticRoutes},
+                            "qos_profile": {"type": str},
+                            "wan_carrier": {"type": str},
+                            "wan_circuit_id": {"type": str},
+                            "connected_to_pathfinder": {"type": bool, "default": True},
+                            "raw_eos_cli": {"type": str},
+                            "flow_tracking": {"type": FlowTracking},
+                            "structured_config": {"type": StructuredConfig},
+                            "_custom_data": {"type": dict},
+                        }
+                        name: str
+                        """
+                        Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                        For a
+                        Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                        """
+                        description: str | None
+                        """
+                        Interface description.
+                        If not set, a default description will be configured with '[<peer>[
+                        <peer_port_channel>]]'.
+                        """
+                        mode: Literal["active", "passive", "on"]
+                        """
+                        Port-Channel mode.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Default value: `"active"`
+                        """
+                        member_interfaces: MemberInterfaces
+                        """
+                        Port-Channel member interfaces.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Subclass of
+                        AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                        """
+                        ip_address: str | None
+                        """Node IPv4 address/Mask or 'dhcp'."""
+                        dhcp_ip: str | None
+                        """
+                        When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                        IPv4 address
+                        (without mask) to be allocated on the interface if known.
+                        This is not rendered in the configuration
+                        but can be used for substitution of 'interface_ip' in the Access-list
+                        set under `ipv4_acl_in` and
+                        `ipv4_acl_out`.
+                        """
+                        public_ip: str | None
+                        """
+                        Node IPv4 address (no mask).
+
+                        This is used to get the public IP (if known) when the device is behind
+                        NAT.
+                        This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                        with the following preference:
+                          `wan_route_servers.path_groups.interfaces.ip_address`
+                              ->
+                        `l3_port_channels.public_ip`
+                                  -> `l3_port_channels.ip_address`
+
+                        The determined Public IP is
+                        used by WAN routers when peering with this interface.
+                        """
+                        encapsulation_dot1q_vlan: int | None
+                        """
+                        For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                        specified.
+                        """
+                        dhcp_accept_default_route: bool
+                        """
+                        Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+
+                        Default value: `True`
+                        """
+                        enabled: bool
+                        """
+                        Enable or Shutdown the interface.
+
+                        Default value: `True`
+                        """
+                        peer: str | None
+                        """The peer device name. Used for description and documentation."""
+                        peer_port_channel: str | None
+                        """The peer device port-channel interface. Used for description and documentation."""
+                        peer_ip: str | None
+                        """
+                        The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                        and `ip` is an IP address.
+                        """
+                        bgp: Bgp
+                        """
+                        Enforce IPv4 BGP peering for the peer
+
+                        Subclass of AvdModel.
+                        """
+                        ipv4_acl_in: str | None
+                        """
+                        Name of the IPv4 access-list to be assigned in the ingress direction.
+                        The access-list must be
+                        defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        Required
+                        for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                        `wan_carriers`.
+                        """
+                        ipv4_acl_out: str | None
+                        """
+                        Name of the IPv4 Access-list to be assigned in the egress direction.
+                        The access-list must be defined
+                        under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        """
+                        static_routes: StaticRoutes
+                        """
+                        Configure IPv4 static routes pointing to `peer_ip`.
+
+                        Subclass of AvdIndexedList with
+                        `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                        """
+                        qos_profile: str | None
+                        """QOS service profile."""
+                        wan_carrier: str | None
+                        """
+                        The WAN carrier this interface is connected to.
+                        This is used to infer the path-groups in which this
+                        interface should be configured.
+                        Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                        `ipv4_acl_in` is also required on all WAN interfaces.
+                        """
+                        wan_circuit_id: str | None
+                        """
+                        The WAN circuit ID for this interface.
+                        This is not rendered in the configuration but used for WAN
+                        designs.
+                        """
+                        connected_to_pathfinder: bool
+                        """
+                        For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+
+                        Default value: `True`
+                        """
+                        raw_eos_cli: str | None
+                        """EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration."""
+                        flow_tracking: FlowTracking
+                        """
+                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                        setting.
+
+                        Subclass of AvdModel.
+                        """
+                        structured_config: StructuredConfig
+                        """
+                        Custom structured config for the Port-Channel interface.
+
+                        Subclass of AvdModel.
+                        """
+                        _custom_data: dict[str, Any]
+
+                        if TYPE_CHECKING:
+
+                            def __init__(
+                                self,
+                                *,
+                                name: str | UndefinedType = Undefined,
+                                description: str | None | UndefinedType = Undefined,
+                                mode: Literal["active", "passive", "on"] | UndefinedType = Undefined,
+                                member_interfaces: MemberInterfaces | UndefinedType = Undefined,
+                                ip_address: str | None | UndefinedType = Undefined,
+                                dhcp_ip: str | None | UndefinedType = Undefined,
+                                public_ip: str | None | UndefinedType = Undefined,
+                                encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
+                                dhcp_accept_default_route: bool | UndefinedType = Undefined,
+                                enabled: bool | UndefinedType = Undefined,
+                                peer: str | None | UndefinedType = Undefined,
+                                peer_port_channel: str | None | UndefinedType = Undefined,
+                                peer_ip: str | None | UndefinedType = Undefined,
+                                bgp: Bgp | UndefinedType = Undefined,
+                                ipv4_acl_in: str | None | UndefinedType = Undefined,
+                                ipv4_acl_out: str | None | UndefinedType = Undefined,
+                                static_routes: StaticRoutes | UndefinedType = Undefined,
+                                qos_profile: str | None | UndefinedType = Undefined,
+                                wan_carrier: str | None | UndefinedType = Undefined,
+                                wan_circuit_id: str | None | UndefinedType = Undefined,
+                                connected_to_pathfinder: bool | UndefinedType = Undefined,
+                                raw_eos_cli: str | None | UndefinedType = Undefined,
+                                flow_tracking: FlowTracking | UndefinedType = Undefined,
+                                structured_config: StructuredConfig | UndefinedType = Undefined,
+                                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                            ) -> None:
+                                """
+                                L3PortChannelsItem.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    name:
+                                       Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                                       For a
+                                       Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                                    description:
+                                       Interface description.
+                                       If not set, a default description will be configured with '[<peer>[
+                                       <peer_port_channel>]]'.
+                                    mode:
+                                       Port-Channel mode.
+                                       Should not be set on Port-Channel subinterfaces.
+                                    member_interfaces:
+                                       Port-Channel member interfaces.
+                                       Should not be set on Port-Channel subinterfaces.
+
+                                       Subclass of
+                                       AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                                    ip_address: Node IPv4 address/Mask or 'dhcp'.
+                                    dhcp_ip:
+                                       When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                                       IPv4 address
+                                       (without mask) to be allocated on the interface if known.
+                                       This is not rendered in the configuration
+                                       but can be used for substitution of 'interface_ip' in the Access-list
+                                       set under `ipv4_acl_in` and
+                                       `ipv4_acl_out`.
+                                    public_ip:
+                                       Node IPv4 address (no mask).
+
+                                       This is used to get the public IP (if known) when the device is behind
+                                       NAT.
+                                       This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                                       with the following preference:
+                                         `wan_route_servers.path_groups.interfaces.ip_address`
+                                             ->
+                                       `l3_port_channels.public_ip`
+                                                 -> `l3_port_channels.ip_address`
+
+                                       The determined Public IP is
+                                       used by WAN routers when peering with this interface.
+                                    encapsulation_dot1q_vlan:
+                                       For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                                       specified.
+                                    dhcp_accept_default_route: Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+                                    enabled: Enable or Shutdown the interface.
+                                    peer: The peer device name. Used for description and documentation.
+                                    peer_port_channel: The peer device port-channel interface. Used for description and documentation.
+                                    peer_ip:
+                                       The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                                       and `ip` is an IP address.
+                                    bgp:
+                                       Enforce IPv4 BGP peering for the peer
+
+                                       Subclass of AvdModel.
+                                    ipv4_acl_in:
+                                       Name of the IPv4 access-list to be assigned in the ingress direction.
+                                       The access-list must be
+                                       defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                       Required
+                                       for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                                       `wan_carriers`.
+                                    ipv4_acl_out:
+                                       Name of the IPv4 Access-list to be assigned in the egress direction.
+                                       The access-list must be defined
+                                       under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                    static_routes:
+                                       Configure IPv4 static routes pointing to `peer_ip`.
+
+                                       Subclass of AvdIndexedList with
+                                       `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                                    qos_profile: QOS service profile.
+                                    wan_carrier:
+                                       The WAN carrier this interface is connected to.
+                                       This is used to infer the path-groups in which this
+                                       interface should be configured.
+                                       Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                                       `ipv4_acl_in` is also required on all WAN interfaces.
+                                    wan_circuit_id:
+                                       The WAN circuit ID for this interface.
+                                       This is not rendered in the configuration but used for WAN
+                                       designs.
+                                    connected_to_pathfinder: For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+                                    raw_eos_cli: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
+                                    flow_tracking:
+                                       Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                                       setting.
+
+                                       Subclass of AvdModel.
+                                    structured_config:
+                                       Custom structured config for the Port-Channel interface.
+
+                                       Subclass of AvdModel.
+                                    _custom_data: _custom_data
+
+                                """
+
+                    class L3PortChannels(AvdIndexedList[str, L3PortChannelsItem]):
+                        """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
+
+                    L3PortChannels._item_type = L3PortChannelsItem
+
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
                         "platform": {"type": str},
@@ -42684,6 +45496,7 @@ class EosDesigns(EosDesignsRootModel):
                         "wan_ha": {"type": WanHa},
                         "dps_mss_ipv4": {"type": str, "default": "auto"},
                         "l3_interfaces": {"type": L3Interfaces},
+                        "l3_port_channels": {"type": L3PortChannels},
                         "data_plane_cpu_allocation_max": {"type": int},
                         "flow_tracker_type": {"type": str},
                         "_custom_data": {"type": dict},
@@ -43465,11 +46278,16 @@ class EosDesigns(EosDesignsRootModel):
                     l3_interfaces: L3Interfaces
                     """
                     L3 Interfaces to configure on the node.
-                    Used to define the node for WAN interfaces when
-                    `wan_carrier` is set.
 
-                    Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                    `name` (`str`).
+                    Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                    Primary key is `name` (`str`).
+                    """
+                    l3_port_channels: L3PortChannels
+                    """
+                    L3 Port-Channel interfaces to configure on the node.
+
+                    Subclass of AvdIndexedList with
+                    `L3PortChannelsItem` items. Primary key is `name` (`str`).
                     """
                     data_plane_cpu_allocation_max: int | None
                     """
@@ -43594,6 +46412,7 @@ class EosDesigns(EosDesignsRootModel):
                             wan_ha: WanHa | UndefinedType = Undefined,
                             dps_mss_ipv4: str | UndefinedType = Undefined,
                             l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                            l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                             data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined,
                             flow_tracker_type: Literal["sampled", "hardware"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -44150,11 +46969,14 @@ class EosDesigns(EosDesignsRootModel):
                                 dps_mss_ipv4: IPv4 MSS value configured under "router path-selection" on WAN Devices.
                                 l3_interfaces:
                                    L3 Interfaces to configure on the node.
-                                   Used to define the node for WAN interfaces when
-                                   `wan_carrier` is set.
 
-                                   Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                                   `name` (`str`).
+                                   Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                                   Primary key is `name` (`str`).
+                                l3_port_channels:
+                                   L3 Port-Channel interfaces to configure on the node.
+
+                                   Subclass of AvdIndexedList with
+                                   `L3PortChannelsItem` items. Primary key is `name` (`str`).
                                 data_plane_cpu_allocation_max:
                                    Set the maximum number of CPU used for the data plane.
                                    This setting is useful on virtual Route
@@ -46125,6 +48947,550 @@ class EosDesigns(EosDesignsRootModel):
 
                         L3Interfaces._item_type = L3InterfacesItem
 
+                        class L3PortChannelsItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class MemberInterfacesItem(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                class StructuredConfig(EosCliConfigGen.EthernetInterfacesItem):
+                                    """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {
+                                    "name": {"type": str},
+                                    "description": {"type": str},
+                                    "peer": {"type": str},
+                                    "peer_interface": {"type": str},
+                                    "speed": {"type": str},
+                                    "structured_config": {"type": StructuredConfig},
+                                    "_custom_data": {"type": dict},
+                                }
+                                name: str
+                                """
+                                Ethernet interface name like 'Ethernet2'.
+                                Member interface cannot be subinterface.
+                                """
+                                description: str | None
+                                """
+                                Interface description for this member.
+                                If not set, a default description will be configured with
+                                '[<peer>[ <peer_interface>]]'.
+                                """
+                                peer: str | None
+                                """
+                                The peer device name. Used for description and documentation.
+                                If not set, this inherits the peer
+                                setting on the port-channel interface.
+                                """
+                                peer_interface: str | None
+                                """The peer device interface. Used for description and documentation."""
+                                speed: str | None
+                                """
+                                Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                <interface_speed>`.
+                                """
+                                structured_config: StructuredConfig
+                                """
+                                Custom structured config for the member ethernet interface.
+
+                                Subclass of AvdModel.
+                                """
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        name: str | UndefinedType = Undefined,
+                                        description: str | None | UndefinedType = Undefined,
+                                        peer: str | None | UndefinedType = Undefined,
+                                        peer_interface: str | None | UndefinedType = Undefined,
+                                        speed: str | None | UndefinedType = Undefined,
+                                        structured_config: StructuredConfig | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        MemberInterfacesItem.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            name:
+                                               Ethernet interface name like 'Ethernet2'.
+                                               Member interface cannot be subinterface.
+                                            description:
+                                               Interface description for this member.
+                                               If not set, a default description will be configured with
+                                               '[<peer>[ <peer_interface>]]'.
+                                            peer:
+                                               The peer device name. Used for description and documentation.
+                                               If not set, this inherits the peer
+                                               setting on the port-channel interface.
+                                            peer_interface: The peer device interface. Used for description and documentation.
+                                            speed:
+                                               Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                               <interface_speed>`.
+                                            structured_config:
+                                               Custom structured config for the member ethernet interface.
+
+                                               Subclass of AvdModel.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class MemberInterfaces(AvdIndexedList[str, MemberInterfacesItem]):
+                                """Subclass of AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`)."""
+
+                                _primary_key: ClassVar[str] = "name"
+
+                            MemberInterfaces._item_type = MemberInterfacesItem
+
+                            class Bgp(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {
+                                    "peer_as": {"type": str},
+                                    "ipv4_prefix_list_in": {"type": str},
+                                    "ipv4_prefix_list_out": {"type": str},
+                                    "_custom_data": {"type": dict},
+                                }
+                                peer_as: str
+                                """
+                                BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                For asdot notation in
+                                YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                number.
+                                """
+                                ipv4_prefix_list_in: str | None
+                                """
+                                Prefix List Name. Accept routes for only these prefixes from the peer.
+                                Required for wan interfaces.
+                                """
+                                ipv4_prefix_list_out: str | None
+                                """
+                                Prefix List Name. Advertise routes for only these prefixes.
+                                If not specified, nothing would be
+                                advertised.
+                                """
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        peer_as: str | UndefinedType = Undefined,
+                                        ipv4_prefix_list_in: str | None | UndefinedType = Undefined,
+                                        ipv4_prefix_list_out: str | None | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        Bgp.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            peer_as:
+                                               BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                               For asdot notation in
+                                               YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                               number.
+                                            ipv4_prefix_list_in:
+                                               Prefix List Name. Accept routes for only these prefixes from the peer.
+                                               Required for wan interfaces.
+                                            ipv4_prefix_list_out:
+                                               Prefix List Name. Advertise routes for only these prefixes.
+                                               If not specified, nothing would be
+                                               advertised.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class StaticRoutesItem(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {"prefix": {"type": str}, "_custom_data": {"type": dict}}
+                                prefix: str
+                                """IPv4_network/Mask."""
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self, *, prefix: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                                    ) -> None:
+                                        """
+                                        StaticRoutesItem.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            prefix: IPv4_network/Mask.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class StaticRoutes(AvdIndexedList[str, StaticRoutesItem]):
+                                """Subclass of AvdIndexedList with `StaticRoutesItem` items. Primary key is `prefix` (`str`)."""
+
+                                _primary_key: ClassVar[str] = "prefix"
+
+                            StaticRoutes._item_type = StaticRoutesItem
+
+                            class FlowTracking(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {"enabled": {"type": bool}, "name": {"type": str}, "_custom_data": {"type": dict}}
+                                enabled: bool | None
+                                name: str | None
+                                """Flow tracker name as defined in flow_tracking_settings."""
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        enabled: bool | None | UndefinedType = Undefined,
+                                        name: str | None | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        FlowTracking.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            enabled: enabled
+                                            name: Flow tracker name as defined in flow_tracking_settings.
+                                            _custom_data: _custom_data
+
+                                        """
+
+                            class StructuredConfig(EosCliConfigGen.PortChannelInterfacesItem):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "name": {"type": str},
+                                "description": {"type": str},
+                                "mode": {"type": str, "default": "active"},
+                                "member_interfaces": {"type": MemberInterfaces},
+                                "ip_address": {"type": str},
+                                "dhcp_ip": {"type": str},
+                                "public_ip": {"type": str},
+                                "encapsulation_dot1q_vlan": {"type": int},
+                                "dhcp_accept_default_route": {"type": bool, "default": True},
+                                "enabled": {"type": bool, "default": True},
+                                "peer": {"type": str},
+                                "peer_port_channel": {"type": str},
+                                "peer_ip": {"type": str},
+                                "bgp": {"type": Bgp},
+                                "ipv4_acl_in": {"type": str},
+                                "ipv4_acl_out": {"type": str},
+                                "static_routes": {"type": StaticRoutes},
+                                "qos_profile": {"type": str},
+                                "wan_carrier": {"type": str},
+                                "wan_circuit_id": {"type": str},
+                                "connected_to_pathfinder": {"type": bool, "default": True},
+                                "raw_eos_cli": {"type": str},
+                                "flow_tracking": {"type": FlowTracking},
+                                "structured_config": {"type": StructuredConfig},
+                                "_custom_data": {"type": dict},
+                            }
+                            name: str
+                            """
+                            Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                            For a
+                            Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                            """
+                            description: str | None
+                            """
+                            Interface description.
+                            If not set, a default description will be configured with '[<peer>[
+                            <peer_port_channel>]]'.
+                            """
+                            mode: Literal["active", "passive", "on"]
+                            """
+                            Port-Channel mode.
+                            Should not be set on Port-Channel subinterfaces.
+
+                            Default value: `"active"`
+                            """
+                            member_interfaces: MemberInterfaces
+                            """
+                            Port-Channel member interfaces.
+                            Should not be set on Port-Channel subinterfaces.
+
+                            Subclass of
+                            AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                            """
+                            ip_address: str | None
+                            """Node IPv4 address/Mask or 'dhcp'."""
+                            dhcp_ip: str | None
+                            """
+                            When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                            IPv4 address
+                            (without mask) to be allocated on the interface if known.
+                            This is not rendered in the configuration
+                            but can be used for substitution of 'interface_ip' in the Access-list
+                            set under `ipv4_acl_in` and
+                            `ipv4_acl_out`.
+                            """
+                            public_ip: str | None
+                            """
+                            Node IPv4 address (no mask).
+
+                            This is used to get the public IP (if known) when the device is behind
+                            NAT.
+                            This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                            with the following preference:
+                              `wan_route_servers.path_groups.interfaces.ip_address`
+                                  ->
+                            `l3_port_channels.public_ip`
+                                      -> `l3_port_channels.ip_address`
+
+                            The determined Public IP is
+                            used by WAN routers when peering with this interface.
+                            """
+                            encapsulation_dot1q_vlan: int | None
+                            """
+                            For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                            specified.
+                            """
+                            dhcp_accept_default_route: bool
+                            """
+                            Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+
+                            Default value: `True`
+                            """
+                            enabled: bool
+                            """
+                            Enable or Shutdown the interface.
+
+                            Default value: `True`
+                            """
+                            peer: str | None
+                            """The peer device name. Used for description and documentation."""
+                            peer_port_channel: str | None
+                            """The peer device port-channel interface. Used for description and documentation."""
+                            peer_ip: str | None
+                            """
+                            The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                            and `ip` is an IP address.
+                            """
+                            bgp: Bgp
+                            """
+                            Enforce IPv4 BGP peering for the peer
+
+                            Subclass of AvdModel.
+                            """
+                            ipv4_acl_in: str | None
+                            """
+                            Name of the IPv4 access-list to be assigned in the ingress direction.
+                            The access-list must be
+                            defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                            Required
+                            for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                            `wan_carriers`.
+                            """
+                            ipv4_acl_out: str | None
+                            """
+                            Name of the IPv4 Access-list to be assigned in the egress direction.
+                            The access-list must be defined
+                            under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                            """
+                            static_routes: StaticRoutes
+                            """
+                            Configure IPv4 static routes pointing to `peer_ip`.
+
+                            Subclass of AvdIndexedList with
+                            `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                            """
+                            qos_profile: str | None
+                            """QOS service profile."""
+                            wan_carrier: str | None
+                            """
+                            The WAN carrier this interface is connected to.
+                            This is used to infer the path-groups in which this
+                            interface should be configured.
+                            Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                            `ipv4_acl_in` is also required on all WAN interfaces.
+                            """
+                            wan_circuit_id: str | None
+                            """
+                            The WAN circuit ID for this interface.
+                            This is not rendered in the configuration but used for WAN
+                            designs.
+                            """
+                            connected_to_pathfinder: bool
+                            """
+                            For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+
+                            Default value: `True`
+                            """
+                            raw_eos_cli: str | None
+                            """EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration."""
+                            flow_tracking: FlowTracking
+                            """
+                            Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                            setting.
+
+                            Subclass of AvdModel.
+                            """
+                            structured_config: StructuredConfig
+                            """
+                            Custom structured config for the Port-Channel interface.
+
+                            Subclass of AvdModel.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    name: str | UndefinedType = Undefined,
+                                    description: str | None | UndefinedType = Undefined,
+                                    mode: Literal["active", "passive", "on"] | UndefinedType = Undefined,
+                                    member_interfaces: MemberInterfaces | UndefinedType = Undefined,
+                                    ip_address: str | None | UndefinedType = Undefined,
+                                    dhcp_ip: str | None | UndefinedType = Undefined,
+                                    public_ip: str | None | UndefinedType = Undefined,
+                                    encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
+                                    dhcp_accept_default_route: bool | UndefinedType = Undefined,
+                                    enabled: bool | UndefinedType = Undefined,
+                                    peer: str | None | UndefinedType = Undefined,
+                                    peer_port_channel: str | None | UndefinedType = Undefined,
+                                    peer_ip: str | None | UndefinedType = Undefined,
+                                    bgp: Bgp | UndefinedType = Undefined,
+                                    ipv4_acl_in: str | None | UndefinedType = Undefined,
+                                    ipv4_acl_out: str | None | UndefinedType = Undefined,
+                                    static_routes: StaticRoutes | UndefinedType = Undefined,
+                                    qos_profile: str | None | UndefinedType = Undefined,
+                                    wan_carrier: str | None | UndefinedType = Undefined,
+                                    wan_circuit_id: str | None | UndefinedType = Undefined,
+                                    connected_to_pathfinder: bool | UndefinedType = Undefined,
+                                    raw_eos_cli: str | None | UndefinedType = Undefined,
+                                    flow_tracking: FlowTracking | UndefinedType = Undefined,
+                                    structured_config: StructuredConfig | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    L3PortChannelsItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        name:
+                                           Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                                           For a
+                                           Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                                        description:
+                                           Interface description.
+                                           If not set, a default description will be configured with '[<peer>[
+                                           <peer_port_channel>]]'.
+                                        mode:
+                                           Port-Channel mode.
+                                           Should not be set on Port-Channel subinterfaces.
+                                        member_interfaces:
+                                           Port-Channel member interfaces.
+                                           Should not be set on Port-Channel subinterfaces.
+
+                                           Subclass of
+                                           AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                                        ip_address: Node IPv4 address/Mask or 'dhcp'.
+                                        dhcp_ip:
+                                           When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                                           IPv4 address
+                                           (without mask) to be allocated on the interface if known.
+                                           This is not rendered in the configuration
+                                           but can be used for substitution of 'interface_ip' in the Access-list
+                                           set under `ipv4_acl_in` and
+                                           `ipv4_acl_out`.
+                                        public_ip:
+                                           Node IPv4 address (no mask).
+
+                                           This is used to get the public IP (if known) when the device is behind
+                                           NAT.
+                                           This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                                           with the following preference:
+                                             `wan_route_servers.path_groups.interfaces.ip_address`
+                                                 ->
+                                           `l3_port_channels.public_ip`
+                                                     -> `l3_port_channels.ip_address`
+
+                                           The determined Public IP is
+                                           used by WAN routers when peering with this interface.
+                                        encapsulation_dot1q_vlan:
+                                           For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                                           specified.
+                                        dhcp_accept_default_route: Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+                                        enabled: Enable or Shutdown the interface.
+                                        peer: The peer device name. Used for description and documentation.
+                                        peer_port_channel: The peer device port-channel interface. Used for description and documentation.
+                                        peer_ip:
+                                           The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                                           and `ip` is an IP address.
+                                        bgp:
+                                           Enforce IPv4 BGP peering for the peer
+
+                                           Subclass of AvdModel.
+                                        ipv4_acl_in:
+                                           Name of the IPv4 access-list to be assigned in the ingress direction.
+                                           The access-list must be
+                                           defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                           Required
+                                           for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                                           `wan_carriers`.
+                                        ipv4_acl_out:
+                                           Name of the IPv4 Access-list to be assigned in the egress direction.
+                                           The access-list must be defined
+                                           under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                        static_routes:
+                                           Configure IPv4 static routes pointing to `peer_ip`.
+
+                                           Subclass of AvdIndexedList with
+                                           `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                                        qos_profile: QOS service profile.
+                                        wan_carrier:
+                                           The WAN carrier this interface is connected to.
+                                           This is used to infer the path-groups in which this
+                                           interface should be configured.
+                                           Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                                           `ipv4_acl_in` is also required on all WAN interfaces.
+                                        wan_circuit_id:
+                                           The WAN circuit ID for this interface.
+                                           This is not rendered in the configuration but used for WAN
+                                           designs.
+                                        connected_to_pathfinder: For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+                                        raw_eos_cli: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
+                                        flow_tracking:
+                                           Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                                           setting.
+
+                                           Subclass of AvdModel.
+                                        structured_config:
+                                           Custom structured config for the Port-Channel interface.
+
+                                           Subclass of AvdModel.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class L3PortChannels(AvdIndexedList[str, L3PortChannelsItem]):
+                            """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "name"
+
+                        L3PortChannels._item_type = L3PortChannelsItem
+
                         _fields: ClassVar[dict] = {
                             "name": {"type": str},
                             "downlink_pools": {"type": DownlinkPools},
@@ -46231,6 +49597,7 @@ class EosDesigns(EosDesignsRootModel):
                             "wan_ha": {"type": WanHa},
                             "dps_mss_ipv4": {"type": str, "default": "auto"},
                             "l3_interfaces": {"type": L3Interfaces},
+                            "l3_port_channels": {"type": L3PortChannels},
                             "data_plane_cpu_allocation_max": {"type": int},
                             "flow_tracker_type": {"type": str},
                             "_custom_data": {"type": dict},
@@ -47022,11 +50389,16 @@ class EosDesigns(EosDesignsRootModel):
                         l3_interfaces: L3Interfaces
                         """
                         L3 Interfaces to configure on the node.
-                        Used to define the node for WAN interfaces when
-                        `wan_carrier` is set.
 
-                        Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                        `name` (`str`).
+                        Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                        Primary key is `name` (`str`).
+                        """
+                        l3_port_channels: L3PortChannels
+                        """
+                        L3 Port-Channel interfaces to configure on the node.
+
+                        Subclass of AvdIndexedList with
+                        `L3PortChannelsItem` items. Primary key is `name` (`str`).
                         """
                         data_plane_cpu_allocation_max: int | None
                         """
@@ -47153,6 +50525,7 @@ class EosDesigns(EosDesignsRootModel):
                                 wan_ha: WanHa | UndefinedType = Undefined,
                                 dps_mss_ipv4: str | UndefinedType = Undefined,
                                 l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                                l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                                 data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined,
                                 flow_tracker_type: Literal["sampled", "hardware"] | None | UndefinedType = Undefined,
                                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -47716,11 +51089,14 @@ class EosDesigns(EosDesignsRootModel):
                                     dps_mss_ipv4: IPv4 MSS value configured under "router path-selection" on WAN Devices.
                                     l3_interfaces:
                                        L3 Interfaces to configure on the node.
-                                       Used to define the node for WAN interfaces when
-                                       `wan_carrier` is set.
 
-                                       Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                                       `name` (`str`).
+                                       Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                                       Primary key is `name` (`str`).
+                                    l3_port_channels:
+                                       L3 Port-Channel interfaces to configure on the node.
+
+                                       Subclass of AvdIndexedList with
+                                       `L3PortChannelsItem` items. Primary key is `name` (`str`).
                                     data_plane_cpu_allocation_max:
                                        Set the maximum number of CPU used for the data plane.
                                        This setting is useful on virtual Route
@@ -49624,6 +53000,550 @@ class EosDesigns(EosDesignsRootModel):
 
                     L3Interfaces._item_type = L3InterfacesItem
 
+                    class L3PortChannelsItem(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class MemberInterfacesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class StructuredConfig(EosCliConfigGen.EthernetInterfacesItem):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "name": {"type": str},
+                                "description": {"type": str},
+                                "peer": {"type": str},
+                                "peer_interface": {"type": str},
+                                "speed": {"type": str},
+                                "structured_config": {"type": StructuredConfig},
+                                "_custom_data": {"type": dict},
+                            }
+                            name: str
+                            """
+                            Ethernet interface name like 'Ethernet2'.
+                            Member interface cannot be subinterface.
+                            """
+                            description: str | None
+                            """
+                            Interface description for this member.
+                            If not set, a default description will be configured with
+                            '[<peer>[ <peer_interface>]]'.
+                            """
+                            peer: str | None
+                            """
+                            The peer device name. Used for description and documentation.
+                            If not set, this inherits the peer
+                            setting on the port-channel interface.
+                            """
+                            peer_interface: str | None
+                            """The peer device interface. Used for description and documentation."""
+                            speed: str | None
+                            """
+                            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                            <interface_speed>`.
+                            """
+                            structured_config: StructuredConfig
+                            """
+                            Custom structured config for the member ethernet interface.
+
+                            Subclass of AvdModel.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    name: str | UndefinedType = Undefined,
+                                    description: str | None | UndefinedType = Undefined,
+                                    peer: str | None | UndefinedType = Undefined,
+                                    peer_interface: str | None | UndefinedType = Undefined,
+                                    speed: str | None | UndefinedType = Undefined,
+                                    structured_config: StructuredConfig | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    MemberInterfacesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        name:
+                                           Ethernet interface name like 'Ethernet2'.
+                                           Member interface cannot be subinterface.
+                                        description:
+                                           Interface description for this member.
+                                           If not set, a default description will be configured with
+                                           '[<peer>[ <peer_interface>]]'.
+                                        peer:
+                                           The peer device name. Used for description and documentation.
+                                           If not set, this inherits the peer
+                                           setting on the port-channel interface.
+                                        peer_interface: The peer device interface. Used for description and documentation.
+                                        speed:
+                                           Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                           <interface_speed>`.
+                                        structured_config:
+                                           Custom structured config for the member ethernet interface.
+
+                                           Subclass of AvdModel.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class MemberInterfaces(AvdIndexedList[str, MemberInterfacesItem]):
+                            """Subclass of AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "name"
+
+                        MemberInterfaces._item_type = MemberInterfacesItem
+
+                        class Bgp(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "peer_as": {"type": str},
+                                "ipv4_prefix_list_in": {"type": str},
+                                "ipv4_prefix_list_out": {"type": str},
+                                "_custom_data": {"type": dict},
+                            }
+                            peer_as: str
+                            """
+                            BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                            For asdot notation in
+                            YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                            number.
+                            """
+                            ipv4_prefix_list_in: str | None
+                            """
+                            Prefix List Name. Accept routes for only these prefixes from the peer.
+                            Required for wan interfaces.
+                            """
+                            ipv4_prefix_list_out: str | None
+                            """
+                            Prefix List Name. Advertise routes for only these prefixes.
+                            If not specified, nothing would be
+                            advertised.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    peer_as: str | UndefinedType = Undefined,
+                                    ipv4_prefix_list_in: str | None | UndefinedType = Undefined,
+                                    ipv4_prefix_list_out: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Bgp.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        peer_as:
+                                           BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                           For asdot notation in
+                                           YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                           number.
+                                        ipv4_prefix_list_in:
+                                           Prefix List Name. Accept routes for only these prefixes from the peer.
+                                           Required for wan interfaces.
+                                        ipv4_prefix_list_out:
+                                           Prefix List Name. Advertise routes for only these prefixes.
+                                           If not specified, nothing would be
+                                           advertised.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"prefix": {"type": str}, "_custom_data": {"type": dict}}
+                            prefix: str
+                            """IPv4_network/Mask."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self, *, prefix: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                                ) -> None:
+                                    """
+                                    StaticRoutesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        prefix: IPv4_network/Mask.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutes(AvdIndexedList[str, StaticRoutesItem]):
+                            """Subclass of AvdIndexedList with `StaticRoutesItem` items. Primary key is `prefix` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "prefix"
+
+                        StaticRoutes._item_type = StaticRoutesItem
+
+                        class FlowTracking(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "name": {"type": str}, "_custom_data": {"type": dict}}
+                            enabled: bool | None
+                            name: str | None
+                            """Flow tracker name as defined in flow_tracking_settings."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    enabled: bool | None | UndefinedType = Undefined,
+                                    name: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    FlowTracking.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        enabled: enabled
+                                        name: Flow tracker name as defined in flow_tracking_settings.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StructuredConfig(EosCliConfigGen.PortChannelInterfacesItem):
+                            """Subclass of AvdModel."""
+
+                        _fields: ClassVar[dict] = {
+                            "name": {"type": str},
+                            "description": {"type": str},
+                            "mode": {"type": str, "default": "active"},
+                            "member_interfaces": {"type": MemberInterfaces},
+                            "ip_address": {"type": str},
+                            "dhcp_ip": {"type": str},
+                            "public_ip": {"type": str},
+                            "encapsulation_dot1q_vlan": {"type": int},
+                            "dhcp_accept_default_route": {"type": bool, "default": True},
+                            "enabled": {"type": bool, "default": True},
+                            "peer": {"type": str},
+                            "peer_port_channel": {"type": str},
+                            "peer_ip": {"type": str},
+                            "bgp": {"type": Bgp},
+                            "ipv4_acl_in": {"type": str},
+                            "ipv4_acl_out": {"type": str},
+                            "static_routes": {"type": StaticRoutes},
+                            "qos_profile": {"type": str},
+                            "wan_carrier": {"type": str},
+                            "wan_circuit_id": {"type": str},
+                            "connected_to_pathfinder": {"type": bool, "default": True},
+                            "raw_eos_cli": {"type": str},
+                            "flow_tracking": {"type": FlowTracking},
+                            "structured_config": {"type": StructuredConfig},
+                            "_custom_data": {"type": dict},
+                        }
+                        name: str
+                        """
+                        Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                        For a
+                        Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                        """
+                        description: str | None
+                        """
+                        Interface description.
+                        If not set, a default description will be configured with '[<peer>[
+                        <peer_port_channel>]]'.
+                        """
+                        mode: Literal["active", "passive", "on"]
+                        """
+                        Port-Channel mode.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Default value: `"active"`
+                        """
+                        member_interfaces: MemberInterfaces
+                        """
+                        Port-Channel member interfaces.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Subclass of
+                        AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                        """
+                        ip_address: str | None
+                        """Node IPv4 address/Mask or 'dhcp'."""
+                        dhcp_ip: str | None
+                        """
+                        When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                        IPv4 address
+                        (without mask) to be allocated on the interface if known.
+                        This is not rendered in the configuration
+                        but can be used for substitution of 'interface_ip' in the Access-list
+                        set under `ipv4_acl_in` and
+                        `ipv4_acl_out`.
+                        """
+                        public_ip: str | None
+                        """
+                        Node IPv4 address (no mask).
+
+                        This is used to get the public IP (if known) when the device is behind
+                        NAT.
+                        This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                        with the following preference:
+                          `wan_route_servers.path_groups.interfaces.ip_address`
+                              ->
+                        `l3_port_channels.public_ip`
+                                  -> `l3_port_channels.ip_address`
+
+                        The determined Public IP is
+                        used by WAN routers when peering with this interface.
+                        """
+                        encapsulation_dot1q_vlan: int | None
+                        """
+                        For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                        specified.
+                        """
+                        dhcp_accept_default_route: bool
+                        """
+                        Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+
+                        Default value: `True`
+                        """
+                        enabled: bool
+                        """
+                        Enable or Shutdown the interface.
+
+                        Default value: `True`
+                        """
+                        peer: str | None
+                        """The peer device name. Used for description and documentation."""
+                        peer_port_channel: str | None
+                        """The peer device port-channel interface. Used for description and documentation."""
+                        peer_ip: str | None
+                        """
+                        The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                        and `ip` is an IP address.
+                        """
+                        bgp: Bgp
+                        """
+                        Enforce IPv4 BGP peering for the peer
+
+                        Subclass of AvdModel.
+                        """
+                        ipv4_acl_in: str | None
+                        """
+                        Name of the IPv4 access-list to be assigned in the ingress direction.
+                        The access-list must be
+                        defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        Required
+                        for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                        `wan_carriers`.
+                        """
+                        ipv4_acl_out: str | None
+                        """
+                        Name of the IPv4 Access-list to be assigned in the egress direction.
+                        The access-list must be defined
+                        under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        """
+                        static_routes: StaticRoutes
+                        """
+                        Configure IPv4 static routes pointing to `peer_ip`.
+
+                        Subclass of AvdIndexedList with
+                        `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                        """
+                        qos_profile: str | None
+                        """QOS service profile."""
+                        wan_carrier: str | None
+                        """
+                        The WAN carrier this interface is connected to.
+                        This is used to infer the path-groups in which this
+                        interface should be configured.
+                        Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                        `ipv4_acl_in` is also required on all WAN interfaces.
+                        """
+                        wan_circuit_id: str | None
+                        """
+                        The WAN circuit ID for this interface.
+                        This is not rendered in the configuration but used for WAN
+                        designs.
+                        """
+                        connected_to_pathfinder: bool
+                        """
+                        For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+
+                        Default value: `True`
+                        """
+                        raw_eos_cli: str | None
+                        """EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration."""
+                        flow_tracking: FlowTracking
+                        """
+                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                        setting.
+
+                        Subclass of AvdModel.
+                        """
+                        structured_config: StructuredConfig
+                        """
+                        Custom structured config for the Port-Channel interface.
+
+                        Subclass of AvdModel.
+                        """
+                        _custom_data: dict[str, Any]
+
+                        if TYPE_CHECKING:
+
+                            def __init__(
+                                self,
+                                *,
+                                name: str | UndefinedType = Undefined,
+                                description: str | None | UndefinedType = Undefined,
+                                mode: Literal["active", "passive", "on"] | UndefinedType = Undefined,
+                                member_interfaces: MemberInterfaces | UndefinedType = Undefined,
+                                ip_address: str | None | UndefinedType = Undefined,
+                                dhcp_ip: str | None | UndefinedType = Undefined,
+                                public_ip: str | None | UndefinedType = Undefined,
+                                encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
+                                dhcp_accept_default_route: bool | UndefinedType = Undefined,
+                                enabled: bool | UndefinedType = Undefined,
+                                peer: str | None | UndefinedType = Undefined,
+                                peer_port_channel: str | None | UndefinedType = Undefined,
+                                peer_ip: str | None | UndefinedType = Undefined,
+                                bgp: Bgp | UndefinedType = Undefined,
+                                ipv4_acl_in: str | None | UndefinedType = Undefined,
+                                ipv4_acl_out: str | None | UndefinedType = Undefined,
+                                static_routes: StaticRoutes | UndefinedType = Undefined,
+                                qos_profile: str | None | UndefinedType = Undefined,
+                                wan_carrier: str | None | UndefinedType = Undefined,
+                                wan_circuit_id: str | None | UndefinedType = Undefined,
+                                connected_to_pathfinder: bool | UndefinedType = Undefined,
+                                raw_eos_cli: str | None | UndefinedType = Undefined,
+                                flow_tracking: FlowTracking | UndefinedType = Undefined,
+                                structured_config: StructuredConfig | UndefinedType = Undefined,
+                                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                            ) -> None:
+                                """
+                                L3PortChannelsItem.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    name:
+                                       Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                                       For a
+                                       Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                                    description:
+                                       Interface description.
+                                       If not set, a default description will be configured with '[<peer>[
+                                       <peer_port_channel>]]'.
+                                    mode:
+                                       Port-Channel mode.
+                                       Should not be set on Port-Channel subinterfaces.
+                                    member_interfaces:
+                                       Port-Channel member interfaces.
+                                       Should not be set on Port-Channel subinterfaces.
+
+                                       Subclass of
+                                       AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                                    ip_address: Node IPv4 address/Mask or 'dhcp'.
+                                    dhcp_ip:
+                                       When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                                       IPv4 address
+                                       (without mask) to be allocated on the interface if known.
+                                       This is not rendered in the configuration
+                                       but can be used for substitution of 'interface_ip' in the Access-list
+                                       set under `ipv4_acl_in` and
+                                       `ipv4_acl_out`.
+                                    public_ip:
+                                       Node IPv4 address (no mask).
+
+                                       This is used to get the public IP (if known) when the device is behind
+                                       NAT.
+                                       This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                                       with the following preference:
+                                         `wan_route_servers.path_groups.interfaces.ip_address`
+                                             ->
+                                       `l3_port_channels.public_ip`
+                                                 -> `l3_port_channels.ip_address`
+
+                                       The determined Public IP is
+                                       used by WAN routers when peering with this interface.
+                                    encapsulation_dot1q_vlan:
+                                       For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                                       specified.
+                                    dhcp_accept_default_route: Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+                                    enabled: Enable or Shutdown the interface.
+                                    peer: The peer device name. Used for description and documentation.
+                                    peer_port_channel: The peer device port-channel interface. Used for description and documentation.
+                                    peer_ip:
+                                       The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                                       and `ip` is an IP address.
+                                    bgp:
+                                       Enforce IPv4 BGP peering for the peer
+
+                                       Subclass of AvdModel.
+                                    ipv4_acl_in:
+                                       Name of the IPv4 access-list to be assigned in the ingress direction.
+                                       The access-list must be
+                                       defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                       Required
+                                       for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                                       `wan_carriers`.
+                                    ipv4_acl_out:
+                                       Name of the IPv4 Access-list to be assigned in the egress direction.
+                                       The access-list must be defined
+                                       under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                    static_routes:
+                                       Configure IPv4 static routes pointing to `peer_ip`.
+
+                                       Subclass of AvdIndexedList with
+                                       `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                                    qos_profile: QOS service profile.
+                                    wan_carrier:
+                                       The WAN carrier this interface is connected to.
+                                       This is used to infer the path-groups in which this
+                                       interface should be configured.
+                                       Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                                       `ipv4_acl_in` is also required on all WAN interfaces.
+                                    wan_circuit_id:
+                                       The WAN circuit ID for this interface.
+                                       This is not rendered in the configuration but used for WAN
+                                       designs.
+                                    connected_to_pathfinder: For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+                                    raw_eos_cli: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
+                                    flow_tracking:
+                                       Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                                       setting.
+
+                                       Subclass of AvdModel.
+                                    structured_config:
+                                       Custom structured config for the Port-Channel interface.
+
+                                       Subclass of AvdModel.
+                                    _custom_data: _custom_data
+
+                                """
+
+                    class L3PortChannels(AvdIndexedList[str, L3PortChannelsItem]):
+                        """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
+
+                    L3PortChannels._item_type = L3PortChannelsItem
+
                     _fields: ClassVar[dict] = {
                         "group": {"type": str},
                         "nodes": {"type": Nodes},
@@ -49730,6 +53650,7 @@ class EosDesigns(EosDesignsRootModel):
                         "wan_ha": {"type": WanHa},
                         "dps_mss_ipv4": {"type": str, "default": "auto"},
                         "l3_interfaces": {"type": L3Interfaces},
+                        "l3_port_channels": {"type": L3PortChannels},
                         "data_plane_cpu_allocation_max": {"type": int},
                         "flow_tracker_type": {"type": str},
                         "_custom_data": {"type": dict},
@@ -50524,11 +54445,16 @@ class EosDesigns(EosDesignsRootModel):
                     l3_interfaces: L3Interfaces
                     """
                     L3 Interfaces to configure on the node.
-                    Used to define the node for WAN interfaces when
-                    `wan_carrier` is set.
 
-                    Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                    `name` (`str`).
+                    Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                    Primary key is `name` (`str`).
+                    """
+                    l3_port_channels: L3PortChannels
+                    """
+                    L3 Port-Channel interfaces to configure on the node.
+
+                    Subclass of AvdIndexedList with
+                    `L3PortChannelsItem` items. Primary key is `name` (`str`).
                     """
                     data_plane_cpu_allocation_max: int | None
                     """
@@ -50655,6 +54581,7 @@ class EosDesigns(EosDesignsRootModel):
                             wan_ha: WanHa | UndefinedType = Undefined,
                             dps_mss_ipv4: str | UndefinedType = Undefined,
                             l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                            l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                             data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined,
                             flow_tracker_type: Literal["sampled", "hardware"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -51220,11 +55147,14 @@ class EosDesigns(EosDesignsRootModel):
                                 dps_mss_ipv4: IPv4 MSS value configured under "router path-selection" on WAN Devices.
                                 l3_interfaces:
                                    L3 Interfaces to configure on the node.
-                                   Used to define the node for WAN interfaces when
-                                   `wan_carrier` is set.
 
-                                   Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                                   `name` (`str`).
+                                   Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                                   Primary key is `name` (`str`).
+                                l3_port_channels:
+                                   L3 Port-Channel interfaces to configure on the node.
+
+                                   Subclass of AvdIndexedList with
+                                   `L3PortChannelsItem` items. Primary key is `name` (`str`).
                                 data_plane_cpu_allocation_max:
                                    Set the maximum number of CPU used for the data plane.
                                    This setting is useful on virtual Route
@@ -53197,6 +57127,550 @@ class EosDesigns(EosDesignsRootModel):
 
                     L3Interfaces._item_type = L3InterfacesItem
 
+                    class L3PortChannelsItem(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class MemberInterfacesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class StructuredConfig(EosCliConfigGen.EthernetInterfacesItem):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "name": {"type": str},
+                                "description": {"type": str},
+                                "peer": {"type": str},
+                                "peer_interface": {"type": str},
+                                "speed": {"type": str},
+                                "structured_config": {"type": StructuredConfig},
+                                "_custom_data": {"type": dict},
+                            }
+                            name: str
+                            """
+                            Ethernet interface name like 'Ethernet2'.
+                            Member interface cannot be subinterface.
+                            """
+                            description: str | None
+                            """
+                            Interface description for this member.
+                            If not set, a default description will be configured with
+                            '[<peer>[ <peer_interface>]]'.
+                            """
+                            peer: str | None
+                            """
+                            The peer device name. Used for description and documentation.
+                            If not set, this inherits the peer
+                            setting on the port-channel interface.
+                            """
+                            peer_interface: str | None
+                            """The peer device interface. Used for description and documentation."""
+                            speed: str | None
+                            """
+                            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                            <interface_speed>`.
+                            """
+                            structured_config: StructuredConfig
+                            """
+                            Custom structured config for the member ethernet interface.
+
+                            Subclass of AvdModel.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    name: str | UndefinedType = Undefined,
+                                    description: str | None | UndefinedType = Undefined,
+                                    peer: str | None | UndefinedType = Undefined,
+                                    peer_interface: str | None | UndefinedType = Undefined,
+                                    speed: str | None | UndefinedType = Undefined,
+                                    structured_config: StructuredConfig | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    MemberInterfacesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        name:
+                                           Ethernet interface name like 'Ethernet2'.
+                                           Member interface cannot be subinterface.
+                                        description:
+                                           Interface description for this member.
+                                           If not set, a default description will be configured with
+                                           '[<peer>[ <peer_interface>]]'.
+                                        peer:
+                                           The peer device name. Used for description and documentation.
+                                           If not set, this inherits the peer
+                                           setting on the port-channel interface.
+                                        peer_interface: The peer device interface. Used for description and documentation.
+                                        speed:
+                                           Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                           <interface_speed>`.
+                                        structured_config:
+                                           Custom structured config for the member ethernet interface.
+
+                                           Subclass of AvdModel.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class MemberInterfaces(AvdIndexedList[str, MemberInterfacesItem]):
+                            """Subclass of AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "name"
+
+                        MemberInterfaces._item_type = MemberInterfacesItem
+
+                        class Bgp(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "peer_as": {"type": str},
+                                "ipv4_prefix_list_in": {"type": str},
+                                "ipv4_prefix_list_out": {"type": str},
+                                "_custom_data": {"type": dict},
+                            }
+                            peer_as: str
+                            """
+                            BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                            For asdot notation in
+                            YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                            number.
+                            """
+                            ipv4_prefix_list_in: str | None
+                            """
+                            Prefix List Name. Accept routes for only these prefixes from the peer.
+                            Required for wan interfaces.
+                            """
+                            ipv4_prefix_list_out: str | None
+                            """
+                            Prefix List Name. Advertise routes for only these prefixes.
+                            If not specified, nothing would be
+                            advertised.
+                            """
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    peer_as: str | UndefinedType = Undefined,
+                                    ipv4_prefix_list_in: str | None | UndefinedType = Undefined,
+                                    ipv4_prefix_list_out: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Bgp.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        peer_as:
+                                           BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+                                           For asdot notation in
+                                           YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float
+                                           number.
+                                        ipv4_prefix_list_in:
+                                           Prefix List Name. Accept routes for only these prefixes from the peer.
+                                           Required for wan interfaces.
+                                        ipv4_prefix_list_out:
+                                           Prefix List Name. Advertise routes for only these prefixes.
+                                           If not specified, nothing would be
+                                           advertised.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"prefix": {"type": str}, "_custom_data": {"type": dict}}
+                            prefix: str
+                            """IPv4_network/Mask."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self, *, prefix: str | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                                ) -> None:
+                                    """
+                                    StaticRoutesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        prefix: IPv4_network/Mask.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StaticRoutes(AvdIndexedList[str, StaticRoutesItem]):
+                            """Subclass of AvdIndexedList with `StaticRoutesItem` items. Primary key is `prefix` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "prefix"
+
+                        StaticRoutes._item_type = StaticRoutesItem
+
+                        class FlowTracking(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "name": {"type": str}, "_custom_data": {"type": dict}}
+                            enabled: bool | None
+                            name: str | None
+                            """Flow tracker name as defined in flow_tracking_settings."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    enabled: bool | None | UndefinedType = Undefined,
+                                    name: str | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    FlowTracking.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        enabled: enabled
+                                        name: Flow tracker name as defined in flow_tracking_settings.
+                                        _custom_data: _custom_data
+
+                                    """
+
+                        class StructuredConfig(EosCliConfigGen.PortChannelInterfacesItem):
+                            """Subclass of AvdModel."""
+
+                        _fields: ClassVar[dict] = {
+                            "name": {"type": str},
+                            "description": {"type": str},
+                            "mode": {"type": str, "default": "active"},
+                            "member_interfaces": {"type": MemberInterfaces},
+                            "ip_address": {"type": str},
+                            "dhcp_ip": {"type": str},
+                            "public_ip": {"type": str},
+                            "encapsulation_dot1q_vlan": {"type": int},
+                            "dhcp_accept_default_route": {"type": bool, "default": True},
+                            "enabled": {"type": bool, "default": True},
+                            "peer": {"type": str},
+                            "peer_port_channel": {"type": str},
+                            "peer_ip": {"type": str},
+                            "bgp": {"type": Bgp},
+                            "ipv4_acl_in": {"type": str},
+                            "ipv4_acl_out": {"type": str},
+                            "static_routes": {"type": StaticRoutes},
+                            "qos_profile": {"type": str},
+                            "wan_carrier": {"type": str},
+                            "wan_circuit_id": {"type": str},
+                            "connected_to_pathfinder": {"type": bool, "default": True},
+                            "raw_eos_cli": {"type": str},
+                            "flow_tracking": {"type": FlowTracking},
+                            "structured_config": {"type": StructuredConfig},
+                            "_custom_data": {"type": dict},
+                        }
+                        name: str
+                        """
+                        Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                        For a
+                        Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                        """
+                        description: str | None
+                        """
+                        Interface description.
+                        If not set, a default description will be configured with '[<peer>[
+                        <peer_port_channel>]]'.
+                        """
+                        mode: Literal["active", "passive", "on"]
+                        """
+                        Port-Channel mode.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Default value: `"active"`
+                        """
+                        member_interfaces: MemberInterfaces
+                        """
+                        Port-Channel member interfaces.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Subclass of
+                        AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                        """
+                        ip_address: str | None
+                        """Node IPv4 address/Mask or 'dhcp'."""
+                        dhcp_ip: str | None
+                        """
+                        When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                        IPv4 address
+                        (without mask) to be allocated on the interface if known.
+                        This is not rendered in the configuration
+                        but can be used for substitution of 'interface_ip' in the Access-list
+                        set under `ipv4_acl_in` and
+                        `ipv4_acl_out`.
+                        """
+                        public_ip: str | None
+                        """
+                        Node IPv4 address (no mask).
+
+                        This is used to get the public IP (if known) when the device is behind
+                        NAT.
+                        This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                        with the following preference:
+                          `wan_route_servers.path_groups.interfaces.ip_address`
+                              ->
+                        `l3_port_channels.public_ip`
+                                  -> `l3_port_channels.ip_address`
+
+                        The determined Public IP is
+                        used by WAN routers when peering with this interface.
+                        """
+                        encapsulation_dot1q_vlan: int | None
+                        """
+                        For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                        specified.
+                        """
+                        dhcp_accept_default_route: bool
+                        """
+                        Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+
+                        Default value: `True`
+                        """
+                        enabled: bool
+                        """
+                        Enable or Shutdown the interface.
+
+                        Default value: `True`
+                        """
+                        peer: str | None
+                        """The peer device name. Used for description and documentation."""
+                        peer_port_channel: str | None
+                        """The peer device port-channel interface. Used for description and documentation."""
+                        peer_ip: str | None
+                        """
+                        The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                        and `ip` is an IP address.
+                        """
+                        bgp: Bgp
+                        """
+                        Enforce IPv4 BGP peering for the peer
+
+                        Subclass of AvdModel.
+                        """
+                        ipv4_acl_in: str | None
+                        """
+                        Name of the IPv4 access-list to be assigned in the ingress direction.
+                        The access-list must be
+                        defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        Required
+                        for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                        `wan_carriers`.
+                        """
+                        ipv4_acl_out: str | None
+                        """
+                        Name of the IPv4 Access-list to be assigned in the egress direction.
+                        The access-list must be defined
+                        under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                        """
+                        static_routes: StaticRoutes
+                        """
+                        Configure IPv4 static routes pointing to `peer_ip`.
+
+                        Subclass of AvdIndexedList with
+                        `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                        """
+                        qos_profile: str | None
+                        """QOS service profile."""
+                        wan_carrier: str | None
+                        """
+                        The WAN carrier this interface is connected to.
+                        This is used to infer the path-groups in which this
+                        interface should be configured.
+                        Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                        `ipv4_acl_in` is also required on all WAN interfaces.
+                        """
+                        wan_circuit_id: str | None
+                        """
+                        The WAN circuit ID for this interface.
+                        This is not rendered in the configuration but used for WAN
+                        designs.
+                        """
+                        connected_to_pathfinder: bool
+                        """
+                        For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+
+                        Default value: `True`
+                        """
+                        raw_eos_cli: str | None
+                        """EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration."""
+                        flow_tracking: FlowTracking
+                        """
+                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                        setting.
+
+                        Subclass of AvdModel.
+                        """
+                        structured_config: StructuredConfig
+                        """
+                        Custom structured config for the Port-Channel interface.
+
+                        Subclass of AvdModel.
+                        """
+                        _custom_data: dict[str, Any]
+
+                        if TYPE_CHECKING:
+
+                            def __init__(
+                                self,
+                                *,
+                                name: str | UndefinedType = Undefined,
+                                description: str | None | UndefinedType = Undefined,
+                                mode: Literal["active", "passive", "on"] | UndefinedType = Undefined,
+                                member_interfaces: MemberInterfaces | UndefinedType = Undefined,
+                                ip_address: str | None | UndefinedType = Undefined,
+                                dhcp_ip: str | None | UndefinedType = Undefined,
+                                public_ip: str | None | UndefinedType = Undefined,
+                                encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
+                                dhcp_accept_default_route: bool | UndefinedType = Undefined,
+                                enabled: bool | UndefinedType = Undefined,
+                                peer: str | None | UndefinedType = Undefined,
+                                peer_port_channel: str | None | UndefinedType = Undefined,
+                                peer_ip: str | None | UndefinedType = Undefined,
+                                bgp: Bgp | UndefinedType = Undefined,
+                                ipv4_acl_in: str | None | UndefinedType = Undefined,
+                                ipv4_acl_out: str | None | UndefinedType = Undefined,
+                                static_routes: StaticRoutes | UndefinedType = Undefined,
+                                qos_profile: str | None | UndefinedType = Undefined,
+                                wan_carrier: str | None | UndefinedType = Undefined,
+                                wan_circuit_id: str | None | UndefinedType = Undefined,
+                                connected_to_pathfinder: bool | UndefinedType = Undefined,
+                                raw_eos_cli: str | None | UndefinedType = Undefined,
+                                flow_tracking: FlowTracking | UndefinedType = Undefined,
+                                structured_config: StructuredConfig | UndefinedType = Undefined,
+                                _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                            ) -> None:
+                                """
+                                L3PortChannelsItem.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    name:
+                                       Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                                       For a
+                                       Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                                    description:
+                                       Interface description.
+                                       If not set, a default description will be configured with '[<peer>[
+                                       <peer_port_channel>]]'.
+                                    mode:
+                                       Port-Channel mode.
+                                       Should not be set on Port-Channel subinterfaces.
+                                    member_interfaces:
+                                       Port-Channel member interfaces.
+                                       Should not be set on Port-Channel subinterfaces.
+
+                                       Subclass of
+                                       AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                                    ip_address: Node IPv4 address/Mask or 'dhcp'.
+                                    dhcp_ip:
+                                       When the `ip_address` is `dhcp`, this optional field allows to indicate the expected
+                                       IPv4 address
+                                       (without mask) to be allocated on the interface if known.
+                                       This is not rendered in the configuration
+                                       but can be used for substitution of 'interface_ip' in the Access-list
+                                       set under `ipv4_acl_in` and
+                                       `ipv4_acl_out`.
+                                    public_ip:
+                                       Node IPv4 address (no mask).
+
+                                       This is used to get the public IP (if known) when the device is behind
+                                       NAT.
+                                       This is only used for `wan_rr` routers (AutoVPN RRs and Pathfinders) to determine the Public IP
+                                       with the following preference:
+                                         `wan_route_servers.path_groups.interfaces.ip_address`
+                                             ->
+                                       `l3_port_channels.public_ip`
+                                                 -> `l3_port_channels.ip_address`
+
+                                       The determined Public IP is
+                                       used by WAN routers when peering with this interface.
+                                    encapsulation_dot1q_vlan:
+                                       For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                                       specified.
+                                    dhcp_accept_default_route: Accept a default route from DHCP if `ip_address` is set to `dhcp`.
+                                    enabled: Enable or Shutdown the interface.
+                                    peer: The peer device name. Used for description and documentation.
+                                    peer_port_channel: The peer device port-channel interface. Used for description and documentation.
+                                    peer_ip:
+                                       The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true
+                                       and `ip` is an IP address.
+                                    bgp:
+                                       Enforce IPv4 BGP peering for the peer
+
+                                       Subclass of AvdModel.
+                                    ipv4_acl_in:
+                                       Name of the IPv4 access-list to be assigned in the ingress direction.
+                                       The access-list must be
+                                       defined under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                       Required
+                                       for all WAN interfaces (`wan_carrier` is set) unless the carrier is marked as 'trusted' under
+                                       `wan_carriers`.
+                                    ipv4_acl_out:
+                                       Name of the IPv4 Access-list to be assigned in the egress direction.
+                                       The access-list must be defined
+                                       under `ipv4_acls` and supports field substitution for "interface_ip" and "peer_ip".
+                                    static_routes:
+                                       Configure IPv4 static routes pointing to `peer_ip`.
+
+                                       Subclass of AvdIndexedList with
+                                       `StaticRoutesItem` items. Primary key is `prefix` (`str`).
+                                    qos_profile: QOS service profile.
+                                    wan_carrier:
+                                       The WAN carrier this interface is connected to.
+                                       This is used to infer the path-groups in which this
+                                       interface should be configured.
+                                       Unless the carrier is marked as 'trusted' under `wan_carriers`,
+                                       `ipv4_acl_in` is also required on all WAN interfaces.
+                                    wan_circuit_id:
+                                       The WAN circuit ID for this interface.
+                                       This is not rendered in the configuration but used for WAN
+                                       designs.
+                                    connected_to_pathfinder: For a WAN interface (`wan_carrier` is set), allow to disable the static tunnel towards Pathfinders.
+                                    raw_eos_cli: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
+                                    flow_tracking:
+                                       Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                                       setting.
+
+                                       Subclass of AvdModel.
+                                    structured_config:
+                                       Custom structured config for the Port-Channel interface.
+
+                                       Subclass of AvdModel.
+                                    _custom_data: _custom_data
+
+                                """
+
+                    class L3PortChannels(AvdIndexedList[str, L3PortChannelsItem]):
+                        """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
+
+                    L3PortChannels._item_type = L3PortChannelsItem
+
                     _fields: ClassVar[dict] = {
                         "name": {"type": str},
                         "downlink_pools": {"type": DownlinkPools},
@@ -53303,6 +57777,7 @@ class EosDesigns(EosDesignsRootModel):
                         "wan_ha": {"type": WanHa},
                         "dps_mss_ipv4": {"type": str, "default": "auto"},
                         "l3_interfaces": {"type": L3Interfaces},
+                        "l3_port_channels": {"type": L3PortChannels},
                         "data_plane_cpu_allocation_max": {"type": int},
                         "flow_tracker_type": {"type": str},
                         "_custom_data": {"type": dict},
@@ -54094,11 +58569,16 @@ class EosDesigns(EosDesignsRootModel):
                     l3_interfaces: L3Interfaces
                     """
                     L3 Interfaces to configure on the node.
-                    Used to define the node for WAN interfaces when
-                    `wan_carrier` is set.
 
-                    Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                    `name` (`str`).
+                    Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                    Primary key is `name` (`str`).
+                    """
+                    l3_port_channels: L3PortChannels
+                    """
+                    L3 Port-Channel interfaces to configure on the node.
+
+                    Subclass of AvdIndexedList with
+                    `L3PortChannelsItem` items. Primary key is `name` (`str`).
                     """
                     data_plane_cpu_allocation_max: int | None
                     """
@@ -54225,6 +58705,7 @@ class EosDesigns(EosDesignsRootModel):
                             wan_ha: WanHa | UndefinedType = Undefined,
                             dps_mss_ipv4: str | UndefinedType = Undefined,
                             l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                            l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                             data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined,
                             flow_tracker_type: Literal["sampled", "hardware"] | None | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -54788,11 +59269,14 @@ class EosDesigns(EosDesignsRootModel):
                                 dps_mss_ipv4: IPv4 MSS value configured under "router path-selection" on WAN Devices.
                                 l3_interfaces:
                                    L3 Interfaces to configure on the node.
-                                   Used to define the node for WAN interfaces when
-                                   `wan_carrier` is set.
 
-                                   Subclass of AvdIndexedList with `L3InterfacesItem` items. Primary key is
-                                   `name` (`str`).
+                                   Subclass of AvdIndexedList with `L3InterfacesItem` items.
+                                   Primary key is `name` (`str`).
+                                l3_port_channels:
+                                   L3 Port-Channel interfaces to configure on the node.
+
+                                   Subclass of AvdIndexedList with
+                                   `L3PortChannelsItem` items. Primary key is `name` (`str`).
                                 data_plane_cpu_allocation_max:
                                    Set the maximum number of CPU used for the data plane.
                                    This setting is useful on virtual Route

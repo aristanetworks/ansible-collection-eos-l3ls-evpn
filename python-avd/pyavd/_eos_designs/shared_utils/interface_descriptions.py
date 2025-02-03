@@ -4,16 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import load_python_class
 from pyavd.api.interface_descriptions import AvdInterfaceDescriptions
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class InterfaceDescriptionsMixin:
+class InterfaceDescriptionsMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -22,7 +22,7 @@ class InterfaceDescriptionsMixin:
     """
 
     @cached_property
-    def interface_descriptions(self: SharedUtils) -> AvdInterfaceDescriptions:
+    def interface_descriptions(self: SharedUtilsProtocol) -> AvdInterfaceDescriptions:
         """
         Load the python_module defined in `templates.interface_descriptions.python_module`.
 

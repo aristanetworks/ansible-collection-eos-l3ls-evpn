@@ -6,20 +6,18 @@ from __future__ import annotations
 import ipaddress
 from functools import cached_property
 from itertools import groupby as itertools_groupby
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import AvdStringFormatter, append_if_not_duplicate, default, get_item, merge, strip_empties_from_dict
 from pyavd.j2filters import list_compress
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class RouterBgpMixin(UtilsMixin):
+class RouterBgpMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -27,7 +25,7 @@ class RouterBgpMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_bgp(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_bgp(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Return the structured config for router_bgp.
 
@@ -62,7 +60,7 @@ class RouterBgpMixin(UtilsMixin):
         # Strip None values from vlan before returning
         return {key: value for key, value in router_bgp.items() if value is not None}
 
-    def _router_bgp_peer_groups(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _router_bgp_peer_groups(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         """
         Return the structured config for router_bgp.peer_groups.
 
@@ -131,7 +129,7 @@ class RouterBgpMixin(UtilsMixin):
         return strip_empties_from_dict(router_bgp)
 
     @cached_property
-    def _router_bgp_vrfs(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _router_bgp_vrfs(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         """
         Return partial structured config for router_bgp.
 
@@ -276,7 +274,7 @@ class RouterBgpMixin(UtilsMixin):
         return strip_empties_from_dict(router_bgp)
 
     def _update_router_bgp_vrf_evpn_or_mpls_cfg(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         bgp_vrf: dict,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         vrf_address_families: list[str],
@@ -326,7 +324,7 @@ class RouterBgpMixin(UtilsMixin):
             bgp_vrf["evpn_multicast_address_family"] = {"ipv4": {"transit": evpn_multicast_transit_mode}}
 
     def _update_router_bgp_vrf_mlag_neighbor_cfg(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         bgp_vrf: dict,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
@@ -384,7 +382,7 @@ class RouterBgpMixin(UtilsMixin):
                     },
                 )
 
-    def _router_bgp_sorted_vlans_and_svis_lists(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _router_bgp_sorted_vlans_and_svis_lists(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         tenant_svis_l2vlans_dict = {}
         for tenant in self.shared_utils.filtered_tenants:
             tenant_svis_l2vlans_dict[tenant.name] = {}
@@ -431,7 +429,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return tenant_svis_l2vlans_dict
 
-    def _router_bgp_vlans(self: AvdStructuredConfigNetworkServices, tenant_svis_l2vlans_dict: dict) -> list | None:
+    def _router_bgp_vlans(self: AvdStructuredConfigNetworkServicesProtocol, tenant_svis_l2vlans_dict: dict) -> list | None:
         """Return structured config for router_bgp.vlans."""
         if not (
             self.shared_utils.network_services_l2
@@ -475,7 +473,7 @@ class RouterBgpMixin(UtilsMixin):
         return vlans or None
 
     def _router_bgp_vlans_vlan(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
@@ -522,7 +520,7 @@ class RouterBgpMixin(UtilsMixin):
         return {key: value for key, value in bgp_vlan.items() if value is not None}
 
     def _get_vlan_aware_bundle_name_tuple_for_l2vlans(
-        self: AvdStructuredConfigNetworkServices, vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem
+        self: AvdStructuredConfigNetworkServicesProtocol, vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem
     ) -> tuple[str, bool] | None:
         """Return a tuple with string with the vlan-aware-bundle name for one VLAN and a boolean saying if this is a evpn_vlan_bundle."""
         if vlan.evpn_vlan_bundle:
@@ -530,7 +528,7 @@ class RouterBgpMixin(UtilsMixin):
         return (vlan.name, False)
 
     def _get_vlan_aware_bundle_name_tuple_for_svis(
-        self: AvdStructuredConfigNetworkServices, vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
+        self: AvdStructuredConfigNetworkServicesProtocol, vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
     ) -> tuple[str, bool] | None:
         """
         Return a tuple with string with the vlan-aware-bundle name for one VLAN and a boolean saying if this is a evpn_vlan_bundle.
@@ -543,7 +541,7 @@ class RouterBgpMixin(UtilsMixin):
         return ("", False)
 
     def _get_evpn_vlan_bundle(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         bundle_name: str,
@@ -558,7 +556,7 @@ class RouterBgpMixin(UtilsMixin):
         return self.inputs.evpn_vlan_bundles[bundle_name]
 
     def _get_svi_l2vlan_bundle(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         evpn_vlan_bundle: EosDesigns.EvpnVlanBundlesItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         vlans: list,
@@ -586,7 +584,7 @@ class RouterBgpMixin(UtilsMixin):
 
         return None
 
-    def _router_bgp_vlan_aware_bundles(self: AvdStructuredConfigNetworkServices, tenant_svis_l2vlans_dict: dict) -> list | None:
+    def _router_bgp_vlan_aware_bundles(self: AvdStructuredConfigNetworkServicesProtocol, tenant_svis_l2vlans_dict: dict) -> list | None:
         """Return structured config for router_bgp.vlan_aware_bundles."""
         if not self.shared_utils.network_services_l2 or not self.shared_utils.overlay_evpn:
             return None
@@ -675,7 +673,7 @@ class RouterBgpMixin(UtilsMixin):
         return bundles or None
 
     def _router_bgp_vlan_aware_bundles_vrf(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         svis: list[EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem],
@@ -691,7 +689,7 @@ class RouterBgpMixin(UtilsMixin):
         )
 
     def _router_bgp_vlan_aware_bundle(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         name: str,
         vlans: list[EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem]
         | list[EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem],
@@ -728,7 +726,7 @@ class RouterBgpMixin(UtilsMixin):
         return bundle
 
     @cached_property
-    def _router_bgp_redistribute_routes(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _router_bgp_redistribute_routes(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Return structured config for router_bgp.redistribute.
 
@@ -750,7 +748,7 @@ class RouterBgpMixin(UtilsMixin):
         return {"static": {"enabled": True}}
 
     @cached_property
-    def _router_bgp_vpws(self: AvdStructuredConfigNetworkServices) -> list[dict] | None:
+    def _router_bgp_vpws(self: AvdStructuredConfigNetworkServicesProtocol) -> list[dict] | None:
         """Return structured config for router_bgp.vpws."""
         if not (self.shared_utils.network_services_l1 and self.shared_utils.overlay_ler and self.shared_utils.overlay_evpn_mpls):
             return None

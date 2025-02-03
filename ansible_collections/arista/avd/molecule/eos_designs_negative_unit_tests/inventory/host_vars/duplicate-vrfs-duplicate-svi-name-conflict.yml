@@ -44,6 +44,5 @@ tenants:
             ip_address_virtual: 10.0.100.1/24
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for SVIs in VRF 'VRF1'.
-  {'id': 100, 'name': 'VLAN100', 'tenant': 'TENANT1'} conflicts with {'id': 100, 'name':
-  'VLAN100_CONFLICTING_NAME', 'tenant': 'DUPLICATE_TENANT1'}.
+  Found duplicate objects with conflicting data while generating configuration for Vlans.
+  {'id': 100, 'name': 'VLAN100', 'tenant': 'TENANT1'} conflicts with {'id': 100, 'name': 'VLAN100_CONFLICTING_NAME', 'tenant': 'DUPLICATE_TENANT1'}.

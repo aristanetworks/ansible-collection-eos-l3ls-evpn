@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
@@ -14,13 +14,11 @@ from pyavd._utils import Undefined
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigConnectedEndpoints
+    from . import AvdStructuredConfigConnectedEndpointsProtocol
 
 
-class EthernetInterfacesMixin(UtilsMixin):
+class EthernetInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -28,7 +26,7 @@ class EthernetInterfacesMixin(UtilsMixin):
     """
 
     @structured_config_contributor
-    def ethernet_interfaces(self: AvdStructuredConfigConnectedEndpoints) -> None:
+    def ethernet_interfaces(self: AvdStructuredConfigConnectedEndpointsProtocol) -> None:
         """
         Return structured config for ethernet_interfaces.
 
@@ -76,7 +74,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             self.structured_config.ethernet_interfaces.extend(network_ports_ethernet_interfaces)
 
     def _update_ethernet_interface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         ethernet_interface: EosCliConfigGen.EthernetInterfacesItem,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
@@ -120,7 +118,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             )
 
     def _get_ethernet_interface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         node_index: int,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,

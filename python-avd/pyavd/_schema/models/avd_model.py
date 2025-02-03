@@ -410,10 +410,16 @@ class AvdModel(AvdBase):
             if field in ignore_fields:
                 continue
 
-            if (value := self._get_defined_attr(field)) == (other_value := other._get_defined_attr(field)) or value is Undefined:
+            if (value := self._get_defined_attr(field)) == (other_value := other._get_defined_attr(field)) or (
+                value in (Undefined, None) and other_value in (Undefined, None)
+            ):
                 continue
 
             field_type = field_info["type"]
+
+            if issubclass(field_type, AvdBase) and not value and not other_value:
+                # Ignore empty lists or classes since they could have been initialized in the code but they would be trimmed from the output.
+                continue
 
             # TODO: Handle deep comparison for lists and indexed lists as well.
             if not issubclass(field_type, AvdModel) or not isinstance(other_value, field_type):

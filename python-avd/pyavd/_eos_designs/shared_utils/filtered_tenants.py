@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
@@ -12,10 +12,12 @@ from pyavd._utils import default, unique
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+
+    from . import SharedUtilsProtocol
 
 
-class FilteredTenantsMixin:
+class FilteredTenantsMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -24,7 +26,7 @@ class FilteredTenantsMixin:
     """
 
     @cached_property
-    def filtered_tenants(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServices:
+    def filtered_tenants(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServices:
         """
         Return sorted tenants list from all network_services_keys and filtered based on filter_tenants.
 
@@ -77,7 +79,7 @@ class FilteredTenantsMixin:
         return filtered_tenants._natural_sorted()
 
     def filtered_l2vlans(
-        self: SharedUtils, tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem
+        self: SharedUtilsProtocol, tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem
     ) -> EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlans:
         """
         Return sorted and filtered l2vlan list from given tenant.
@@ -101,7 +103,7 @@ class FilteredTenantsMixin:
         return filtered_l2vlans._natural_sorted(sort_key="id")
 
     def is_accepted_vlan(
-        self: SharedUtils,
+        self: SharedUtilsProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
     ) -> bool:
@@ -126,7 +128,7 @@ class FilteredTenantsMixin:
         return bool(self.inputs.enable_trunk_groups and vlan.trunk_groups and endpoint_trunk_groups.intersection(vlan.trunk_groups))
 
     @cached_property
-    def accepted_vlans(self: SharedUtils) -> list[int]:
+    def accepted_vlans(self: SharedUtilsProtocol) -> list[int]:
         """
         The 'vlans' switch fact is a string representing a vlan range (ex. "1-200").
 
@@ -152,7 +154,7 @@ class FilteredTenantsMixin:
 
         return accepted_vlans
 
-    def is_accepted_vrf(self: SharedUtils, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
+    def is_accepted_vrf(self: SharedUtilsProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
         """
         Returns True if.
 
@@ -166,7 +168,9 @@ class FilteredTenantsMixin:
             not self.node_config.filter.deny_vrfs or vrf.name not in self.node_config.filter.deny_vrfs
         )
 
-    def is_forced_vrf(self: SharedUtils, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem, tenant_name: str) -> bool:
+    def is_forced_vrf(
+        self: SharedUtilsProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem, tenant_name: str
+    ) -> bool:
         """
         Returns True if the given VRF name should be configured even without any loopbacks or SVIs etc.
 
@@ -181,7 +185,7 @@ class FilteredTenantsMixin:
         return vrf.name in (self.get_switch_fact("uplink_switch_vrfs", required=False) or [])
 
     def filtered_vrfs(
-        self: SharedUtils, tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem
+        self: SharedUtilsProtocol, tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem
     ) -> EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.Vrfs:
         """
         Return sorted and filtered vrf list from given tenant.
@@ -253,7 +257,7 @@ class FilteredTenantsMixin:
         return filtered_vrfs
 
     def get_merged_svi_config(
-        self: SharedUtils, svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
+        self: SharedUtilsProtocol, svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
     ) -> EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem:
         """
         Return structured config for one svi after inheritance.
@@ -299,7 +303,7 @@ class FilteredTenantsMixin:
         return merged_svi
 
     def filtered_svis(
-        self: SharedUtils, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+        self: SharedUtilsProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
     ) -> EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.Svis:
         """
         Return sorted and filtered svi list from given tenant vrf.
@@ -325,7 +329,7 @@ class FilteredTenantsMixin:
         return svis._natural_sorted(sort_key="id")
 
     @cached_property
-    def endpoint_vlans(self: SharedUtils) -> list:
+    def endpoint_vlans(self: SharedUtilsProtocol) -> list:
         endpoint_vlans = self.get_switch_fact("endpoint_vlans", required=False)
         if not endpoint_vlans:
             return []
@@ -348,7 +352,7 @@ class FilteredTenantsMixin:
         return vrf_vni
 
     @cached_property
-    def vrfs(self: SharedUtils) -> list[str]:
+    def vrfs(self: SharedUtilsProtocol) -> list[str]:
         """
         Return the list of vrfs to be defined on this switch.
 
@@ -361,7 +365,7 @@ class FilteredTenantsMixin:
 
     @staticmethod
     def get_additional_svi_config(
-        svi_config: dict,
+        config: EosCliConfigGen.VlanInterfacesItem | EosCliConfigGen.EthernetInterfacesItem,
         svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
     ) -> None:
@@ -370,38 +374,38 @@ class FilteredTenantsMixin:
 
         Used for SVIs and for subinterfaces when uplink_type: lan.
 
-        The given svi_config is updated in-place.
+        The given config is updated in-place.
         """
-        svi_ip_helpers = svi.ip_helpers or vrf.ip_helpers
-        if svi_ip_helpers:
-            svi_config["ip_helpers"] = [
-                {"ip_helper": svi_ip_helper.ip_helper, "source_interface": svi_ip_helper.source_interface, "vrf": svi_ip_helper.source_vrf}
-                for svi_ip_helper in svi_ip_helpers
-            ]
+        ip_helpers = svi.ip_helpers or vrf.ip_helpers
+        if ip_helpers:
+            for svi_ip_helper in ip_helpers:
+                config.ip_helpers.append_new(
+                    ip_helper=svi_ip_helper.ip_helper,
+                    source_interface=svi_ip_helper.source_interface,
+                    vrf=svi_ip_helper.source_vrf,
+                )
 
         if svi.ospf.enabled and vrf.ospf.enabled:
-            svi_config.update(
-                {
-                    "ospf_area": svi.ospf.area,
-                    "ospf_network_point_to_point": svi.ospf.point_to_point,
-                    "ospf_cost": svi.ospf.cost,
-                },
+            config._update(
+                ospf_area=svi.ospf.area,
+                ospf_network_point_to_point=svi.ospf.point_to_point,
+                ospf_cost=svi.ospf.cost,
             )
             ospf_authentication = svi.ospf.authentication
             if ospf_authentication == "simple" and (ospf_simple_auth_key := svi.ospf.simple_auth_key) is not None:
-                svi_config.update({"ospf_authentication": ospf_authentication, "ospf_authentication_key": ospf_simple_auth_key})
-            elif ospf_authentication == "message-digest" and (ospf_message_digest_keys := svi.ospf.message_digest_keys) is not None:
-                ospf_keys = []
+                config._update(ospf_authentication=ospf_authentication, ospf_authentication_key=ospf_simple_auth_key)
+            elif ospf_authentication == "message-digest" and (ospf_message_digest_keys := svi.ospf.message_digest_keys):
                 for ospf_key in ospf_message_digest_keys:
                     if not (ospf_key.id and ospf_key.key):
                         continue
 
-                    ospf_keys.append({"id": ospf_key.id, "hash_algorithm": ospf_key.hash_algorithm, "key": ospf_key.key})
-                if ospf_keys:
-                    svi_config.update({"ospf_authentication": ospf_authentication, "ospf_message_digest_keys": ospf_keys})
+                    config.ospf_message_digest_keys.append_new(id=ospf_key.id, hash_algorithm=ospf_key.hash_algorithm, key=ospf_key.key)
+
+                if config.ospf_message_digest_keys:
+                    config.ospf_authentication = ospf_authentication
 
     @cached_property
-    def bgp_in_network_services(self: SharedUtils) -> bool:
+    def bgp_in_network_services(self: SharedUtilsProtocol) -> bool:
         """
         True if BGP is needed or forcefully enabled for any VRF under network services.
 
@@ -412,7 +416,7 @@ class FilteredTenantsMixin:
 
         return any(self.bgp_enabled_for_vrf(vrf) for tenant in self.filtered_tenants for vrf in tenant.vrfs)
 
-    def bgp_enabled_for_vrf(self: SharedUtils, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
+    def bgp_enabled_for_vrf(self: SharedUtilsProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
         """
         True if the given VRF should be included under Router BGP.
 

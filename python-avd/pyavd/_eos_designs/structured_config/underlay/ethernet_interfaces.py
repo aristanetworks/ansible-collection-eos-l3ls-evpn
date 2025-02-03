@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
@@ -12,13 +12,11 @@ from pyavd._utils import append_if_not_duplicate, get, strip_null_from_data
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import encrypt, natural_sort
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class EthernetInterfacesMixin(UtilsMixin):
+class EthernetInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -26,7 +24,7 @@ class EthernetInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def ethernet_interfaces(self: AvdStructuredConfigUnderlay) -> list | None:
+    def ethernet_interfaces(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
         """Return structured config for ethernet_interfaces."""
         ethernet_interfaces = []
 
@@ -307,12 +305,28 @@ class EthernetInterfacesMixin(UtilsMixin):
                 context_keys=["name", "peer", "peer_interface"],
             )
 
+        # Member ethernet ports for Port-Channel interface
+        for l3_port_channel in self.shared_utils.node_config.l3_port_channels:
+            # sub-interface for l3_port_channel cannot have member eth ports
+            # skip any logic to generate member port config for such sub-interfaces
+            if "." in l3_port_channel.name:
+                continue
+            member_eth_intfs = self._get_l3_port_channel_member_ports_cfg(l3_port_channel)
+            for member_eth_intf in member_eth_intfs:
+                append_if_not_duplicate(
+                    list_of_dicts=ethernet_interfaces,
+                    primary_key="name",
+                    new_dict=member_eth_intf,
+                    context=f"Ethernet interface defined under 'member_interfaces' for {self.shared_utils.node_type_key_data.key} l3_port_channels",
+                    context_keys=["name", "peer", "peer_interface"],
+                )
+
         if ethernet_interfaces:
             return ethernet_interfaces
 
         return None
 
-    def _get_direct_ha_ethernet_interfaces(self: AvdStructuredConfigUnderlay) -> list:
+    def _get_direct_ha_ethernet_interfaces(self: AvdStructuredConfigUnderlayProtocol) -> list:
         """
         Return a list of ethernet interfaces to be configured for WAN direct HA.
 

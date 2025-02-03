@@ -4,14 +4,14 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get, get_item
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 MPLS_DEFAULT_NODE_TYPE_KEYS = [
     {
@@ -183,7 +183,7 @@ DEFAULT_NODE_TYPE_KEYS = {
 }
 
 
-class NodeTypeKeysMixin:
+class NodeTypeKeysMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -192,7 +192,7 @@ class NodeTypeKeysMixin:
     """
 
     @cached_property
-    def node_type_key_data(self: SharedUtils) -> EosDesigns.NodeTypeKeysItem:
+    def node_type_key_data(self: SharedUtilsProtocol) -> EosDesigns.NodeTypeKeysItem:
         """node_type_key_data containing settings for this node_type."""
         for node_type_key in self.inputs.custom_node_type_keys:
             if node_type_key.type == self.type:

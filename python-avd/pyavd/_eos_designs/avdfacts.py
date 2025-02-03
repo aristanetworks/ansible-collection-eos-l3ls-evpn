@@ -4,23 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
+    from pyavd._eos_designs.shared_utils import SharedUtilsProtocol
 
-    from .shared_utils import SharedUtils
 
-
-class AvdFacts:
+class AvdFactsProtocol(Protocol):
     _hostvars: dict
     inputs: EosDesigns
-    shared_utils: SharedUtils
-
-    def __init__(self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtils) -> None:
-        self._hostvars = hostvars
-        self.inputs = inputs
-        self.shared_utils = shared_utils
+    shared_utils: SharedUtilsProtocol
 
     @classmethod
     def _keys(cls) -> list[str]:
@@ -70,3 +64,10 @@ class AvdFacts:
     def clear_cache(self) -> None:
         for key in self.keys() + self.internal_keys():
             self.__dict__.pop(key, None)
+
+
+class AvdFacts(AvdFactsProtocol):
+    def __init__(self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtilsProtocol) -> None:
+        self._hostvars = hostvars
+        self.inputs = inputs
+        self.shared_utils = shared_utils

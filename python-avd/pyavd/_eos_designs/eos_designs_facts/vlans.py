@@ -5,17 +5,17 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd.j2filters import list_compress, range_expand
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import EosDesignsFacts
+    from . import EosDesignsFacts, EosDesignsFactsProtocol
 
 
-class VlansMixin:
+class VlansMixin(Protocol):
     """
     Mixin Class used to generate some of the EosDesignsFacts.
 
@@ -24,7 +24,7 @@ class VlansMixin:
     """
 
     @cached_property
-    def vlans(self: EosDesignsFacts) -> str:
+    def vlans(self: EosDesignsFactsProtocol) -> str:
         """
         Exposed in avd_switch_facts.
 
@@ -38,7 +38,7 @@ class VlansMixin:
         return list_compress(self._vlans)
 
     def _parse_adapter_settings(
-        self: EosDesignsFacts,
+        self: EosDesignsFactsProtocol,
         adapter_settings: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem | EosDesigns.NetworkPortsItem,
     ) -> tuple[set, set]:
         """Parse the given adapter_settings and return relevant vlans and trunk_groups."""
@@ -72,7 +72,7 @@ class VlansMixin:
         return vlans, trunk_groups
 
     @cached_property
-    def _local_endpoint_vlans_and_trunk_groups(self: EosDesignsFacts) -> tuple[set, set]:
+    def _local_endpoint_vlans_and_trunk_groups(self: EosDesignsFactsProtocol) -> tuple[set, set]:
         """
         Return list of vlans and list of trunk groups used by connected_endpoints on this switch.
 
@@ -128,7 +128,7 @@ class VlansMixin:
         return vlans, trunk_groups
 
     @cached_property
-    def _downstream_switch_endpoint_vlans_and_trunk_groups(self: EosDesignsFacts) -> tuple[set, set]:
+    def _downstream_switch_endpoint_vlans_and_trunk_groups(self: EosDesignsFactsProtocol) -> tuple[set, set]:
         """
         Return set of vlans and set of trunk groups used by downstream switches.
 
@@ -149,7 +149,7 @@ class VlansMixin:
         return vlans, trunk_groups
 
     @cached_property
-    def _mlag_peer_endpoint_vlans_and_trunk_groups(self: EosDesignsFacts) -> tuple[set, set]:
+    def _mlag_peer_endpoint_vlans_and_trunk_groups(self: EosDesignsFactsProtocol) -> tuple[set, set]:
         """
         Return set of vlans and set of trunk groups used by connected_endpoints on the MLAG peer.
 
@@ -163,7 +163,7 @@ class VlansMixin:
         return mlag_peer_facts._endpoint_vlans_and_trunk_groups
 
     @cached_property
-    def _endpoint_vlans_and_trunk_groups(self: EosDesignsFacts) -> tuple[set, set]:
+    def _endpoint_vlans_and_trunk_groups(self: EosDesignsFactsProtocol) -> tuple[set, set]:
         """
         Return set of vlans and set of trunk groups.
 
@@ -175,7 +175,7 @@ class VlansMixin:
         return local_endpoint_vlans.union(downstream_switch_endpoint_vlans), local_endpoint_trunk_groups.union(downstream_switch_endpoint_trunk_groups)
 
     @cached_property
-    def _endpoint_vlans(self: EosDesignsFacts) -> set[int]:
+    def _endpoint_vlans(self: EosDesignsFactsProtocol) -> set[int]:
         """
         Return set of vlans in use by endpoints connected to this switch, downstream switches or MLAG peer.
 
@@ -193,7 +193,7 @@ class VlansMixin:
         return endpoint_vlans.union(mlag_endpoint_vlans)
 
     @cached_property
-    def endpoint_vlans(self: EosDesignsFacts) -> str | None:
+    def endpoint_vlans(self: EosDesignsFactsProtocol) -> str | None:
         """
         Return compressed list of vlans in use by endpoints connected to this switch or MLAG peer.
 
@@ -205,7 +205,7 @@ class VlansMixin:
         return None
 
     @cached_property
-    def _endpoint_trunk_groups(self: EosDesignsFacts) -> set[str]:
+    def _endpoint_trunk_groups(self: EosDesignsFactsProtocol) -> set[str]:
         """Return set of trunk_groups in use by endpoints connected to this switch, downstream switches or MLAG peer."""
         if not self.shared_utils.node_config.filter.only_vlans_in_use:
             return set()
@@ -218,7 +218,7 @@ class VlansMixin:
         return endpoint_trunk_groups.union(mlag_endpoint_trunk_groups)
 
     @cached_property
-    def local_endpoint_trunk_groups(self: EosDesignsFacts) -> list[str]:
+    def local_endpoint_trunk_groups(self: EosDesignsFactsProtocol) -> list[str]:
         """
         Return list of trunk_groups in use by endpoints connected to this switch only.
 
@@ -232,7 +232,7 @@ class VlansMixin:
         return []
 
     @cached_property
-    def endpoint_trunk_groups(self: EosDesignsFacts) -> list[str]:
+    def endpoint_trunk_groups(self: EosDesignsFactsProtocol) -> list[str]:
         """
         Return list of trunk_groups in use by endpoints connected to this switch, downstream switches or MLAG peer.
 
@@ -241,7 +241,7 @@ class VlansMixin:
         return list(self._endpoint_trunk_groups)
 
     @cached_property
-    def _vlans(self: EosDesignsFacts) -> list[int]:
+    def _vlans(self: EosDesignsFactsProtocol) -> list[int]:
         """
         Return list of vlans after filtering network services.
 
