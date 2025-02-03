@@ -3,10 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import append_if_not_duplicate
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
@@ -20,20 +20,19 @@ class IpAccesslistsMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def ip_access_lists(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
+    @structured_config_contributor
+    def ip_access_lists(self: AvdStructuredConfigUnderlayProtocol) -> None:
         """
         Return structured config for ip_access_lists.
 
         Covers ipv4_acl_in/out defined under node l3_interfaces.
         """
         if not self._l3_interface_acls:
-            return None
-
-        ip_access_lists = []
+            return
 
         for interface_acls in self._l3_interface_acls.values():
             for acl in interface_acls.values():
-                append_if_not_duplicate(ip_access_lists, "name", acl, context="IPv4 Access lists for node l3_interfaces", context_keys=["name"])
+                acl_dict = acl._cast_as(EosCliConfigGen.IpAccessListsItem, ignore_extra_keys=True)
+                self.structured_config.ip_access_lists.append(acl_dict)
 
-        return natural_sort(ip_access_lists, "name")
+        natural_sort(self.structured_config.ip_access_lists, "name")

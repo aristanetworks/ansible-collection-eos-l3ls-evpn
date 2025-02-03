@@ -88,6 +88,8 @@ class VlanInterfacesMixin(Protocol):
                 raise AristaAvdInvalidInputsError(msg)
 
         interface_name = f"Vlan{svi.id}"
+        ipv4_acl_in = get(self._svi_acls, f"{interface_name}.ipv4_acl_in")
+        ipv4_acl_out = get(self._svi_acls, f"{interface_name}.ipv4_acl_out")
         vlan_interface_config = {
             "name": interface_name,
             "tenant": svi._tenant,
@@ -97,8 +99,8 @@ class VlanInterfacesMixin(Protocol):
             "ip_address": svi.ip_address,
             "ipv6_address": svi.ipv6_address,
             "ipv6_enable": svi.ipv6_enable,
-            "access_group_in": get(self._svi_acls, f"{interface_name}.ipv4_acl_in.name"),
-            "access_group_out": get(self._svi_acls, f"{interface_name}.ipv4_acl_out.name"),
+            "access_group_in": ipv4_acl_in.name,
+            "access_group_out": ipv4_acl_out.name,
             "mtu": svi.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
             "eos_cli": svi.raw_eos_cli,
         }
