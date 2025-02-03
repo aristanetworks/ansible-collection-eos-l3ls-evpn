@@ -48,7 +48,8 @@ tenants:
             ip_address_virtual: 10.0.100.1/24
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for BGP VRFs defined under network services.
+  Found duplicate objects with conflicting data while generating configuration for Vrfs.
   {'name': 'VRF1', 'rd': '192.168.255.101:1', 'route_targets': {'import': [{'address_family': 'evpn', 'route_targets': ['1:1']}],
-  'export': [{'address_family': 'evpn', 'route_targets': ['1:1']}]}} conflicts with {'name': 'VRF1', 'rd': '192.168.255.101:2', 'route_targets':
-  {'import': [{'address_family': 'evpn', 'route_targets': ['2:2']}], 'export': [{'address_family': 'evpn', 'route_targets': ['2:2']}]}}.
+  'export': [{'address_family': 'evpn', 'route_targets': ['1:1']}]}, 'router_id': '192.168.255.101', 'redistribute': {'connected': {'enabled': True}}}
+  conflicts with {'name': 'VRF1', 'rd': '192.168.255.101:2', 'route_targets': {'import': [{'address_family': 'evpn', 'route_targets': ['2:2']}],
+  'export': [{'address_family': 'evpn', 'route_targets': ['2:2']}]}, 'router_id': '192.168.255.101', 'redistribute': {'connected': {'enabled': True}}}.
