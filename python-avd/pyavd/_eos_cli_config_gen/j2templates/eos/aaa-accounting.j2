@@ -5,7 +5,7 @@
 #}
 {# eos - aaa accounting #}
 {% if aaa_accounting is arista.avd.defined %}
-{%     if aaa_accounting.exec.console.type == 'none' %}
+{%     if aaa_accounting.exec.console.type is arista.avd.defined('none') %}
 aaa accounting exec console none
 {%     elif aaa_accounting.exec.console.methods is arista.avd.defined %}
 {%         set exec_console_list = [] %}
@@ -63,7 +63,7 @@ aaa accounting commands {{ command_console.commands }} console {{ command_consol
 {%             endif %}
 {%         endfor %}
 {%     endif %}
-{%     if aaa_accounting.exec.default.type == 'none' %}
+{%     if aaa_accounting.exec.default.type is arista.avd.defined('none') %}
 aaa accounting exec default none
 {%     elif aaa_accounting.exec.default.methods is arista.avd.defined %}
 {%         set exec_default_list = [] %}
@@ -89,7 +89,7 @@ aaa accounting exec default {{ aaa_accounting.exec.default.type }} {{ exec_defau
 {%         endif %}
 {{ exec_default_cli }}
 {%     endif %}
-{%     if aaa_accounting.system.default.type == 'none' %}
+{%     if aaa_accounting.system.default.type is arista.avd.defined('none') %}
 aaa accounting system default none
 {%     elif aaa_accounting.system.default.methods is arista.avd.defined %}
 {%         set system_default_list = [] %}
