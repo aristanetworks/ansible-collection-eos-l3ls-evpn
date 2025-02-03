@@ -1144,16 +1144,16 @@ router_bgp:
       connected:
         enabled: true
   - name: Tenant_A_ERP_Zone
-    rd: '65103:17'
+    rd: auto
     route_targets:
       import:
       - address_family: evpn
         route_targets:
-        - '17:17'
+        - auto
       export:
       - address_family: evpn
         route_targets:
-        - '17:17'
+        - auto
     router_id: 192.168.255.12
     updates:
       wait_install: true
