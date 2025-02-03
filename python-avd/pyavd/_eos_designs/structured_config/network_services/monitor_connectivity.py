@@ -22,7 +22,7 @@ class MonitorConnectivityMixin(Protocol):
     @structured_config_contributor
     def monitor_connectivity(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Return structured config for monitor_connectivity.
+        Set the structured config for monitor_connectivity.
 
         Only used for CV Pathfinder edge routers today
         """
