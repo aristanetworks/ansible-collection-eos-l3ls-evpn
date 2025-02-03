@@ -36,7 +36,7 @@ class MonitorConnectivityMixin(Protocol):
                 interface_set_name = f"SET-{self.shared_utils.sanitize_interface_name(interface_name)}"
                 self.structured_config.monitor_connectivity.interface_sets.append_new(name=interface_set_name, interfaces=interface_name)
 
-                host = EosCliConfigGen.MonitorConnectivity.HostsItem(
+                self.structured_config.monitor_connectivity.hosts.append_new(
                     name=connection["monitor_name"],
                     description=connection["description"],
                     ip=connection["monitor_host"],
@@ -44,7 +44,6 @@ class MonitorConnectivityMixin(Protocol):
                     address_only=False,
                     url=connection.get("monitor_url"),
                 )
-                self.structured_config.monitor_connectivity.hosts.append(host)
 
         if self.structured_config.monitor_connectivity:
             self.structured_config.monitor_connectivity.shutdown = False
