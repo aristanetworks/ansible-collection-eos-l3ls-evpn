@@ -34,8 +34,7 @@ class MonitorConnectivityMixin(Protocol):
                 interface_name = f"Tunnel{connection['tunnel_id']}" if connection["type"] == "tunnel" else connection["source_interface"]
 
                 interface_set_name = f"SET-{self.shared_utils.sanitize_interface_name(interface_name)}"
-                interface_set = EosCliConfigGen.MonitorConnectivity.InterfaceSetsItem(name=interface_set_name, interfaces=interface_name)
-                self.structured_config.monitor_connectivity.interface_sets.append(interface_set)
+                self.structured_config.monitor_connectivity.interface_sets.append_new(name=interface_set_name, interfaces=interface_name)
 
                 host = EosCliConfigGen.MonitorConnectivity.HostsItem(
                     name=connection["monitor_name"],
