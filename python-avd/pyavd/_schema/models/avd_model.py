@@ -37,6 +37,12 @@ class AvdModel(AvdBase):
     _key_to_field_map: ClassVar[dict[str, str]] = {}
     """Map of dict key to field name. Used when the key is names with a reserved keyword or mixed case. E.g. `Vxlan1` or `as`."""
 
+    _custom_data: dict[str, Any]
+    """
+    Dictionary holding extra keys given in _from_dict.
+    These keys are either keys starting with underscore or any non-schema key if _from_dict was called with 'keep_extra_keys'.
+    """
+
     @classmethod
     def _load(cls, data: Mapping) -> Self:
         """Returns a new instance loaded with the data from the given dict."""
@@ -53,13 +59,13 @@ class AvdModel(AvdBase):
             msg = f"Expecting 'data' as a 'Mapping' when loading data into '{cls.__name__}'. Got '{type(data)}"
             raise TypeError(msg)
 
-        has_custom_data = "_custom_data" in cls._fields
         cls_args = {}
+        custom_data = {}
 
         for key in data:
             if not (field := cls._get_field_name(key)):
-                if keep_extra_keys or (has_custom_data and str(key).startswith("_")):
-                    cls_args.setdefault("_custom_data", {})[key] = data[key]
+                if keep_extra_keys or str(key).startswith("_"):
+                    custom_data[key] = data[key]
                     continue
 
                 if cls._allow_other_keys:
@@ -70,6 +76,9 @@ class AvdModel(AvdBase):
                 raise KeyError(msg)
 
             cls_args[field] = coerce_type(data[key], cls._fields[field]["type"])
+
+        if custom_data:
+            cls_args["_custom_data"] = custom_data
 
         return cls(**cls_args)
 
@@ -94,10 +103,12 @@ class AvdModel(AvdBase):
         - For AvdModel subclasses we return a new empty instance of the class.
         - For other types we return None.
         """
-        if name not in cls._fields:
+        try:
+            field_info = cls._fields[name]
+        except KeyError as e:
             msg = f"'{cls.__name__}' object has no attribute '{name}'"
-            raise AttributeError(msg)
-        field_info = cls._fields[name]
+            raise AttributeError(msg) from e
+
         field_type: type = field_info["type"]
 
         if issubclass(field_type, AvdBase) or field_type is dict:
@@ -111,8 +122,9 @@ class AvdModel(AvdBase):
 
         Only walking the given kwargs improves performance compared to having named kwargs.
 
-        This method is typically overridden when TYPE_HINTING is True, to provider proper suggestions and type hints for the arguments.
+        This method is typically overridden when TYPE_CHECKING is True, to provider proper suggestions and type hints for the arguments.
         """
+        self._custom_data = {}
         [setattr(self, arg, arg_value) for arg, arg_value in kwargs.items() if arg_value is not Undefined]
 
     def __getattr__(self, name: str) -> Any:
@@ -121,10 +133,6 @@ class AvdModel(AvdBase):
 
         We only get here if the attribute is not set already, and next call will skip this since the attribute is set.
         """
-        if name not in self._fields:
-            msg = f"'{type(self).__name__}' object has no attribute '{name}'"
-            raise AttributeError(msg)
-
         default_value = self._get_field_default_value(name)
         setattr(self, name, default_value)
         return default_value
@@ -135,9 +143,6 @@ class AvdModel(AvdBase):
 
         Avoids the overridden __getattr__ to avoid default values.
         """
-        if name not in self._fields:
-            msg = f"'{type(self).__name__}' object has no attribute '{name}'"
-            raise AttributeError(msg)
         try:
             return self.__getattribute__(name)
         except AttributeError:
@@ -147,6 +152,8 @@ class AvdModel(AvdBase):
         """Returns a repr with all the fields that are set including any nested models."""
         cls_name = self.__class__.__name__
         attrs = [f"{key}={getattr(self, key)!r}" for key in self._fields if self._get_defined_attr(key) is not Undefined]
+        if self._custom_data:
+            attrs.append(f"_custom_data={self._custom_data}")
         return f"<{cls_name}({', '.join(attrs)})>"
 
     def __bool__(self) -> bool:
@@ -165,12 +172,12 @@ class AvdModel(AvdBase):
             # True otherwise
             not (isinstance(value, AvdBase) and not value)
             for field in self._fields
-        )
+        ) or bool(self._custom_data)
 
     def _strip_empties(self) -> None:
         """In-place update the instance to remove data matching the given strip_values."""
         for field, field_info in self._fields.items():
-            if (value := self._get_defined_attr(field)) is Undefined or field == "_custom_data":
+            if (value := self._get_defined_attr(field)) is Undefined:
                 continue
 
             if issubclass(field_info["type"], AvdBase):
@@ -192,13 +199,6 @@ class AvdModel(AvdBase):
         as_dict = {}
         for field, field_info in self._fields.items():
             value = self._get_defined_attr(field)
-
-            if field == "_custom_data":
-                if value:
-                    value = cast(dict[str, Any], value)
-                    as_dict.update(value)
-                continue
-
             if value is Undefined:
                 if not include_default_values:
                     continue
@@ -213,6 +213,9 @@ class AvdModel(AvdBase):
                 value = None if value._created_from_null else value._dump(include_default_values=include_default_values)
 
             as_dict[key] = value
+
+        if self._custom_data:
+            as_dict.update(self._custom_data)
 
         return as_dict
 
@@ -303,6 +306,10 @@ class AvdModel(AvdBase):
             # We merged into a "null" class, but since we now have proper data, we clear the flag.
             self._created_from_null = False
 
+        if other._custom_data:
+            legacy_list_merge = list_merge.replace("_unique", "_rp")
+            merge(self._custom_data, deepcopy(other._custom_data), list_merge=legacy_list_merge)
+
     def _deepinherit(self, other: Self) -> None:
         """Update instance by recursively inheriting unset fields from other instance. Lists are not merged."""
         cls = type(self)
@@ -348,7 +355,10 @@ class AvdModel(AvdBase):
 
             if field_type is dict:
                 # In-place deepmerge in to the existing dict without schema.
-                merge(old_value, deepcopy(new_value), list_merge="replace")
+                merge(old_value, deepcopy(new_value), same_key_strategy="use_existing", list_merge="keep")
+
+        if other._custom_data:
+            merge(self._custom_data, deepcopy(other._custom_data), same_key_strategy="use_existing", list_merge="keep")
 
     def _deepinherited(self, other: Self) -> Self:
         """Return new instance with the result of recursively inheriting unset fields from other instance. Lists are not merged."""
@@ -397,6 +407,9 @@ class AvdModel(AvdBase):
         # Pass along the internal flags
         new_instance._created_from_null = self._created_from_null
         new_instance._block_inheritance = self._block_inheritance
+
+        if self._custom_data:
+            new_instance._custom_data = self._custom_data
 
         return new_instance
 
