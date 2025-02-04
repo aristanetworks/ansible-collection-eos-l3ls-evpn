@@ -7,7 +7,6 @@ from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
-from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol
@@ -34,7 +33,7 @@ class RouterOspfMixin(Protocol):
         if no_passive_interfaces:
             self.structured_config.router_ospf.process_ids.append(
                 EosCliConfigGen.RouterOspf.ProcessIdsItem(
-                     id=self.inputs.underlay_ospf_process_id,
-                     no_passive_interfaces=EosCliConfigGen.RouterOspf.ProcessIdsItem.NoPassiveInterfaces(no_passive_interfaces),
+                    id=self.inputs.underlay_ospf_process_id,
+                    no_passive_interfaces=EosCliConfigGen.RouterOspf.ProcessIdsItem.NoPassiveInterfaces(no_passive_interfaces),
                 )
             )
