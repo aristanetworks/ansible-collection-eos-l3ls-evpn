@@ -6,6 +6,9 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
+
 if TYPE_CHECKING:
     from . import AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol
 
@@ -21,17 +24,17 @@ class RouterOspfMixin(Protocol):
     def router_ospf(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> dict | None:
         """Return structured config for router_ospf."""
         if not self.shared_utils.underlay_ospf:
-            return None
+            return
 
-        no_passive_interfaces = [p2p_link_data["interface"] for p2p_link, p2p_link_data in self._filtered_p2p_links if p2p_link.include_in_underlay_protocol]
+        no_passive_interfaces = EosCliConfigGen.RouterOspf.ProcessIdsItem.NoPassiveInterfaces()
+        for p2p_link, p2p_link_data in self._filtered_p2p_links:
+            if p2p_link.include_in_underlay_protocol:
+                no_passive_interfaces.append(p2p_link_data["interface"])
+
         if no_passive_interfaces:
-            return {
-                "process_ids": [
-                    {
-                        "id": self.inputs.underlay_ospf_process_id,
-                        "no_passive_interfaces": no_passive_interfaces,
-                    },
-                ],
-            }
-
-        return None
+            self.structured_config.router_ospf.process_ids.append(
+                EosCliConfigGen.RouterOspf.ProcessIdsItem(
+                     id=self.inputs.underlay_ospf_process_id,
+                     no_passive_interfaces=EosCliConfigGen.RouterOspf.ProcessIdsItem.NoPassiveInterfaces(no_passive_interfaces),
+                )
+            )
