@@ -3,13 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import append_if_not_duplicate
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
-from .utils import UtilsMixin
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
@@ -38,6 +35,12 @@ class RouterPimSparseModeMixin(Protocol):
                     ipv4_config = EosCliConfigGen.RouterPimSparseMode.VrfsItem.Ipv4()
                     for rps in vrf_rps:
                         rps_item = EosCliConfigGen.RouterPimSparseMode.VrfsItem.Ipv4.RpAddressesItem(**rps)
-                        ipv4_config.rp_addresses.append_new(address=rps_item.address, groups=rps_item.groups, access_lists=rps_item.access_lists,priority=rps_item.priority,
-                                                hashmask=rps_item.hashmask, override=rps_item.override)
+                        ipv4_config.rp_addresses.append_new(
+                            address=rps_item.address,
+                            groups=rps_item.groups,
+                            access_lists=rps_item.access_lists,
+                            priority=rps_item.priority,
+                            hashmask=rps_item.hashmask,
+                            override=rps_item.override,
+                        )
                     self.structured_config.router_pim_sparse_mode.vrfs.append_new(name=vrf.name, ipv4=ipv4_config)
