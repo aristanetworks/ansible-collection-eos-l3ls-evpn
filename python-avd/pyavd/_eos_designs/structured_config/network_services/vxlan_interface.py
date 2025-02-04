@@ -122,24 +122,24 @@ class VxlanInterfaceMixin(Protocol):
             # NOTE: this can never be None here, it would be caught previously in the code
             vrf_id: int = default(vrf.vrf_id, vrf.vrf_vni)
 
-            new_vrf = EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem(name=vrf.name, vni=vni)
+            vxlan_vrf = EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem(name=vrf.name, vni=vni)
 
             if getattr(vrf, "_evpn_l3_multicast_enabled", False):
                 if vrf_multicast_group := getattr(vrf, "_evpn_l3_multicast_group_ip", None):
-                    new_vrf.multicast_group = vrf_multicast_group
+                    vxlan_vrf.multicast_group = vrf_multicast_group
                 else:
                     if not tenant.evpn_l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool:
                         msg = f"'evpn_l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool' for Tenant: {tenant.name} is required."
                         raise AristaAvdInvalidInputsError(msg)
 
-                    new_vrf.multicast_group = self.shared_utils.ip_addressing.evpn_underlay_l3_multicast_group(
+                    vxlan_vrf.multicast_group = self.shared_utils.ip_addressing.evpn_underlay_l3_multicast_group(
                         tenant.evpn_l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool,
                         vni,
                         vrf_id,
                         tenant.evpn_l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool_offset,
                     )
 
-            self.structured_config.vxlan_interface.vxlan1.vxlan.vrfs.append(new_vrf)
+            self.structured_config.vxlan_interface.vxlan1.vxlan.vrfs.append(vxlan_vrf)
 
     def _update_vxlan_interface_config_for_vlan(
         self: AvdStructuredConfigNetworkServicesProtocol,
@@ -239,15 +239,16 @@ class VxlanInterfaceMixin(Protocol):
         vnis: dict[int, EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem | EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem] = {}
         for vlan in self.structured_config.vxlan_interface.vxlan1.vxlan.vlans:
             if vlan.vni in vnis:
+                conflicting_object_type = "VLAN" if isinstance(vnis[vlan.vni], EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem) else "VRF"
                 msg = (
                     "Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs. "
-                    f"VLAN {vlan._as_dict()} conflicts with VLAN {vnis[vlan.vni]._as_dict()}."
+                    f"VLAN {vlan._as_dict()} conflicts with {conflicting_object_type} {vnis[vlan.vni]._as_dict()}."
                 )
                 raise AristaAvdInvalidInputsError(msg)
             vnis[vlan.vni] = vlan
         for vrf in self.structured_config.vxlan_interface.vxlan1.vxlan.vrfs:
             if vrf.vni in vnis:
-                conflicting_object_type = "VLAN" if vnis[vrf.vni].__class__.__name__ == "VlansItem" else "VRF"
+                conflicting_object_type = "VLAN" if isinstance(vnis[vrf.vni], EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem) else "VRF"
                 msg = (
                     f"Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs. "
                     f"VRF {vrf._as_dict()} conflicts with {conflicting_object_type} {vnis[vrf.vni]._as_dict()}."
