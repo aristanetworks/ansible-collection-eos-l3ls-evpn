@@ -194,9 +194,9 @@ class WanMixin(Protocol):
                     raise AristaAvdInvalidInputsError(msg)
 
                 local_path_groups[path_group_name] = self.inputs.wan_path_groups[path_group_name]._deepcopy()
-                local_path_groups[path_group_name]._interfaces = []
+                local_path_groups[path_group_name]._internal_data.interfaces = []
 
-            local_path_groups[path_group_name]._interfaces.extend(carrier["interfaces"])
+            local_path_groups[path_group_name]._internal_data.interfaces.extend(carrier["interfaces"])
 
         return local_path_groups
 
@@ -424,7 +424,8 @@ class WanMixin(Protocol):
           `connected_to_pathfinder` is not False.
         """
         return any(
-            local_path_group.name in path_group_names and any(wan_interface["connected_to_pathfinder"] for wan_interface in local_path_group._interfaces)
+            local_path_group.name in path_group_names
+            and any(wan_interface["connected_to_pathfinder"] for wan_interface in local_path_group._internal_data.interfaces)
             for local_path_group in self.wan_local_path_groups
         )
 

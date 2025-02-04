@@ -159,7 +159,7 @@ class RouterPathSelectionMixin(Protocol):
         if path_group_name not in self.shared_utils.wan_local_path_groups:
             return local_interfaces
 
-        for interface in self.shared_utils.wan_local_path_groups[path_group_name]._interfaces:
+        for interface in self.shared_utils.wan_local_path_groups[path_group_name]._internal_data.interfaces:
             local_interface = {"name": get(interface, "name", required=True)}
 
             if self.shared_utils.is_wan_client and self.shared_utils.should_connect_to_wan_rs([path_group_name]):

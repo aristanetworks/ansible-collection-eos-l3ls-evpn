@@ -35,7 +35,7 @@ class LoopbackInterfacesMixin(Protocol):
         loopback_interfaces = []
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
-                if (loopback_interface := self._get_vtep_diagnostic_loopback_for_vrf(vrf)) is not None:
+                if (loopback_interface := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is not None:
                     append_if_not_duplicate(
                         list_of_dicts=loopback_interfaces,
                         primary_key="name",
@@ -78,7 +78,9 @@ class LoopbackInterfacesMixin(Protocol):
         return None
 
     def _get_vtep_diagnostic_loopback_for_vrf(
-        self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> dict | None:
         if (loopback := vrf.vtep_diagnostic.loopback) is None:
             return None
@@ -99,7 +101,7 @@ class LoopbackInterfacesMixin(Protocol):
         return strip_empties_from_dict(
             {
                 "name": interface_name,
-                "description": AvdStringFormatter().format(description_template, interface=interface_name, vrf=vrf.name, tenant=vrf._tenant),
+                "description": AvdStringFormatter().format(description_template, interface=interface_name, vrf=vrf.name, tenant=tenant.name),
                 "shutdown": False,
                 "vrf": vrf.name,
                 "ip_address": f"{self.shared_utils.ip_addressing.vrf_loopback_ip(loopback_ipv4_pool)}/32" if loopback_ipv4_pool else None,

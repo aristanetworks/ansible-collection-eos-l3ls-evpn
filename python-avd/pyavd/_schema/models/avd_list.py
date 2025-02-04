@@ -27,7 +27,9 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     Other lists are *not* using this model.
     """
 
-    _item_type: ClassVar[type]
+    __slots__ = ("_items",)
+
+    _item_type: ClassVar[type]  # pylint: disable=declare-non-slot # pylint bug #9950
     """Type of items. This is used instead of inspecting the type-hints to improve performance significantly."""
     _items: list[T_ItemType]
     """
@@ -66,6 +68,8 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
         else:
             self._items = list(items)
 
+        super().__init__()
+
     def __repr__(self) -> str:
         """Returns a repr with all the items including any nested models."""
         cls_name = self.__class__.__name__
@@ -90,6 +94,13 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
 
     def __setitem__(self, index: int, value: T_ItemType) -> None:
         self._items[index] = value
+
+    def __getstate__(self) -> tuple[None, dict[str, Any]]:
+        slots_dict: dict[str, Any] = {"_items": self._items, "_created_from_null": self._created_from_null, "_block_inheritance": self._block_inheritance}
+        if hasattr(self, "_internal_data_instance"):
+            slots_dict["_internal_data_instance"] = self._internal_data_instance
+
+        return (None, slots_dict)
 
     def get(self, index: int, default: T | UndefinedType = Undefined) -> T_ItemType | T | UndefinedType:
         return self._items[index] if index < len(self._items) else default

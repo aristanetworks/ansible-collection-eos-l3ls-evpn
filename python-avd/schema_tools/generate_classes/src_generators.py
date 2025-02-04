@@ -164,6 +164,9 @@ class ModelSrc:
             else:
                 classsrc += indent(f'"""{description}"""\n', INDENT)
 
+        if slots := self._render_slots():
+            classsrc += f"{slots}\n"
+
         if classes := self._render_classes():
             classsrc += f"{classes}\n"
 
@@ -225,6 +228,14 @@ class ModelSrc:
             return ""
 
         return indent("\n".join(str(class_var) for class_var in self.class_vars), INDENT)
+
+    def _render_slots(self) -> str:
+        """Renders the Python source code for __slots__ covering any nested fields."""
+        if not self.fields:
+            return ""
+        field_names = [f'"{field.name}"' for field in self.fields]
+        slots = ", ".join(sorted(field_names))
+        return f"    __slots__ = ({slots},)\n"
 
     def _render_fields(self) -> str:
         """Renders the Python source code for any nested fields."""

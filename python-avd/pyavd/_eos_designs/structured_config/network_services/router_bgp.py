@@ -147,7 +147,7 @@ class RouterBgpMixin(Protocol):
                     self._update_router_bgp_vrf_evpn_or_mpls_cfg(bgp_vrf, vrf, vrf_address_families)
 
                 if vrf_name != "default":
-                    bgp_vrf.router_id = self.get_vrf_router_id(vrf, vrf.bgp.router_id, tenant.name)
+                    bgp_vrf.router_id = self.get_vrf_router_id(vrf, tenant, vrf.bgp.router_id)
 
                     if vrf.redistribute_connected:
                         bgp_vrf.redistribute.connected.enabled = True
@@ -265,8 +265,8 @@ class RouterBgpMixin(Protocol):
             return
 
         # Not VRF default
-        bgp_vrf.evpn_multicast = getattr(vrf, "_evpn_l3_multicast_enabled", None)
-        if evpn_multicast_transit_mode := getattr(vrf, "_evpn_l3_multicast_evpn_peg_transit", False):
+        bgp_vrf.evpn_multicast = getattr(vrf._internal_data, "evpn_l3_multicast_enabled", None)
+        if evpn_multicast_transit_mode := getattr(vrf._internal_data, "evpn_l3_multicast_evpn_peg_transit", False):
             bgp_vrf.evpn_multicast_address_family.ipv4.transit = evpn_multicast_transit_mode
 
     def _update_router_bgp_vrf_mlag_neighbor_cfg(
@@ -433,7 +433,7 @@ class RouterBgpMixin(Protocol):
         #   - evpn_l2_multicast.always_redistribute_igmp is set on the vlan or tenant.
         if vlan_evpn_l2_multicast_enabled and (
             isinstance(vlan, EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem)
-            or not getattr(vrf, "_evpn_l3_multicast_enabled", False)
+            or not getattr(vrf._internal_data, "evpn_l3_multicast_enabled", False)
             or bool(default(vlan.evpn_l2_multicast.always_redistribute_igmp, tenant.evpn_l2_multicast.always_redistribute_igmp))
         ):
             bgp_vlan.redistribute_routes.append("igmp")
@@ -465,13 +465,14 @@ class RouterBgpMixin(Protocol):
         self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         bundle_name: str,
     ) -> EosDesigns.EvpnVlanBundlesItem:
         """Return an evpn_vlan_bundle dict if it exists, else raise an exception."""
         if bundle_name not in self.inputs.evpn_vlan_bundles:
             msg = (
                 "The 'evpn_vlan_bundle' of the svis/l2vlans must be defined in the common 'evpn_vlan_bundles' setting. First occurrence seen for svi/l2vlan"
-                f" {vlan.id} in Tenant '{vlan._tenant}' and evpn_vlan_bundle '{vlan.evpn_vlan_bundle}'."
+                f" {vlan.id} in Tenant '{tenant.name}' and evpn_vlan_bundle '{vlan.evpn_vlan_bundle}'."
             )
             raise AristaAvdInvalidInputsError(msg)
         return self.inputs.evpn_vlan_bundles[bundle_name]
@@ -519,7 +520,7 @@ class RouterBgpMixin(Protocol):
                         l2vlan_svi_vlan_aware_bundles[bundle_name]["l2vlan_svis"].extend(svis)
                     else:
                         # check if the referred name exists in the global evpn_vlan_bundles
-                        evpn_vlan_bundle = self._get_evpn_vlan_bundle(svis[0], bundle_name)
+                        evpn_vlan_bundle = self._get_evpn_vlan_bundle(svis[0], tenant, bundle_name)
                         l2vlan_svi_vlan_aware_bundles[bundle_name] = {"evpn_vlan_bundle": evpn_vlan_bundle, "l2vlan_svis": svis}
 
                 if self.inputs.evpn_vlan_aware_bundles:
@@ -535,7 +536,7 @@ class RouterBgpMixin(Protocol):
                     l2vlan_svi_vlan_aware_bundles[bundle_name]["l2vlan_svis"].extend(l2vlans)
                 else:
                     # check if the referred name exists in the global evpn_vlan_bundles
-                    evpn_vlan_bundle = self._get_evpn_vlan_bundle(l2vlans[0], bundle_name)
+                    evpn_vlan_bundle = self._get_evpn_vlan_bundle(l2vlans[0], tenant, bundle_name)
                     l2vlan_svi_vlan_aware_bundles[bundle_name] = {"evpn_vlan_bundle": evpn_vlan_bundle, "l2vlan_svis": l2vlans}
 
             if self.inputs.evpn_vlan_aware_bundles:

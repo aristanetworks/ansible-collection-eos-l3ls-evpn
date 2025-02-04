@@ -32,7 +32,7 @@ class RouterPimSparseModeMixin(Protocol):
         vrfs = []
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
-                if vrf_rps := getattr(vrf, "_pim_rp_addresses", None):
+                if vrf_rps := getattr(vrf._internal_data, "pim_rp_addresses", None):
                     vrf_config = {
                         "name": vrf.name,
                         "ipv4": {

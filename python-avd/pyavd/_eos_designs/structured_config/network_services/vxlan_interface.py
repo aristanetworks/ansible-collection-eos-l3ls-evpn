@@ -183,8 +183,8 @@ class VxlanInterfaceMixin(Protocol):
 
             vrf_data = {"name": vrf_name, "vni": vni}
 
-            if getattr(vrf, "_evpn_l3_multicast_enabled", False):
-                if vrf_multicast_group := getattr(vrf, "_evpn_l3_multicast_group_ip", None):
+            if getattr(vrf._internal_data, "evpn_l3_multicast_enabled", False):
+                if vrf_multicast_group := getattr(vrf._internal_data, "evpn_l3_multicast_group_ip", None):
                     vrf_data["multicast_group"] = vrf_multicast_group
                 else:
                     if not tenant.evpn_l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool:

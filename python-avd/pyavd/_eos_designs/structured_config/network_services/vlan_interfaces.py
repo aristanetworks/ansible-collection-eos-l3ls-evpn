@@ -37,14 +37,14 @@ class VlanInterfacesMixin(Protocol):
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 for svi in vrf.svis:
-                    self.structured_config.vlan_interfaces.append(self._get_vlan_interface_config_for_svi(svi, vrf), ignore_fields=("tenant",))
+                    self.structured_config.vlan_interfaces.append(self._get_vlan_interface_config_for_svi(svi, vrf, tenant), ignore_fields=("tenant",))
 
                 # MLAG IBGP Peering VLANs per VRF
                 # Continue to next VRF if mlag vlan_id is not set
                 if (vlan_id := self._mlag_ibgp_peering_vlan_vrf(vrf, tenant)) is None:
                     continue
 
-                self.structured_config.vlan_interfaces.append(self._get_vlan_interface_config_for_mlag_peering(vrf, vlan_id), ignore_fields=("tenant",))
+                self.structured_config.vlan_interfaces.append(self._get_vlan_interface_config_for_mlag_peering(vrf, tenant, vlan_id), ignore_fields=("tenant",))
 
     def _check_virtual_router_mac_address(self: AvdStructuredConfigNetworkServicesProtocol, variable: str) -> None:
         """Raise if virtual router mac address is required but missing, otherwise return None."""
@@ -56,13 +56,14 @@ class VlanInterfacesMixin(Protocol):
         self: AvdStructuredConfigNetworkServicesProtocol,
         svi: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> EosCliConfigGen.VlanInterfacesItem:
         pim_source_interface_needed = False
 
         interface_name = f"Vlan{svi.id}"
         vlan_interface_config = EosCliConfigGen.VlanInterfacesItem(
             name=interface_name,
-            tenant=svi._tenant,
+            tenant=tenant.name,
             tags=EosCliConfigGen.VlanInterfacesItem.Tags(svi._get("tags", [])),  # Historic behavior is to not output the default ["all"]
             description=default(svi.description, svi.name),
             shutdown=not default(svi.enabled, False),  # noqa: FBT003
@@ -100,7 +101,7 @@ class VlanInterfacesMixin(Protocol):
                 vlan_interface_config.ip_address_virtual_secondaries.extend(svi.ip_address_virtual_secondaries)
                 self._check_virtual_router_mac_address("ip_address_virtual_secondaries")
 
-        if default(svi.evpn_l3_multicast.enabled, getattr(vrf, "_evpn_l3_multicast_enabled", False)) is True:
+        if default(svi.evpn_l3_multicast.enabled, getattr(vrf._internal_data, "evpn_l3_multicast_enabled", False)) is True:
             if self.shared_utils.mlag:
                 vlan_interface_config.pim.ipv4.sparse_mode = True
             else:
@@ -109,7 +110,7 @@ class VlanInterfacesMixin(Protocol):
             if pim_source_interface_needed:
                 if (vrf_diagnostic_loopback := vrf.vtep_diagnostic.loopback) is None:
                     msg = (
-                        f"No vtep_diagnostic loopback defined on VRF '{vrf.name}' in Tenant '{svi._tenant}'."
+                        f"No vtep_diagnostic loopback defined on VRF '{vrf.name}' in Tenant '{tenant.name}'."
                         "This is required when 'l3_multicast' is enabled on the VRF and ip_address_virtual is used on an SVI in that VRF."
                     )
                     raise AristaAvdInvalidInputsError(msg)
@@ -137,12 +138,15 @@ class VlanInterfacesMixin(Protocol):
         return vlan_interface_config
 
     def _get_vlan_interface_config_for_mlag_peering(
-        self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem, vlan_id: int
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+        vlan_id: int,
     ) -> EosCliConfigGen.VlanInterfacesItem:
         """Build full config for MLAG peering SVI for the given VRF."""
         vlan_interface_config = EosCliConfigGen.VlanInterfacesItem(
             name=f"Vlan{vlan_id}",
-            tenant=vrf._tenant,
+            tenant=tenant.name,
             type="underlay_peering",
             shutdown=False,
             description=self.shared_utils.interface_descriptions.mlag_peer_l3_vrf_svi(

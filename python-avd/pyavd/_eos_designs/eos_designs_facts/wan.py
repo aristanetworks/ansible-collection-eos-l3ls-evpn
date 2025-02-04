@@ -33,6 +33,6 @@ class WanMixin(Protocol):
 
         wan_path_groups = self.shared_utils.wan_local_path_groups._as_list()
         for wan_path_group in wan_path_groups:
-            wan_path_group["_interfaces"] = self.shared_utils.wan_local_path_groups[wan_path_group["name"]]._interfaces
+            wan_path_group["_interfaces"] = self.shared_utils.wan_local_path_groups[wan_path_group["name"]]._internal_data.interfaces
 
         return wan_path_groups

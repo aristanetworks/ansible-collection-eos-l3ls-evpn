@@ -9,16 +9,41 @@ from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
+    from typing import Any
 
     from typing_extensions import Self
 
     from .type_vars import T_AvdBase
 
 
+class InternalData:
+    __slots__ = (
+        "context",
+        "evpn_l3_multicast_enabled",
+        "evpn_l3_multicast_evpn_peg_transit",
+        "evpn_l3_multicast_group_ip",
+        "interface",
+        "interfaces",
+        "pim_rp_addresses",
+        "type",
+    )
+
+    context: str
+    evpn_l3_multicast_enabled: bool | None
+    evpn_l3_multicast_evpn_peg_transit: bool | None
+    evpn_l3_multicast_group_ip: str | None
+    interface: str
+    interfaces: list
+    pim_rp_addresses: list[dict]
+    type: str | None
+
+
 class AvdBase(ABC):
     """Base class used for schema-based data classes holding data loaded from AVD inputs."""
 
-    _created_from_null: bool = False
+    __slots__ = ("_block_inheritance", "_created_from_null", "_internal_data_instance")
+
+    _created_from_null: bool
     """
     Flag to say if this data was loaded from a '<key>: null' value in YAML.
 
@@ -31,12 +56,34 @@ class AvdBase(ABC):
     Only exception is on _cast_as, where the flag is carried over.
     """
 
-    _block_inheritance: bool = False
+    _block_inheritance: bool
     """Flag to block inheriting further if we at some point inherited from a class with _created_from_null set."""
+
+    _internal_data_instance: InternalData
+    """Placeholder for Internal data used for storing internal context on data objects, without affecting other logic."""
+
+    def __init__(self) -> None:
+        self._created_from_null = False
+        self._block_inheritance = False
 
     def _deepcopy(self) -> Self:
         """Return a copy including all nested models."""
         return deepcopy(self)
+
+    def __setstate__(self, state: tuple[None, dict[str, Any]]) -> None:
+        _, slots = state
+        for name, value in slots.items():
+            setattr(self, name, value)
+
+    @property
+    def _internal_data(self) -> InternalData:
+        """Internal data used for storing internal context on data objects, without affecting other logic."""
+        # Creating the instance on first access to avoid creating unused instances of this class.
+        try:
+            return self._internal_data_instance
+        except AttributeError:
+            self._internal_data_instance = InternalData()
+            return self._internal_data_instance
 
     @classmethod
     @abstractmethod

@@ -59,7 +59,7 @@ class AvdFactsProtocol(Protocol):
         If the value is not cached, it will be resolved by the attribute function first.
         Empty values are removed from the returned data.
         """
-        return {key: getattr(self, key) for key in self.keys() if getattr(self, key) is not None}
+        return {key: value for key in self.keys() if (value := getattr(self, key)) is not None}
 
     def clear_cache(self) -> None:
         for key in self.keys() + self.internal_keys():

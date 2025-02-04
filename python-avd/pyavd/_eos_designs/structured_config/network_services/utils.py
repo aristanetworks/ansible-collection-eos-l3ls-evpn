@@ -203,7 +203,7 @@ class UtilsMixin(Protocol):
         if mac_vrf_id_base is None:
             msg = (
                 "'rt_override' or 'vni_override' or 'mac_vrf_id_base' or 'mac_vrf_vni_base' must be set. "
-                f"Unable to set EVPN RD/RT for vlan {vlan.id} in Tenant '{vlan._tenant}'"
+                f"Unable to set EVPN RD/RT for vlan {vlan.id} in Tenant '{tenant.name}'"
             )
             raise AristaAvdInvalidInputsError(msg)
         return mac_vrf_id_base + vlan.id
@@ -218,7 +218,7 @@ class UtilsMixin(Protocol):
         if mac_vrf_vni_base is None:
             msg = (
                 "'rt_override' or 'vni_override' or 'mac_vrf_id_base' or 'mac_vrf_vni_base' must be set. "
-                f"Unable to set EVPN RD/RT for vlan {vlan.id} in Tenant '{vlan._tenant}'"
+                f"Unable to set EVPN RD/RT for vlan {vlan.id} in Tenant '{tenant.name}'"
             )
             raise AristaAvdInvalidInputsError(msg)
         return mac_vrf_vni_base + vlan.id
@@ -382,16 +382,16 @@ class UtilsMixin(Protocol):
     def get_vrf_router_id(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         router_id: str,
-        tenant_name: str,
     ) -> str | None:
         """
         Determine the router ID for a given VRF based on its configuration.
 
         Args:
             vrf: The VRF object containing OSPF/BGP and vtep_diagnostic details.
+            tenant: The Tenant to which the VRF belongs.
             router_id: The router ID type specified for the VRF (e.g., "vtep_diagnostic", "main_router_id", "none", or an IPv4 address).
-            tenant_name: The name of the tenant to which the VRF belongs.
 
         Returns:
             The resolved router ID as a string, or None if the router ID is not applicable.
@@ -402,9 +402,9 @@ class UtilsMixin(Protocol):
         # Handle "vtep_diagnostic" router ID case
         if router_id == "diagnostic_loopback":
             # Validate required configuration
-            if (interface_data := self._get_vtep_diagnostic_loopback_for_vrf(vrf)) is None:
+            if (interface_data := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is None:
                 msg = (
-                    f"Invalid configuration on VRF '{vrf.name}' in Tenant '{tenant_name}'. "
+                    f"Invalid configuration on VRF '{vrf.name}' in Tenant '{tenant.name}'. "
                     "'vtep_diagnostic.loopback' along with either 'vtep_diagnostic.loopback_ip_pools' or 'vtep_diagnostic.loopback_ip_range' must be defined "
                     "when 'router_id' is set to 'diagnostic_loopback' on the VRF."
                 )

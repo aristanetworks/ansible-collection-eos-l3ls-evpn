@@ -25,9 +25,11 @@ LOGGER = getLogger(__name__)
 class AvdModel(AvdBase):
     """Base class used for schema-based data classes holding dictionaries loaded from AVD inputs."""
 
+    __slots__ = ("_custom_data",)
+
     _allow_other_keys: ClassVar[bool] = False
     """Attribute telling if this class should fail or ignore unknown keys found during loading in _from_dict()."""
-    _fields: ClassVar[dict[str, dict]]
+    _fields: ClassVar[dict[str, dict]]  # pylint: disable=declare-non-slot # pylint bug #9950
     """
     Metadata serving as a shortcut for knowing the expected type of each field and default value.
     This is used instead of inspecting the type-hints to improve performance significantly.
@@ -127,6 +129,8 @@ class AvdModel(AvdBase):
         self._custom_data = {}
         [setattr(self, arg, arg_value) for arg, arg_value in kwargs.items() if arg_value is not Undefined]
 
+        super().__init__()
+
     def __getattr__(self, name: str) -> Any:
         """
         Resolves the default value for a field, set the default value on the attribute and return the value.
@@ -175,7 +179,7 @@ class AvdModel(AvdBase):
         ) or bool(self._custom_data)
 
     def _strip_empties(self) -> None:
-        """In-place update the instance to remove data matching the given strip_values."""
+        """In-place update the instance to remove None values and empty models recursively."""
         for field, field_info in self._fields.items():
             if (value := self._get_defined_attr(field)) is Undefined:
                 continue
@@ -189,6 +193,18 @@ class AvdModel(AvdBase):
 
             if value is None:
                 delattr(self, field)
+
+    def __getstate__(self) -> tuple[None, dict[str, Any]]:
+        slots_dict: dict[str, Any] = {
+            "_custom_data": self._custom_data,
+            "_created_from_null": self._created_from_null,
+            "_block_inheritance": self._block_inheritance,
+        }
+        if hasattr(self, "_internal_data_instance"):
+            slots_dict["_internal_data_instance"] = self._internal_data_instance
+        slots_dict.update({slot: value for slot in self.__slots__ if (value := self._get_defined_attr(slot)) is not Undefined})
+
+        return (None, slots_dict)
 
     def _as_dict(self, include_default_values: bool = False) -> dict:
         """
