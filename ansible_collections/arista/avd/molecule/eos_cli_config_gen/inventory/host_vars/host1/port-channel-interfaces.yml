@@ -840,6 +840,7 @@ port_channel_interfaces:
         static:
           - original_ip: 3.0.0.1
             translated_ip: 4.0.0.1
+      service_profile: TEST-NAT-PROFILE
 
   - name: Port-Channel131
     description: dot1q-tunnel mode
