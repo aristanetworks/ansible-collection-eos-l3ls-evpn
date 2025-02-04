@@ -32,6 +32,6 @@ class IpAccesslistsMixin(Protocol):
 
         for interface_acls in chain(self._l3_interface_acls.values(), self._l3_port_channel_acls.values()):
             for acl in interface_acls.values():
-                self.structured_config.ip_access_lists.append_new(acl)
+                self.structured_config.ip_access_lists.append(acl)
 
         natural_sort(self.structured_config.ip_access_lists, "name")
