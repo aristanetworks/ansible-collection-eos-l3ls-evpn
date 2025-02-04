@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, ClassVar, Protocol
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
@@ -25,9 +25,6 @@ class EthernetInterfacesMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    subif_parent_interface_names: ClassVar[set[str]] = set()
-    """Set to collect all the parent interface names of all the subinterfaces defined under l3_interfaces or point_to_point_services in network_services."""
-
     @structured_config_contributor
     def ethernet_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
@@ -38,23 +35,24 @@ class EthernetInterfacesMixin(Protocol):
         if not (self.shared_utils.network_services_l3 or self.shared_utils.network_services_l1):
             return
 
+        subif_parent_interface_names: set[str] = set()
+        """Set to collect all the parent interface names of all the subinterfaces defined under l3_interfaces or point_to_point_services in network_services."""
+
         if self.shared_utils.network_services_l3:
             for tenant in self.shared_utils.filtered_tenants:
                 for vrf in tenant.vrfs:
                     # The l3_interfaces has already been filtered in filtered_tenants
                     # to only contain entries with our hostname
-                    self._update_l3_interfaces(vrf, tenant)
+                    self._update_l3_interfaces(vrf, tenant, subif_parent_interface_names)
 
         if self.shared_utils.network_services_l1:
             for tenant in self.shared_utils.filtered_tenants:
                 if not tenant.point_to_point_services:
                     continue
-                self._update_point_to_point_interfaces(tenant)
+                self._update_point_to_point_interfaces(tenant, subif_parent_interface_names)
 
         # Add missing parent interface names if any
-        if missing_parent_interface_names := self.subif_parent_interface_names.difference(
-            eth_int.name for eth_int in self.structured_config.ethernet_interfaces
-        ):
+        if missing_parent_interface_names := subif_parent_interface_names.difference(eth_int.name for eth_int in self.structured_config.ethernet_interfaces):
             self._update_subif_parent_interfaces(missing_parent_interface_names)
 
         # Add interfaces used for Internet Exit policies
@@ -64,6 +62,7 @@ class EthernetInterfacesMixin(Protocol):
         self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+        subif_parent_interface_names: set[str],
     ) -> None:
         """Update the structured_config ethernet_interfaces with the l3interfaces."""
         for l3_interface in vrf.l3_interfaces:
@@ -116,7 +115,7 @@ class EthernetInterfacesMixin(Protocol):
                 if "." in interface_name:
                     # This is a subinterface so we need to ensure that the parent is created
                     parent_interface_name, subif_id = interface_name.split(".", maxsplit=1)
-                    self.subif_parent_interface_names.add(parent_interface_name)
+                    subif_parent_interface_names.add(parent_interface_name)
 
                     encapsulation_dot1q_vlans = l3_interface.encapsulation_dot1q_vlan
                     if len(encapsulation_dot1q_vlans) > node_index:
@@ -178,6 +177,7 @@ class EthernetInterfacesMixin(Protocol):
     def _update_point_to_point_interfaces(
         self: AvdStructuredConfigNetworkServicesProtocol,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+        subif_parent_interface_names: set[str],
     ) -> None:
         """Update the structured_config ethernet_interfaces with the point-to-point interfaces defined under network_services."""
         for point_to_point_service in tenant.point_to_point_services._natural_sorted():
@@ -204,7 +204,7 @@ class EthernetInterfacesMixin(Protocol):
 
                     if point_to_point_service.subinterfaces:
                         # This is a subinterface so we need to ensure that the parent is created
-                        self.subif_parent_interface_names.add(interface_name)
+                        subif_parent_interface_names.add(interface_name)
                         for subif in point_to_point_service.subinterfaces:
                             subif_name = f"{interface_name}.{subif.number}"
                             interface = self.structured_config.ethernet_interfaces.append_new(
