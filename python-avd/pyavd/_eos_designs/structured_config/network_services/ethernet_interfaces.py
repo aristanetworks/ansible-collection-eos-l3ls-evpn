@@ -70,7 +70,7 @@ class EthernetInterfacesMixin(Protocol):
                                 eos_cli=l3_interface.raw_eos_cli,
                                 flow_tracker=self.shared_utils.new_get_flow_tracker(
                                     l3_interface.flow_tracking, output_type=EosCliConfigGen.EthernetInterfacesItem.FlowTracker
-                                )
+                                ),
                             )
 
                             if l3_interface.structured_config:
@@ -83,8 +83,8 @@ class EthernetInterfacesMixin(Protocol):
 
                             if self._l3_interface_acls is not None:
                                 interface._update(
-                                        access_group_in=get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_in..name", separator=".."),
-                                        access_group_out=get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_out..name", separator=".."),
+                                    access_group_in=get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_in..name", separator=".."),
+                                    access_group_out=get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_out..name", separator=".."),
                                 )
 
                             if "." in interface_name:
@@ -98,20 +98,21 @@ class EthernetInterfacesMixin(Protocol):
                                 else:
                                     interface.encapsulation_dot1q.vlan = int(subif_id)
                             else:
-                                interface.switchport.enabled= False
+                                interface.switchport.enabled = False
 
                             if vrf.name != "default":
                                 interface.vrf = vrf.name
 
                             if l3_interface.ospf.enabled and vrf.ospf.enabled:
                                 interface._update(
-                                ospf_area=l3_interface.ospf.area,
-                                ospf_network_point_to_point = l3_interface.ospf.point_to_point,
-                                ospf_cost = l3_interface.ospf.cost)
+                                    ospf_area=l3_interface.ospf.area,
+                                    ospf_network_point_to_point=l3_interface.ospf.point_to_point,
+                                    ospf_cost=l3_interface.ospf.cost,
+                                )
 
                                 ospf_authentication = l3_interface.ospf.authentication
                                 if ospf_authentication == "simple" and (ospf_simple_auth_key := l3_interface.ospf.simple_auth_key) is not None:
-                                    interface._update(ospf_authentication = ospf_authentication, ospf_authentication_key = ospf_simple_auth_key)
+                                    interface._update(ospf_authentication=ospf_authentication, ospf_authentication_key=ospf_simple_auth_key)
                                 elif (
                                     ospf_authentication == "message-digest" and (ospf_message_digest_keys := l3_interface.ospf.message_digest_keys) is not None
                                 ):
@@ -119,10 +120,10 @@ class EthernetInterfacesMixin(Protocol):
                                         if not (ospf_key.id and ospf_key.key):
                                             continue
                                         interface.ospf_message_digest_keys.append_new(
-                                                id=ospf_key.id,
-                                                hash_algorithm=ospf_key.hash_algorithm,
-                                                key=ospf_key.key,
-                                            )
+                                            id=ospf_key.id,
+                                            hash_algorithm=ospf_key.hash_algorithm,
+                                            key=ospf_key.key,
+                                        )
                                     if interface.ospf_message_digest_keys:
                                         interface.ospf_authentication = ospf_authentication
 
@@ -148,7 +149,7 @@ class EthernetInterfacesMixin(Protocol):
                                     )
                                     raise AristaAvdError(msg)
 
-                                interface.pim.ipv4.sparse_mode= True
+                                interface.pim.ipv4.sparse_mode = True
 
         if self.shared_utils.network_services_l1:
             for tenant in self.shared_utils.filtered_tenants:
@@ -172,7 +173,7 @@ class EthernetInterfacesMixin(Protocol):
                                     name=interface_name,
                                     peer_type="point_to_point_service",
                                     shutdown=False,
-                                    channel_group = EosCliConfigGen.EthernetInterfacesItem.ChannelGroup(id=channel_group_id, mode=port_channel_mode),
+                                    channel_group=EosCliConfigGen.EthernetInterfacesItem.ChannelGroup(id=channel_group_id, mode=port_channel_mode),
                                 )
 
                                 continue
@@ -199,19 +200,19 @@ class EthernetInterfacesMixin(Protocol):
                                 )
                                 interface.switchport.enabled = False
                                 if point_to_point_service.lldp_disable:
-                                    interface.lldp._update(transmit = False, receive=False)
+                                    interface.lldp._update(transmit=False, receive=False)
 
         subif_parent_interface_names = subif_parent_interface_names.difference(eth_int.name for eth_int in self.structured_config.ethernet_interfaces)
         for interface_name in natural_sort(subif_parent_interface_names):
             interface = self.structured_config.ethernet_interfaces.append_new(
-                    name=interface_name,
-                    peer_type="l3_interface",
-                    shutdown=False,
+                name=interface_name,
+                peer_type="l3_interface",
+                shutdown=False,
             )
-            interface.switchport.enabled=False
+            interface.switchport.enabled = False
 
         for internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
             for connection in connections:
                 if connection["type"] == "ethernet":
-                    interface = self.structured_config.ethernet_interfaces.append_new(name= connection["source_interface"])
+                    interface = self.structured_config.ethernet_interfaces.append_new(name=connection["source_interface"])
                     interface.ip_nat.service_profile = self.get_internet_exit_nat_profile_name(internet_exit_policy.type)
