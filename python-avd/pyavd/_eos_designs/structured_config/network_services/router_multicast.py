@@ -3,10 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import append_if_not_duplicate
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
@@ -19,30 +19,17 @@ class RouterMulticastMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def router_multicast(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
+    @structured_config_contributor
+    def router_multicast(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Return structured config for router_multicast.
+        Set the structured config for router_multicast.
 
         Used to enable multicast routing on the VRF.
         """
         if not self.shared_utils.network_services_l3:
-            return None
+            return
 
-        vrfs = []
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 if getattr(vrf, "_evpn_l3_multicast_enabled", False):
-                    vrf_config = {"name": vrf.name, "ipv4": {"routing": True}}
-                    append_if_not_duplicate(
-                        list_of_dicts=vrfs,
-                        primary_key="name",
-                        new_dict=vrf_config,
-                        context="Router Multicast for VRFs",
-                        context_keys=["name"],
-                    )
-
-        if vrfs:
-            return {"vrfs": vrfs}
-
-        return None
+                    self.structured_config.router_multicast.vrfs.append_new(name=vrf.name, ipv4=EosCliConfigGen.RouterMulticast.VrfsItem.Ipv4(routing=True))
