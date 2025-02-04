@@ -21,7 +21,7 @@ class AgentsMixin(Protocol):
 
     @structured_config_contributor
     def agents(self: AvdStructuredConfigUnderlayProtocol) -> None:
-        """Return structured config for agents."""
+        """Set the structured config for agents."""
         if not self.shared_utils.is_wan_router:
             return
 
