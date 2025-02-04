@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, ClassVar, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
@@ -13,6 +13,8 @@ from pyavd._utils import get
 from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
+    from pyavd._eos_designs.schema import EosDesigns
+
     from . import AvdStructuredConfigNetworkServicesProtocol
 
 
@@ -22,6 +24,9 @@ class EthernetInterfacesMixin(Protocol):
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
+
+    subif_parent_interface_names: ClassVar[set[str]] = set()
+    """Set to collect all the parent interface names of all the subinterfaces defined under l3_interfaces or point_to_point_services in network_services."""
 
     @structured_config_contributor
     def ethernet_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
@@ -33,177 +38,197 @@ class EthernetInterfacesMixin(Protocol):
         if not (self.shared_utils.network_services_l3 or self.shared_utils.network_services_l1):
             return
 
-        subif_parent_interface_names = set()
-
         if self.shared_utils.network_services_l3:
             for tenant in self.shared_utils.filtered_tenants:
                 for vrf in tenant.vrfs:
                     # The l3_interfaces has already been filtered in filtered_tenants
                     # to only contain entries with our hostname
-                    for l3_interface in vrf.l3_interfaces:
-                        nodes_length = len(l3_interface.nodes)
-                        if (
-                            len(l3_interface.interfaces) != nodes_length
-                            or len(l3_interface.ip_addresses) != nodes_length
-                            or (l3_interface.descriptions and len(l3_interface.descriptions) != nodes_length)
-                        ):
-                            msg = (
-                                "Length of lists 'interfaces', 'nodes', 'ip_addresses' and 'descriptions' (if used) must match for l3_interfaces for"
-                                f" {vrf.name} in {tenant.name}"
-                            )
-                            raise AristaAvdError(msg)
-
-                        for node_index, node_name in enumerate(l3_interface.nodes):
-                            if node_name != self.shared_utils.hostname:
-                                continue
-
-                            interface_name = l3_interface.interfaces[node_index]
-                            # if 'descriptions' is set, it is preferred
-                            interface_description = l3_interface.descriptions[node_index] if l3_interface.descriptions else l3_interface.description
-                            interface = self.structured_config.ethernet_interfaces.append_new(
-                                name=interface_name,
-                                peer_type="l3_interface",
-                                ip_address=l3_interface.ip_addresses[node_index],
-                                mtu=l3_interface.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
-                                shutdown=not l3_interface.enabled,
-                                description=interface_description,
-                                eos_cli=l3_interface.raw_eos_cli,
-                                flow_tracker=self.shared_utils.new_get_flow_tracker(
-                                    l3_interface.flow_tracking, output_type=EosCliConfigGen.EthernetInterfacesItem.FlowTracker
-                                ),
-                            )
-
-                            if l3_interface.structured_config:
-                                self.custom_structured_configs.nested.ethernet_interfaces.obtain(interface_name)._deepmerge(
-                                    l3_interface.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
-                                )
-
-                            if self.inputs.fabric_sflow.l3_interfaces is not None:
-                                interface.sflow.enable = self.inputs.fabric_sflow.l3_interfaces
-
-                            if self._l3_interface_acls is not None:
-                                interface._update(
-                                    access_group_in=get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_in..name", separator=".."),
-                                    access_group_out=get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_out..name", separator=".."),
-                                )
-
-                            if "." in interface_name:
-                                # This is a subinterface so we need to ensure that the parent is created
-                                parent_interface_name, subif_id = interface_name.split(".", maxsplit=1)
-                                subif_parent_interface_names.add(parent_interface_name)
-
-                                encapsulation_dot1q_vlans = l3_interface.encapsulation_dot1q_vlan
-                                if len(encapsulation_dot1q_vlans) > node_index:
-                                    interface.encapsulation_dot1q.vlan = encapsulation_dot1q_vlans[node_index]
-                                else:
-                                    interface.encapsulation_dot1q.vlan = int(subif_id)
-                            else:
-                                interface.switchport.enabled = False
-
-                            if vrf.name != "default":
-                                interface.vrf = vrf.name
-
-                            if l3_interface.ospf.enabled and vrf.ospf.enabled:
-                                interface._update(
-                                    ospf_area=l3_interface.ospf.area,
-                                    ospf_network_point_to_point=l3_interface.ospf.point_to_point,
-                                    ospf_cost=l3_interface.ospf.cost,
-                                )
-
-                                ospf_authentication = l3_interface.ospf.authentication
-                                if ospf_authentication == "simple" and (ospf_simple_auth_key := l3_interface.ospf.simple_auth_key) is not None:
-                                    interface._update(ospf_authentication=ospf_authentication, ospf_authentication_key=ospf_simple_auth_key)
-                                elif (
-                                    ospf_authentication == "message-digest" and (ospf_message_digest_keys := l3_interface.ospf.message_digest_keys) is not None
-                                ):
-                                    for ospf_key in ospf_message_digest_keys:
-                                        if not (ospf_key.id and ospf_key.key):
-                                            continue
-                                        interface.ospf_message_digest_keys.append_new(
-                                            id=ospf_key.id,
-                                            hash_algorithm=ospf_key.hash_algorithm,
-                                            key=ospf_key.key,
-                                        )
-                                    if interface.ospf_message_digest_keys:
-                                        interface.ospf_authentication = ospf_authentication
-
-                            if l3_interface.pim.enabled:
-                                if not getattr(vrf, "_evpn_l3_multicast_enabled", False):
-                                    # Possibly the key was not set because `evpn_multicast` is not set to `true`.
-                                    if not self.shared_utils.evpn_multicast:
-                                        msg = (
-                                            f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires "
-                                            "'evpn_multicast: true' at the fabric level"
-                                        )
-                                    else:
-                                        msg = (
-                                            f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires "
-                                            f"'evpn_l3_multicast.enabled: true' under VRF '{vrf.name}' or Tenant '{tenant.name}'"
-                                        )
-                                    raise AristaAvdError(msg)
-
-                                if not getattr(vrf, "_pim_rp_addresses", None):
-                                    msg = (
-                                        f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires at least one RP"
-                                        f" defined in pim_rp_addresses under VRF '{vrf.name}' or Tenant '{tenant.name}'"
-                                    )
-                                    raise AristaAvdError(msg)
-
-                                interface.pim.ipv4.sparse_mode = True
+                    self._update_l3_interfaces(vrf, tenant)
 
         if self.shared_utils.network_services_l1:
             for tenant in self.shared_utils.filtered_tenants:
                 if not tenant.point_to_point_services:
                     continue
+                self._update_point_to_point_interfaces(tenant)
 
-                for point_to_point_service in tenant.point_to_point_services._natural_sorted():
-                    for endpoint in point_to_point_service.endpoints:
-                        if self.shared_utils.hostname not in endpoint.nodes:
-                            continue
+        # Add missing parent interface names if any
+        if missing_parent_interface_names := self.subif_parent_interface_names.difference(
+            eth_int.name for eth_int in self.structured_config.ethernet_interfaces
+        ):
+            self._update_subif_parent_interfaces(missing_parent_interface_names)
 
-                        for node_index, interface_name in enumerate(endpoint.interfaces):
-                            if endpoint.nodes[node_index] != self.shared_utils.hostname:
+        # Add interfaces used for Internet Exit policies
+        self._update_internet_exit_policy_interfaces()
+
+    def _update_l3_interfaces(
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+    ) -> None:
+        """Update the structured_config ethernet_interfaces with the l3interfaces."""
+        for l3_interface in vrf.l3_interfaces:
+            nodes_length = len(l3_interface.nodes)
+            if (
+                len(l3_interface.interfaces) != nodes_length
+                or len(l3_interface.ip_addresses) != nodes_length
+                or (l3_interface.descriptions and len(l3_interface.descriptions) != nodes_length)
+            ):
+                msg = (
+                    "Length of lists 'interfaces', 'nodes', 'ip_addresses' and 'descriptions' (if used) must match for l3_interfaces for"
+                    f" {vrf.name} in {tenant.name}"
+                )
+                raise AristaAvdError(msg)
+
+            for node_index, node_name in enumerate(l3_interface.nodes):
+                if node_name != self.shared_utils.hostname:
+                    continue
+
+                interface_name = l3_interface.interfaces[node_index]
+                # if 'descriptions' is set, it is preferred
+                interface_description = l3_interface.descriptions[node_index] if l3_interface.descriptions else l3_interface.description
+                interface = self.structured_config.ethernet_interfaces.append_new(
+                    name=interface_name,
+                    peer_type="l3_interface",
+                    ip_address=l3_interface.ip_addresses[node_index],
+                    mtu=l3_interface.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
+                    shutdown=not l3_interface.enabled,
+                    description=interface_description,
+                    eos_cli=l3_interface.raw_eos_cli,
+                    flow_tracker=self.shared_utils.new_get_flow_tracker(
+                        l3_interface.flow_tracking, output_type=EosCliConfigGen.EthernetInterfacesItem.FlowTracker
+                    ),
+                )
+
+                if l3_interface.structured_config:
+                    self.custom_structured_configs.nested.ethernet_interfaces.obtain(interface_name)._deepmerge(
+                        l3_interface.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                    )
+
+                if self.inputs.fabric_sflow.l3_interfaces is not None:
+                    interface.sflow.enable = self.inputs.fabric_sflow.l3_interfaces
+
+                if self._l3_interface_acls is not None:
+                    interface._update(
+                        access_group_in=get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_in..name", separator=".."),
+                        access_group_out=get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_out..name", separator=".."),
+                    )
+
+                if "." in interface_name:
+                    # This is a subinterface so we need to ensure that the parent is created
+                    parent_interface_name, subif_id = interface_name.split(".", maxsplit=1)
+                    self.subif_parent_interface_names.add(parent_interface_name)
+
+                    encapsulation_dot1q_vlans = l3_interface.encapsulation_dot1q_vlan
+                    if len(encapsulation_dot1q_vlans) > node_index:
+                        interface.encapsulation_dot1q.vlan = encapsulation_dot1q_vlans[node_index]
+                    else:
+                        interface.encapsulation_dot1q.vlan = int(subif_id)
+                else:
+                    interface.switchport.enabled = False
+
+                if vrf.name != "default":
+                    interface.vrf = vrf.name
+
+                if l3_interface.ospf.enabled and vrf.ospf.enabled:
+                    interface._update(
+                        ospf_area=l3_interface.ospf.area,
+                        ospf_network_point_to_point=l3_interface.ospf.point_to_point,
+                        ospf_cost=l3_interface.ospf.cost,
+                    )
+
+                    ospf_authentication = l3_interface.ospf.authentication
+                    if ospf_authentication == "simple" and (ospf_simple_auth_key := l3_interface.ospf.simple_auth_key) is not None:
+                        interface._update(ospf_authentication=ospf_authentication, ospf_authentication_key=ospf_simple_auth_key)
+                    elif ospf_authentication == "message-digest" and (ospf_message_digest_keys := l3_interface.ospf.message_digest_keys) is not None:
+                        for ospf_key in ospf_message_digest_keys:
+                            if not (ospf_key.id and ospf_key.key):
                                 continue
+                            interface.ospf_message_digest_keys.append_new(
+                                id=ospf_key.id,
+                                hash_algorithm=ospf_key.hash_algorithm,
+                                key=ospf_key.key,
+                            )
+                        if interface.ospf_message_digest_keys:
+                            interface.ospf_authentication = ospf_authentication
 
-                            if (port_channel_mode := endpoint.port_channel.mode) in ["active", "on"]:
-                                first_interface_index = endpoint.nodes.index(self.shared_utils.hostname)
-                                first_interface_name = endpoint.interfaces[first_interface_index]
-                                channel_group_id = int("".join(re.findall(r"\d", first_interface_name)))
-                                self.structured_config.ethernet_interfaces.append_new(
-                                    name=interface_name,
-                                    peer_type="point_to_point_service",
-                                    shutdown=False,
-                                    channel_group=EosCliConfigGen.EthernetInterfacesItem.ChannelGroup(id=channel_group_id, mode=port_channel_mode),
-                                )
+                if l3_interface.pim.enabled:
+                    if not getattr(vrf, "_evpn_l3_multicast_enabled", False):
+                        # Possibly the key was not set because `evpn_multicast` is not set to `true`.
+                        if not self.shared_utils.evpn_multicast:
+                            msg = (
+                                f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires "
+                                "'evpn_multicast: true' at the fabric level"
+                            )
+                        else:
+                            msg = (
+                                f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires "
+                                f"'evpn_l3_multicast.enabled: true' under VRF '{vrf.name}' or Tenant '{tenant.name}'"
+                            )
+                        raise AristaAvdError(msg)
 
-                                continue
+                    if not getattr(vrf, "_pim_rp_addresses", None):
+                        msg = (
+                            f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires at least one RP"
+                            f" defined in pim_rp_addresses under VRF '{vrf.name}' or Tenant '{tenant.name}'"
+                        )
+                        raise AristaAvdError(msg)
 
-                            if point_to_point_service.subinterfaces:
-                                # This is a subinterface so we need to ensure that the parent is created
-                                subif_parent_interface_names.add(interface_name)
-                                for subif in point_to_point_service.subinterfaces:
-                                    subif_name = f"{interface_name}.{subif.number}"
-                                    interface = self.structured_config.ethernet_interfaces.append_new(
-                                        name=subif_name,
-                                        peer_type="point_to_point_service",
-                                        shutdown=False,
-                                    )
-                                    interface.encapsulation_vlan.client.encapsulation = "dot1q"
-                                    interface.encapsulation_vlan.client.vlan = subif.number
-                                    interface.encapsulation_vlan.network.encapsulation = "client"
+                    interface.pim.ipv4.sparse_mode = True
 
-                            else:
-                                interface = self.structured_config.ethernet_interfaces.append_new(
-                                    name=interface_name,
-                                    peer_type="point_to_point_service",
-                                    shutdown=False,
-                                )
-                                interface.switchport.enabled = False
-                                if point_to_point_service.lldp_disable:
-                                    interface.lldp._update(transmit=False, receive=False)
+    def _update_point_to_point_interfaces(
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+    ) -> None:
+        """Update the structured_config ethernet_interfaces with the point-to-point interfaces defined under network_services."""
+        for point_to_point_service in tenant.point_to_point_services._natural_sorted():
+            for endpoint in point_to_point_service.endpoints:
+                if self.shared_utils.hostname not in endpoint.nodes:
+                    continue
 
-        subif_parent_interface_names = subif_parent_interface_names.difference(eth_int.name for eth_int in self.structured_config.ethernet_interfaces)
-        for interface_name in natural_sort(subif_parent_interface_names):
+                for node_index, interface_name in enumerate(endpoint.interfaces):
+                    if endpoint.nodes[node_index] != self.shared_utils.hostname:
+                        continue
+
+                    if (port_channel_mode := endpoint.port_channel.mode) in ["active", "on"]:
+                        first_interface_index = endpoint.nodes.index(self.shared_utils.hostname)
+                        first_interface_name = endpoint.interfaces[first_interface_index]
+                        channel_group_id = int("".join(re.findall(r"\d", first_interface_name)))
+                        self.structured_config.ethernet_interfaces.append_new(
+                            name=interface_name,
+                            peer_type="point_to_point_service",
+                            shutdown=False,
+                            channel_group=EosCliConfigGen.EthernetInterfacesItem.ChannelGroup(id=channel_group_id, mode=port_channel_mode),
+                        )
+
+                        continue
+
+                    if point_to_point_service.subinterfaces:
+                        # This is a subinterface so we need to ensure that the parent is created
+                        self.subif_parent_interface_names.add(interface_name)
+                        for subif in point_to_point_service.subinterfaces:
+                            subif_name = f"{interface_name}.{subif.number}"
+                            interface = self.structured_config.ethernet_interfaces.append_new(
+                                name=subif_name,
+                                peer_type="point_to_point_service",
+                                shutdown=False,
+                            )
+                            interface.encapsulation_vlan.client.encapsulation = "dot1q"
+                            interface.encapsulation_vlan.client.vlan = subif.number
+                            interface.encapsulation_vlan.network.encapsulation = "client"
+
+                    else:
+                        interface = self.structured_config.ethernet_interfaces.append_new(
+                            name=interface_name,
+                            peer_type="point_to_point_service",
+                            shutdown=False,
+                        )
+                        interface.switchport.enabled = False
+                        if point_to_point_service.lldp_disable:
+                            interface.lldp._update(transmit=False, receive=False)
+
+    def _update_subif_parent_interfaces(self: AvdStructuredConfigNetworkServicesProtocol, missing_parent_interface_names: set[str]) -> None:
+        """Update the ethernet_interfaces with the missing parent interfaces of l3_subinterfaces."""
+        for interface_name in natural_sort(missing_parent_interface_names):
             interface = self.structured_config.ethernet_interfaces.append_new(
                 name=interface_name,
                 peer_type="l3_interface",
@@ -211,6 +236,8 @@ class EthernetInterfacesMixin(Protocol):
             )
             interface.switchport.enabled = False
 
+    def _update_internet_exit_policy_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
+        """Update the ethernet_interfaces with the interfaces defined for internet exit policies."""
         for internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
             for connection in connections:
                 if connection["type"] == "ethernet":
