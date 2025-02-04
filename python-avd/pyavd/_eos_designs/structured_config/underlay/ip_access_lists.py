@@ -3,6 +3,8 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+from functools import cached_property
+from itertools import chain
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
@@ -25,14 +27,17 @@ class IpAccesslistsMixin(Protocol):
         """
         Return structured config for ip_access_lists.
 
-        Covers ipv4_acl_in/out defined under node l3_interfaces.
+        Covers ipv4_acl_in/out defined under node l3_interfaces or l3_port_channels.
         """
-        if not self._l3_interface_acls:
+        if not self._l3_interface_acls and not self._l3_port_channel_acls:
             return
 
-        for interface_acls in self._l3_interface_acls.values():
+        ip_access_lists = []
+        context_str = "IPv4 Access lists for node l3_interfaces or l3_port_channels"
+        for interface_acls in chain(self._l3_interface_acls.values(), self._l3_port_channel_acls.values()):
             for acl in interface_acls.values():
-                acl_dict = acl._cast_as(EosCliConfigGen.IpAccessListsItem, ignore_extra_keys=True)
-                self.structured_config.ip_access_lists.append(acl_dict)
+                self.structured_config.ip_access_lists.append(acl)
+
+                #append_if_not_duplicate(ip_access_lists, "name", acl, context=context_str, context_keys=["name"])
 
         natural_sort(self.structured_config.ip_access_lists, "name")

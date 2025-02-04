@@ -3,12 +3,11 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Literal, Protocol
 from functools import cached_property
-from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
-from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
+from typing import TYPE_CHECKING, Literal, Protocol
+
 from pyavd._errors import AristaAvdError
-from pyavd._utils import get_ip_from_ip_prefix
+from pyavd._utils import append_if_not_duplicate, get_ip_from_ip_prefix
 from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
@@ -21,14 +20,24 @@ class IpAccesslistsMixin(Protocol):
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
+
     @cached_property
-    def _acl_internet_exit_zscaler(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
-        acl = EosCliConfigGen.IpAccessListsItem(name=self.get_internet_exit_nat_acl_name("zscaler"))
-        acl.entries.append(EosCliConfigGen.IpAccessListsItem.EntriesItem(sequence=10, action="permit", protocol="ip", source="any", destination="any"))
-        self.structured_config.ip_access_lists.append(acl)
-    
+    def _acl_internet_exit_zscaler(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
+        return {
+            "name": self.get_internet_exit_nat_acl_name("zscaler"),
+            "entries": [
+                {
+                    "sequence": 10,
+                    "action": "permit",
+                    "protocol": "ip",
+                    "source": "any",
+                    "destination": "any",
+                },
+            ],
+        }
+
     @cached_property
-    def _acl_internet_exit_direct(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
+    def _acl_internet_exit_direct(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         interface_ips = set()
         for ie_policy, connections in self._filtered_internet_exit_policies_and_connections:
             if ie_policy.type == "direct":
@@ -37,21 +46,37 @@ class IpAccesslistsMixin(Protocol):
 
         if interface_ips:
             interface_ips = sorted(interface_ips)
-            acl = EosCliConfigGen.IpAccessListsItem(name=self.get_internet_exit_nat_acl_name("direct"))
+            entries = []
             i = 0
             for i, interface_ip in enumerate(interface_ips):
-                acl.entries.append(
-                    EosCliConfigGen.IpAccessListsItem.EntriesItem(
-                        sequence=10 + i * 10, action="deny", protocol="ip", source=get_ip_from_ip_prefix(interface_ip), destination="any"
-                    )
+                entries.append(
+                    {
+                        "sequence": 10 + i * 10,
+                        "action": "deny",
+                        "protocol": "ip",
+                        "source": get_ip_from_ip_prefix(interface_ip),
+                        "destination": "any",
+                    },
                 )
-            acl.entries.append(
-                EosCliConfigGen.IpAccessListsItem.EntriesItem(sequence=20 + i * 10, action="permit", protocol="ip", source="any", destination="any")
+            entries.append(
+                {
+                    "sequence": 20 + i * 10,
+                    "action": "permit",
+                    "protocol": "ip",
+                    "source": "any",
+                    "destination": "any",
+                },
             )
 
-            self.structured_config.ip_access_lists.append(acl)
+            return {
+                "name": self.get_internet_exit_nat_acl_name("direct"),
+                "entries": entries,
+            }
+        return None
 
-    def _acl_internet_exit_user_defined(self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]) -> None:
+    def _acl_internet_exit_user_defined(
+        self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]
+    ) -> list[dict] | None:
         acl_name = self.get_internet_exit_nat_acl_name(internet_exit_policy_type)
         if acl_name not in self.inputs.ipv4_acls:
             # TODO: Evaluate if we should continue so we raise when there is no ACL.
@@ -68,32 +93,34 @@ class IpAccesslistsMixin(Protocol):
         msg = f"ipv4_acls[name={acl_name}] field substitution is not supported for internet exit access lists"
         raise AristaAvdError(msg)
 
-    def _acl_internet_exit(self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]) -> None:
+    def _acl_internet_exit(self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]) -> list[dict] | None:
         acls = self._acl_internet_exit_user_defined(internet_exit_policy_type)
         if acls:
-            acl_dict = acls._cast_as(EosCliConfigGen.IpAccessListsItem, ignore_extra_keys=True)
-            self.structured_config.ip_access_lists.append(acls)
-        elif internet_exit_policy_type == "zscaler":
-            self._acl_internet_exit_zscaler()
-        elif internet_exit_policy_type == "direct":
-            self._acl_internet_exit_direct()
+            return acls
 
-    @structured_config_contributor
-    def ip_access_lists(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
+        if internet_exit_policy_type == "zscaler":
+            return [self._acl_internet_exit_zscaler]
+        if internet_exit_policy_type == "direct" and (acl := self._acl_internet_exit_direct):
+            return [acl]
+        return None
+
+    @cached_property
+    def ip_access_lists(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """Return structured config for ip_access_lists."""
+        ip_access_lists = []
         if self._svi_acls:
             for interface_acls in self._svi_acls.values():
                 for acl in interface_acls.values():
-                    #acl_dict = acl._cast_as(EosCliConfigGen.IpAccessListsItem, ignore_extra_keys=True)
-                    self.structured_config.ip_access_lists.append(acl)
+                    append_if_not_duplicate(ip_access_lists, "name", acl, context="IPv4 Access lists for SVI", context_keys=["name"])
 
         if self._l3_interface_acls:
             for l3_interface_acl in self._l3_interface_acls.values():
                 for acl in l3_interface_acl.values():
-                    #acl_dict = acl._cast_as(EosCliConfigGen.IpAccessListsItem, ignore_extra_keys=True)
-                    self.structured_config.ip_access_lists.append(acl)
+                    append_if_not_duplicate(ip_access_lists, "name", acl, context="IPv4 Access lists for L3 interface", context_keys=["name"])
 
         for ie_policy_type in self._filtered_internet_exit_policy_types:
-            self._acl_internet_exit(ie_policy_type)
+            acls = self._acl_internet_exit(ie_policy_type)
+            if acls:
+                ip_access_lists.extend(acls)
 
-        natural_sort(self.structured_config.ip_access_lists, "name")
+        return natural_sort(ip_access_lists, "name") or None

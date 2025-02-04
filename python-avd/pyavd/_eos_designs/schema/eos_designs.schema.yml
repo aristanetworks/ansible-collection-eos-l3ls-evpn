@@ -1509,6 +1509,10 @@ keys:
           tenants.vrfs.l3_interfaces.
         type: dict
         $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
+      l3_port_channels:
+        description: Enable flow-tracking on all node.l3_port_channels.
+        type: dict
+        $ref: eos_designs#/keys/fabric_flow_tracking/keys/uplinks
       dps_interfaces:
         description: Enable flow-tracking on all dps_interfaces.
         type: dict
@@ -9451,9 +9455,7 @@ $defs:
             $ref: eos_designs#/$defs/node_type_l3_interfaces
             documentation_options:
               table: node-type-l3-interfaces-configuration
-            description: 'L3 Interfaces to configure on the node.
-
-              Used to define the node for WAN interfaces when `wan_carrier` is set.'
+            description: L3 Interfaces to configure on the node.
             items:
               type: dict
               keys:
@@ -9462,6 +9464,12 @@ $defs:
                   description: 'L3 interface profile name. Profile defined under `l3_interface_profiles`.
 
                     '
+          l3_port_channels:
+            type: list
+            $ref: eos_designs#/$defs/node_type_l3_port_channels
+            documentation_options:
+              table: node-type-l3-port-channels-configuration
+            description: L3 Port-Channel interfaces to configure on the node.
           data_plane_cpu_allocation_max:
             documentation_options:
               table: system-settings
@@ -9570,7 +9578,7 @@ $defs:
             name like ''Ethernet2.42''.
 
             For a subinterface, the parent physical interface is automatically created.'
-          pattern: Ethernet[\d/]+(.[\d]+)?
+          pattern: Ethernet[\d/]+(\.[\d]+)?
         description:
           type: str
           description: 'Interface description.
@@ -9746,6 +9754,221 @@ $defs:
             hide_keys: true
           description: Custom structured config for the Ethernet interface.
           $ref: eos_cli_config_gen#/keys/ethernet_interfaces/items
+  node_type_l3_port_channels:
+    type: list
+    primary_key: name
+    items:
+      type: dict
+      keys:
+        name:
+          type: str
+          required: true
+          description: 'Port-Channel interface name like ''Port-Channel2'' or subinterface
+            name like ''Port-Channel2.42''.
+
+            For a Port-Channel subinterface, the parent Port-Channel interface must
+            be defined as well.'
+          pattern: Port-Channel[\d/]+(\.[\d]+)?
+        description:
+          type: str
+          description: 'Interface description.
+
+            If not set, a default description will be configured with ''[<peer>[ <peer_port_channel>]]''.'
+        mode:
+          type: str
+          description: 'Port-Channel mode.
+
+            Should not be set on Port-Channel subinterfaces.'
+          valid_values:
+          - active
+          - passive
+          - 'on'
+          default: active
+        member_interfaces:
+          description: 'Port-Channel member interfaces.
+
+            Should not be set on Port-Channel subinterfaces.'
+          type: list
+          primary_key: name
+          items:
+            type: dict
+            keys:
+              name:
+                type: str
+                required: true
+                description: 'Ethernet interface name like ''Ethernet2''.
+
+                  Member interface cannot be subinterface.'
+                pattern: Ethernet[\d/]+
+              description:
+                type: str
+                description: 'Interface description for this member.
+
+                  If not set, a default description will be configured with ''[<peer>[
+                  <peer_interface>]]''.'
+              peer:
+                type: str
+                description: 'The peer device name. Used for description and documentation.
+
+                  If not set, this inherits the peer setting on the port-channel interface.'
+              peer_interface:
+                type: str
+                description: The peer device interface. Used for description and documentation.
+              speed:
+                type: str
+                description: Speed should be set in the format `<interface_speed>`
+                  or `forced <interface_speed>` or `auto <interface_speed>`.
+              structured_config:
+                type: dict
+                documentation_options:
+                  hide_keys: true
+                description: Custom structured config for the member ethernet interface.
+                $ref: eos_cli_config_gen#/keys/ethernet_interfaces/items
+        ip_address:
+          type: str
+          description: Node IPv4 address/Mask or 'dhcp'.
+        dhcp_ip:
+          type: str
+          description: 'When the `ip_address` is `dhcp`, this optional field allows
+            to indicate the expected
+
+            IPv4 address (without mask) to be allocated on the interface if known.
+
+            This is not rendered in the configuration but can be used for substitution
+            of ''interface_ip'' in the Access-list
+
+            set under `ipv4_acl_in` and `ipv4_acl_out`.'
+        public_ip:
+          type: str
+          description: "Node IPv4 address (no mask).\n\nThis is used to get the public
+            IP (if known) when the device is behind NAT.\nThis is only used for `wan_rr`
+            routers (AutoVPN RRs and Pathfinders) to determine the Public IP\nwith
+            the following preference:\n  `wan_route_servers.path_groups.interfaces.ip_address`\n
+            \     -> `l3_port_channels.public_ip`\n          -> `l3_port_channels.ip_address`\n\nThe
+            determined Public IP is used by WAN routers when peering with this interface."
+        encapsulation_dot1q_vlan:
+          description: For subinterfaces the dot1q vlan is derived from the interface
+            name by default, but can also be specified.
+          type: int
+          convert_types:
+          - str
+          min: 1
+          max: 4094
+        dhcp_accept_default_route:
+          type: bool
+          default: true
+          description: Accept a default route from DHCP if `ip_address` is set to
+            `dhcp`.
+        enabled:
+          type: bool
+          default: true
+          description: Enable or Shutdown the interface.
+        peer:
+          type: str
+          description: The peer device name. Used for description and documentation.
+        peer_port_channel:
+          type: str
+          description: The peer device port-channel interface. Used for description
+            and documentation.
+        peer_ip:
+          type: str
+          description: The peer device IPv4 address (no mask). Used as default route
+            gateway if `set_default_route` is true and `ip` is an IP address.
+        bgp:
+          type: dict
+          description: Enforce IPv4 BGP peering for the peer
+          keys:
+            peer_as:
+              type: str
+              required: true
+              convert_types:
+              - int
+              description: 'BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+
+                For asdot notation in YAML inputs, the value must be put in quotes,
+                to prevent it from being interpreted as a float number.'
+            ipv4_prefix_list_in:
+              type: str
+              description: 'Prefix List Name. Accept routes for only these prefixes
+                from the peer.
+
+                Required for wan interfaces.'
+            ipv4_prefix_list_out:
+              type: str
+              description: 'Prefix List Name. Advertise routes for only these prefixes.
+
+                If not specified, nothing would be advertised.'
+        ipv4_acl_in:
+          description: 'Name of the IPv4 access-list to be assigned in the ingress
+            direction.
+
+            The access-list must be defined under `ipv4_acls` and supports field substitution
+            for "interface_ip" and "peer_ip".
+
+            Required for all WAN interfaces (`wan_carrier` is set) unless the carrier
+            is marked as ''trusted'' under `wan_carriers`.'
+          type: str
+          convert_types:
+          - int
+        ipv4_acl_out:
+          description: 'Name of the IPv4 Access-list to be assigned in the egress
+            direction.
+
+            The access-list must be defined under `ipv4_acls` and supports field substitution
+            for "interface_ip" and "peer_ip".'
+          type: str
+          convert_types:
+          - int
+        static_routes:
+          description: Configure IPv4 static routes pointing to `peer_ip`.
+          type: list
+          min_length: 1
+          primary_key: prefix
+          items:
+            type: dict
+            keys:
+              prefix:
+                type: str
+                description: IPv4_network/Mask.
+        qos_profile:
+          type: str
+          description: QOS service profile.
+        wan_carrier:
+          type: str
+          description: 'The WAN carrier this interface is connected to.
+
+            This is used to infer the path-groups in which this interface should be
+            configured.
+
+            Unless the carrier is marked as ''trusted'' under `wan_carriers`, `ipv4_acl_in`
+            is also required on all WAN interfaces.'
+        wan_circuit_id:
+          type: str
+          convert_types:
+          - int
+          description: 'The WAN circuit ID for this interface.
+
+            This is not rendered in the configuration but used for WAN designs.'
+        connected_to_pathfinder:
+          type: bool
+          default: true
+          description: For a WAN interface (`wan_carrier` is set), allow to disable
+            the static tunnel towards Pathfinders.
+        raw_eos_cli:
+          type: str
+          description: EOS CLI rendered directly on the Port-Channel interface in
+            the final EOS configuration.
+        flow_tracking:
+          type: dict
+          $ref: eos_designs#/$defs/flow_tracking_link
+          description: Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+            setting.
+        structured_config:
+          type: dict
+          documentation_options:
+            hide_keys: true
+          description: Custom structured config for the Port-Channel interface.
+          $ref: eos_cli_config_gen#/keys/port_channel_interfaces/items
   p2p_links:
     type: list
     items:

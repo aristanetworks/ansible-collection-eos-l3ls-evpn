@@ -6,7 +6,12 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, StructuredConfigGeneratorProtocol
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import (
+    StructuredConfigGenerator,
+    StructuredConfigGeneratorProtocol,
+    structured_config_contributor,
+)
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, strip_empties_from_dict, strip_null_from_data
 from pyavd.j2filters import natural_sort
@@ -102,7 +107,7 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
             )
 
         l3_interfaces_neighbors = []
-        for neighbor_info in self.shared_utils.l3_interfaces_bgp_neighbors:
+        for neighbor_info in self.shared_utils.l3_bgp_neighbors:
             neighbor = {
                 "ip_address": neighbor_info["ip_address"],
                 "remote_as": neighbor_info["remote_as"],
@@ -441,16 +446,14 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
             return {"timezone": self.inputs.timezone}
         return None
 
-    @cached_property
-    def vrfs(self) -> list:
+    @structured_config_contributor
+    def vrfs(self) -> None:
         """Vrfs set based on mgmt_interface_vrf variable."""
-        vrf_settings = {
-            "name": self.inputs.mgmt_interface_vrf,
-            "ip_routing": self.inputs.mgmt_vrf_routing,
-        }
+        vrf_settings = EosCliConfigGen.VrfsItem(name=self.inputs.mgmt_interface_vrf, ip_routing=self.inputs.mgmt_vrf_routing)
+
         if self.shared_utils.node_config.ipv6_mgmt_ip is not None:
-            vrf_settings["ipv6_routing"] = self.inputs.mgmt_vrf_routing
-        return [vrf_settings]
+            vrf_settings.ipv6_routing = self.inputs.mgmt_vrf_routing
+        self.structured_config.vrfs.append(vrf_settings)
 
     @cached_property
     def management_interfaces(self) -> list | None:
@@ -696,7 +699,7 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
     def prefix_lists(self) -> list | None:
         prefix_lists = []
         prefix_lists_in_use = set()
-        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
+        for neighbor in self.shared_utils.l3_bgp_neighbors:
             if (prefix_list_in := get(neighbor, "ipv4_prefix_list_in")) and prefix_list_in not in prefix_lists_in_use:
                 pfx_list = self._get_prefix_list(prefix_list_in)._as_dict()
                 prefix_lists.append(pfx_list)
@@ -718,7 +721,7 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
     @cached_property
     def route_maps(self) -> list | None:
         route_maps = []
-        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
+        for neighbor in self.shared_utils.l3_bgp_neighbors:
             # RM-BGP-<PEER-IP>-IN
             if prefix_list_in := get(neighbor, "ipv4_prefix_list_in"):
                 sequence_numbers = [

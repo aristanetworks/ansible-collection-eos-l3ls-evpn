@@ -72,26 +72,44 @@ class WanMixin(Protocol):
     @cached_property
     def wan_interfaces(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces:
         """
-        As a first approach, only interfaces under node config l3_interfaces can be considered as WAN interfaces.
+        Returns the list of the device L3 interfaces (not including port-channels) which are WAN interfaces.
 
-        This may need to be made wider.
-        This also may require a different format for the dictionaries inside the list.
+        Interfaces under node config l3_interfaces where wan_carrier is set are considered as WAN interfaces.
         """
         if not self.is_wan_router:
             return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces()
 
-        wan_interfaces = EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces(
+        return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces(
             [interface for interface in self.l3_interfaces if interface.wan_carrier]
         )
-        if not wan_interfaces:
-            msg = "At least one WAN interface must be configured on a WAN router. Add WAN interfaces under `l3_interfaces` node setting with `wan_carrier` set."
-            raise AristaAvdError(msg)
-        return wan_interfaces
+
+    @cached_property
+    def wan_port_channels(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels:
+        """
+        Returns the list of the device Port-Channels which are WAN interfaces.
+
+        Interfaces under node config l3_port_channels where wan_carrier is set are considered as WAN interfaces.
+        """
+        if not self.is_wan_router:
+            return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels()
+
+        return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels(
+            [port_channel for port_channel in self.node_config.l3_port_channels if port_channel.wan_carrier]
+        )
+
+    @cached_property
+    def _wan_port_channel_member_interfaces(self: SharedUtilsProtocol) -> dict:
+        """Dictionary with mapping of member ethernet interface to wan port_channel for a device."""
+        member_intfs = {}
+        for port_channel_intf in self.wan_port_channels:
+            for member_eth_intf in port_channel_intf.member_interfaces:
+                member_intfs[member_eth_intf.name] = port_channel_intf.name
+        return member_intfs
 
     @cached_property
     def wan_local_carriers(self: SharedUtilsProtocol) -> list:
         """
-        List of carriers present on this router based on the wan_interfaces with the associated WAN interfaces.
+        List of carriers present on this router based on the wan_interfaces and wan_port_channels with the associated WAN interfaces.
 
             interfaces:
               - name: ...
@@ -100,17 +118,49 @@ class WanMixin(Protocol):
         if not self.is_wan_router:
             return []
 
-        local_carriers_dict = {}
-        for interface in self.wan_interfaces:
-            interface_carrier: str = interface.wan_carrier
-            if interface_carrier not in local_carriers_dict:
-                if interface_carrier not in self.inputs.wan_carriers:
-                    msg = f"WAN carrier {interface_carrier} is not in the available carriers defined in `wan_carriers`"
-                    raise AristaAvdInvalidInputsError(msg)
-                local_carriers_dict[interface_carrier] = self.inputs.wan_carriers[interface_carrier]._as_dict(include_default_values=True)
-                local_carriers_dict[interface_carrier]["interfaces"] = []
+        # Combining WAN carrier information from both L3 Interfaces and L3 Port-Channels configured as WAN interfaces.
+        if not self.wan_interfaces and not self.wan_port_channels:
+            msg = (
+                "At least one WAN interface must be configured on a WAN router. "
+                "Add WAN interfaces under 'l3_interfaces' or 'l3_port_channels' node setting with 'wan_carrier' set."
+            )
+            raise AristaAvdError(msg)
 
-            local_carriers_dict[interface_carrier]["interfaces"].append(
+        wan_carriers_dict = {}
+        # Collect WAN carriers information for WAN l3_interfaces
+        self.update_wan_local_carriers(wan_carriers_dict, self.wan_interfaces)
+        # Collect WAN carriers information for WAN l3_port_channels
+        self.update_wan_local_carriers(wan_carriers_dict, self.wan_port_channels)
+
+        return list(wan_carriers_dict.values())
+
+    def update_wan_local_carriers(
+        self: SharedUtilsProtocol,
+        local_carriers_dict: dict,
+        l3_generic_interfaces: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
+        ),
+    ) -> None:
+        """
+        In-place update the dictionary of carriers relevant to this router.
+
+        Such update is done for either `wan_interfaces` or `wan_port_channels` representing WAN interfaces.
+        carrier:
+            interfaces:
+              - name: ...
+                public_ip: ... (for route-servers the IP may come from wan_route_servers) and so on.
+        """
+        for interface in l3_generic_interfaces:
+            if interface.wan_carrier not in local_carriers_dict:
+                if interface.wan_carrier not in self.inputs.wan_carriers:
+                    msg = f"WAN carrier {interface.wan_carrier} is not in the available carriers defined in `wan_carriers`"
+                    raise AristaAvdInvalidInputsError(msg)
+
+                local_carriers_dict[interface.wan_carrier] = self.inputs.wan_carriers[interface.wan_carrier]._as_dict(include_default_values=True)
+                local_carriers_dict[interface.wan_carrier]["interfaces"] = []
+
+            local_carriers_dict[interface.wan_carrier]["interfaces"].append(
                 strip_empties_from_dict(
                     {
                         "name": interface.name,
@@ -120,8 +170,6 @@ class WanMixin(Protocol):
                     },
                 ),
             )
-
-        return list(local_carriers_dict.values())
 
     @cached_property
     def wan_local_path_groups(self: SharedUtilsProtocol) -> EosDesigns.WanPathGroups:
@@ -171,11 +219,13 @@ class WanMixin(Protocol):
         return [path_group["name"] for path_group in self.wan_ha_peer_path_groups]
 
     def get_public_ip_for_wan_interface(
-        self: SharedUtilsProtocol, interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
+        self: SharedUtilsProtocol,
+        interface: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
+        ),
     ) -> str:
         """
-        Takes a dict which looks like `l3_interface` from node config.
-
         If not a WAN route-server this returns public IP and if not found then the interface IP without a mask.
 
         For WAN route-servers we try to find the IP under wan_route_servers.path_groups.interfaces.
