@@ -26,7 +26,9 @@ class MplsMixin(Protocol):
 
         self.structured_config.mpls.ip = True
         if self.shared_utils.underlay_ldp is True:
-            self.structured_config.mpls.ldp._update(interface_disabled_default=True,
-            router_id=self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None,
-            shutdown=False,
-            transport_address_interface="Loopback0")
+            self.structured_config.mpls.ldp._update(
+                interface_disabled_default=True,
+                router_id=self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None,
+                shutdown=False,
+                transport_address_interface="Loopback0",
+            )
