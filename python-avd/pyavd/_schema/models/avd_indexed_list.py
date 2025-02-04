@@ -32,9 +32,11 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     Other lists are *not* using this model.
     """
 
-    _item_type: ClassVar[type[AvdModel]]
+    __slots__ = ("_items",)
+
+    _item_type: ClassVar[type[AvdModel]]  # pylint: disable=declare-non-slot # pylint bug #9950
     """Type of items. This is used instead of inspecting the type-hints to improve performance significantly."""
-    _primary_key: ClassVar[str]
+    _primary_key: ClassVar[str]  # pylint: disable=declare-non-slot # pylint bug #9950
     """The name of the primary key to be used in the items."""
     _items: dict[T_PrimaryKey, T_AvdModel]
     """
@@ -69,6 +71,8 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         else:
             self._items = {getattr(item, self._primary_key): item for item in items}
 
+        super().__init__()
+
     def __repr__(self) -> str:
         """Returns a repr with all the items including any nested models."""
         cls_name = self.__class__.__name__
@@ -93,6 +97,13 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
     def __setitem__(self, key: T_PrimaryKey, value: T_AvdModel) -> None:
         self._items[key] = value
+
+    def __getstate__(self) -> tuple[None, dict[str, Any]]:
+        slots_dict: dict[str, Any] = {"_items": self._items, "_created_from_null": self._created_from_null, "_block_inheritance": self._block_inheritance}
+        if hasattr(self, "_internal_data_instance"):
+            slots_dict["_internal_data_instance"] = self._internal_data_instance
+
+        return (None, slots_dict)
 
     def get(self, key: T_PrimaryKey, default: T | UndefinedType = Undefined) -> T_AvdModel | T | UndefinedType:
         return self._items.get(key, default)
