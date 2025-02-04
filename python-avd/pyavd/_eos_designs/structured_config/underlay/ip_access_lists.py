@@ -32,12 +32,8 @@ class IpAccesslistsMixin(Protocol):
         if not self._l3_interface_acls and not self._l3_port_channel_acls:
             return
 
-        ip_access_lists = []
-        context_str = "IPv4 Access lists for node l3_interfaces or l3_port_channels"
         for interface_acls in chain(self._l3_interface_acls.values(), self._l3_port_channel_acls.values()):
             for acl in interface_acls.values():
-                self.structured_config.ip_access_lists.append(acl)
-
-                #append_if_not_duplicate(ip_access_lists, "name", acl, context=context_str, context_keys=["name"])
+                self.structured_config.ip_access_lists.append_new(acl)
 
         natural_sort(self.structured_config.ip_access_lists, "name")
