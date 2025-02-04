@@ -68,5 +68,3 @@ class IpSecurityMixin(Protocol):
                     connection="start",
                 )
             )
-
-        return
