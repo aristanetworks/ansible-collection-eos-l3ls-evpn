@@ -421,6 +421,10 @@ class AvdModel(AvdBase):
                 # Ignore empty lists or classes since they could have been initialized in the code but they would be trimmed from the output.
                 continue
 
+            if (value and not other_value) or (not value and other_value):
+                # Only one is set
+                return False
+
             # TODO: Handle deep comparison for lists and indexed lists as well.
             if not issubclass(field_type, AvdModel) or not isinstance(other_value, field_type):
                 # Difference and not a nested model.
