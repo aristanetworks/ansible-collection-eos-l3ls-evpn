@@ -796,7 +796,27 @@ router_multicast:
 router_pim_sparse_mode:
   vrfs:
   - name: TEN_E_L3_MULTICAST_ENABLED_PEG_OVERRIDE
+    ipv4:
+      rp_addresses:
+      - address: 10.40.40.40
+        groups:
+        - '[''232.0.0.0/21'']'
+      - address: 10.40.40.40
+        groups:
+        - '[''232.0.0.0/21'']'
   - name: TEN_E_PEG_L3_MULTICAST_ENABLED
+    ipv4:
+      rp_addresses:
+      - address: 10.1.50.150
+        groups:
+        - '[''232.0.112.0/21'']'
+        access_lists:
+        - '[''RPS_ACL_VRF_Tenant_E_2'']'
+      - address: 10.1.50.150
+        groups:
+        - '[''232.0.112.0/21'']'
+        access_lists:
+        - '[''RPS_ACL_VRF_Tenant_E_2'']'
 service_routing_protocols_model: multi-agent
 standard_access_lists:
 - name: RPS_ACL_VRF_Tenant_E_2
