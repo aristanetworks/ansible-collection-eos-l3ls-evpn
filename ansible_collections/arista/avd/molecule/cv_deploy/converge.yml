@@ -11,5 +11,8 @@
 - name: Test Workspace Force False
   import_playbook: workspace_force_false.yml
 
+- name: Test Workspace build with invalid Designed Config
+  import_playbook: invalid_config.yml
+
 - name: Test Change Control False
   import_playbook: cc_false.yml

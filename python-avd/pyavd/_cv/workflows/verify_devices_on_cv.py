@@ -18,19 +18,23 @@ LOGGER = getLogger(__name__)
 
 async def verify_devices_on_cv(
     *, devices: list[CVDevice], workspace_id: str, skip_missing_devices: bool, warnings: list[Exception], cv_client: CVClient
-) -> None:
-    """Verify that the given Devices are already present in the CloudVision Inventory & I&T Studio."""
+) -> list[CVDevice]:
+    """
+    Verify that the given Devices are already present in the CloudVision Inventory & I&T Studio.
+
+    Returns a list of CVDevice objects found on CloudVision.
+    """
     LOGGER.info("verify_devices_on_cv: %s", len(devices))
 
     # Return if we have nothing to do.
     if not devices:
-        return
+        return []
 
     existing_devices = await verify_devices_in_cloudvision_inventory(
         devices=devices, skip_missing_devices=skip_missing_devices, warnings=warnings, cv_client=cv_client
     )
     await verify_devices_in_topology_studio(existing_devices, workspace_id, cv_client)
-    return
+    return existing_devices
 
 
 async def verify_devices_in_cloudvision_inventory(

@@ -1,0 +1,26 @@
+hostname: avd-ci-leaf1
+is_deployed: true
+metadata:
+  cv_tags:
+    device_tags:
+    - name: Role
+      value: edge
+    - name: Region
+      value: AVD_Land_East
+    - name: Zone
+      value: DEFAULT-ZONE
+    - name: Site
+      value: Site511
+    interface_tags:
+    - interface: Ethernet1
+      tags:
+      - name: Type
+        value: wan
+    - interface: Ethernet2
+      tags:
+      - name: Type
+        value: wan
+    - interface: Ethernet3
+      tags:
+      - name: Type
+        value: wan
