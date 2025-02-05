@@ -406,7 +406,7 @@ class RouterBgpMixin(Protocol):
         vlan_rd = self.get_vlan_rd(vlan, tenant)
         vlan_rt = self.get_vlan_rt(vlan, tenant)
 
-        bgp_vlan = self.structured_config.router_bgp.vlans.append_new(
+        bgp_vlan = EosCliConfigGen.RouterBgp.VlansItem(
             id=vlan.id,
             tenant=tenant.name,
             rd=vlan_rd,
