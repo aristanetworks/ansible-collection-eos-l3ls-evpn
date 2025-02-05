@@ -9,24 +9,22 @@
 ## Errdisable
 
 ### Errdisable Summary
+{%     if errdisable.detect.causes is defined %}
 
-{%     if errdisable.recovery is defined %}
-{%         if errdisable.detect.causes is defined %}
 |  Detect Cause | Enabled |
 | ------------- | ------- |
-{%             for cause in errdisable.detect.causes | arista.avd.natural_sort %}
+{%         for cause in errdisable.detect.causes | arista.avd.natural_sort %}
 | {{ cause }} | True |
-{%             endfor %}
-{%         endif %}
+{%         endfor %}
+{%     endif %}
+{%     if errdisable.recovery.causes is defined %}
 
-{%         if errdisable.recovery.causes is defined %}
 |  Detect Cause | Enabled | Interval |
 | ------------- | ------- | -------- |
-{%             set interval = errdisable.recovery.interval | arista.avd.default("-") %}
-{%             for cause in errdisable.recovery.causes | arista.avd.natural_sort %}
+{%         set interval = errdisable.recovery.interval | arista.avd.default("-") %}
+{%         for cause in errdisable.recovery.causes | arista.avd.natural_sort %}
 | {{ cause }} | True | {{ interval }} |
-{%             endfor %}
-{%         endif %}
+{%         endfor %}
 {%     endif %}
 
 ```eos
