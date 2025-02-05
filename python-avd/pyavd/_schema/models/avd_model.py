@@ -169,10 +169,6 @@ class AvdModel(AvdBase):
         """
         return bool(self.__dict__) or bool(self._custom_data)
 
-    def __hash__(self) -> int:
-        LOGGER.warning("__hash__")
-        return hash(((key, hash(value)) for key, value in self.items()))
-
     def __eq__(self, other: object) -> bool:
         return self._compare(other)
 
@@ -293,9 +289,6 @@ class AvdModel(AvdBase):
 
         for field, new_value in other.items():
             old_value = self._get_defined_attr(field)
-
-            if field == "ip_igmp_snooping":
-                LOGGER.warning("%s, %s, %s", field, old_value, new_value)
 
             if old_value == new_value:
                 continue
