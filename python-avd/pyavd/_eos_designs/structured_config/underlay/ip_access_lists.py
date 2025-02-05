@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
+from itertools import chain
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate
@@ -25,15 +26,15 @@ class IpAccesslistsMixin(Protocol):
         """
         Return structured config for ip_access_lists.
 
-        Covers ipv4_acl_in/out defined under node l3_interfaces.
+        Covers ipv4_acl_in/out defined under node l3_interfaces or l3_port_channels.
         """
-        if not self._l3_interface_acls:
+        if not self._l3_interface_acls and not self._l3_port_channel_acls:
             return None
 
         ip_access_lists = []
-
-        for interface_acls in self._l3_interface_acls.values():
+        context_str = "IPv4 Access lists for node l3_interfaces or l3_port_channels"
+        for interface_acls in chain(self._l3_interface_acls.values(), self._l3_port_channel_acls.values()):
             for acl in interface_acls.values():
-                append_if_not_duplicate(ip_access_lists, "name", acl, context="IPv4 Access lists for node l3_interfaces", context_keys=["name"])
+                append_if_not_duplicate(ip_access_lists, "name", acl, context=context_str, context_keys=["name"])
 
         return natural_sort(ip_access_lists, "name")

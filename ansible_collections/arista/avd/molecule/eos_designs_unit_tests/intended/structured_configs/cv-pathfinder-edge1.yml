@@ -166,6 +166,60 @@ ethernet_interfaces:
   peer_type: l3_interface
   switchport:
     enabled: false
+- name: Ethernet6
+  description: peerDevice1_PeerDevIntf1
+  shutdown: false
+  speed: forced 10000full
+  channel_group:
+    id: 1
+    mode: active
+  peer: peerDevice1
+  peer_interface: PeerDevIntf1
+  peer_type: l3_port_channel_member
+- name: Ethernet7
+  description: peerDeviceA
+  shutdown: false
+  speed: forced 10000full
+  channel_group:
+    id: 1
+    mode: active
+  peer: peerDeviceA
+  peer_type: l3_port_channel_member
+- name: Ethernet1/10
+  description: peerDevice10
+  shutdown: false
+  speed: forced 10000full
+  channel_group:
+    id: 450
+    mode: 'on'
+  peer: peerDevice10
+  peer_type: l3_port_channel_member
+- name: Ethernet1/16
+  description: peerDevice11
+  shutdown: false
+  speed: auto 10000full
+  channel_group:
+    id: 540
+    mode: active
+  peer: peerDevice11
+  peer_type: l3_port_channel_member
+- name: Ethernet1/17
+  description: peerDevice11
+  shutdown: false
+  channel_group:
+    id: 540
+    mode: active
+  peer: peerDevice11
+  peer_type: l3_port_channel_member
+- name: Ethernet1/18
+  description: peerDevice11
+  shutdown: false
+  speed: 1000full
+  channel_group:
+    id: 540
+    mode: active
+  peer: peerDevice11
+  peer_type: l3_port_channel_member
 flow_tracking:
   hardware:
     trackers:
@@ -193,6 +247,24 @@ ip_access_lists:
     protocol: ip
     source: 172.24.49.2
     destination: 172.24.49.3
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Port-Channel540
+  entries:
+  - sequence: 15
+    action: deny
+    protocol: ip
+    source: any
+    destination: 172.15.6.9
+  - action: permit
+    protocol: ip
+    source: 172.31.0.11
+    destination: 172.15.6.9
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Port-Channel540
+  entries:
+  - remark: Some remark will not require source and destination fields.
+  - action: permit
+    protocol: ip
+    source: 172.15.6.9
+    destination: any
 - name: ACL-NAT-IE-DIRECT
   entries:
   - sequence: 10
@@ -404,6 +476,26 @@ metadata:
       tags:
       - name: Type
         value: lan
+    - interface: Port-Channel1
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: ATT
+      - name: Circuit
+        value: '404'
+    - interface: Port-Channel450
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: Orange
+    - interface: Port-Channel540
+      tags:
+      - name: Type
+        value: wan
+      - name: Carrier
+        value: Comcast
   cv_pathfinder:
     role: edge
     region: AVD_Land_East
@@ -426,6 +518,16 @@ metadata:
     - name: Ethernet3
       carrier: ATT
       circuit_id: '404'
+      pathgroup: INET
+    - name: Port-Channel1
+      carrier: ATT
+      circuit_id: '404'
+      pathgroup: INET
+    - name: Port-Channel450
+      carrier: Orange
+      pathgroup: INET
+    - name: Port-Channel540
+      carrier: Comcast
       pathgroup: INET
     internet_exit_policies:
     - name: ZSCALER-EXIT-POLICY-1
@@ -571,13 +673,45 @@ monitor_connectivity:
     local_interfaces: SET-Tunnel112
     address_only: false
     url: http://gateway.zscalerbeta.net/vpntest
+port_channel_interfaces:
+- name: Port-Channel1
+  description: ATT_404_peerDeviceA_Port-Channel2
+  shutdown: false
+  ip_address: 172.15.5.7/31
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  peer: peerDeviceA
+  peer_interface: Port-Channel2
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
+- name: Port-Channel450
+  description: Orange_peerDevice10_Port-Channel455
+  shutdown: false
+  ip_address: 172.15.5.8/31
+  peer: peerDevice10
+  peer_interface: Port-Channel455
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
+- name: Port-Channel540
+  description: Comcast_peerDevice11_Port-Channel545
+  shutdown: false
+  ip_address: 172.15.6.9/31
+  access_group_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Port-Channel540
+  access_group_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Port-Channel540
+  peer: peerDevice11
+  peer_interface: Port-Channel545
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
 prefix_lists:
 - name: PL2
   sequence_numbers:
   - sequence: 10
     action: permit 5.0.0.0/0
   - sequence: 20
-    action: deny 10.00.0.0/24
+    action: deny 10.0.0.0/24
 - name: ALLOW-DEFAULT
   sequence_numbers:
   - sequence: 10
@@ -608,6 +742,34 @@ route_maps:
     match:
     - ip address prefix-list PL2
   - sequence: 20
+    type: deny
+- name: RM-BGP-172.31.0.1-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL2
+    set:
+    - community no-advertise additive
+- name: RM-BGP-172.31.0.1-OUT
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list ALLOW-DEFAULT
+  - sequence: 20
+    type: deny
+- name: RM-BGP-172.31.0.10-IN
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL2
+    set:
+    - community no-advertise additive
+- name: RM-BGP-172.31.0.10-OUT
+  sequence_numbers:
+  - sequence: 10
     type: deny
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -773,6 +935,16 @@ router_bgp:
   - ip_address: 172.28.0.14
     remote_as: '64520'
     route_map_out: RM-BGP-172.28.0.14-OUT
+  - ip_address: 172.31.0.1
+    remote_as: '64520'
+    description: ATT_404_peerDeviceA_Port-Channel2
+    route_map_in: RM-BGP-172.31.0.1-IN
+    route_map_out: RM-BGP-172.31.0.1-OUT
+  - ip_address: 172.31.0.10
+    remote_as: '64520'
+    description: Orange_peerDevice10_Port-Channel455
+    route_map_in: RM-BGP-172.31.0.10-IN
+    route_map_out: RM-BGP-172.31.0.10-OUT
   - ip_address: 172.17.0.2
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65199'
@@ -807,6 +979,10 @@ router_bgp:
     - ip_address: 172.29.0.13
       activate: true
     - ip_address: 172.28.0.14
+      activate: true
+    - ip_address: 172.31.0.1
+      activate: true
+    - ip_address: 172.31.0.10
       activate: true
   address_family_ipv4_sr_te:
     peer_groups:
@@ -965,6 +1141,21 @@ router_path_selection:
         server_profiles:
         - INET-cv-pathfinder-pathfinder1-Ethernet1
         - INET-cv-pathfinder-pathfinder2-Ethernet1
+    - name: Port-Channel1
+      stun:
+        server_profiles:
+        - INET-cv-pathfinder-pathfinder1-Ethernet1
+        - INET-cv-pathfinder-pathfinder2-Ethernet1
+    - name: Port-Channel450
+      stun:
+        server_profiles:
+        - INET-cv-pathfinder-pathfinder1-Ethernet1
+        - INET-cv-pathfinder-pathfinder2-Ethernet1
+    - name: Port-Channel540
+      stun:
+        server_profiles:
+        - INET-cv-pathfinder-pathfinder1-Ethernet1
+        - INET-cv-pathfinder-pathfinder2-Ethernet1
     dynamic_peers:
       enabled: true
     static_peers:
@@ -1048,6 +1239,12 @@ service_routing_protocols_model: multi-agent
 spanning_tree:
   mode: none
 static_routes:
+- destination_address_prefix: 172.16.0.0/16
+  gateway: 172.31.0.1
+- destination_address_prefix: 172.17.0.0/16
+  gateway: 172.31.0.10
+- destination_address_prefix: 172.18.0.0/16
+  gateway: 172.31.0.11
 - destination_address_prefix: 10.37.121.1/32
   gateway: 172.31.0.1
   name: IE-ZSCALER-PRI

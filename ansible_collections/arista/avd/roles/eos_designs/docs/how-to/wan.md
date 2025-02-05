@@ -64,6 +64,7 @@ Please familiarize yourself with the Arista WAN terminology before proceeding:
 - LAN support is limited to single L2 using `uplink_type: lan` and eBGP L3 using `uplink_type: p2p-vrfs` in conjunction of `underlay_routing_protocol: ebgp`.
 - All the WAN routers must have a common path-group with at least one WAN route server to be able to inject the default control-plane match statement in the VRF default WAN policy.
 - For the default VRF, routes received over BGP peering configured under tenants in `network_services` will not be automatically advertised to the WAN (they will be advertised toward the LAN if eBGP is used). To advertise them towards the WAN, they need to be injected in EVPN and this can be achieved by adding a route-map to mark them with the site SOO.
+- Internet exit policies are not supported under WAN port-channel interfaces.
 
 ### Future work
 
@@ -356,7 +357,7 @@ wan_router:
 
 ### WAN interfaces
 
-A WAN interface in AVD is defined under the node settings under the `l3_interfaces` list. To be considered as a WAN interface by AVD, the `l3_interface` must have the `wan_carrier` key defined (which will allow to detect the path-group thanks to the carrier to path-group mapping). The `wan_circuit_id` is optional and used on CVaaS to provide more information in the visualization as well as in the AVD generated interface description. Finally the key `connected_to_pathfinder` allows to disable the static peering configuration on a given path-group.
+A WAN interface in AVD is defined under the node settings either under the `l3_interfaces` or the `l3_port_channels` list. To be considered as a WAN interface by AVD, an `l3_interface` pr `l3_port_channel` must have the `wan_carrier` key defined (which will allow to detect the path-group thanks to the carrier to path-group mapping). The `wan_circuit_id` is optional and used on CVaaS to provide more information in the visualization as well as in the AVD generated interface description. Finally the key `connected_to_pathfinder` allows to disable the static peering configuration on a given path-group.
 
 !!! Danger
 
@@ -402,6 +403,21 @@ wan_router:
           # This is NOT a WAN interface
           - name: Ethernet3
             ip_address: 172.20.20.20/31
+        l3_port_channels:
+          # This is a WAN interface because `wan_carrier` is defined
+          - name: Port-Channel1
+            mode: active
+            peer: peer4
+            peer_interface: Port-Channel12
+            wan_carrier: ISP-3
+            ipv4_acl_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN
+            ipv4_acl_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT
+            dhcp_accept_default_route: true
+            ip_address: dhcp
+            dhcp_ip: 42.42.42.42
+            member_interfaces:
+              - name: Ethernet4
+              - name: Ethernet5
 
 ipv4_prefix_list_catalog:
   - name: ALLOW-DEFAULT

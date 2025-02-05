@@ -18,7 +18,7 @@ if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
     from pyavd._eos_designs.shared_utils import SharedUtilsProtocol
 
-    T_StructuredConfigGeneratorSubclass = TypeVar("T_StructuredConfigGeneratorSubclass", bound="StructuredConfigGenerator")
+    T_StructuredConfigGeneratorSubclass = TypeVar("T_StructuredConfigGeneratorSubclass", bound="StructuredConfigGeneratorProtocol")
 
 
 def structured_config_contributor(func: Callable[[T_StructuredConfigGeneratorSubclass], None]) -> Callable[[T_StructuredConfigGeneratorSubclass], None]:
