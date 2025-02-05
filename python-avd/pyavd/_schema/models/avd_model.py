@@ -15,6 +15,8 @@ from .avd_base import AvdBase
 from .avd_indexed_list import AvdIndexedList
 
 if TYPE_CHECKING:
+    from collections.abc import ItemsView
+
     from typing_extensions import Self
 
     from .type_vars import T_AvdModel
@@ -147,15 +149,12 @@ class AvdModel(AvdBase):
 
         Avoids the overridden __getattr__ to avoid default values.
         """
-        try:
-            return self.__getattribute__(name)
-        except AttributeError:
-            return Undefined
+        return self.__dict__.get(name, Undefined)
 
     def __repr__(self) -> str:
         """Returns a repr with all the fields that are set including any nested models."""
         cls_name = self.__class__.__name__
-        attrs = [f"{key}={getattr(self, key)!r}" for key in self._fields if self._get_defined_attr(key) is not Undefined]
+        attrs = [f"{key}={value}" for key, value in self.items()]
         if self._custom_data:
             attrs.append(f"_custom_data={self._custom_data}")
         return f"<{cls_name}({', '.join(attrs)})>"
@@ -168,43 +167,29 @@ class AvdModel(AvdBase):
 
         The check ignores the default values and is performed recursively on any nested models.
         """
-        return any(
-            # False if item is Undefined
-            (value := self._get_defined_attr(field)) is not Undefined
-            and
-            # False if it is AVD class with a falsy value
-            # True otherwise
-            not (isinstance(value, AvdBase) and not value)
-            for field in self._fields
-        ) or bool(self._custom_data)
+        return bool(self.__dict__) or bool(self._custom_data)
+
+    def items(self) -> ItemsView:
+        return self.__dict__.items()
 
     def _strip_empties(self) -> None:
         """In-place update the instance to remove None values and empty models recursively."""
-        for field, field_info in self._fields.items():
-            if (value := self._get_defined_attr(field)) is Undefined:
-                continue
+        to_be_deleted = set()
+        for field, value in self.items():
+            field_info = self._fields[field]
 
             if issubclass(field_info["type"], AvdBase):
                 value = cast(AvdBase, value)
                 value._strip_empties()
                 if not value:
-                    delattr(self, field)
+                    to_be_deleted.add(field)
                 continue
 
             if value is None:
-                delattr(self, field)
+                to_be_deleted.add(field)
 
-    def __getstate__(self) -> tuple[None, dict[str, Any]]:
-        slots_dict: dict[str, Any] = {
-            "_custom_data": self._custom_data,
-            "_created_from_null": self._created_from_null,
-            "_block_inheritance": self._block_inheritance,
-        }
-        if hasattr(self, "_internal_data_instance"):
-            slots_dict["_internal_data_instance"] = self._internal_data_instance
-        slots_dict.update({slot: value for slot in self.__slots__ if (value := self._get_defined_attr(slot)) is not Undefined})
-
-        return (None, slots_dict)
+        for field in to_be_deleted:
+            delattr(self, field)
 
     def _as_dict(self, include_default_values: bool = False) -> dict:
         """
@@ -213,22 +198,31 @@ class AvdModel(AvdBase):
         Filtered for nested None, {} and [] values.
         """
         as_dict = {}
-        for field, field_info in self._fields.items():
-            value = self._get_defined_attr(field)
-            if value is Undefined:
-                if not include_default_values:
-                    continue
-
-                value = self._get_field_default_value(field)
+        ordered_field_names = list(self._fields.keys())
+        for field in sorted(self.__dict__, key=ordered_field_names.index):
+            value = self.__dict__[field]
 
             # Removing field_ prefix if needed.
             key = self._field_to_key_map.get(field, field)
 
-            if issubclass(field_info["type"], AvdBase):
+            if issubclass(self._fields[field]["type"], AvdBase):
                 value = cast(AvdBase, value)
                 value = None if value._created_from_null else value._dump(include_default_values=include_default_values)
 
             as_dict[key] = value
+
+        # This will insert default values after the set values, so the order will not be consistent.
+        # TODO: Figure out if this is a problem or not. We only use include_default_values internally
+        # so probably we can remove the include_default_values at some point.
+        if include_default_values:
+            for field in ordered_field_names:
+                if field not in __dict__:
+                    default_value = self._get_field_default_value(field)
+
+                    # Removing field_ prefix if needed.
+                    key = self._field_to_key_map.get(field, field)
+
+                    as_dict[key] = default_value
 
         if self._custom_data:
             as_dict.update(self._custom_data)
@@ -244,9 +238,7 @@ class AvdModel(AvdBase):
 
         If the field value is not set, this will not insert a default schema values but will instead return the given 'default' value (or None).
         """
-        if (value := self._get_defined_attr(name)) is Undefined:
-            return default
-        return value
+        return self.__dict__.get(name, default)
 
     if TYPE_CHECKING:
         _update: type[Self]
@@ -281,13 +273,12 @@ class AvdModel(AvdBase):
             msg = f"Unable to merge type '{type(other)}' into '{cls}'"
             raise TypeError(msg)
 
-        for field, field_info in cls._fields.items():
-            if other._created_from_null and self._get_defined_attr(field) is not Undefined:
-                # Force the field back to unset if other is a "null" class.
-                delattr(self, field)
+        if other._created_from_null:
+            # Force all fields on this instance back to unset if other is a "null" class.
+            self.__dict__ = {}
+            self._custom_data = {}
 
-            if (new_value := other._get_defined_attr(field)) is Undefined:
-                continue
+        for field, new_value in other.items():
             old_value = self._get_defined_attr(field)
             if old_value == new_value:
                 continue
@@ -298,7 +289,7 @@ class AvdModel(AvdBase):
                 continue
 
             # Merge new value
-            field_type = field_info["type"]
+            field_type = self._fields[field]["type"]
             if issubclass(field_type, AvdBase):
                 # Merge in to the existing object
                 old_value = cast(AvdBase, old_value)
@@ -342,9 +333,7 @@ class AvdModel(AvdBase):
             self._block_inheritance = True
             return
 
-        for field, field_info in cls._fields.items():
-            if (new_value := other._get_defined_attr(field)) is Undefined:
-                continue
+        for field, new_value in other.items():
             old_value = self._get_defined_attr(field)
             if old_value == new_value:
                 continue
@@ -355,7 +344,7 @@ class AvdModel(AvdBase):
                 continue
 
             # Merge new value if it is a class with inheritance support.
-            field_type = field_info["type"]
+            field_type = self._fields[field]["type"]
             if issubclass(field_type, AvdModel):
                 # Inherit into the existing object.
                 old_value = cast(AvdModel, old_value)
@@ -397,14 +386,14 @@ class AvdModel(AvdBase):
             raise TypeError(msg)
 
         new_args = {}
-        for field, field_info in cls._fields.items():
-            if (value := self._get_defined_attr(field)) is Undefined:
-                continue
+        for field, value in self.items():
             if field not in new_type._fields:
                 if ignore_extra_keys:
                     continue
                 msg = f"Unable to cast '{cls}' as type '{new_type}' since the field '{field}' is missing from the new class. "
                 raise TypeError(msg)
+
+            field_info = self._fields[field]
             if field_info != new_type._fields[field]:
                 if issubclass(field_info["type"], AvdBase):
                     # TODO: Consider using the TypeError we raise below to ensure we know the outer type.
