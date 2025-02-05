@@ -976,6 +976,11 @@ router_pim_sparse_mode:
         - 232.0.112.0/21
         access_lists:
         - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_2
+      - address: 10.1.50.150
+        groups:
+        - 232.0.112.0/21
+        access_lists:
         - RPS_ACL_VRF_Tenant_E_1
         - RPS_ACL_VRF_Tenant_E_2
       - address: 10.1.50.150
@@ -983,6 +988,11 @@ router_pim_sparse_mode:
         - 232.0.112.0/21
         access_lists:
         - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_2
+      - address: 10.1.50.150
+        groups:
+        - 232.0.112.0/21
+        access_lists:
         - RPS_ACL_VRF_Tenant_E_1
         - RPS_ACL_VRF_Tenant_E_2
       - address: 10.1.50.150
@@ -990,27 +1000,11 @@ router_pim_sparse_mode:
         - 232.0.112.0/21
         access_lists:
         - RPS_ACL_VRF_Tenant_E_1
-        - RPS_ACL_VRF_Tenant_E_1
         - RPS_ACL_VRF_Tenant_E_2
       - address: 10.1.50.150
         groups:
         - 232.0.112.0/21
         access_lists:
-        - RPS_ACL_VRF_Tenant_E_1
-        - RPS_ACL_VRF_Tenant_E_1
-        - RPS_ACL_VRF_Tenant_E_2
-      - address: 10.1.50.150
-        groups:
-        - 232.0.112.0/21
-        access_lists:
-        - RPS_ACL_VRF_Tenant_E_1
-        - RPS_ACL_VRF_Tenant_E_1
-        - RPS_ACL_VRF_Tenant_E_2
-      - address: 10.1.50.150
-        groups:
-        - 232.0.112.0/21
-        access_lists:
-        - RPS_ACL_VRF_Tenant_E_1
         - RPS_ACL_VRF_Tenant_E_1
         - RPS_ACL_VRF_Tenant_E_2
 service_routing_protocols_model: multi-agent
