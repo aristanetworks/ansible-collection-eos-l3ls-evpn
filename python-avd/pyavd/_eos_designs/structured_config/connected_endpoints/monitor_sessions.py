@@ -27,7 +27,7 @@ class MonitorSessionsMixin(Protocol):
     """
 
     @structured_config_contributor
-    def monitor_sessions(self: AvdStructuredConfigConnectedEndpoints) -> None:
+    def monitor_sessions(self: AvdStructuredConfigConnectedEndpointsProtocol) -> None:
         """Return structured_config for monitor_sessions."""
         if not self._monitor_session_configs:
             return
