@@ -245,8 +245,8 @@ class AvdModel(AvdBase):
     else:
 
         def _update(self, *args: Any, **kwargs: Any) -> Self:
-            """Update instance with the given kwargs. Reuses __init__."""
-            self.__init__(*args, **kwargs)
+            """Update instance with the given kwargs."""
+            [setattr(self, arg, arg_value) for arg, arg_value in kwargs.items() if arg_value is not Undefined]
             return self
 
     def _deepmerge(self, other: Self, list_merge: Literal["append_unique", "append", "replace", "keep", "prepend", "prepend_unique"] = "append_unique") -> None:
