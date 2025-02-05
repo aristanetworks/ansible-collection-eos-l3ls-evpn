@@ -300,7 +300,7 @@ keys:
                       - pipe
                       - uniform
                   dscp:
-                    description: DSCP model `uniform` supported with ttl model `uniform` on some platforms.
+                    description: The DSCP model `uniform` is supported only on specific hardware platforms.
                     type: str
                     required: true
                     valid_values:
@@ -317,7 +317,9 @@ keys:
                       - pipe
                       - uniform
                   dscp:
+                    description: The DSCP model `uniform` is supported only on specific hardware platforms.
                     type: str
                     required: true
                     valid_values:
                       - pipe
+                      - uniform

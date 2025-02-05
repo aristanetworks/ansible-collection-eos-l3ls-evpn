@@ -71,10 +71,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;termination</samp>](## "mpls.tunnel.termination") | Dictionary |  |  |  | Controls selection of the TTL/DSCP values by LER when decapsulating MPLS packets. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;model</samp>](## "mpls.tunnel.termination.model") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ttl</samp>](## "mpls.tunnel.termination.model.ttl") | String | Required |  | Valid Values:<br>- <code>pipe</code><br>- <code>uniform</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp</samp>](## "mpls.tunnel.termination.model.dscp") | String | Required |  | Valid Values:<br>- <code>pipe</code><br>- <code>uniform</code> | DSCP model `uniform` supported with ttl model `uniform` on some platforms. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp</samp>](## "mpls.tunnel.termination.model.dscp") | String | Required |  | Valid Values:<br>- <code>pipe</code><br>- <code>uniform</code> | The DSCP model `uniform` is supported only on specific hardware platforms. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;php_model</samp>](## "mpls.tunnel.termination.php_model") | Dictionary |  |  |  | Used on PHP router in the absence of any VPN routes and explicit null VRF labels. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ttl</samp>](## "mpls.tunnel.termination.php_model.ttl") | String | Required |  | Valid Values:<br>- <code>pipe</code><br>- <code>uniform</code> |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp</samp>](## "mpls.tunnel.termination.php_model.dscp") | String | Required |  | Valid Values:<br>- <code>pipe</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp</samp>](## "mpls.tunnel.termination.php_model.dscp") | String | Required |  | Valid Values:<br>- <code>pipe</code><br>- <code>uniform</code> | The DSCP model `uniform` is supported only on specific hardware platforms. |
 
 === "YAML"
 
@@ -233,11 +233,13 @@
           model:
             ttl: <str; "pipe" | "uniform"; required>
 
-            # DSCP model `uniform` supported with ttl model `uniform` on some platforms.
+            # The DSCP model `uniform` is supported only on specific hardware platforms.
             dscp: <str; "pipe" | "uniform"; required>
 
           # Used on PHP router in the absence of any VPN routes and explicit null VRF labels.
           php_model:
             ttl: <str; "pipe" | "uniform"; required>
-            dscp: <str; "pipe"; required>
+
+            # The DSCP model `uniform` is supported only on specific hardware platforms.
+            dscp: <str; "pipe" | "uniform"; required>
     ```

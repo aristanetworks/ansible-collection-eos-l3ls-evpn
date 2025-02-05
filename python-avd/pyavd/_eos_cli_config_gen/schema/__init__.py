@@ -26863,7 +26863,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     _fields: ClassVar[dict] = {"ttl": {"type": str}, "dscp": {"type": str}, "_custom_data": {"type": dict}}
                     ttl: Literal["pipe", "uniform"]
                     dscp: Literal["pipe", "uniform"]
-                    """DSCP model `uniform` supported with ttl model `uniform` on some platforms."""
+                    """The DSCP model `uniform` is supported only on specific hardware platforms."""
                     _custom_data: dict[str, Any]
 
                     if TYPE_CHECKING:
@@ -26883,7 +26883,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             Args:
                                 ttl: ttl
-                                dscp: DSCP model `uniform` supported with ttl model `uniform` on some platforms.
+                                dscp: The DSCP model `uniform` is supported only on specific hardware platforms.
                                 _custom_data: _custom_data
 
                             """
@@ -26893,7 +26893,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     _fields: ClassVar[dict] = {"ttl": {"type": str}, "dscp": {"type": str}, "_custom_data": {"type": dict}}
                     ttl: Literal["pipe", "uniform"]
-                    dscp: Literal["pipe"]
+                    dscp: Literal["pipe", "uniform"]
+                    """The DSCP model `uniform` is supported only on specific hardware platforms."""
                     _custom_data: dict[str, Any]
 
                     if TYPE_CHECKING:
@@ -26902,7 +26903,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             self,
                             *,
                             ttl: Literal["pipe", "uniform"] | UndefinedType = Undefined,
-                            dscp: Literal["pipe"] | UndefinedType = Undefined,
+                            dscp: Literal["pipe", "uniform"] | UndefinedType = Undefined,
                             _custom_data: dict[str, Any] | UndefinedType = Undefined,
                         ) -> None:
                             """
@@ -26913,7 +26914,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             Args:
                                 ttl: ttl
-                                dscp: dscp
+                                dscp: The DSCP model `uniform` is supported only on specific hardware platforms.
                                 _custom_data: _custom_data
 
                             """
