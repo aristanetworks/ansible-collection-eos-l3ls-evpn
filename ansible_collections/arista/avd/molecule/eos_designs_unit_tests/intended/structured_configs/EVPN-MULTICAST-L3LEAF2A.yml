@@ -793,6 +793,10 @@ router_multicast:
   - name: TEN_E_PEG_L3_MULTICAST_ENABLED
     ipv4:
       routing: true
+router_pim_sparse_mode:
+  vrfs:
+  - name: TEN_E_L3_MULTICAST_ENABLED_PEG_OVERRIDE
+  - name: TEN_E_PEG_L3_MULTICAST_ENABLED
 service_routing_protocols_model: multi-agent
 standard_access_lists:
 - name: RPS_ACL_VRF_Tenant_E_2
