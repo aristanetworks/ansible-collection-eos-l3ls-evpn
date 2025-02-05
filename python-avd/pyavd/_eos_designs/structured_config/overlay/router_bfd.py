@@ -21,7 +21,7 @@ class RouterBfdMixin(Protocol):
 
     @structured_config_contributor
     def router_bfd(self: AvdStructuredConfigOverlayProtocol) -> None:
-        """Return structured config for router_bfd."""
+        """Set structured config for router_bfd."""
         if self.shared_utils.overlay_cvx:
             return
         self.structured_config.router_bfd.multihop = self.inputs.bfd_multihop._cast_as(EosCliConfigGen.RouterBfd.Multihop)
