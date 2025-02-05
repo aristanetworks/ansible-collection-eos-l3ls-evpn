@@ -28,7 +28,7 @@ class MonitorSessionsMixin(Protocol):
 
     @structured_config_contributor
     def monitor_sessions(self: AvdStructuredConfigConnectedEndpointsProtocol) -> None:
-        """Return structured_config for monitor_sessions."""
+        """Set the structured_config for monitor_sessions."""
         if not self._monitor_session_configs:
             return
 
@@ -48,27 +48,21 @@ class MonitorSessionsMixin(Protocol):
                         )
                         raise AristaAvdInvalidInputsError(msg)
 
-            monitor_session = EosCliConfigGen.MonitorSessionsItem(
-                name=session_name,
-                sources=[],
-                destinations=[session._interface for session in session_configs_list if session.role == "destination"],
-            )
+            monitor_session = EosCliConfigGen.MonitorSessionsItem(name=session_name)
+            monitor_session.destinations.append_new(session._interface for session in session_configs_list if session.role == "destination")
             source_sessions = [session for session in session_configs_list if session.role == "source"]
             for session in source_sessions:
                 source = EosCliConfigGen.MonitorSessionsItem.SourcesItem(
                     name=session._interface,
                     direction=session.source_settings.direction,
                 )
-                if session.source_settings.access_group.name is not None:
-                    source.access_group = EosCliConfigGen.MonitorSessionsItem.SourcesItem.AccessGroup(
-                        type=session.source_settings.access_group.type,
-                        name=session.source_settings.access_group.name,
-                        priority=session.source_settings.access_group.priority,
-                    )
-                monitor_session.sources.extend(source)
+                if session.source_settings.access_group.name:
+                    source.access_group = session.source_settings.access_group._cast_as(EosCliConfigGen.MonitorSessionsItem.SourcesItem.AccessGroup)  
+
+                monitor_session.sources.append(source)
 
             if session_settings := merged_settings.session_settings:
-                monitor_session._update(session_settings)
+                monitor_session._cast_as(session_settings)
 
             self.structured_config.monitor_sessions.append(monitor_session)
 
