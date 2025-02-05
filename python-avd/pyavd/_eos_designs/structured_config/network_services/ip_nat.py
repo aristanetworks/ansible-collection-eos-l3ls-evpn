@@ -20,7 +20,7 @@ class IpNatMixin(Protocol):
 
     @structured_config_contributor
     def ip_nat(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
-        """Returns structured config for ip_nat."""
+        """Set the structured config for ip_nat."""
         if not self.shared_utils.is_cv_pathfinder_client:
             return
 
