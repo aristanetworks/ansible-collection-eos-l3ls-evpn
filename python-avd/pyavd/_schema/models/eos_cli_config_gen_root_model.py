@@ -21,7 +21,7 @@ class EosCliConfigGenRootModel(AvdModel):
 
         Args:
             data: A mapping containing the EosDesigns input data to be loaded.
-            keep_extra_keys: Store all unknown keys in the _custom_data dict and include it again in the output of _to_dict().
+            keep_extra_keys: Store all unknown keys in the self._custom_data dict and include it again in the output of _to_dict().
                 By default _all_ keys will be stored. Setting this to False will only store keys starting with _.
 
         TODO: AVD6.0.0 remove the keep_extra_keys option so we no longer support custom keys without _ in structured config

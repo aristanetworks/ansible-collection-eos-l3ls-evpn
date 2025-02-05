@@ -82,7 +82,7 @@ def test_eos_designs_initialize_kwargs_with_valid_data(molecule_host: MoleculeHo
     """Test EosDesigns model with valid data."""
     inputs = deepcopy(molecule_host.hostvars)
 
-    # The class will not accept _custom_keys to be given directly. They must be given as `_custom_data: <dict>`.
+    # The class will not accept _custom_keys to be given directly. They must be extracted by from_dict().
     # This is normally handled by the loader, but since we here test loading with kwargs, we need to remove any
     # custom keys from the test data.
     inputs = {k: v for k, v in inputs.items() if not str(k).startswith("_")}

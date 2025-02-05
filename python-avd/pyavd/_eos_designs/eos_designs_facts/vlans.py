@@ -90,7 +90,7 @@ class VlansMixin(Protocol):
         for connected_endpoints_key in self.inputs._dynamic_keys.connected_endpoints:
             for connected_endpoint in connected_endpoints_key.value:
                 for index, adapter in enumerate(connected_endpoint.adapters):
-                    adapter._context = f"{connected_endpoints_key.key}[name={connected_endpoint.name}].adapters[{index}]"
+                    adapter._internal_data.context = f"{connected_endpoints_key.key}[name={connected_endpoint.name}].adapters[{index}]"
                     adapter_settings = self.shared_utils.get_merged_adapter_settings(adapter)
                     if self.shared_utils.hostname not in adapter_settings.switches:
                         # This switch is not connected to this endpoint. Skipping.
@@ -114,7 +114,7 @@ class VlansMixin(Protocol):
                     # Skip entry if no match
                     continue
 
-                network_port_item._context = f"network_ports[{index}]"
+                network_port_item._internal_data.context = f"network_ports[{index}]"
                 adapter_settings = self.shared_utils.get_merged_adapter_settings(network_port_item)
                 adapter_vlans, adapter_trunk_groups = self._parse_adapter_settings(adapter_settings)
                 vlans.update(adapter_vlans)

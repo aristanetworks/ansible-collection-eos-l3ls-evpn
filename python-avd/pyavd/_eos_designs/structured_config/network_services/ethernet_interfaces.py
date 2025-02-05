@@ -132,7 +132,7 @@ class EthernetInterfacesMixin(Protocol):
                                         interface["ospf_message_digest_keys"] = ospf_keys
 
                             if l3_interface.pim.enabled:
-                                if not getattr(vrf, "_evpn_l3_multicast_enabled", False):
+                                if not getattr(vrf._internal_data, "evpn_l3_multicast_enabled", False):
                                     # Possibly the key was not set because `evpn_multicast` is not set to `true`.
                                     if not self.shared_utils.evpn_multicast:
                                         msg = (
@@ -146,7 +146,7 @@ class EthernetInterfacesMixin(Protocol):
                                         )
                                     raise AristaAvdError(msg)
 
-                                if not getattr(vrf, "_pim_rp_addresses", None):
+                                if not getattr(vrf._internal_data, "pim_rp_addresses", None):
                                     msg = (
                                         f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires at least one RP"
                                         f" defined in pim_rp_addresses under VRF '{vrf.name}' or Tenant '{tenant.name}'"
