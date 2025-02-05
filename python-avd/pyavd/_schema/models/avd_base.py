@@ -9,7 +9,6 @@ from typing import TYPE_CHECKING, Literal
 
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
-    from typing import Any
 
     from typing_extensions import Self
 
