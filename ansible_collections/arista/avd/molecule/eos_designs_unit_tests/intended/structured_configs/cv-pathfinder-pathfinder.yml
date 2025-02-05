@@ -261,6 +261,10 @@ metadata:
           name: Site423
           location:
             address: Somewhere-warm
+        - id: 12
+          name: Site12
+          location:
+            address: 12 Downing Street, London
     - id: 43
       name: AVD_Land_East
       zones:
@@ -434,6 +438,56 @@ metadata:
           preference: alternate
         - name: LAN_HA
           preference: preferred
+    - name: WAN-VRF-NO-AF
+      vni: 200
+      avts:
+      - constraints:
+          jitter: 42
+          hop_count: lowest
+        id: 2
+        name: PROD-AVT-POLICY-VOICE
+        pathgroups:
+        - name: MPLS
+          preference: preferred
+        - name: INET
+          preference: alternate
+        - name: LAN_HA
+          preference: preferred
+        application_profiles:
+        - VOICE
+      - constraints:
+          lossrate: '42.0'
+        id: 4
+        name: PROD-AVT-POLICY-VIDEO
+        pathgroups:
+        - name: MPLS
+          preference: preferred
+        - name: LTE
+          preference: preferred
+        - name: INET
+          preference: alternate
+        - name: LAN_HA
+          preference: preferred
+        application_profiles:
+        - VIDEO
+      - id: 5
+        name: PROD-AVT-POLICY-MPLS-ONLY
+        pathgroups:
+        - name: MPLS
+          preference: preferred
+        - name: LAN_HA
+          preference: preferred
+        application_profiles:
+        - MPLS-ONLY
+      - id: 1
+        name: PROD-AVT-POLICY-DEFAULT
+        pathgroups:
+        - name: INET
+          preference: preferred
+        - name: MPLS
+          preference: alternate
+        - name: LAN_HA
+          preference: preferred
     applications:
       profiles:
       - name: VIDEO
@@ -581,6 +635,17 @@ router_adaptive_virtual_topology:
     policy: DEFAULT-POLICY
     profiles:
     - name: DEFAULT-POLICY-DEFAULT
+      id: 1
+  - name: WAN-VRF-NO-AF
+    policy: PROD-AVT-POLICY
+    profiles:
+    - name: PROD-AVT-POLICY-VOICE
+      id: 2
+    - name: PROD-AVT-POLICY-VIDEO
+      id: 4
+    - name: PROD-AVT-POLICY-MPLS-ONLY
+      id: 5
+    - name: PROD-AVT-POLICY-DEFAULT
       id: 1
 router_bfd:
   multihop:
@@ -815,3 +880,5 @@ vxlan_interface:
         vni: 66
       - name: ATTRACTED-VRF-FROM-UPLINK
         vni: 166
+      - name: WAN-VRF-NO-AF
+        vni: 200

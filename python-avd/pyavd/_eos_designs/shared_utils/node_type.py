@@ -137,4 +137,7 @@ class NodeTypeMixin(Protocol):
         <node_type_key>.nodes.[].vtep and
         node_type_keys.<node_type_key>.vtep.
         """
+        if self.is_wan_router and not self.inputs.wan_use_evpn_node_settings_for_lan:
+            # For WAN routers without the knob, vtep should be ignored.
+            return False
         return default(self.node_config.vtep, self.node_type_key_data.vtep)

@@ -147,23 +147,23 @@ class RouterBgpMixin(Protocol):
                 if not self.shared_utils.bgp_enabled_for_vrf(vrf):
                     continue
 
-                vrf_name = vrf.name
-                bgp_vrf = strip_empties_from_dict(
-                    {
-                        "eos_cli": vrf.bgp.raw_eos_cli,
-                    }
-                )
+                bgp_vrf = strip_empties_from_dict({"eos_cli": vrf.bgp.raw_eos_cli})
 
                 if vrf.bgp.structured_config:
-                    self.custom_structured_configs.nested.router_bgp.vrfs.obtain(vrf_name)._deepmerge(
+                    self.custom_structured_configs.nested.router_bgp.vrfs.obtain(vrf.name)._deepmerge(
                         vrf.bgp.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
                     )
 
-                if vrf_address_families := [af for af in vrf.address_families if af in self.shared_utils.overlay_address_families]:
+                vrf_address_families = {af for af in vrf.address_families if af in self.shared_utils.overlay_address_families}
+                if self.shared_utils.is_wan_vrf(vrf):
+                    # If the VRF is a WAN VRF, EVPN RTs are needed.
+                    vrf_address_families.add("evpn")
+
+                if vrf_address_families:
                     # The called function in-place updates the bgp_vrf dict.
                     self._update_router_bgp_vrf_evpn_or_mpls_cfg(bgp_vrf, vrf, vrf_address_families)
 
-                if vrf_name != "default":
+                if vrf.name != "default":
                     bgp_vrf["router_id"] = self.get_vrf_router_id(vrf, vrf.bgp.router_id, tenant.name)
 
                     if vrf.redistribute_connected:
@@ -173,7 +173,7 @@ class RouterBgpMixin(Protocol):
                     if vrf.redistribute_static or (vrf.static_routes and vrf.redistribute_static is None):
                         bgp_vrf["redistribute"].update({"static": {"enabled": True}})
 
-                    if self.shared_utils.inband_mgmt_vrf == vrf_name and self.shared_utils.inband_management_parent_vlans:
+                    if self.shared_utils.inband_mgmt_vrf == vrf.name and self.shared_utils.inband_management_parent_vlans:
                         bgp_vrf["redistribute"].update({"attached_host": {"enabled": True}})
 
                 else:
@@ -184,7 +184,7 @@ class RouterBgpMixin(Protocol):
                         append_if_not_duplicate(
                             list_of_dicts=router_bgp["vrfs"],
                             primary_key="name",
-                            new_dict={"name": vrf_name, **bgp_vrf},
+                            new_dict={"name": vrf.name, **bgp_vrf},
                             context="BGP VRFs defined under network services",
                             context_keys=["name"],
                         )
@@ -226,7 +226,7 @@ class RouterBgpMixin(Protocol):
                     )
 
                     if bgp_peer.set_ipv4_next_hop or bgp_peer.set_ipv6_next_hop:
-                        route_map = f"RM-{vrf_name}-{peer_ip}-SET-NEXT-HOP-OUT"
+                        route_map = f"RM-{vrf.name}-{peer_ip}-SET-NEXT-HOP-OUT"
                         bgp_peer_dict["route_map_out"] = route_map
                         if bgp_peer_dict.get("default_originate") is not None:
                             bgp_peer_dict["default_originate"].setdefault("route_map", route_map)
@@ -260,14 +260,14 @@ class RouterBgpMixin(Protocol):
                 if not bgp_vrf:
                     continue
 
-                if vrf_name == "default":
+                if vrf.name == "default":
                     # VRF default is added directly under router_bgp
                     router_bgp.update(bgp_vrf)
                 else:
                     append_if_not_duplicate(
                         list_of_dicts=router_bgp["vrfs"],
                         primary_key="name",
-                        new_dict={"name": vrf_name, **bgp_vrf},
+                        new_dict={"name": vrf.name, **bgp_vrf},
                         context="BGP VRFs defined under network services",
                         context_keys=["name"],
                     )
@@ -277,15 +277,14 @@ class RouterBgpMixin(Protocol):
         self: AvdStructuredConfigNetworkServicesProtocol,
         bgp_vrf: dict,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
-        vrf_address_families: list[str],
+        vrf_address_families: set[str],
     ) -> None:
         """In-place update EVPN/MPLS part of structured config for *one* VRF under router_bgp.vrfs."""
-        vrf_name = vrf.name
         bgp_vrf["rd"] = self.get_vrf_rd(vrf)
         vrf_rt = self.get_vrf_rt(vrf)
         route_targets = {"import": [], "export": []}
 
-        for af in vrf_address_families:
+        for af in sorted(vrf_address_families):
             if (target := get_item(route_targets["import"], "address_family", af)) is None:
                 route_targets["import"].append({"address_family": af, "route_targets": [vrf_rt]})
             else:
@@ -304,7 +303,7 @@ class RouterBgpMixin(Protocol):
             else:
                 target["route_targets"].append(rt.route_target)
 
-        if vrf_name == "default" and self._vrf_default_evpn and self._route_maps_vrf_default:
+        if vrf.name == "default" and self._vrf_default_evpn and self._route_maps_vrf_default:
             # Special handling of vrf default with evpn.
 
             if (target := get_item(route_targets["export"], "address_family", "evpn")) is None:
@@ -315,7 +314,7 @@ class RouterBgpMixin(Protocol):
         bgp_vrf["route_targets"] = route_targets
 
         # VRF default
-        if vrf_name == "default":
+        if vrf.name == "default":
             return
 
         # Not VRF default

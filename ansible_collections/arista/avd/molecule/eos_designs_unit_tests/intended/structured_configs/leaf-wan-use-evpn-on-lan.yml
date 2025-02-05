@@ -5,92 +5,26 @@ enable_password:
   disabled: true
 ethernet_interfaces:
 - name: Ethernet1
-  description: P2P_cv-pathfinder-edge_Ethernet52
+  description: P2P_cv-pathfinder-edge-wan-use-evpn-on-lan_Ethernet52
   shutdown: false
   mtu: 9214
-  ip_address: 172.17.0.0/31
-  peer: cv-pathfinder-edge
+  ip_address: 172.18.0.22/31
+  peer: cv-pathfinder-edge-wan-use-evpn-on-lan
   peer_interface: Ethernet52
   peer_type: wan_router
   switchport:
     enabled: false
-- name: Ethernet1.1000
-  description: P2P_cv-pathfinder-edge_Ethernet52.1000_VRF_IT
-  shutdown: false
-  mtu: 9214
-  vrf: IT
-  encapsulation_dot1q:
-    vlan: 1000
-  ip_address: 172.17.0.0/31
-  peer: cv-pathfinder-edge
-  peer_interface: Ethernet52.1000
-  peer_type: wan_router
-- name: Ethernet1.142
-  description: P2P_cv-pathfinder-edge_Ethernet52.142_VRF_PROD
-  shutdown: false
-  mtu: 9214
-  vrf: PROD
-  encapsulation_dot1q:
-    vlan: 142
-  ip_address: 172.17.0.0/31
-  peer: cv-pathfinder-edge
-  peer_interface: Ethernet52.142
-  peer_type: wan_router
-- name: Ethernet1.666
-  description: P2P_cv-pathfinder-edge_Ethernet52.666_VRF_ATTRACTED-VRF-FROM-UPLINK
-  shutdown: false
-  mtu: 9214
-  vrf: ATTRACTED-VRF-FROM-UPLINK
-  encapsulation_dot1q:
-    vlan: 666
-  ip_address: 172.17.0.0/31
-  peer: cv-pathfinder-edge
-  peer_interface: Ethernet52.666
-  peer_type: wan_router
 - name: Ethernet2
-  description: P2P_cv-pathfinder-edge1_Ethernet52
+  description: P2P_cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan_Ethernet52
   shutdown: false
   mtu: 9214
-  ip_address: 172.17.0.2/31
-  peer: cv-pathfinder-edge1
+  ip_address: 172.18.0.26/31
+  peer: cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan
   peer_interface: Ethernet52
   peer_type: wan_router
   switchport:
     enabled: false
-- name: Ethernet2.1000
-  description: P2P_cv-pathfinder-edge1_Ethernet52.1000_VRF_IT
-  shutdown: false
-  mtu: 9214
-  vrf: IT
-  encapsulation_dot1q:
-    vlan: 1000
-  ip_address: 172.17.0.2/31
-  peer: cv-pathfinder-edge1
-  peer_interface: Ethernet52.1000
-  peer_type: wan_router
-- name: Ethernet2.142
-  description: P2P_cv-pathfinder-edge1_Ethernet52.142_VRF_PROD
-  shutdown: false
-  mtu: 9214
-  vrf: PROD
-  encapsulation_dot1q:
-    vlan: 142
-  ip_address: 172.17.0.2/31
-  peer: cv-pathfinder-edge1
-  peer_interface: Ethernet52.142
-  peer_type: wan_router
-- name: Ethernet2.666
-  description: P2P_cv-pathfinder-edge1_Ethernet52.666_VRF_ATTRACTED-VRF-FROM-UPLINK
-  shutdown: false
-  mtu: 9214
-  vrf: ATTRACTED-VRF-FROM-UPLINK
-  encapsulation_dot1q:
-    vlan: 666
-  ip_address: 172.17.0.2/31
-  peer: cv-pathfinder-edge1
-  peer_interface: Ethernet52.666
-  peer_type: wan_router
-hostname: site-ha-disabled-leaf
+hostname: leaf-wan-use-evpn-on-lan
 ip_igmp_snooping:
   globally_enabled: true
 ip_routing: true
@@ -100,11 +34,11 @@ loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
   shutdown: false
-  ip_address: 192.168.45.4/32
+  ip_address: 192.168.45.13/32
 - name: Loopback1
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
-  ip_address: 192.168.255.4/32
+  ip_address: 192.168.255.13/32
 management_api_http:
   enable_https: true
   enable_vrfs:
@@ -131,8 +65,8 @@ router_bfd:
     min_rx: 300
     multiplier: 3
 router_bgp:
-  as: '65199'
-  router_id: 192.168.45.4
+  as: '65042'
+  router_id: 192.168.45.13
   maximum_paths:
     paths: 4
     ecmp: 4
@@ -154,16 +88,16 @@ router_bgp:
     send_community: all
     maximum_routes: 0
   neighbors:
-  - ip_address: 172.17.0.1
+  - ip_address: 172.18.0.23
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65000'
-    peer: cv-pathfinder-edge
-    description: cv-pathfinder-edge_Ethernet52
-  - ip_address: 172.17.0.3
+    peer: cv-pathfinder-edge-wan-use-evpn-on-lan
+    description: cv-pathfinder-edge-wan-use-evpn-on-lan_Ethernet52
+  - ip_address: 172.18.0.27
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65000'
-    peer: cv-pathfinder-edge1
-    description: cv-pathfinder-edge1_Ethernet52
+    peer: cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan
+    description: cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan_Ethernet52
   redistribute:
     connected:
       enabled: true
@@ -171,7 +105,7 @@ router_bgp:
   vlans:
   - id: 1000
     tenant: TenantA
-    rd: 192.168.45.4:2000
+    rd: 192.168.45.13:2000
     route_targets:
       both:
       - 2000:2000
@@ -179,7 +113,7 @@ router_bgp:
     - learned
   - id: 100
     tenant: TenantA
-    rd: 192.168.45.4:1100
+    rd: 192.168.45.13:1100
     route_targets:
       both:
       - 1100:1100
@@ -187,7 +121,7 @@ router_bgp:
     - learned
   - id: 101
     tenant: TenantA
-    rd: 192.168.45.4:1101
+    rd: 192.168.45.13:1101
     route_targets:
       both:
       - 1101:1101
@@ -195,7 +129,7 @@ router_bgp:
     - learned
   - id: 666
     tenant: TenantC
-    rd: 192.168.45.4:1666
+    rd: 192.168.45.13:1666
     route_targets:
       both:
       - 1666:1666
@@ -212,8 +146,19 @@ router_bgp:
     - name: EVPN-OVERLAY-PEERS
       activate: false
   vrfs:
+  - name: default
+    rd: 192.168.45.13:1
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '1:1'
   - name: IT
-    rd: 192.168.45.4:1000
+    rd: 192.168.45.13:1000
     route_targets:
       import:
       - address_family: evpn
@@ -223,21 +168,12 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 1000:1000
-    router_id: 192.168.45.4
-    neighbors:
-    - ip_address: 172.17.0.1
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: cv-pathfinder-edge_Ethernet52.1000_vrf_IT
-    - ip_address: 172.17.0.3
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: cv-pathfinder-edge1_Ethernet52.1000_vrf_IT
+    router_id: 192.168.45.13
     redistribute:
       connected:
         enabled: true
   - name: PROD
-    rd: 192.168.45.4:142
+    rd: 192.168.45.13:142
     route_targets:
       import:
       - address_family: evpn
@@ -247,21 +183,12 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 142:142
-    router_id: 192.168.45.4
-    neighbors:
-    - ip_address: 172.17.0.1
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: cv-pathfinder-edge_Ethernet52.142_vrf_PROD
-    - ip_address: 172.17.0.3
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: cv-pathfinder-edge1_Ethernet52.142_vrf_PROD
+    router_id: 192.168.45.13
     redistribute:
       connected:
         enabled: true
   - name: ATTRACTED-VRF-FROM-UPLINK
-    rd: 192.168.45.4:666
+    rd: 192.168.45.13:666
     route_targets:
       import:
       - address_family: evpn
@@ -271,30 +198,25 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 666:666
-    router_id: 192.168.45.4
-    neighbors:
-    - ip_address: 172.17.0.1
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: cv-pathfinder-edge_Ethernet52.666_vrf_ATTRACTED-VRF-FROM-UPLINK
-    - ip_address: 172.17.0.3
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: cv-pathfinder-edge1_Ethernet52.666_vrf_ATTRACTED-VRF-FROM-UPLINK
+    router_id: 192.168.45.13
     redistribute:
       connected:
         enabled: true
-  - name: default
-    rd: 192.168.45.4:1
+  - name: VRF-NO-WAN
+    rd: 192.168.45.13:300
     route_targets:
       import:
       - address_family: evpn
         route_targets:
-        - '1:1'
+        - 300:300
       export:
       - address_family: evpn
         route_targets:
-        - '1:1'
+        - 300:300
+    router_id: 192.168.45.13
+    redistribute:
+      connected:
+        enabled: true
 service_routing_protocols_model: multi-agent
 transceiver_qsfp_default_mode_4x10: true
 vlan_interfaces:
@@ -314,7 +236,6 @@ vlan_interfaces:
   description: VLAN666
   shutdown: true
   vrf: ATTRACTED-VRF-FROM-UPLINK
-  ip_address: 10.66.66.1
   ip_address_virtual: 10.66.66.66/24
   tenant: TenantC
 vlan_internal_order:
@@ -347,9 +268,18 @@ vrfs:
 - name: ATTRACTED-VRF-FROM-UPLINK
   ip_routing: true
   tenant: TenantC
+- name: VRF-NO-WAN
+  ip_routing: true
+  tenant: TenantD
+- name: VRF-NO-WAN-NO-AF
+  ip_routing: true
+  tenant: TenantD
+- name: WAN-VRF-NO-AF
+  ip_routing: true
+  tenant: TenantD
 vxlan_interface:
   vxlan1:
-    description: site-ha-disabled-leaf_VTEP
+    description: leaf-wan-use-evpn-on-lan_VTEP
     vxlan:
       source_interface: Loopback1
       udp_port: 4789
@@ -371,3 +301,5 @@ vxlan_interface:
         vni: 142
       - name: ATTRACTED-VRF-FROM-UPLINK
         vni: 666
+      - name: VRF-NO-WAN
+        vni: 300

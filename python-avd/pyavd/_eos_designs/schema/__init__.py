@@ -9102,8 +9102,6 @@ class EosDesigns(EosDesignsRootModel):
         `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
         `server` indicates that the router is a
         route-reflector.
-
-        Only supported if `overlay_routing_protocol` is set to `ibgp`.
         """
         default_flow_tracker_type: Literal["sampled", "hardware"]
         """
@@ -9257,8 +9255,6 @@ class EosDesigns(EosDesignsRootModel):
                        `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                        `server` indicates that the router is a
                        route-reflector.
-
-                       Only supported if `overlay_routing_protocol` is set to `ibgp`.
                     default_flow_tracker_type: Set the default flow tracker type.
                     mlag_support: Can this node type support mlag.
                     network_services:
@@ -9656,8 +9652,6 @@ class EosDesigns(EosDesignsRootModel):
         `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
         `server` indicates that the router is a
         route-reflector.
-
-        Only supported if `overlay_routing_protocol` is set to `ibgp`.
         """
         default_flow_tracker_type: Literal["sampled", "hardware"]
         """
@@ -9811,8 +9805,6 @@ class EosDesigns(EosDesignsRootModel):
                        `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                        `server` indicates that the router is a
                        route-reflector.
-
-                       Only supported if `overlay_routing_protocol` is set to `ibgp`.
                     default_flow_tracker_type: Set the default flow tracker type.
                     mlag_support: Can this node type support mlag.
                     network_services:
@@ -22968,8 +22960,6 @@ class EosDesigns(EosDesignsRootModel):
                     `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                     `server` indicates that the router is a
                     route-reflector.
-
-                    Only supported if `overlay_routing_protocol` is set to `ibgp`.
                     """
                     cv_pathfinder_transit_mode: Literal["region", "zone"] | None
                     """
@@ -23674,8 +23664,6 @@ class EosDesigns(EosDesignsRootModel):
                                    `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                                    `server` indicates that the router is a
                                    route-reflector.
-
-                                   Only supported if `overlay_routing_protocol` is set to `ibgp`.
                                 cv_pathfinder_transit_mode:
                                    Configure the transit mode for a WAN client for CV Pathfinder designs
                                    only when the `wan_mode` root
@@ -27079,8 +27067,6 @@ class EosDesigns(EosDesignsRootModel):
                         `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                         `server` indicates that the router is a
                         route-reflector.
-
-                        Only supported if `overlay_routing_protocol` is set to `ibgp`.
                         """
                         cv_pathfinder_transit_mode: Literal["region", "zone"] | None
                         """
@@ -27794,8 +27780,6 @@ class EosDesigns(EosDesignsRootModel):
                                        `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                                        `server` indicates that the router is a
                                        route-reflector.
-
-                                       Only supported if `overlay_routing_protocol` is set to `ibgp`.
                                     cv_pathfinder_transit_mode:
                                        Configure the transit mode for a WAN client for CV Pathfinder designs
                                        only when the `wan_mode` root
@@ -31135,8 +31119,6 @@ class EosDesigns(EosDesignsRootModel):
                     `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                     `server` indicates that the router is a
                     route-reflector.
-
-                    Only supported if `overlay_routing_protocol` is set to `ibgp`.
                     """
                     cv_pathfinder_transit_mode: Literal["region", "zone"] | None
                     """
@@ -31852,8 +31834,6 @@ class EosDesigns(EosDesignsRootModel):
                                    `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                                    `server` indicates that the router is a
                                    route-reflector.
-
-                                   Only supported if `overlay_routing_protocol` is set to `ibgp`.
                                 cv_pathfinder_transit_mode:
                                    Configure the transit mode for a WAN client for CV Pathfinder designs
                                    only when the `wan_mode` root
@@ -35259,8 +35239,6 @@ class EosDesigns(EosDesignsRootModel):
                     `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                     `server` indicates that the router is a
                     route-reflector.
-
-                    Only supported if `overlay_routing_protocol` is set to `ibgp`.
                     """
                     cv_pathfinder_transit_mode: Literal["region", "zone"] | None
                     """
@@ -35974,8 +35952,6 @@ class EosDesigns(EosDesignsRootModel):
                                    `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                                    `server` indicates that the router is a
                                    route-reflector.
-
-                                   Only supported if `overlay_routing_protocol` is set to `ibgp`.
                                 cv_pathfinder_transit_mode:
                                    Configure the transit mode for a WAN client for CV Pathfinder designs
                                    only when the `wan_mode` root
@@ -46229,8 +46205,6 @@ class EosDesigns(EosDesignsRootModel):
                     `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                     `server` indicates that the router is a
                     route-reflector.
-
-                    Only supported if `overlay_routing_protocol` is set to `ibgp`.
                     """
                     cv_pathfinder_transit_mode: Literal["region", "zone"] | None
                     """
@@ -46935,8 +46909,6 @@ class EosDesigns(EosDesignsRootModel):
                                    `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                                    `server` indicates that the router is a
                                    route-reflector.
-
-                                   Only supported if `overlay_routing_protocol` is set to `ibgp`.
                                 cv_pathfinder_transit_mode:
                                    Configure the transit mode for a WAN client for CV Pathfinder designs
                                    only when the `wan_mode` root
@@ -50340,8 +50312,6 @@ class EosDesigns(EosDesignsRootModel):
                         `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                         `server` indicates that the router is a
                         route-reflector.
-
-                        Only supported if `overlay_routing_protocol` is set to `ibgp`.
                         """
                         cv_pathfinder_transit_mode: Literal["region", "zone"] | None
                         """
@@ -51055,8 +51025,6 @@ class EosDesigns(EosDesignsRootModel):
                                        `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                                        `server` indicates that the router is a
                                        route-reflector.
-
-                                       Only supported if `overlay_routing_protocol` is set to `ibgp`.
                                     cv_pathfinder_transit_mode:
                                        Configure the transit mode for a WAN client for CV Pathfinder designs
                                        only when the `wan_mode` root
@@ -54396,8 +54364,6 @@ class EosDesigns(EosDesignsRootModel):
                     `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                     `server` indicates that the router is a
                     route-reflector.
-
-                    Only supported if `overlay_routing_protocol` is set to `ibgp`.
                     """
                     cv_pathfinder_transit_mode: Literal["region", "zone"] | None
                     """
@@ -55113,8 +55079,6 @@ class EosDesigns(EosDesignsRootModel):
                                    `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                                    `server` indicates that the router is a
                                    route-reflector.
-
-                                   Only supported if `overlay_routing_protocol` is set to `ibgp`.
                                 cv_pathfinder_transit_mode:
                                    Configure the transit mode for a WAN client for CV Pathfinder designs
                                    only when the `wan_mode` root
@@ -58520,8 +58484,6 @@ class EosDesigns(EosDesignsRootModel):
                     `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                     `server` indicates that the router is a
                     route-reflector.
-
-                    Only supported if `overlay_routing_protocol` is set to `ibgp`.
                     """
                     cv_pathfinder_transit_mode: Literal["region", "zone"] | None
                     """
@@ -59235,8 +59197,6 @@ class EosDesigns(EosDesignsRootModel):
                                    `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
                                    `server` indicates that the router is a
                                    route-reflector.
-
-                                   Only supported if `overlay_routing_protocol` is set to `ibgp`.
                                 cv_pathfinder_transit_mode:
                                    Configure the transit mode for a WAN client for CV Pathfinder designs
                                    only when the `wan_mode` root
@@ -59783,6 +59743,7 @@ class EosDesigns(EosDesignsRootModel):
         "wan_route_servers": {"type": WanRouteServers},
         "wan_stun_dtls_disable": {"type": bool, "default": False},
         "wan_stun_dtls_profile_name": {"type": str, "default": "STUN-DTLS"},
+        "wan_use_evpn_node_settings_for_lan": {"type": bool, "default": False},
         "wan_virtual_topologies": {"type": WanVirtualTopologies},
         "zscaler_endpoints": {"type": ZscalerEndpoints},
         "_custom_data": {"type": dict},
@@ -61540,6 +61501,18 @@ class EosDesigns(EosDesignsRootModel):
 
     Default value: `"STUN-DTLS"`
     """
+    wan_use_evpn_node_settings_for_lan: bool
+    """
+    PREVIEW: This key is currently not supported
+    When true, `eos_designs` will use
+    `overlay_routing_protocol`, `evpn_role` and `vtep`
+    node settings for LAN side on WAN devices.
+    Otherwise these will be ignored for WAN.
+    This will be the default in AVD version 6.0.0 and this
+    option will be removed.
+
+    Default value: `False`
+    """
     wan_virtual_topologies: WanVirtualTopologies
     """
     Configure Virtual Topologies for CV Pathfinder and AutoVPN.
@@ -61760,6 +61733,7 @@ class EosDesigns(EosDesignsRootModel):
             wan_route_servers: WanRouteServers | UndefinedType = Undefined,
             wan_stun_dtls_disable: bool | UndefinedType = Undefined,
             wan_stun_dtls_profile_name: str | UndefinedType = Undefined,
+            wan_use_evpn_node_settings_for_lan: bool | UndefinedType = Undefined,
             wan_virtual_topologies: WanVirtualTopologies | UndefinedType = Undefined,
             zscaler_endpoints: ZscalerEndpoints | UndefinedType = Undefined,
             _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -63013,6 +62987,14 @@ class EosDesigns(EosDesignsRootModel):
                    Name of the SSL profile used for DTLS on WAN STUN connections.
                    When using automatic ceritficate
                    deployment via CloudVision this name must be the same on all WAN routers.
+                wan_use_evpn_node_settings_for_lan:
+                   PREVIEW: This key is currently not supported
+                   When true, `eos_designs` will use
+                   `overlay_routing_protocol`, `evpn_role` and `vtep`
+                   node settings for LAN side on WAN devices.
+                   Otherwise these will be ignored for WAN.
+                   This will be the default in AVD version 6.0.0 and this
+                   option will be removed.
                 wan_virtual_topologies:
                    Configure Virtual Topologies for CV Pathfinder and AutoVPN.
                    Auto create a control plane

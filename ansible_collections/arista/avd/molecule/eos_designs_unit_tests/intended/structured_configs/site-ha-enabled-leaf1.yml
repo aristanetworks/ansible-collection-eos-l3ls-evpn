@@ -169,6 +169,14 @@ router_bgp:
       enabled: true
       route_map: RM-CONN-2-BGP
   vlans:
+  - id: 1000
+    tenant: TenantA
+    rd: 192.168.45.1:2000
+    route_targets:
+      both:
+      - 2000:2000
+    redistribute_routes:
+    - learned
   - id: 100
     tenant: TenantA
     rd: 192.168.45.1:1100
@@ -290,6 +298,12 @@ router_bgp:
 service_routing_protocols_model: multi-agent
 transceiver_qsfp_default_mode_4x10: true
 vlan_interfaces:
+- name: Vlan1000
+  description: VLAN1000
+  shutdown: true
+  vrf: IT
+  ip_address_virtual: 10.0.100.1/24
+  tenant: TenantA
 - name: Vlan100
   description: VLAN100
   shutdown: true
@@ -308,6 +322,9 @@ vlan_internal_order:
     beginning: 1006
     ending: 1199
 vlans:
+- id: 1000
+  name: VLAN1000
+  tenant: TenantA
 - id: 100
   name: VLAN100
   tenant: TenantA
@@ -336,6 +353,8 @@ vxlan_interface:
       source_interface: Loopback1
       udp_port: 4789
       vlans:
+      - id: 1000
+        vni: 2000
       - id: 100
         vni: 1100
       - id: 101

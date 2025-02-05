@@ -149,6 +149,7 @@ DEFAULT_NODE_TYPE_KEYS = {
             "default_evpn_role": "server",
             "cv_tags_topology_type": "spine",
         },
+        # TODO: AVD 6.0 change default overlay_routing_protocol and evpn_role to none for wan_router and wan_rr.
         {
             "key": "wan_router",
             "type": "wan_router",
