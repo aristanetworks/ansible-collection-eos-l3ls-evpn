@@ -7,6 +7,8 @@ from abc import ABC, abstractmethod
 from copy import deepcopy
 from typing import TYPE_CHECKING, Literal
 
+from .input_path import InputPath
+
 if TYPE_CHECKING:
     from collections.abc import Mapping, Sequence
 
@@ -17,6 +19,12 @@ if TYPE_CHECKING:
 
 class AvdBase(ABC):
     """Base class used for schema-based data classes holding data loaded from AVD inputs."""
+
+    _source: InputPath = InputPath()
+    """Source of the class.
+
+    For now only InputPath (path in the input data) is supported.
+    """
 
     _created_from_null: bool = False
     """
@@ -44,10 +52,11 @@ class AvdBase(ABC):
         """Returns a new instance loaded with the given data."""
 
     @classmethod
-    def _from_null(cls) -> Self:
+    def _from_null(cls, data_source: InputPath | None = None) -> Self:
         """Returns a new instance with all attributes set to None. This represents the YAML input '<key>: null'."""
         new_instance = cls()
         new_instance._created_from_null = True
+        new_instance._source = data_source or InputPath()
         return new_instance
 
     @abstractmethod

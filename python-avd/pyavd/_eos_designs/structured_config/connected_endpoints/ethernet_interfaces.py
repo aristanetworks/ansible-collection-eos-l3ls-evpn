@@ -52,7 +52,6 @@ class EthernetInterfacesMixin(Protocol):
             network_port_as_adapter = network_port._cast_as(
                 EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem, ignore_extra_keys=True
             )
-            network_port_as_adapter._context = network_port._context
             for ethernet_interface_name in range_expand(network_port.switch_ports):
                 # Skip the interface if it was already created by some other feature like connected endpoints or uplinks etc.
                 if ethernet_interface_name in self.structured_config.ethernet_interfaces:
@@ -208,11 +207,10 @@ class EthernetInterfacesMixin(Protocol):
                     )
                     raise AristaAvdInvalidInputsError(msg)
 
-                profile = self.shared_utils.get_merged_port_profile(profile_name, context=f"{adapter._context}.port_channel.lacp_fallback.individual")._cast_as(
+                profile = self.shared_utils.get_merged_port_profile(profile_name, context=f"{adapter._source}.port_channel.lacp_fallback.individual")._cast_as(
                     EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem
                 )
-                profile._context = adapter._context
-                self._update_ethernet_interface_cfg(profile, ethernet_interface, connected_endpoint)
+                ethernet_interface = self._update_ethernet_interface_cfg(profile, ethernet_interface, connected_endpoint)
 
             if adapter.port_channel.mode != "on" and adapter.port_channel.lacp_timer.mode is not None:
                 ethernet_interface.lacp_timer.mode = adapter.port_channel.lacp_timer.mode

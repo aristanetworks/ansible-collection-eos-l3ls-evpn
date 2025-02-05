@@ -29,4 +29,4 @@ servers:
 
 expected_error_message: >-
   Cannot set an ACL for both `session_settings` and `source_settings` under the monitor session 'DMF'
-  for servers[name=INDIVIDUAL_1].adapters[0].
+  for servers[0 (name=INDIVIDUAL_1)].adapters[0].
