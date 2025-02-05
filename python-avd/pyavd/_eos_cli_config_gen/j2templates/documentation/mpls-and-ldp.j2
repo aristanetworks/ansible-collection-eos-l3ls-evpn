@@ -23,4 +23,10 @@
 {%     if mpls.icmp.ttl_exceeded_tunneling is arista.avd.defined %}
 | ICMP TTL-Exceeded Tunneling Enabled | {{ mpls.icmp.ttl_exceeded_tunneling }} |
 {%     endif %}
+{%     if mpls.tunnel.termination.model.ttl is arista.avd.defined and mpls.tunnel.termination.model.dscp is arista.avd.defined %}
+| Tunnel Termination Model | TTL: {{ mpls.tunnel.termination.model.ttl }}, DSCP: {{ mpls.tunnel.termination.model.ttl }} |
+{%     endif %}
+{%     if mpls.tunnel.termination.php_model.ttl is arista.avd.defined and mpls.tunnel.termination.php_model.dscp is arista.avd.defined %}
+| Tunnel Termination PHP Model | TTL: {{ mpls.tunnel.termination.php_model.ttl }}, DSCP: {{ mpls.tunnel.termination.php_model.ttl }} |
+{%     endif %}
 {% endif %}
