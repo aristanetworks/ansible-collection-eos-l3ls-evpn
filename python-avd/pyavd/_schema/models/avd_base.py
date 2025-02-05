@@ -124,7 +124,7 @@ class AvdBase(ABC):
         """
 
     @abstractmethod
-    def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
+    def _compare(self, other: Self) -> bool:
         """Compare two instances. Optionally ignoring fields for the outermost AvdModel."""
 
     def _deepmerged(

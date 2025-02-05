@@ -169,6 +169,13 @@ class AvdModel(AvdBase):
         """
         return bool(self.__dict__) or bool(self._custom_data)
 
+    def __hash__(self) -> int:
+        LOGGER.warning("__hash__")
+        return hash(((key, hash(value)) for key, value in self.items()))
+
+    def __eq__(self, other: object) -> bool:
+        return self._compare(other)
+
     def items(self) -> ItemsView:
         return self.__dict__.items()
 
@@ -216,17 +223,19 @@ class AvdModel(AvdBase):
         # so probably we can remove the include_default_values at some point.
         if include_default_values:
             for field in ordered_field_names:
-                if field not in self.__dict__:
-                    default_value = self._get_field_default_value(field)
+                if field in self.__dict__:
+                    continue
 
-                    if issubclass(self._fields[field]["type"], AvdBase):
-                        default_value = cast(AvdBase, default_value)
-                        default_value = default_value._dump(include_default_values=include_default_values)
+                default_value = self._get_field_default_value(field)
 
-                    # Removing field_ prefix if needed.
-                    key = self._field_to_key_map.get(field, field)
+                if issubclass(self._fields[field]["type"], AvdBase):
+                    default_value = cast(AvdBase, default_value)
+                    default_value = default_value._dump(include_default_values=include_default_values)
 
-                    as_dict[key] = default_value
+                # Removing field_ prefix if needed.
+                key = self._field_to_key_map.get(field, field)
+
+                as_dict[key] = default_value
 
         if self._custom_data:
             as_dict.update(self._custom_data)
@@ -284,6 +293,10 @@ class AvdModel(AvdBase):
 
         for field, new_value in other.items():
             old_value = self._get_defined_attr(field)
+
+            if field == "ip_igmp_snooping":
+                LOGGER.warning("%s, %s, %s", field, old_value, new_value)
+
             if old_value == new_value:
                 continue
 
@@ -422,33 +435,32 @@ class AvdModel(AvdBase):
 
         return new_instance
 
-    def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
-        cls = type(self)
-        if not isinstance(other, cls):
-            msg = f"Unable to compare '{cls}' with a '{type(other)}' class."
-            raise TypeError(msg)
+    def _compare(self, other: object, ignore_fields: tuple[str, ...] = ()) -> bool:
+        """
+        Compare two instances of this class.
 
-        for field, field_info in self._fields.items():
-            if field in ignore_fields:
-                continue
+        First we check if they have the same values set.
+        Next we check every set field using regular __eq__ check.
 
-            if (value := self._get_defined_attr(field)) == (other_value := other._get_defined_attr(field)) or (
-                value in (Undefined, None) and other_value in (Undefined, None)
-            ):
-                continue
+        Args:
+            other: Other instance to compare with.
+            ignore_fields: Fields to ignore during comparison. Note this is not respected when comparing any nested models.
 
-            field_type = field_info["type"]
+        Returns:
+            boolean telling if the two instances are equal.
 
-            if issubclass(field_type, AvdBase) and not value and not other_value:
-                # Ignore empty lists or classes since they could have been initialized in the code but they would be trimmed from the output.
-                continue
+        Raises:
+            TypeError if 'other' is of a different type.
+        """
+        if not isinstance(other, type(self)):
+            return False
 
-            if not issubclass(field_type, AvdBase) or not isinstance(other_value, field_type):
-                # Difference and not a nested model.
-                return False
+        different_keys = set(self.__dict__).symmetric_difference(other.__dict__)
+        if different_keys.difference(ignore_fields):
+            return False
 
-            value = cast(AvdBase, value)
-            if not value._compare(other_value):
-                return False
+        if self._created_from_null != other._created_from_null:
+            return False
 
-        return True
+        # Use regular __eq__ check on all nested models, since we do not carry over ignore_fields.
+        return all(value == other.__dict__[field] for field, value in self.items() if field not in ignore_fields)

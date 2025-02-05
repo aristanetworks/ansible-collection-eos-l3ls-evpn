@@ -91,6 +91,9 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     def __setitem__(self, key: T_PrimaryKey, value: T_AvdModel) -> None:
         self._items[key] = value
 
+    def __eq__(self, other: object) -> bool:
+        return self._compare(other)
+
     def get(self, key: T_PrimaryKey, default: T | UndefinedType = Undefined) -> T_AvdModel | T | UndefinedType:
         return self._items.get(key, default)
 
@@ -280,13 +283,14 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
         return new_instance
 
-    def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
-        cls = type(self)
-        if not isinstance(other, cls):
-            msg = f"Unable to compare '{cls}' with a '{type(other)}' class."
-            raise TypeError(msg)
+    def _compare(self, other: object) -> bool:
+        if not isinstance(other, type(self)):
+            return False
 
         if set(self.keys()) != set(other.keys()):
             return False
 
-        return all(item._compare(other[key], ignore_fields=ignore_fields) for key, item in self.items())
+        if self._created_from_null != other._created_from_null:
+            return False
+
+        return all(item._compare(other[key]) for key, item in self.items())
