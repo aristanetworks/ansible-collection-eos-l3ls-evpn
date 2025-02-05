@@ -9,7 +9,7 @@
 ## Errdisable
 
 ### Errdisable Summary
-{%     if errdisable.detect.causes is defined %}
+{%     if errdisable.detect.causes is arista.avd.defined %}
 
 |  Detect Cause | Enabled |
 | ------------- | ------- |
@@ -17,7 +17,7 @@
 | {{ cause }} | True |
 {%         endfor %}
 {%     endif %}
-{%     if errdisable.recovery.causes is defined %}
+{%     if errdisable.recovery.causes is arista.avd.defined %}
 
 |  Detect Cause | Enabled | Interval |
 | ------------- | ------- | -------- |
