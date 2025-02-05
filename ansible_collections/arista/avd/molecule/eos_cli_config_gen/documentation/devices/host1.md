@@ -11631,7 +11631,7 @@ ip nat synchronization
 | xcvr-power-unsupported | True |
 | xcvr-unsupported | True |
 
-Errdisable recovery timer interval: 300
+Errdisable recovery timer interval: 300 seconds
 
 ```eos
 !
