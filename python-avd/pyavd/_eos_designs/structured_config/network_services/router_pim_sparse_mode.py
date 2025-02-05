@@ -51,5 +51,5 @@ class RouterPimSparseModeMixin(Protocol):
                             rps_item.address = rps["override"]
                         if "_custom_data" in rps:
                             rps_item.address = rps["_custom_data"]
-                        ipv4_config.rp_addresses.append(rps_item)
+                        ipv4_config.rp_addresses.append_unique(rps_item)
                     self.structured_config.router_pim_sparse_mode.vrfs.append_new(name=vrf.name, ipv4=ipv4_config)
