@@ -79,10 +79,6 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         attrs = [f"{item!r}" for item in (self._items.values())]
         return f"<{cls_name}([{', '.join(attrs)}])>"
 
-    def __bool__(self) -> bool:
-        """Boolean check on the class to quickly determine if any items are set."""
-        return bool(self._items)
-
     def __len__(self) -> int:
         return len(self._items)
 
@@ -97,13 +93,6 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
     def __setitem__(self, key: T_PrimaryKey, value: T_AvdModel) -> None:
         self._items[key] = value
-
-    def __getstate__(self) -> tuple[None, dict[str, Any]]:
-        slots_dict: dict[str, Any] = {"_items": self._items, "_created_from_null": self._created_from_null, "_block_inheritance": self._block_inheritance}
-        if hasattr(self, "_internal_data_instance"):
-            slots_dict["_internal_data_instance"] = self._internal_data_instance
-
-        return (None, slots_dict)
 
     def get(self, key: T_PrimaryKey, default: T | UndefinedType = Undefined) -> T_AvdModel | T | UndefinedType:
         return self._items.get(key, default)

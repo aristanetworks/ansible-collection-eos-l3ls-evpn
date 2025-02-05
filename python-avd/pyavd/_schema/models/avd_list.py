@@ -76,10 +76,6 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
         items = [f"{item!r}" for item in (self._items)]
         return f"<{cls_name}([{', '.join(items)}])>"
 
-    def __bool__(self) -> bool:
-        """Boolean check on the class to quickly determine if any items are set."""
-        return bool(self._items)
-
     def __len__(self) -> int:
         return len(self._items)
 
@@ -94,13 +90,6 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
 
     def __setitem__(self, index: int, value: T_ItemType) -> None:
         self._items[index] = value
-
-    def __getstate__(self) -> tuple[None, dict[str, Any]]:
-        slots_dict: dict[str, Any] = {"_items": self._items, "_created_from_null": self._created_from_null, "_block_inheritance": self._block_inheritance}
-        if hasattr(self, "_internal_data_instance"):
-            slots_dict["_internal_data_instance"] = self._internal_data_instance
-
-        return (None, slots_dict)
 
     def get(self, index: int, default: T | UndefinedType = Undefined) -> T_ItemType | T | UndefinedType:
         return self._items[index] if index < len(self._items) else default

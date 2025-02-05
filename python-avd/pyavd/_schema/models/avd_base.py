@@ -70,11 +70,6 @@ class AvdBase(ABC):
         """Return a copy including all nested models."""
         return deepcopy(self)
 
-    def __setstate__(self, state: tuple[None, dict[str, Any]]) -> None:
-        _, slots = state
-        for name, value in slots.items():
-            setattr(self, name, value)
-
     @property
     def _internal_data(self) -> InternalData:
         """Internal data used for storing internal context on data objects, without affecting other logic."""
