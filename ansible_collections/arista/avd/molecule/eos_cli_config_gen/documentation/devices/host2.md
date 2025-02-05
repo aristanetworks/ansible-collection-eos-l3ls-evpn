@@ -111,6 +111,8 @@
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
+- [Errdisable](#errdisable)
+  - [Errdisable Summary](#errdisable-summary)
 - [MACsec](#macsec)
   - [MACsec Summary](#macsec-summary)
   - [MACsec Device Configuration](#macsec-device-configuration)
@@ -1496,6 +1498,27 @@ ip dhcp snooping
 !
 !
 ip nat synchronization
+```
+
+## Errdisable
+
+### Errdisable Summary
+
+|  Detect Cause | Enabled | Interval |
+| ------------- | ------- | -------- |
+| arp-inspection | True | - |
+| bpduguard | True | - |
+| xcvr-overheat | True | - |
+| xcvr-power-unsupported | True | - |
+| xcvr-unsupported | True | - |
+
+```eos
+!
+errdisable recovery cause arp-inspection
+errdisable recovery cause bpduguard
+errdisable recovery cause xcvr-overheat
+errdisable recovery cause xcvr-power-unsupported
+errdisable recovery cause xcvr-unsupported
 ```
 
 ## MACsec
