@@ -59,17 +59,14 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         cls_items = cast(Iterable[T_AvdModel], (coerce_type(item, cls._item_type) for item in data))
         return cls(cls_items)
 
-    def __init__(self, items: Iterable[T_AvdModel] | UndefinedType = Undefined) -> None:
+    def __init__(self, items: Iterable[T_AvdModel] = ()) -> None:
         """
         AvdIndexedList subclass.
 
         Args:
             items: Iterable holding items of the correct type to be loaded into the indexed list.
         """
-        if isinstance(items, UndefinedType):
-            self._items = {}
-        else:
-            self._items = {getattr(item, self._primary_key): item for item in items}
+        self._items = {getattr(item, self._primary_key): item for item in items}
 
         super().__init__()
 

@@ -406,13 +406,14 @@ class RouterBgpMixin(Protocol):
         vlan_rd = self.get_vlan_rd(vlan, tenant)
         vlan_rt = self.get_vlan_rt(vlan, tenant)
 
-        bgp_vlan = EosCliConfigGen.RouterBgp.VlansItem(
+        bgp_vlan = self.structured_config.router_bgp.vlans.append_new(
             id=vlan.id,
             tenant=tenant.name,
             rd=vlan_rd,
-            route_targets=EosCliConfigGen.RouterBgp.VlansItem.RouteTargets(both=EosCliConfigGen.RouterBgp.VlansItem.RouteTargets.Both([vlan_rt])),
-            redistribute_routes=EosCliConfigGen.RouterBgp.VlansItem.RedistributeRoutes(["learned"]),
         )
+        bgp_vlan.route_targets.both.append(vlan_rt)
+        bgp_vlan.redistribute_routes.append("learned")
+
         if vlan.bgp.raw_eos_cli:
             bgp_vlan.eos_cli = vlan.bgp.raw_eos_cli
 
