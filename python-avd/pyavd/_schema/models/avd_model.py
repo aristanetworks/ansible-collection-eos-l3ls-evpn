@@ -219,6 +219,10 @@ class AvdModel(AvdBase):
                 if field not in self.__dict__:
                     default_value = self._get_field_default_value(field)
 
+                    if issubclass(self._fields[field]["type"], AvdBase):
+                        default_value = cast(AvdBase, default_value)
+                        default_value = default_value._dump(include_default_values=include_default_values)
+
                     # Removing field_ prefix if needed.
                     key = self._field_to_key_map.get(field, field)
 
@@ -244,7 +248,7 @@ class AvdModel(AvdBase):
         _update: type[Self]
     else:
 
-        def _update(self, *args: Any, **kwargs: Any) -> Self:
+        def _update(self, **kwargs: Any) -> Self:
             """Update instance with the given kwargs."""
             [setattr(self, arg, arg_value) for arg, arg_value in kwargs.items() if arg_value is not Undefined]
             return self
