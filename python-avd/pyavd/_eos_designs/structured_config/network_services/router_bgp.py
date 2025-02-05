@@ -416,7 +416,6 @@ class RouterBgpMixin(Protocol):
         if vlan.bgp.raw_eos_cli:
             bgp_vlan.eos_cli = vlan.bgp.raw_eos_cli
 
-
         if vlan.bgp.structured_config:
             self.custom_structured_configs.nested.router_bgp.vlans.obtain(vlan.id)._deepmerge(
                 vlan.bgp.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
