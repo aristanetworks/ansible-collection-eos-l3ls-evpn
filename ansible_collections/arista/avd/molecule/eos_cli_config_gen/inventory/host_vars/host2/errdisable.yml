@@ -1,0 +1,11 @@
+---
+### Errdisable ###
+
+errdisable:
+  recovery:
+    causes:
+      - bpduguard
+      - xcvr-overheat
+      - xcvr-power-unsupported
+      - xcvr-unsupported
+      - arp-inspection
