@@ -1374,6 +1374,7 @@ class EosDesigns(EosDesignsRootModel):
                 "ptp": {"type": Ptp},
                 "sflow": {"type": bool},
                 "underlay_multicast": {"type": bool, "default": False},
+                "underlay_multicast_ipv4_static": {"type": bool, "default": False},
                 "flow_tracking": {"type": FlowTracking},
                 "qos_profile": {"type": str},
                 "macsec_profile": {"type": str},
@@ -1483,6 +1484,12 @@ class EosDesigns(EosDesignsRootModel):
 
             Default value: `False`
             """
+            underlay_multicast_ipv4_static: bool
+            """
+            Enable multicast ipv4 static on p2p uplink ethernet interfaces.
+
+            Default value: `False`
+            """
             flow_tracking: FlowTracking
             """
             Enable flow-tracking. Overrides `fabric_flow_tracking` setting.
@@ -1545,6 +1552,7 @@ class EosDesigns(EosDesignsRootModel):
                     ptp: Ptp | UndefinedType = Undefined,
                     sflow: bool | None | UndefinedType = Undefined,
                     underlay_multicast: bool | UndefinedType = Undefined,
+                    underlay_multicast_ipv4_static: bool | UndefinedType = Undefined,
                     flow_tracking: FlowTracking | UndefinedType = Undefined,
                     qos_profile: str | None | UndefinedType = Undefined,
                     macsec_profile: str | None | UndefinedType = Undefined,
@@ -1618,6 +1626,7 @@ class EosDesigns(EosDesignsRootModel):
                         underlay_multicast:
                            Enable PIM sparse mode. Requires `include_in_underlay_protocol` and the global `underlay_multicast`
                            to be `true`.
+                        underlay_multicast_ipv4_static: Enable multicast ipv4 static on p2p uplink ethernet interfaces.
                         flow_tracking:
                            Enable flow-tracking. Overrides `fabric_flow_tracking` setting.
 
@@ -1947,6 +1956,7 @@ class EosDesigns(EosDesignsRootModel):
                 "ptp": {"type": Ptp},
                 "sflow": {"type": bool},
                 "underlay_multicast": {"type": bool, "default": False},
+                "underlay_multicast_ipv4_static": {"type": bool, "default": False},
                 "flow_tracking": {"type": FlowTracking},
                 "qos_profile": {"type": str},
                 "macsec_profile": {"type": str},
@@ -2056,6 +2066,12 @@ class EosDesigns(EosDesignsRootModel):
 
             Default value: `False`
             """
+            underlay_multicast_ipv4_static: bool
+            """
+            Enable multicast ipv4 static on p2p uplink ethernet interfaces.
+
+            Default value: `False`
+            """
             flow_tracking: FlowTracking
             """
             Enable flow-tracking. Overrides `fabric_flow_tracking` setting.
@@ -2118,6 +2134,7 @@ class EosDesigns(EosDesignsRootModel):
                     ptp: Ptp | UndefinedType = Undefined,
                     sflow: bool | None | UndefinedType = Undefined,
                     underlay_multicast: bool | UndefinedType = Undefined,
+                    underlay_multicast_ipv4_static: bool | UndefinedType = Undefined,
                     flow_tracking: FlowTracking | UndefinedType = Undefined,
                     qos_profile: str | None | UndefinedType = Undefined,
                     macsec_profile: str | None | UndefinedType = Undefined,
@@ -2191,6 +2208,7 @@ class EosDesigns(EosDesignsRootModel):
                         underlay_multicast:
                            Enable PIM sparse mode. Requires `include_in_underlay_protocol` and the global `underlay_multicast`
                            to be `true`.
+                        underlay_multicast_ipv4_static: Enable multicast ipv4 static on p2p uplink ethernet interfaces.
                         flow_tracking:
                            Enable flow-tracking. Overrides `fabric_flow_tracking` setting.
 
@@ -5582,6 +5600,7 @@ class EosDesigns(EosDesignsRootModel):
                 "ptp": {"type": Ptp},
                 "sflow": {"type": bool},
                 "underlay_multicast": {"type": bool, "default": False},
+                "underlay_multicast_ipv4_static": {"type": bool, "default": False},
                 "flow_tracking": {"type": FlowTracking},
                 "qos_profile": {"type": str},
                 "macsec_profile": {"type": str},
@@ -5691,6 +5710,12 @@ class EosDesigns(EosDesignsRootModel):
 
             Default value: `False`
             """
+            underlay_multicast_ipv4_static: bool
+            """
+            Enable multicast ipv4 static on p2p uplink ethernet interfaces.
+
+            Default value: `False`
+            """
             flow_tracking: FlowTracking
             """
             Enable flow-tracking. Overrides `fabric_flow_tracking` setting.
@@ -5753,6 +5778,7 @@ class EosDesigns(EosDesignsRootModel):
                     ptp: Ptp | UndefinedType = Undefined,
                     sflow: bool | None | UndefinedType = Undefined,
                     underlay_multicast: bool | UndefinedType = Undefined,
+                    underlay_multicast_ipv4_static: bool | UndefinedType = Undefined,
                     flow_tracking: FlowTracking | UndefinedType = Undefined,
                     qos_profile: str | None | UndefinedType = Undefined,
                     macsec_profile: str | None | UndefinedType = Undefined,
@@ -5826,6 +5852,7 @@ class EosDesigns(EosDesignsRootModel):
                         underlay_multicast:
                            Enable PIM sparse mode. Requires `include_in_underlay_protocol` and the global `underlay_multicast`
                            to be `true`.
+                        underlay_multicast_ipv4_static: Enable multicast ipv4 static on p2p uplink ethernet interfaces.
                         flow_tracking:
                            Enable flow-tracking. Overrides `fabric_flow_tracking` setting.
 
@@ -6155,6 +6182,7 @@ class EosDesigns(EosDesignsRootModel):
                 "ptp": {"type": Ptp},
                 "sflow": {"type": bool},
                 "underlay_multicast": {"type": bool, "default": False},
+                "underlay_multicast_ipv4_static": {"type": bool, "default": False},
                 "flow_tracking": {"type": FlowTracking},
                 "qos_profile": {"type": str},
                 "macsec_profile": {"type": str},
@@ -6264,6 +6292,12 @@ class EosDesigns(EosDesignsRootModel):
 
             Default value: `False`
             """
+            underlay_multicast_ipv4_static: bool
+            """
+            Enable multicast ipv4 static on p2p uplink ethernet interfaces.
+
+            Default value: `False`
+            """
             flow_tracking: FlowTracking
             """
             Enable flow-tracking. Overrides `fabric_flow_tracking` setting.
@@ -6326,6 +6360,7 @@ class EosDesigns(EosDesignsRootModel):
                     ptp: Ptp | UndefinedType = Undefined,
                     sflow: bool | None | UndefinedType = Undefined,
                     underlay_multicast: bool | UndefinedType = Undefined,
+                    underlay_multicast_ipv4_static: bool | UndefinedType = Undefined,
                     flow_tracking: FlowTracking | UndefinedType = Undefined,
                     qos_profile: str | None | UndefinedType = Undefined,
                     macsec_profile: str | None | UndefinedType = Undefined,
@@ -6399,6 +6434,7 @@ class EosDesigns(EosDesignsRootModel):
                         underlay_multicast:
                            Enable PIM sparse mode. Requires `include_in_underlay_protocol` and the global `underlay_multicast`
                            to be `true`.
+                        underlay_multicast_ipv4_static: Enable multicast ipv4 static on p2p uplink ethernet interfaces.
                         flow_tracking:
                            Enable flow-tracking. Overrides `fabric_flow_tracking` setting.
 

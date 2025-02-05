@@ -156,6 +156,10 @@ $defs:
           type: bool
           description: Enable PIM sparse mode. Requires `include_in_underlay_protocol` and the global `underlay_multicast` to be `true`.
           default: false
+        underlay_multicast_ipv4_static:
+          description: Enable multicast ipv4 static on p2p uplink ethernet interfaces.
+          type: bool
+          default: false
         flow_tracking:
           type: dict
           $ref: "eos_designs#/$defs/flow_tracking_link"
