@@ -21,7 +21,7 @@ class RouterOspfMixin(Protocol):
 
     @structured_config_contributor
     def router_ospf(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> None:
-        """Return structured config for router_ospf."""
+        """Set the structured config for router_ospf."""
         if not self.shared_utils.underlay_ospf:
             return
 
