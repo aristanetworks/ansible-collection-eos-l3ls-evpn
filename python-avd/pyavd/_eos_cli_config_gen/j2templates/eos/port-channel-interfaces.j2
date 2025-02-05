@@ -483,6 +483,9 @@ interface {{ port_channel_interface.name }}
 {%     if port_channel_interface.ip_nat is arista.avd.defined %}
 {%         set interface_ip_nat = port_channel_interface.ip_nat %}
 {%         include 'eos/interface-ip-nat.j2' %}
+{%         if port_channel_interface.ip_nat.service_profile is arista.avd.defined %}
+   ip nat service-profile {{ port_channel_interface.ip_nat.service_profile }}
+{%         endif %}
 {%     endif %}
 {%     if port_channel_interface.ospf_cost is arista.avd.defined %}
    ip ospf cost {{ port_channel_interface.ospf_cost }}
