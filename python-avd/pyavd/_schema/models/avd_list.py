@@ -88,6 +88,9 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     def __setitem__(self, index: int, value: T_ItemType) -> None:
         self._items[index] = value
 
+    def __eq__(self, other: object) -> bool:
+        return self._compare(other)
+
     def get(self, index: int, default: T | UndefinedType = Undefined) -> T_ItemType | T | UndefinedType:
         return self._items[index] if index < len(self._items) else default
 
@@ -234,18 +237,16 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
 
         return new_instance
 
-    def _compare(self, other: Self, ignore_fields: tuple[str, ...] = ()) -> bool:
-        cls = type(self)
-        if not isinstance(other, cls):
-            msg = f"Unable to compare '{cls}' with a '{type(other)}' class."
-            raise TypeError(msg)
+    def _compare(self, other: object) -> bool:
+        if not isinstance(other, type(self)):
+            return False
 
         if len(self) != len(other):
             return False
 
-        if issubclass(self._item_type, AvdBase):
-            items = cast(list[AvdBase], self._items)
-            other_items = cast(list[AvdBase], other._items)
-            return all(item._compare(other_items[index], ignore_fields=ignore_fields) for index, item in enumerate(items))
+        if self._created_from_null != other._created_from_null:
+            return False
 
-        return self._items == other._items
+        items = cast(list[AvdBase], self._items)
+        other_items = cast(list[AvdBase], other._items)
+        return all(item == other_items[index] for index, item in enumerate(items))
