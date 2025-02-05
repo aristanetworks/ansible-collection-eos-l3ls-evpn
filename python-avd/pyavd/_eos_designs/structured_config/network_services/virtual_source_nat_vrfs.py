@@ -23,7 +23,7 @@ class VirtualSourceNatVrfsMixin(Protocol):
     @structured_config_contributor
     def virtual_source_nat_vrfs(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Return structured config for virtual_source_nat_vrfs.
+        Set the structured config for virtual_source_nat_vrfs.
 
         Only used by VTEPs with L2 and L3 services
         Using data from loopback_interfaces to avoid duplicating logic
