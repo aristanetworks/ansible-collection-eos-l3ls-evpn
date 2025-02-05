@@ -477,13 +477,13 @@ class UtilsMixin(Protocol):
                     interface_name=l3_generic_interface.name,
                     interface_ip=interface_ip,
                     peer_ip=l3_generic_interface.peer_ip,
-                )._as_dict()
+                )
             if ipv4_acl_out is not None:
                 l3_interface_acls.setdefault(l3_generic_interface.name, {})["ipv4_acl_out"] = self.shared_utils.get_ipv4_acl(
                     name=ipv4_acl_out,
                     interface_name=l3_generic_interface.name,
                     interface_ip=interface_ip,
                     peer_ip=l3_generic_interface.peer_ip,
-                )._as_dict()
+                )
 
         return l3_interface_acls

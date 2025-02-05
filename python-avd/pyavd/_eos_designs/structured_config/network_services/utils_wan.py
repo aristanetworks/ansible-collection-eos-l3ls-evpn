@@ -6,6 +6,7 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING, Literal, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import get, get_ip_from_ip_prefix
@@ -419,7 +420,7 @@ class UtilsWanMixin(Protocol):
         ]
 
     @cached_property
-    def _svi_acls(self: AvdStructuredConfigNetworkServicesProtocol) -> dict[str, dict[str, dict]] | None:
+    def _svi_acls(self: AvdStructuredConfigNetworkServicesProtocol) -> dict[str, dict[str, EosCliConfigGen.IpAccessListsItem]] | None:
         """
         Returns a dict of SVI ACLs.
 
@@ -453,13 +454,13 @@ class UtilsWanMixin(Protocol):
                             name=ipv4_acl_in,
                             interface_name=interface_name,
                             interface_ip=interface_ip,
-                        )._as_dict()
+                        )
                     if ipv4_acl_out is not None:
                         svi_acls.setdefault(interface_name, {})["ipv4_acl_out"] = self.shared_utils.get_ipv4_acl(
                             name=ipv4_acl_out,
                             interface_name=interface_name,
                             interface_ip=interface_ip,
-                        )._as_dict()
+                        )
 
         return svi_acls
 
