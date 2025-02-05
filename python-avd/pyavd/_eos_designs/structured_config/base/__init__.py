@@ -4,9 +4,14 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import (
+    StructuredConfigGenerator,
+    StructuredConfigGeneratorProtocol,
+    structured_config_contributor,
+)
 from pyavd._errors import AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get, strip_empties_from_dict, strip_null_from_data
 from pyavd.j2filters import natural_sort
@@ -14,14 +19,15 @@ from pyavd.j2filters import natural_sort
 from .ntp import NtpMixin
 from .router_general import RouterGeneralMixin
 from .snmp_server import SnmpServerMixin
+from .utils import UtilsMixin
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
 
-class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMixin, RouterGeneralMixin):
+class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMixin, UtilsMixin, StructuredConfigGeneratorProtocol, Protocol):
     """
-    The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
+    Protocol for the AvdStructuredConfig Class, which is imported by "get_structured_config" to render parts of the structured config.
 
     "get_structured_config" imports, instantiates and run the .render() method on the class.
     .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
@@ -101,7 +107,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
             )
 
         l3_interfaces_neighbors = []
-        for neighbor_info in self.shared_utils.l3_interfaces_bgp_neighbors:
+        for neighbor_info in self.shared_utils.l3_bgp_neighbors:
             neighbor = {
                 "ip_address": neighbor_info["ip_address"],
                 "remote_as": neighbor_info["remote_as"],
@@ -440,16 +446,14 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
             return {"timezone": self.inputs.timezone}
         return None
 
-    @cached_property
-    def vrfs(self) -> list:
+    @structured_config_contributor
+    def vrfs(self) -> None:
         """Vrfs set based on mgmt_interface_vrf variable."""
-        vrf_settings = {
-            "name": self.inputs.mgmt_interface_vrf,
-            "ip_routing": self.inputs.mgmt_vrf_routing,
-        }
+        vrf_settings = EosCliConfigGen.VrfsItem(name=self.inputs.mgmt_interface_vrf, ip_routing=self.inputs.mgmt_vrf_routing)
+
         if self.shared_utils.node_config.ipv6_mgmt_ip is not None:
-            vrf_settings["ipv6_routing"] = self.inputs.mgmt_vrf_routing
-        return [vrf_settings]
+            vrf_settings.ipv6_routing = self.inputs.mgmt_vrf_routing
+        self.structured_config.vrfs.append(vrf_settings)
 
     @cached_property
     def management_interfaces(self) -> list | None:
@@ -695,7 +699,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     def prefix_lists(self) -> list | None:
         prefix_lists = []
         prefix_lists_in_use = set()
-        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
+        for neighbor in self.shared_utils.l3_bgp_neighbors:
             if (prefix_list_in := get(neighbor, "ipv4_prefix_list_in")) and prefix_list_in not in prefix_lists_in_use:
                 pfx_list = self._get_prefix_list(prefix_list_in)._as_dict()
                 prefix_lists.append(pfx_list)
@@ -717,7 +721,7 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     @cached_property
     def route_maps(self) -> list | None:
         route_maps = []
-        for neighbor in self.shared_utils.l3_interfaces_bgp_neighbors:
+        for neighbor in self.shared_utils.l3_bgp_neighbors:
             # RM-BGP-<PEER-IP>-IN
             if prefix_list_in := get(neighbor, "ipv4_prefix_list_in"):
                 sequence_numbers = [
@@ -762,3 +766,18 @@ class AvdStructuredConfigBase(StructuredConfigGenerator, NtpMixin, SnmpServerMix
     def struct_cfgs(self) -> None:
         if self.shared_utils.platform_settings.structured_config:
             self.custom_structured_configs.root.append(self.shared_utils.platform_settings.structured_config)
+
+
+class AvdStructuredConfigBase(StructuredConfigGenerator, AvdStructuredConfigBaseProtocol):
+    """
+    The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
+
+    "get_structured_config" imports, instantiates and run the .render() method on the class.
+    .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
+    a dict with the name of the method as key. This means that each key in the final dict corresponds to a method.
+
+    The Class uses StructuredConfigGenerator, as the base class, to inherit the _hostvars, keys and other attributes.
+    Other methods are included as "Mixins" to make the files more manageable.
+
+    The order of the @cached_properties methods imported from Mixins will also control the order in the output.
+    """

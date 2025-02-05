@@ -2782,6 +2782,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "cos": {"type": str},
                 "ip": {"type": Ip},
                 "ipv6": {"type": Ipv6},
+                "dscp": {"type": str},
+                "ecn": {"type": str},
                 "_custom_data": {"type": dict},
             }
             name: str
@@ -2794,6 +2796,26 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """Subclass of AvdModel."""
             ipv6: Ipv6
             """Subclass of AvdModel."""
+            dscp: str | None
+            """
+            Match packets based on the DSCP value(s).
+            Accepted formats:
+              - Single AF/CS/EF DSCP name like
+            "af12".
+              - Single decimal DSCP value. Example: "23".
+              - Range of decimal DSCP values. Examples:
+            "1,3-10".
+            """
+            ecn: Literal["ce", "ect", "ect-ce", "non-ect"] | None
+            """
+            Match packets based on the ECN value.
+            Accepted values:
+              - non-ect (matches 00).
+              - ect (matches 01
+            an 10).
+              - ce (matches 11).
+              - ect-ce (matches 01, 10 and 11).
+            """
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -2806,6 +2828,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     cos: str | None | UndefinedType = Undefined,
                     ip: Ip | UndefinedType = Undefined,
                     ipv6: Ipv6 | UndefinedType = Undefined,
+                    dscp: str | None | UndefinedType = Undefined,
+                    ecn: Literal["ce", "ect", "ect-ce", "non-ect"] | None | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -2820,6 +2844,22 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         cos: CoS value(s) or range(s) of CoS values.
                         ip: Subclass of AvdModel.
                         ipv6: Subclass of AvdModel.
+                        dscp:
+                           Match packets based on the DSCP value(s).
+                           Accepted formats:
+                             - Single AF/CS/EF DSCP name like
+                           "af12".
+                             - Single decimal DSCP value. Example: "23".
+                             - Range of decimal DSCP values. Examples:  # fmt: skip
+                           "1,3-10".
+                        ecn:
+                           Match packets based on the ECN value.
+                           Accepted values:
+                             - non-ect (matches 00).
+                             - ect (matches 01
+                           an 10).
+                             - ce (matches 11).
+                             - ect-ce (matches 01, 10 and 11).
                         _custom_data: _custom_data
 
                     """
@@ -2835,7 +2875,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         pbr: Pbr
         """Subclass of AvdIndexedList with `PbrItem` items. Primary key is `name` (`str`)."""
         qos: Qos
-        """Subclass of AvdIndexedList with `QosItem` items. Primary key is `name` (`str`)."""
+        """
+        The keys `vlan`, `cos`, `ip`, `ipv6`, `dscp`, `ecn` are mutually exclusive,
+        except `dscp` and `ecn`
+        which can be given separate or together.
+
+        Subclass of AvdIndexedList with `QosItem` items. Primary
+        key is `name` (`str`).
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -2851,7 +2898,13 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Args:
                     pbr: Subclass of AvdIndexedList with `PbrItem` items. Primary key is `name` (`str`).
-                    qos: Subclass of AvdIndexedList with `QosItem` items. Primary key is `name` (`str`).
+                    qos:
+                       The keys `vlan`, `cos`, `ip`, `ipv6`, `dscp`, `ecn` are mutually exclusive,
+                       except `dscp` and `ecn`
+                       which can be given separate or together.
+
+                       Subclass of AvdIndexedList with `QosItem` items. Primary
+                       key is `name` (`str`).
                     _custom_data: _custom_data
 
                 """
@@ -30927,7 +30980,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         """
 
-            _fields: ClassVar[dict] = {"destination": {"type": Destination}, "source": {"type": Source}, "_custom_data": {"type": dict}}
+            _fields: ClassVar[dict] = {
+                "service_profile": {"type": str},
+                "destination": {"type": Destination},
+                "source": {"type": Source},
+                "_custom_data": {"type": dict},
+            }
+            service_profile: str | None
+            """NAT interface profile."""
             destination: Destination
             """Subclass of AvdModel."""
             source: Source
@@ -30939,6 +30999,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 def __init__(
                     self,
                     *,
+                    service_profile: str | None | UndefinedType = Undefined,
                     destination: Destination | UndefinedType = Undefined,
                     source: Source | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
@@ -30950,6 +31011,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Subclass of AvdModel.
 
                     Args:
+                        service_profile: NAT interface profile.
                         destination: Subclass of AvdModel.
                         source: Subclass of AvdModel.
                         _custom_data: _custom_data

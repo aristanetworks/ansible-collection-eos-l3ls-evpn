@@ -33,6 +33,7 @@
 - [Interfaces](#interfaces)
   - [DPS Interfaces](#dps-interfaces)
   - [Ethernet Interfaces](#ethernet-interfaces)
+  - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
   - [VXLAN Interface](#vxlan-interface)
 - [Routing](#routing)
@@ -287,7 +288,7 @@ daemon TerminAttr
 
 | Tracker Name | Record Export On Inactive Timeout | Record Export On Interval | Number of Exporters | Applied On |
 | ------------ | --------------------------------- | ------------------------- | ------------------- | ---------- |
-| FLOW-TRACKER | 70000 | 5000 | 1 | Dps1<br>Ethernet1.666<br>Ethernet1.42<br>Ethernet4 |
+| FLOW-TRACKER | 70000 | 5000 | 1 | Dps1<br>Ethernet1.666<br>Ethernet1.42<br>Port-Channel4 |
 
 ##### Exporters Summary
 
@@ -430,7 +431,10 @@ interface Dps1
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
 | Ethernet1.42 | RED-TEST | - | 10.42.3.1/24 | RED | - | False | - | - |
 | Ethernet1.666 | BLUE-TEST | - | 10.66.3.1/24 | BLUE | - | False | - | - |
-| Ethernet4 | REGION2-INTERNET-CORP_inet-site3-wan1_inet-cloud_Ethernet8 | - | dhcp | default | - | False | ACL-INTERNET-IN_Ethernet4 | - |
+| Ethernet4 | inet-cloud_Ethernet8 | 4 | *dhcp | **default | **- | *False | *ACL-INTERNET-IN_Port-Channel4 | **- |
+| Ethernet5 | inet-cloud_Ethernet9 | 4 | *dhcp | **default | **- | *False | *ACL-INTERNET-IN_Port-Channel4 | **- |
+
+*Inherited from Port-Channel Interface
 
 #### Ethernet Interfaces Device Configuration
 
@@ -459,13 +463,43 @@ interface Ethernet1.666
    ip address 10.66.3.1/24
 !
 interface Ethernet4
-   description REGION2-INTERNET-CORP_inet-site3-wan1_inet-cloud_Ethernet8
+   description inet-cloud_Ethernet8
+   no shutdown
+   channel-group 4 mode active
+!
+interface Ethernet5
+   description inet-cloud_Ethernet9
+   no shutdown
+   channel-group 4 mode active
+```
+
+### Port-Channel Interfaces
+
+#### Port-Channel Interfaces Summary
+
+##### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+
+##### IPv4
+
+| Interface | Description | MLAG ID | IP Address | VRF | MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | ------- | ---------- | --- | --- | -------- | ------ | ------- |
+| Port-Channel4 | REGION2-INTERNET-CORP_inet-site3-wan1_inet-cloud_Port-Channel8 | - | dhcp | default | - | False | ACL-INTERNET-IN_Port-Channel4 | - |
+
+#### Port-Channel Interfaces Device Configuration
+
+```eos
+!
+interface Port-Channel4
+   description REGION2-INTERNET-CORP_inet-site3-wan1_inet-cloud_Port-Channel8
    no shutdown
    no switchport
    flow tracker hardware FLOW-TRACKER
    ip address dhcp
    dhcp client accept default-route
-   ip access-group ACL-INTERNET-IN_Ethernet4 in
+   ip access-group ACL-INTERNET-IN_Port-Channel4 in
 ```
 
 ### Loopback Interfaces
@@ -1011,7 +1045,7 @@ ip extcommunity-list ECL-EVPN-SOO permit soo 192.168.255.11:203
 
 ```eos
 !
-ip access-list ACL-INTERNET-IN_Ethernet4
+ip access-list ACL-INTERNET-IN_Port-Channel4
    1 remark Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface
    10 permit udp any host 100.64.30.2 eq isakmp non500-isakmp
    30 permit icmp any host 100.64.30.2
@@ -1168,7 +1202,7 @@ application traffic recognition
 
 | Interface name | Public address | STUN server profile(s) |
 | -------------- | -------------- | ---------------------- |
-| Ethernet4 | - | INTERNET-pf1-Ethernet2<br>INTERNET-pf2-Ethernet2 |
+| Port-Channel4 | - | INTERNET-pf1-Ethernet2<br>INTERNET-pf2-Ethernet2 |
 
 ###### Dynamic Peers Settings
 
@@ -1206,7 +1240,7 @@ router path-selection
    path-group INTERNET id 102
       ipsec profile CP-PROFILE
       !
-      local interface Ethernet4
+      local interface Port-Channel4
          stun server-profile INTERNET-pf1-Ethernet2 INTERNET-pf2-Ethernet2
       !
       peer dynamic

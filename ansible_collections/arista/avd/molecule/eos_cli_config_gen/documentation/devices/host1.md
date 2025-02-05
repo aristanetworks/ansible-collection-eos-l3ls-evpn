@@ -5157,6 +5157,12 @@ interface Ethernet84
 | --------- | ----------- | --------- | -------- | ------- |
 | Port-Channel130 | ACL1 | POOL1 | 0 | - |
 
+##### IP NAT: Interfaces configured via profile
+
+| Interface | Profile |
+| --------- |-------- |
+| Port-Channel130 | TEST-NAT-PROFILE |
+
 ##### IPv6
 
 | Interface | Description | MLAG ID | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
@@ -5689,6 +5695,7 @@ interface Port-Channel130
    ip nat source static 3.0.0.1 4.0.0.1
    ip nat destination dynamic access-list ACL1 pool POOL1
    ip nat source dynamic access-list ACL2 pool POOL2
+   ip nat service-profile TEST-NAT-PROFILE
 !
 interface Port-Channel131
    description dot1q-tunnel mode
@@ -12032,6 +12039,11 @@ qos random-detect ecn allow non-ect chip-based
 | cmap_tc5_v4 | acl | acl_qos_tc5_v4 |
 | cmap_tc5_v6 | - | - |
 | COS_RANGE | vlan | 1-3 |
+| DSCP_TEST_1 | dscp<br>ecn | af11<br>ect-ce |
+| DSCP_TEST_2 | dscp<br>ecn | 2-4,6<br>non-ect |
+| DSCP_TEST_3 | dscp | cs0 |
+| DSCP_TEST_4 | dscp<br>ecn | ef<br>ce |
+| DSCP_TEST_5 | ecn | ce |
 | VLAN_RANGE | vlan | 200-400 |
 
 #### Class-maps Device Configuration
@@ -12064,6 +12076,21 @@ class-map type qos match-any cmap_tc5_v6
 !
 class-map type qos match-any COS_RANGE
    match vlan 1-3
+!
+class-map type qos match-any DSCP_TEST_1
+   match dscp af11 ecn ect-ce
+!
+class-map type qos match-any DSCP_TEST_2
+   match dscp 2-4,6 ecn non-ect
+!
+class-map type qos match-any DSCP_TEST_3
+   match dscp cs0
+!
+class-map type qos match-any DSCP_TEST_4
+   match dscp ef ecn ce
+!
+class-map type qos match-any DSCP_TEST_5
+   match ecn ce
 !
 class-map type qos match-any VLAN_RANGE
    match vlan 200-400

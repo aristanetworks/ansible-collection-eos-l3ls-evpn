@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class RouterPimSparseModeMixin(UtilsMixin):
+class RouterPimSparseModeMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouterPimSparseModeMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_pim_sparse_mode(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_pim_sparse_mode(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Return structured config for router_pim.
 

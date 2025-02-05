@@ -4,21 +4,19 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, default, unique
 from pyavd.j2filters import natural_sort, range_expand
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class VxlanInterfaceMixin(UtilsMixin):
+class VxlanInterfaceMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -26,7 +24,7 @@ class VxlanInterfaceMixin(UtilsMixin):
     """
 
     @cached_property
-    def vxlan_interface(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def vxlan_interface(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Returns structured config for vxlan_interface.
 
@@ -125,7 +123,7 @@ class VxlanInterfaceMixin(UtilsMixin):
         }
 
     def _get_vxlan_interface_config_for_vrf(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         vrfs: list[dict],
@@ -219,7 +217,7 @@ class VxlanInterfaceMixin(UtilsMixin):
             )
 
     def _get_vxlan_interface_config_for_vlan(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
@@ -259,7 +257,7 @@ class VxlanInterfaceMixin(UtilsMixin):
         return vxlan_interface_vlan
 
     @cached_property
-    def _overlay_her_flood_lists(self: AvdStructuredConfigNetworkServices) -> dict[str | int, list]:
+    def _overlay_her_flood_lists(self: AvdStructuredConfigNetworkServicesProtocol) -> dict[str | int, list]:
         """
         Returns a dict with HER Flood Lists.
 
@@ -308,5 +306,5 @@ class VxlanInterfaceMixin(UtilsMixin):
         return overlay_her_flood_lists
 
     @cached_property
-    def _multi_vtep(self: AvdStructuredConfigNetworkServices) -> bool:
+    def _multi_vtep(self: AvdStructuredConfigNetworkServicesProtocol) -> bool:
         return self.shared_utils.mlag is True and self.shared_utils.evpn_multicast is True

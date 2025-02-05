@@ -3,18 +3,16 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class RouterServiceInsertionMixin(UtilsMixin):
+class RouterServiceInsertionMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouterServiceInsertionMixin(UtilsMixin):
     """
 
     @structured_config_contributor
-    def router_service_insertion(self: AvdStructuredConfigNetworkServices) -> None:
+    def router_service_insertion(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
         Set the structured config for router_service_insertion.
 
