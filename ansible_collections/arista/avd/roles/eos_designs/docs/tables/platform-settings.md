@@ -303,7 +303,7 @@
           tcam_profile: vxlan-routing
         - feature_support:
             bgp_update_wait_for_convergence: true
-            bgp_update_wait_install: false
+            bgp_update_wait_install: true
             interface_storm_control: true
             queue_monitor_length_notify: false
           management_interface: Management1/1
