@@ -25,6 +25,6 @@ class AgentsMixin(Protocol):
         if not self.shared_utils.is_wan_router:
             return
 
-        env_var = EosCliConfigGen.AgentsItem.EnvironmentVariables()
-        env_var.append(EosCliConfigGen.AgentsItem.EnvironmentVariablesItem(name="KERNELFIB_PROGRAM_ALL_ECMP", value="1"))
-        self.structured_config.agents.append(EosCliConfigGen.AgentsItem(name="KernelFib", environment_variables=env_var))
+        agent = EosCliConfigGen.AgentsItem(name="KernelFib")
+        agent.environment_variables.append(EosCliConfigGen.AgentsItem.EnvironmentVariablesItem(name="KERNELFIB_PROGRAM_ALL_ECMP", value="1"))
+        self.structured_config.agents.append(agent)
