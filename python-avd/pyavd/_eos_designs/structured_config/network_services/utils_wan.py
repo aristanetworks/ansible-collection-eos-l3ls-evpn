@@ -483,19 +483,11 @@ class UtilsWanMixin(Protocol):
                 ranges=EosCliConfigGen.IpNat.PoolsItem.Ranges([EosCliConfigGen.IpNat.PoolsItem.RangesItem(first_port=1500, last_port=65535)]),
             )
 
-            profile = EosCliConfigGen.IpNat.ProfilesItem(
-                name=self.get_internet_exit_nat_profile_name(internet_exit_policy_type),
-                source=EosCliConfigGen.IpNat.ProfilesItem.Source(
-                    dynamic=EosCliConfigGen.IpNat.ProfilesItem.Source.Dynamic(
-                        [
-                            EosCliConfigGen.IpNat.ProfilesItem.Source.DynamicItem(
-                                access_list=self.get_internet_exit_nat_acl_name(internet_exit_policy_type),
-                                pool_name="PORT-ONLY-POOL",
-                                nat_type="pool",
-                            ),
-                        ]
-                    )
-                ),
+            profile = EosCliConfigGen.IpNat.ProfilesItem(name=self.get_internet_exit_nat_profile_name(internet_exit_policy_type))
+            profile.source.dynamic.append_new(
+                access_list=self.get_internet_exit_nat_acl_name(internet_exit_policy_type),
+                pool_name="PORT-ONLY-POOL",
+                nat_type="pool",
             )
             return pool, profile
         if internet_exit_policy_type == "direct":
