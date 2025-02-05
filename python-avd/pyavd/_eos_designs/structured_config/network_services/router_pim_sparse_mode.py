@@ -37,10 +37,10 @@ class RouterPimSparseModeMixin(Protocol):
                     for rps in vrf_rps:
                         if "groups" in rps:
                             for group in rps["groups"]:
-                                rps_item.groups.append(group)
+                                rps_item.groups.append_unique(group)
                         if "access_lists" in rps:
                             for access_list in rps["access_lists"]:
-                                rps_item.access_lists.append(access_list)
+                                rps_item.access_lists.append_unique(access_list)
                         if "address" in rps:
                             rps_item.address = rps["address"]
                         if "priority" in rps:
