@@ -24,6 +24,8 @@ tenants:
     mac_vrf_vni_base: 10000
     vrfs:
       - name: VRF1
+        # Making VNI the same and ID different
+        vrf_vni: 1
         vrf_id: 1
         svis:
           - id: 100
@@ -35,6 +37,8 @@ tenants:
     mac_vrf_vni_base: 10000
     vrfs:
       - name: VRF1
+        # Making VNI the same and ID different
+        vrf_vni: 1
         # Conflicting setting on VRF so an error will be raised.
         vrf_id: 2
         svis:
@@ -46,6 +50,5 @@ tenants:
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for BGP VRFs defined under network services.
   {'name': 'VRF1', 'rd': '192.168.255.101:1', 'route_targets': {'import': [{'address_family': 'evpn', 'route_targets': ['1:1']}],
-  'export': [{'address_family': 'evpn', 'route_targets': ['1:1']}]}} conflicts with {'name': 'VRF1', 'rd': '192.168.255.101:2',
-  'route_targets': {'import': [{'address_family': 'evpn', 'route_targets': ['2:2']}], 'export': [{'address_family': 'evpn',
-  'route_targets': ['2:2']}]}}.
+  'export': [{'address_family': 'evpn', 'route_targets': ['1:1']}]}} conflicts with {'name': 'VRF1', 'rd': '192.168.255.101:2', 'route_targets':
+  {'import': [{'address_family': 'evpn', 'route_targets': ['2:2']}], 'export': [{'address_family': 'evpn', 'route_targets': ['2:2']}]}}.

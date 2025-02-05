@@ -45,5 +45,5 @@ tenants:
             ip_address_virtual: 10.0.100.1/24
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs for VRFs.
+  Found duplicate objects with conflicting data while generating configuration for Vrfs.
   {'name': 'VRF1', 'vni': 1} conflicts with {'name': 'VRF1', 'vni': 2}.
