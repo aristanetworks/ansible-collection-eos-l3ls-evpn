@@ -25,8 +25,4 @@ class IpNatMixin(Protocol):
             return
 
         for policy_type in self._filtered_internet_exit_policy_types:
-            pool, profile = self.get_internet_exit_nat_pool_and_profile(policy_type)
-            if pool:
-                self.structured_config.ip_nat.pools.append(pool)
-            if profile:
-                self.structured_config.ip_nat.profiles.append(profile)
+            self.get_internet_exit_nat_pool_and_profile(policy_type)
