@@ -1,20 +1,4 @@
 ---
-# Ansible connectivity definitions
-# eAPI connectivity via HTTPS is specified (as opposed to CLI via SSH)
-ansible_connection: ansible.netcommon.httpapi
-# Specifies that we are indeed using Arista EOS
-ansible_network_os: arista.eos.eos
-# This user/password must exist on the switches to enable Ansible access
-ansible_user: ansible
-ansible_password: ansible
-# User escalation (to enter enable mode)
-ansible_become: true
-ansible_become_method: enable
-# Use SSL (HTTPS)
-ansible_httpapi_use_ssl: true
-# Do not try to validate certs
-ansible_httpapi_validate_certs: false
-
 # Common AVD group variables
 fabric_name: FABRIC
 
@@ -57,18 +41,18 @@ p2p_uplinks_mtu: 1500
 
 # Set default uplink, downlink, and MLAG interfaces based on node type
 default_interfaces:
-  - types: [ spine ]
-    platforms: [ default ]
-    uplink_interfaces: [ Ethernet1-2 ]
-    downlink_interfaces: [ Ethernet1-8 ]
-  - types: [ l3leaf ]
-    platforms: [ default ]
-    uplink_interfaces: [ Ethernet1-2 ]
-    mlag_interfaces: [ Ethernet3-4 ]
-    downlink_interfaces: [ Ethernet8 ]
-  - types: [ l2leaf ]
-    platforms: [ default ]
-    uplink_interfaces: [ Ethernet1-2 ]
+  - types: [spine]
+    platforms: [default]
+    uplink_interfaces: [Ethernet1-2]
+    downlink_interfaces: [Ethernet1-8]
+  - types: [l3leaf]
+    platforms: [default]
+    uplink_interfaces: [Ethernet1-2]
+    mlag_interfaces: [Ethernet3-4]
+    downlink_interfaces: [Ethernet8]
+  - types: [l2leaf]
+    platforms: [default]
+    uplink_interfaces: [Ethernet1-2]
 
 # CloudVision Portal definitions
 cvp_instance_ips:

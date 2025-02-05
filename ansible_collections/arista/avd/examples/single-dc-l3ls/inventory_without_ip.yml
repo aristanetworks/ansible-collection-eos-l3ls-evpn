@@ -1,0 +1,43 @@
+---
+all:
+  children:
+    CLOUDVISION: # (1)!
+      hosts:
+        cvp:
+          ansible_httpapi_host: cvp
+          ansible_host: cvp
+          ansible_user: ansible
+          ansible_password: ansible
+          ansible_connection: httpapi
+          ansible_httpapi_use_ssl: true
+          ansible_httpapi_validate_certs: false
+          ansible_network_os: eos
+          ansible_python_interpreter: $(which python3)
+
+    FABRIC:
+      children:
+        DC1:
+          children:
+            DC1_SPINES:
+              hosts:
+                dc1-spine1:
+                dc1-spine2:
+            DC1_L3_LEAVES:
+              hosts:
+                dc1-leaf1a:
+                dc1-leaf1b:
+                dc1-leaf2a:
+                dc1-leaf2b:
+            DC1_L2_LEAVES:
+              hosts:
+                dc1-leaf1c:
+                dc1-leaf2c:
+
+    NETWORK_SERVICES: # (2)!
+      children:
+        DC1_L3_LEAVES:
+        DC1_L2_LEAVES:
+    CONNECTED_ENDPOINTS: # (3)!
+      children:
+        DC1_L3_LEAVES:
+        DC1_L2_LEAVES:
