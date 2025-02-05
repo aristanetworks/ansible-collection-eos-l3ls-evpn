@@ -19,12 +19,15 @@
 {%     endif %}
 {%     if errdisable.recovery.causes is arista.avd.defined %}
 
-|  Detect Cause | Enabled | Interval |
-| ------------- | ------- | -------- |
-{%         set interval = errdisable.recovery.interval | arista.avd.default("-") %}
+|  Detect Cause | Enabled |
+| ------------- | ------- |
 {%         for cause in errdisable.recovery.causes | arista.avd.natural_sort %}
-| {{ cause }} | True | {{ interval }} |
+| {{ cause }} | True |
 {%         endfor %}
+{%     endif %}
+{%     if errdisable.recovery.interval is arista.avd.defined %}
+
+Errdisable recovery timer interval: {{ errdisable.recovery.interval }}
 {%     endif %}
 
 ```eos

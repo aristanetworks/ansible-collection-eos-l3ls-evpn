@@ -1504,13 +1504,13 @@ ip nat synchronization
 
 ### Errdisable Summary
 
-|  Detect Cause | Enabled | Interval |
-| ------------- | ------- | -------- |
-| arp-inspection | True | - |
-| bpduguard | True | - |
-| xcvr-overheat | True | - |
-| xcvr-power-unsupported | True | - |
-| xcvr-unsupported | True | - |
+|  Detect Cause | Enabled |
+| ------------- | ------- |
+| arp-inspection | True |
+| bpduguard | True |
+| xcvr-overheat | True |
+| xcvr-power-unsupported | True |
+| xcvr-unsupported | True |
 
 ```eos
 !
