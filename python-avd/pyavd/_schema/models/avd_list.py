@@ -56,17 +56,14 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
         cls_items = [coerce_type(item, item_type) for item in data]
         return cls(cls_items)
 
-    def __init__(self, items: Iterable[T_ItemType] | UndefinedType = Undefined) -> None:
+    def __init__(self, items: Iterable[T_ItemType] = ()) -> None:
         """
         AvdList subclass.
 
         Args:
             items: Iterable holding items of the correct type to be loaded into the list.
         """
-        if isinstance(items, UndefinedType):
-            self._items = []
-        else:
-            self._items = list(items)
+        self._items = list(items)
 
         super().__init__()
 
