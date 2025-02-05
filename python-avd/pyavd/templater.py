@@ -82,6 +82,7 @@ class Templar:
             list_compress,
             natural_sort,
             range_expand,
+            secure_hash,
             snmp_hash,
             status_render,
         )
@@ -103,6 +104,7 @@ class Templar:
                 "arista.avd.range_expand": range_expand,
                 "arista.avd.snmp_hash": snmp_hash,
                 "arista.avd.status_render": status_render,
+                "arista.avd.secure_hash": secure_hash,
             },
         )
         self.environment.tests.update(
