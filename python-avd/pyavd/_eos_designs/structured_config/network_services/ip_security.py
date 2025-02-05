@@ -46,13 +46,11 @@ class IpSecurityMixin(Protocol):
                     dh_group=24,
                 )
             )
-            self.structured_config.ip_security.sa_policies.append(
-                EosCliConfigGen.IpSecurity.SaPoliciesItem(
-                    name=sa_policy_name,
-                    pfs_dh_group=24,
-                    sa_lifetime=EosCliConfigGen.IpSecurity.SaPoliciesItem.SaLifetime(value=8),
-                    esp=EosCliConfigGen.IpSecurity.SaPoliciesItem.Esp(integrity="sha256", encryption="aes256" if encrypt_traffic else "disabled"),
-                )
+            self.structured_config.ip_security.sa_policies.append_new(
+                name=sa_policy_name,
+                pfs_dh_group=24,
+                sa_lifetime=EosCliConfigGen.IpSecurity.SaPoliciesItem.SaLifetime(value=8),
+                esp=EosCliConfigGen.IpSecurity.SaPoliciesItem.Esp(integrity="sha256", encryption="aes256" if encrypt_traffic else "disabled"),
             )
             self.structured_config.ip_security.profiles.append_new(
                 name=profile_name,
