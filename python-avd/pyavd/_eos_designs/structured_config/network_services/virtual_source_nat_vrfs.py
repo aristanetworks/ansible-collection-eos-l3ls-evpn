@@ -39,7 +39,7 @@ class VirtualSourceNatVrfsMixin(Protocol):
                 continue
 
             # Using append with ignore_fields.
-            # It will append the dict unless the same "name" is already in the dict.
+            # It will append the VirtualSourceNatVrfsItem unless the same "name" is already in the list.
             # It will never raise since we only have these two keys.
             self.structured_config.virtual_source_nat_vrfs.append(
                 EosCliConfigGen.VirtualSourceNatVrfsItem(
