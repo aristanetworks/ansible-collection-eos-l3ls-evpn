@@ -475,7 +475,7 @@ class UtilsWanMixin(Protocol):
     def get_internet_exit_nat_pool_and_profile(
         self: AvdStructuredConfigNetworkServicesProtocol,
         internet_exit_policy_type: Literal["zscaler", "direct"],
-    ) -> tuple[EosCliConfigGen.IpNat.PoolsItem | None, EosCliConfigGen.IpNat.ProfilesItem | None]:
+    ) -> None:
         if internet_exit_policy_type == "zscaler":
             pool = EosCliConfigGen.IpNat.PoolsItem(
                 name="PORT-ONLY-POOL",
@@ -489,23 +489,12 @@ class UtilsWanMixin(Protocol):
                 pool_name="PORT-ONLY-POOL",
                 nat_type="pool",
             )
-            return pool, profile
+            self.structured_config.ip_nat.pools.append(pool)
+            self.structured_config.ip_nat.profiles.append(profile)
         if internet_exit_policy_type == "direct":
-            profile_name = self.get_internet_exit_nat_profile_name(internet_exit_policy_type)
-            profile = EosCliConfigGen.IpNat.ProfilesItem(
-                name=profile_name,
-                source=EosCliConfigGen.IpNat.ProfilesItem.Source(
-                    dynamic=EosCliConfigGen.IpNat.ProfilesItem.Source.Dynamic(
-                        [
-                            EosCliConfigGen.IpNat.ProfilesItem.Source.DynamicItem(
-                                access_list=self.get_internet_exit_nat_acl_name(internet_exit_policy_type), nat_type="overload"
-                            )
-                        ]
-                    )
-                ),
-            )
-            return None, profile
-        return None
+            profile = EosCliConfigGen.IpNat.ProfilesItem(name=self.get_internet_exit_nat_profile_name(internet_exit_policy_type))
+            profile.source.dynamic.append_new(access_list=self.get_internet_exit_nat_acl_name(internet_exit_policy_type), nat_type="overload")
+            self.structured_config.ip_nat.profiles.append(profile)
 
     @cached_property
     def _filtered_internet_exit_policy_types(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
