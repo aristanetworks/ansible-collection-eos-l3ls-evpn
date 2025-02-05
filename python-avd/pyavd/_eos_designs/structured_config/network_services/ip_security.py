@@ -54,17 +54,15 @@ class IpSecurityMixin(Protocol):
                     esp=EosCliConfigGen.IpSecurity.SaPoliciesItem.Esp(integrity="sha256", encryption="aes256" if encrypt_traffic else "disabled"),
                 )
             )
-            self.structured_config.ip_security.profiles.append(
-                EosCliConfigGen.IpSecurity.ProfilesItem(
-                    name=profile_name,
-                    ike_policy=ike_policy_name,
-                    sa_policy=sa_policy_name,
-                    shared_key=ipsec_key,
-                    dpd=EosCliConfigGen.IpSecurity.ProfilesItem.Dpd(
-                        interval=10,
-                        time=60,
-                        action="clear",
-                    ),
-                    connection="start",
-                )
+            self.structured_config.ip_security.profiles.append_new(
+                name=profile_name,
+                ike_policy=ike_policy_name,
+                sa_policy=sa_policy_name,
+                shared_key=ipsec_key,
+                dpd=EosCliConfigGen.IpSecurity.ProfilesItem.Dpd(
+                    interval=10,
+                    time=60,
+                    action="clear",
+                ),
+                connection="start",
             )
