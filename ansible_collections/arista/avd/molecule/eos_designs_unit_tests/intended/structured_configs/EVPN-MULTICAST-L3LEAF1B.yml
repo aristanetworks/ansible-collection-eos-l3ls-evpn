@@ -947,19 +947,19 @@ router_pim_sparse_mode:
       rp_addresses:
       - address: 10.20.20.30
         groups:
-        - '[''232.0.0.0/21'']'
+        - 232.0.0.0/21
         access_lists:
-        - '[''RP_ACL_VRF_OVERRIDE'']'
+        - RP_ACL_VRF_OVERRIDE
       - address: 10.20.20.30
         groups:
-        - '[''232.0.0.0/21'']'
+        - 232.0.0.0/21
         access_lists:
-        - '[''RP_ACL_VRF_OVERRIDE'']'
+        - RP_ACL_VRF_OVERRIDE
       - address: 10.20.20.30
         groups:
-        - '[''232.0.0.0/21'']'
+        - 232.0.0.0/21
         access_lists:
-        - '[''RP_ACL_VRF_OVERRIDE'']'
+        - RP_ACL_VRF_OVERRIDE
   - name: TEN_E_L3_MULTICAST_EVPN_PEG_RP_NODES
     ipv4:
       rp_addresses:
@@ -973,46 +973,46 @@ router_pim_sparse_mode:
       rp_addresses:
       - address: 10.1.50.150
         groups:
-        - '[''232.0.112.0/21'']'
+        - 232.0.112.0/21
         access_lists:
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_2'']'
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_2
       - address: 10.1.50.150
         groups:
-        - '[''232.0.112.0/21'']'
+        - 232.0.112.0/21
         access_lists:
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_2'']'
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_2
       - address: 10.1.50.150
         groups:
-        - '[''232.0.112.0/21'']'
+        - 232.0.112.0/21
         access_lists:
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_2'']'
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_2
       - address: 10.1.50.150
         groups:
-        - '[''232.0.112.0/21'']'
+        - 232.0.112.0/21
         access_lists:
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_2'']'
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_2
       - address: 10.1.50.150
         groups:
-        - '[''232.0.112.0/21'']'
+        - 232.0.112.0/21
         access_lists:
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_2'']'
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_2
       - address: 10.1.50.150
         groups:
-        - '[''232.0.112.0/21'']'
+        - 232.0.112.0/21
         access_lists:
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_1'']'
-        - '[''RPS_ACL_VRF_Tenant_E_2'']'
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_1
+        - RPS_ACL_VRF_Tenant_E_2
 service_routing_protocols_model: multi-agent
 sflow:
   vrfs:
