@@ -26,5 +26,5 @@ class AgentsMixin(Protocol):
             return
 
         agent = EosCliConfigGen.AgentsItem(name="KernelFib")
-        agent.environment_variables.append(EosCliConfigGen.AgentsItem.EnvironmentVariablesItem(name="KERNELFIB_PROGRAM_ALL_ECMP", value="1"))
+        agent.environment_variables.append_new(name="KERNELFIB_PROGRAM_ALL_ECMP", value="1")
         self.structured_config.agents.append(agent)
