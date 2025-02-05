@@ -37,14 +37,12 @@ class IpSecurityMixin(Protocol):
             profile_name = f"IE-{policy_name}-PROFILE"
             ufqdn, ipsec_key = self._get_ipsec_credentials(internet_exit_policy)
 
-            self.structured_config.ip_security.ike_policies.append(
-                EosCliConfigGen.IpSecurity.IkePoliciesItem(
-                    name=ike_policy_name,
-                    local_id_fqdn=ufqdn,
-                    ike_lifetime=24,
-                    encryption="aes256",
-                    dh_group=24,
-                )
+            self.structured_config.ip_security.ike_policies.append_new(
+                name=ike_policy_name,
+                local_id_fqdn=ufqdn,
+                ike_lifetime=24,
+                encryption="aes256",
+                dh_group=24,
             )
             self.structured_config.ip_security.sa_policies.append_new(
                 name=sa_policy_name,
