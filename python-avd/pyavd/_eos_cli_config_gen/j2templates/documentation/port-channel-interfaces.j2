@@ -435,6 +435,8 @@
 {%             endif %}
 {%             if po_te_interface.traffic_engineering.min_delay_static is arista.avd.defined %}
 {%                 set te_min_del = po_te_interface.traffic_engineering.min_delay_static.number ~ " " ~ po_te_interface.traffic_engineering.min_delay_static.unit %}
+{%             elif po_te_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback is arista.avd.defined %}
+{%                 set te_min_del = "twamp-light, fallback " ~ po_te_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback.number ~ " " ~ po_te_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback.unit %}
 {%             else %}
 {%                 set te_min_del = "-" %}
 {%             endif %}

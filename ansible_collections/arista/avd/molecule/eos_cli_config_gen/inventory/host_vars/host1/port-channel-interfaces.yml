@@ -1070,6 +1070,10 @@ port_channel_interfaces:
       enabled: true
       administrative_groups:
         - 7
+      min_delay_dynamic:
+        twamp_light_fallback:
+          number: 123
+          unit: microseconds
 
   - name: Port-Channel137
     description: Traffic Engineering Interface
