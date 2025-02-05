@@ -44,12 +44,12 @@ class RouterPimSparseModeMixin(Protocol):
                         if "address" in rps:
                             rps_item.address = rps["address"]
                         if "priority" in rps:
-                            rps_item.address = rps["priority"]
+                            rps_item.priority = rps["priority"]
                         if "hashmask" in rps:
-                            rps_item.address = rps["hashmask"]
+                            rps_item.hashmask = rps["hashmask"]
                         if "override" in rps:
-                            rps_item.address = rps["override"]
+                            rps_item.override = rps["override"]
                         if "_custom_data" in rps:
-                            rps_item.address = rps["_custom_data"]
+                            rps_item._custom_data = rps["_custom_data"]
                         ipv4_config.rp_addresses.append_unique(rps_item)
                     self.structured_config.router_pim_sparse_mode.vrfs.append_new(name=vrf.name, ipv4=ipv4_config)
