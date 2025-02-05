@@ -216,7 +216,7 @@ class AvdModel(AvdBase):
         # so probably we can remove the include_default_values at some point.
         if include_default_values:
             for field in ordered_field_names:
-                if field not in __dict__:
+                if field not in self.__dict__:
                     default_value = self._get_field_default_value(field)
 
                     # Removing field_ prefix if needed.

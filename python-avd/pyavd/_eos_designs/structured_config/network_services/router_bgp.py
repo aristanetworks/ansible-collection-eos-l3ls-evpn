@@ -412,8 +412,10 @@ class RouterBgpMixin(Protocol):
             rd=vlan_rd,
             route_targets=EosCliConfigGen.RouterBgp.VlansItem.RouteTargets(both=EosCliConfigGen.RouterBgp.VlansItem.RouteTargets.Both([vlan_rt])),
             redistribute_routes=EosCliConfigGen.RouterBgp.VlansItem.RedistributeRoutes(["learned"]),
-            eos_cli=vlan.bgp.raw_eos_cli,
         )
+        if vlan.bgp.raw_eos_cli:
+            bgp_vlan.eos_cli = vlan.bgp.raw_eos_cli
+
 
         if vlan.bgp.structured_config:
             self.custom_structured_configs.nested.router_bgp.vlans.obtain(vlan.id)._deepmerge(
