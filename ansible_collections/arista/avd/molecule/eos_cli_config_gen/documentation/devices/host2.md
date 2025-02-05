@@ -866,11 +866,18 @@ interface Dps1
 | Qos ECN propagation | Disabled |
 | Qos map dscp to traffic-class decapsulation | Disabled |
 
+##### VLAN to VNI, Flood List and Multicast Group Mappings
+
+| VLAN | VNI | Flood List | Multicast Group |
+| ---- | --- | ---------- | --------------- |
+| 113,115-118 | 10113,10115-10118 | - | - |
+
 #### VXLAN Interface Device Configuration
 
 ```eos
 !
 interface Vxlan1
+   vxlan vlan 113,115-118 vni 10113,10115-10118
    no vxlan qos ecn propagation
    no vxlan qos dscp propagation encapsulation
    no vxlan qos map dscp to traffic-class decapsulation

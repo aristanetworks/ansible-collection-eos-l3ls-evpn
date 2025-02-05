@@ -70037,6 +70037,43 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
+                class VlanRange(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}, "_custom_data": {"type": dict}}
+                    vlans: str
+                    """e.g. "94,96,100-110"."""
+                    vnis: str
+                    """
+                    Set `vnis` in the correct sequence as `vlans`.
+                    e.g. "10094,10096,10100-10110".
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            vlans: str | UndefinedType = Undefined,
+                            vnis: str | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            VlanRange.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                vlans: e.g. "94,96,100-110".
+                                vnis:
+                                   Set `vnis` in the correct sequence as `vlans`.
+                                   e.g. "10094,10096,10100-10110".
+                                _custom_data: _custom_data
+
+                            """
+
                 class VlansItem(AvdModel):
                     """Subclass of AvdModel."""
 
@@ -70151,6 +70188,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "virtual_router_encapsulation_mac_address": {"type": str},
                     "bfd_vtep_evpn": {"type": BfdVtepEvpn},
                     "qos": {"type": Qos},
+                    "vlan_range": {"type": VlanRange},
                     "vlans": {"type": Vlans},
                     "vrfs": {"type": Vrfs},
                     "flood_vteps": {"type": FloodVteps},
@@ -70185,8 +70223,27 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Subclass of AvdModel.
                 """
+                vlan_range: VlanRange
+                """
+                Set VNI on range of vlans.
+                `vxlan_interface.vxlan1.vxlan.vlan_range` and
+                `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
+                `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+                Number of VLANs must equal number of
+                VNIs.
+
+                Subclass of AvdModel.
+                """
                 vlans: Vlans
-                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
+                """
+                Set VNI/multicast group/remote vtep on a vlan.
+                `vxlan_interface.vxlan1.vxlan.vlans` and
+                `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
+                `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+
+                Subclass of AvdIndexedList with
+                `VlansItem` items. Primary key is `id` (`int`).
+                """
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
                 flood_vteps: FloodVteps
@@ -70208,6 +70265,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         virtual_router_encapsulation_mac_address: str | None | UndefinedType = Undefined,
                         bfd_vtep_evpn: BfdVtepEvpn | UndefinedType = Undefined,
                         qos: Qos | UndefinedType = Undefined,
+                        vlan_range: VlanRange | UndefinedType = Undefined,
                         vlans: Vlans | UndefinedType = Undefined,
                         vrfs: Vrfs | UndefinedType = Undefined,
                         flood_vteps: FloodVteps | UndefinedType = Undefined,
@@ -70240,7 +70298,23 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
 
                                Subclass of AvdModel.
-                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
+                            vlan_range:
+                               Set VNI on range of vlans.
+                               `vxlan_interface.vxlan1.vxlan.vlan_range` and
+                               `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
+                               `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+                               Number of VLANs must equal number of
+                               VNIs.
+
+                               Subclass of AvdModel.
+                            vlans:
+                               Set VNI/multicast group/remote vtep on a vlan.
+                               `vxlan_interface.vxlan1.vxlan.vlans` and
+                               `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
+                               `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+
+                               Subclass of AvdIndexedList with
+                               `VlansItem` items. Primary key is `id` (`int`).
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane
@@ -70420,6 +70494,43 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
+                class VlanRange(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}, "_custom_data": {"type": dict}}
+                    vlans: str
+                    """e.g. "94,96,100-110"."""
+                    vnis: str
+                    """
+                    Set `vnis` in the correct sequence as `vlans`.
+                    e.g. "10094,10096,10100-10110".
+                    """
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            vlans: str | UndefinedType = Undefined,
+                            vnis: str | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            VlanRange.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                vlans: e.g. "94,96,100-110".
+                                vnis:
+                                   Set `vnis` in the correct sequence as `vlans`.
+                                   e.g. "10094,10096,10100-10110".
+                                _custom_data: _custom_data
+
+                            """
+
                 class VlansItem(AvdModel):
                     """Subclass of AvdModel."""
 
@@ -70534,6 +70645,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "virtual_router_encapsulation_mac_address": {"type": str},
                     "bfd_vtep_evpn": {"type": BfdVtepEvpn},
                     "qos": {"type": Qos},
+                    "vlan_range": {"type": VlanRange},
                     "vlans": {"type": Vlans},
                     "vrfs": {"type": Vrfs},
                     "flood_vteps": {"type": FloodVteps},
@@ -70568,8 +70680,27 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Subclass of AvdModel.
                 """
+                vlan_range: VlanRange
+                """
+                Set VNI on range of vlans.
+                `vxlan_interface.vxlan1.vxlan.vlan_range` and
+                `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
+                `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+                Number of VLANs must equal number of
+                VNIs.
+
+                Subclass of AvdModel.
+                """
                 vlans: Vlans
-                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
+                """
+                Set VNI/multicast group/remote vtep on a vlan.
+                `vxlan_interface.vxlan1.vxlan.vlans` and
+                `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
+                `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+
+                Subclass of AvdIndexedList with
+                `VlansItem` items. Primary key is `id` (`int`).
+                """
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
                 flood_vteps: FloodVteps
@@ -70591,6 +70722,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         virtual_router_encapsulation_mac_address: str | None | UndefinedType = Undefined,
                         bfd_vtep_evpn: BfdVtepEvpn | UndefinedType = Undefined,
                         qos: Qos | UndefinedType = Undefined,
+                        vlan_range: VlanRange | UndefinedType = Undefined,
                         vlans: Vlans | UndefinedType = Undefined,
                         vrfs: Vrfs | UndefinedType = Undefined,
                         flood_vteps: FloodVteps | UndefinedType = Undefined,
@@ -70623,7 +70755,23 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
 
                                Subclass of AvdModel.
-                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
+                            vlan_range:
+                               Set VNI on range of vlans.
+                               `vxlan_interface.vxlan1.vxlan.vlan_range` and
+                               `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
+                               `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+                               Number of VLANs must equal number of
+                               VNIs.
+
+                               Subclass of AvdModel.
+                            vlans:
+                               Set VNI/multicast group/remote vtep on a vlan.
+                               `vxlan_interface.vxlan1.vxlan.vlans` and
+                               `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
+                               `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+
+                               Subclass of AvdIndexedList with
+                               `VlansItem` items. Primary key is `id` (`int`).
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane

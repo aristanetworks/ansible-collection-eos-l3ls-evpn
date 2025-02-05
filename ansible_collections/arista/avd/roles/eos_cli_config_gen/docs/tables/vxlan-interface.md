@@ -29,7 +29,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp_propagation_encapsulation</samp>](## "vxlan_interface.vxlan1.vxlan.qos.dscp_propagation_encapsulation") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ecn_propagation</samp>](## "vxlan_interface.vxlan1.vxlan.qos.ecn_propagation") | Boolean |  |  |  | Enable copying the ECN marking to/from encapsulated packets.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map_dscp_to_traffic_class_decapsulation</samp>](## "vxlan_interface.vxlan1.vxlan.qos.map_dscp_to_traffic_class_decapsulation") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.vxlan1.vxlan.vlans") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_range</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range") | Dictionary |  |  |  | Set VNI on range of vlans.<br>`vxlan_interface.vxlan1.vxlan.vlan_range` and `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.<br>`vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.<br>Number of VLANs must equal number of VNIs. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range.vlans") | String | Required |  |  | e.g. "94,96,100-110". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vnis</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range.vnis") | String | Required |  |  | Set `vnis` in the correct sequence as `vlans`.<br>e.g. "10094,10096,10100-10110". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.vxlan1.vxlan.vlans") | List, items: Dictionary |  |  |  | Set VNI/multicast group/remote vtep on a vlan.<br>`vxlan_interface.vxlan1.vxlan.vlans` and `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.<br>`vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id</samp>](## "vxlan_interface.vxlan1.vxlan.vlans.[].id") | Integer | Required, Unique |  |  | VLAN ID. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vni</samp>](## "vxlan_interface.vxlan1.vxlan.vlans.[].vni") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multicast_group</samp>](## "vxlan_interface.vxlan1.vxlan.vlans.[].multicast_group") | String |  |  |  | IP Multicast Group Address. |
@@ -64,7 +67,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp_propagation_encapsulation</samp>](## "vxlan_interface.Vxlan1.vxlan.qos.dscp_propagation_encapsulation") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ecn_propagation</samp>](## "vxlan_interface.Vxlan1.vxlan.qos.ecn_propagation") | Boolean |  |  |  | Enable copying the ECN marking to/from encapsulated packets.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map_dscp_to_traffic_class_decapsulation</samp>](## "vxlan_interface.Vxlan1.vxlan.qos.map_dscp_to_traffic_class_decapsulation") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_range</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range") | Dictionary |  |  |  | Set VNI on range of vlans.<br>`vxlan_interface.vxlan1.vxlan.vlan_range` and `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.<br>`vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.<br>Number of VLANs must equal number of VNIs. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range.vlans") | String | Required |  |  | e.g. "94,96,100-110". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vnis</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range.vnis") | String | Required |  |  | Set `vnis` in the correct sequence as `vlans`.<br>e.g. "10094,10096,10100-10110". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans") | List, items: Dictionary |  |  |  | Set VNI/multicast group/remote vtep on a vlan.<br>`vxlan_interface.vxlan1.vxlan.vlans` and `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.<br>`vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans.[].id") | Integer | Required, Unique |  |  | VLAN ID. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vni</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans.[].vni") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multicast_group</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans.[].multicast_group") | String |  |  |  | IP Multicast Group Address. |
@@ -117,6 +123,23 @@
             # Enable copying the ECN marking to/from encapsulated packets.
             ecn_propagation: <bool>
             map_dscp_to_traffic_class_decapsulation: <bool>
+
+          # Set VNI on range of vlans.
+          # `vxlan_interface.vxlan1.vxlan.vlan_range` and `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
+          # `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+          # Number of VLANs must equal number of VNIs.
+          vlan_range:
+
+            # e.g. "94,96,100-110".
+            vlans: <str; required>
+
+            # Set `vnis` in the correct sequence as `vlans`.
+            # e.g. "10094,10096,10100-10110".
+            vnis: <str; required>
+
+          # Set VNI/multicast group/remote vtep on a vlan.
+          # `vxlan_interface.vxlan1.vxlan.vlans` and `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
+          # `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
           vlans:
 
               # VLAN ID.
@@ -182,6 +205,23 @@
             # Enable copying the ECN marking to/from encapsulated packets.
             ecn_propagation: <bool>
             map_dscp_to_traffic_class_decapsulation: <bool>
+
+          # Set VNI on range of vlans.
+          # `vxlan_interface.vxlan1.vxlan.vlan_range` and `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
+          # `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+          # Number of VLANs must equal number of VNIs.
+          vlan_range:
+
+            # e.g. "94,96,100-110".
+            vlans: <str; required>
+
+            # Set `vnis` in the correct sequence as `vlans`.
+            # e.g. "10094,10096,10100-10110".
+            vnis: <str; required>
+
+          # Set VNI/multicast group/remote vtep on a vlan.
+          # `vxlan_interface.vxlan1.vxlan.vlans` and `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
+          # `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
           vlans:
 
               # VLAN ID.
