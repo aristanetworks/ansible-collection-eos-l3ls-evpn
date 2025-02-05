@@ -28,8 +28,34 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods[].group
+                  remove_in_version: v6.0.0
               logging:
                 type: bool
+                deprecation:
+                  warning: true
+                  new_key: methods[].method
+                  remove_in_version: v6.0.0
+              methods:
+                type: list
+                min_length: 1
+                items:
+                  type: dict
+                  keys:
+                    method:
+                      type: str
+                      required: true
+                      valid_values:
+                      - logging
+                      - group
+                    group:
+                      type: str
+                      description: 'Specify the server group to be used.
+
+                        This option is applicable only when the `method` key is explicitly
+                        set to `group`.'
           default:
             type: dict
             keys:
@@ -39,11 +65,23 @@ keys:
                 - none
                 - start-stop
                 - stop-only
+                required: true
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods[].group
+                  remove_in_version: v6.0.0
               logging:
                 type: bool
+                deprecation:
+                  warning: true
+                  new_key: methods[].method
+                  remove_in_version: v6.0.0
+              methods:
+                type: list
+                $ref: eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods
       system:
         type: dict
         keys:
@@ -56,9 +94,17 @@ keys:
                 - none
                 - start-stop
                 - stop-only
+                required: true
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods[].group
+                  remove_in_version: v6.0.0
+              methods:
+                type: list
+                $ref: eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods
       dot1x:
         type: dict
         keys:
@@ -70,9 +116,32 @@ keys:
                 valid_values:
                 - start-stop
                 - stop-only
+                required: true
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods[].group
+                  remove_in_version: v6.0.0
+              methods:
+                type: list
+                items:
+                  type: dict
+                  keys:
+                    method:
+                      type: str
+                      $ref: eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods/items/keys/method
+                    group:
+                      type: str
+                      $ref: eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods/items/keys/group
+                    multicast:
+                      type: bool
+                      description: 'Forward accounting packets to all servers within
+                        the specified group.
+
+                        This option is applicable only when the `method` key is explicitly
+                        set to `group`.'
       commands:
         type: dict
         keys:
@@ -93,11 +162,23 @@ keys:
                   - none
                   - start-stop
                   - stop-only
+                  required: true
                 group:
                   description: Group Name.
                   type: str
+                  deprecation:
+                    warning: true
+                    new_key: methods[].group
+                    remove_in_version: v6.0.0
                 logging:
                   type: bool
+                  deprecation:
+                    warning: true
+                    new_key: methods[].method
+                    remove_in_version: v6.0.0
+                methods:
+                  type: list
+                  $ref: eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods
           default:
             type: list
             items:
@@ -115,11 +196,23 @@ keys:
                   - none
                   - start-stop
                   - stop-only
+                  required: true
                 group:
                   description: Group Name.
                   type: str
+                  deprecation:
+                    warning: true
+                    new_key: methods[].group
+                    remove_in_version: v6.0.0
                 logging:
                   type: bool
+                  deprecation:
+                    warning: true
+                    new_key: methods[].method
+                    remove_in_version: v6.0.0
+                methods:
+                  type: list
+                  $ref: eos_cli_config_gen#/keys/aaa_accounting/keys/exec/keys/console/keys/methods
   aaa_authentication:
     type: dict
     keys:
