@@ -89,7 +89,7 @@ class VlanInterfacesMixin(Protocol):
         # Only set Anycast GW if VARP is not set
         else:
             # TODO: Move pim_source_interface_needed under the if svi.ip_address_virtual.
-            # Historicly we checked for presence of ip_address_virtual even if None.
+            # Historically we checked for presence of ip_address_virtual even if None.
             # Fixing this will be breaking.
             pim_source_interface_needed = True
             if svi.ip_address_virtual:
