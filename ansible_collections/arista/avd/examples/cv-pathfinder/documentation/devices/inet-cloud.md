@@ -26,6 +26,7 @@
   - [Internal VLAN Allocation Policy Device Configuration](#internal-vlan-allocation-policy-device-configuration)
 - [Interfaces](#interfaces)
   - [Ethernet Interfaces](#ethernet-interfaces)
+  - [Port-Channel Interfaces](#port-channel-interfaces)
   - [Loopback Interfaces](#loopback-interfaces)
 - [Routing](#routing)
   - [Service Routing Protocols Model](#service-routing-protocols-model)
@@ -235,7 +236,7 @@ dhcp server
 | -------------- | --------- | --------- |
 | Ethernet5 | True | - |
 | Ethernet6 | True | - |
-| Ethernet8 | True | - |
+| Port-Channel8 | True | - |
 
 ## Monitoring
 
@@ -306,7 +307,10 @@ vlan internal order ascending range 1006 1199
 | Ethernet5 | site1-wan1-Ethernet4 | - | 100.64.10.1/24 | default | - | False | - | - |
 | Ethernet6 | site1-wan2-Ethernet4 | - | 100.64.11.1/24 | default | - | False | - | - |
 | Ethernet7 | site2-wan2-Ethernet4 | - | 100.64.21.1/24 | default | - | False | - | - |
-| Ethernet8 | site3-wan1-Ethernet4 | - | 100.64.30.1/24 | default | - | False | - | - |
+| Ethernet8 | - | 8 | *100.64.30.1/24 | **default | **- | *False | **- | **- |
+| Ethernet9 | - | 8 | *100.64.30.1/24 | **default | **- | *False | **- | **- |
+
+*Inherited from Port-Channel Interface
 
 #### Ethernet Interfaces Device Configuration
 
@@ -345,7 +349,35 @@ interface Ethernet7
    ip address 100.64.21.1/24
 !
 interface Ethernet8
-   description site3-wan1-Ethernet4
+   no shutdown
+   channel-group 8 mode active
+!
+interface Ethernet9
+   no shutdown
+   channel-group 8 mode active
+```
+
+### Port-Channel Interfaces
+
+#### Port-Channel Interfaces Summary
+
+##### L2
+
+| Interface | Description | Mode | VLANs | Native VLAN | Trunk Group | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | ---- | ----- | ----------- | ------------| --------------------- | ------------------ | ------- | -------- |
+
+##### IPv4
+
+| Interface | Description | MLAG ID | IP Address | VRF | MTU | Shutdown | ACL In | ACL Out |
+| --------- | ----------- | ------- | ---------- | --- | --- | -------- | ------ | ------- |
+| Port-Channel8 | site3-wan1-Port-Channel4 | - | 100.64.30.1/24 | default | - | False | - | - |
+
+#### Port-Channel Interfaces Device Configuration
+
+```eos
+!
+interface Port-Channel8
+   description site3-wan1-Port-Channel4
    no shutdown
    no switchport
    ip address 100.64.30.1/24

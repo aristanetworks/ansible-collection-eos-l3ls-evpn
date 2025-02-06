@@ -114,18 +114,23 @@ ethernet_interfaces:
   peer_interface: Ethernet1 VLAN 42
   peer_type: l2leaf
 - name: Ethernet4
-  description: REGION2-INTERNET-CORP_inet-site3-wan1_inet-cloud_Ethernet8
+  description: inet-cloud_Ethernet8
   shutdown: false
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  ip_address: dhcp
-  dhcp_client_accept_default_route: true
-  access_group_in: ACL-INTERNET-IN_Ethernet4
+  channel_group:
+    id: 4
+    mode: active
   peer: inet-cloud
   peer_interface: Ethernet8
-  peer_type: l3_interface
-  switchport:
-    enabled: false
+  peer_type: l3_port_channel_member
+- name: Ethernet5
+  description: inet-cloud_Ethernet9
+  shutdown: false
+  channel_group:
+    id: 4
+    mode: active
+  peer: inet-cloud
+  peer_interface: Ethernet9
+  peer_type: l3_port_channel_member
 flow_tracking:
   hardware:
     trackers:
@@ -141,7 +146,7 @@ flow_tracking:
     shutdown: false
 hostname: site3-wan1
 ip_access_lists:
-- name: ACL-INTERNET-IN_Ethernet4
+- name: ACL-INTERNET-IN_Port-Channel4
   entries:
   - sequence: 1
     remark: 'Not for PRODUCTION: This ACL is built this way because the lab has an out-of-band interface'
@@ -276,7 +281,7 @@ metadata:
       tags:
       - name: Type
         value: lan
-    - interface: Ethernet4
+    - interface: Port-Channel4
       tags:
       - name: Type
         value: wan
@@ -295,7 +300,7 @@ metadata:
     - vtep_ip: 192.168.42.1
     - vtep_ip: 192.168.42.2
     interfaces:
-    - name: Ethernet4
+    - name: Port-Channel4
       carrier: REGION2-INTERNET-CORP
       circuit_id: inet-site3-wan1
       pathgroup: INTERNET
@@ -307,6 +312,20 @@ ntp:
   - name: 0.pool.ntp.org
     preferred: true
     vrf: MGMT
+port_channel_interfaces:
+- name: Port-Channel4
+  description: REGION2-INTERNET-CORP_inet-site3-wan1_inet-cloud_Port-Channel8
+  shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
+  access_group_in: ACL-INTERNET-IN_Port-Channel4
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  peer: inet-cloud
+  peer_interface: Port-Channel8
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
 prefix_lists:
 - name: PL-LOOPBACKS-EVPN-OVERLAY
   sequence_numbers:
@@ -532,7 +551,7 @@ router_path_selection:
     id: 102
     ipsec_profile: CP-PROFILE
     local_interfaces:
-    - name: Ethernet4
+    - name: Port-Channel4
       stun:
         server_profiles:
         - INTERNET-pf1-Ethernet2

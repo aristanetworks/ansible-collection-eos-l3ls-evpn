@@ -6,13 +6,14 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING, Any, Protocol
 
+from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get
+from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.eos_designs_facts import EosDesignsFacts
-    from pyavd._eos_designs.schema import EosDesigns
 
     from . import SharedUtilsProtocol
 
@@ -232,3 +233,92 @@ class MiscMixin(Protocol):
             raise AristaAvdError(msg)
 
         return replacement_value
+
+    def get_l3_generic_interface_bgp_neighbors(
+        self: SharedUtilsProtocol,
+        l3_generic_interfaces: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
+        ),
+    ) -> list:
+        """
+        Fetches bgp neighbors for given L3 interface placeholder.
+
+        Fetches bgp neighbors (list of dict) for all interfaces under given interface type.
+        'l3_generic_interfaces' is expected to be set to either property - self.l3_interfaces or self.l3_port_channels.
+        """
+        neighbors = []
+        is_l3_interface = False
+        if isinstance(l3_generic_interfaces, EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces):
+            is_l3_interface = True
+            schema_key = "l3_interfaces"
+        else:
+            # implies we intend to query all L3 Port-Channels
+            schema_key = "l3_port_channels"
+
+        for interface in l3_generic_interfaces:
+            if not (interface.peer_ip and interface.bgp):
+                continue
+
+            if interface.bgp.peer_as is None:
+                msg = f"'{schema_key}[{interface.name}].bgp.peer_as' needs to be set to enable BGP."
+                raise AristaAvdInvalidInputsError(msg)
+
+            is_intf_wan = bool(interface.wan_carrier)
+
+            if not interface.bgp.ipv4_prefix_list_in and is_intf_wan:
+                msg = f"BGP is enabled but 'bgp.ipv4_prefix_list_in' is not configured for {schema_key}[{interface.name}]"
+                raise AristaAvdInvalidInputsError(msg)
+
+            description = interface.description
+            if not description:
+                if is_l3_interface:
+                    description = self.interface_descriptions.underlay_ethernet_interface(
+                        InterfaceDescriptionData(
+                            shared_utils=self,
+                            interface=interface.name,
+                            peer=interface.peer,
+                            peer_interface=interface.peer_interface,
+                            wan_carrier=interface.wan_carrier,
+                            wan_circuit_id=interface.wan_circuit_id,
+                        ),
+                    )
+                else:
+                    # build description for L3 Port-Channel interface
+                    description = self.interface_descriptions.underlay_port_channel_interface(
+                        InterfaceDescriptionData(
+                            shared_utils=self,
+                            interface=interface.name,
+                            peer=interface.peer,
+                            peer_interface=interface.peer_port_channel,
+                            wan_carrier=interface.wan_carrier,
+                            wan_circuit_id=interface.wan_circuit_id,
+                        ),
+                    )
+
+            neighbor = {
+                "ip_address": interface.peer_ip,
+                "remote_as": interface.bgp.peer_as,
+                "description": description,
+            }
+
+            neighbor["ipv4_prefix_list_in"] = interface.bgp.ipv4_prefix_list_in
+            neighbor["ipv4_prefix_list_out"] = interface.bgp.ipv4_prefix_list_out
+            if is_intf_wan:
+                neighbor["set_no_advertise"] = True
+
+            # The inbound route-map is only used if there is a prefix list or no-advertise
+            if neighbor["ipv4_prefix_list_in"] or neighbor.get("set_no_advertise") is True:
+                neighbor["route_map_in"] = f"RM-BGP-{neighbor['ip_address']}-IN"
+            neighbor["route_map_out"] = f"RM-BGP-{neighbor['ip_address']}-OUT"
+
+            neighbors.append(neighbor)
+
+        return neighbors
+
+    @cached_property
+    def l3_bgp_neighbors(self: SharedUtilsProtocol) -> list:
+        """Returns the consolidated list of L3 bgp neighbors referenced by L3 Interfaces and L3 Port-Channels."""
+        l3_bgp_neighbors = self.get_l3_generic_interface_bgp_neighbors(self.l3_interfaces)
+        l3_bgp_neighbors.extend(self.get_l3_generic_interface_bgp_neighbors(self.node_config.l3_port_channels))
+        return l3_bgp_neighbors
