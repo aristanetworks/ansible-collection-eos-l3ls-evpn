@@ -3354,6 +3354,10 @@ keys:
                 Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.
 
                 '
+            build_rss_profile:
+              type: bool
+              default: false
+              description: Build RSS interface profile for supported platforms.
         management_interface:
           type: str
           default: Management1
@@ -3535,6 +3539,7 @@ keys:
         bgp_update_wait_install: false
         interface_storm_control: false
         queue_monitor_length_notify: false
+        build_rss_profile: false
       management_interface: Management1/1
       p2p_uplinks_mtu: 9194
     - platforms:
@@ -9738,6 +9743,31 @@ $defs:
                       internet-exit service provider using this local interface.
 
                       Examples: ''1-3'' or ''100,200,300'''
+        rx_queue:
+          type: dict
+          description: Receive queue parameters for Receive Side Scaling (RSS) profile
+            for this interface.
+          keys:
+            count:
+              type: int
+              min: 1
+              convert_types:
+              - str
+              description: 'Number of receive queues.
+
+                The maximum value is platform dependent.'
+            worker:
+              type: str
+              description: 'Worker ids specified as combination of range and/or comma
+                separated values
+
+                such as 0-4,7.'
+            mode:
+              type: str
+              description: Mode applicable to the workers. Default mode is 'shared'.
+              valid_values:
+              - shared
+              - exclusive
         raw_eos_cli:
           type: str
           description: EOS CLI rendered directly on the interface in the final EOS
@@ -9818,6 +9848,31 @@ $defs:
                 type: str
                 description: Speed should be set in the format `<interface_speed>`
                   or `forced <interface_speed>` or `auto <interface_speed>`.
+              rx_queue:
+                type: dict
+                description: Receive queue parameters for Receive Side Scaling (RSS)
+                  profile for this interface.
+                keys:
+                  count:
+                    type: int
+                    min: 1
+                    convert_types:
+                    - str
+                    description: 'Number of receive queues.
+
+                      The maximum value is platform dependent.'
+                  worker:
+                    type: str
+                    description: 'Worker ids specified as combination of range and/or
+                      comma separated values
+
+                      such as 0-4,7.'
+                  mode:
+                    type: str
+                    description: Mode applicable to the workers. Default mode is 'shared'.
+                    valid_values:
+                    - shared
+                    - exclusive
               structured_config:
                 type: dict
                 documentation_options:

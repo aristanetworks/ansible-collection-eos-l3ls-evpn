@@ -113,6 +113,10 @@ keys:
                 Do not advertise reachability to a prefix until that prefix has been installed in hardware.
                 This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.
                 Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.
+            build_rss_profile:
+              type: bool
+              default: false
+              description: Build RSS interface profile for supported platforms.
         management_interface:
           type: str
           default: Management1
@@ -294,6 +298,7 @@ keys:
           bgp_update_wait_install: false
           interface_storm_control: false
           queue_monitor_length_notify: false
+          build_rss_profile: false
         management_interface: Management1/1
         p2p_uplinks_mtu: 9194
       - platforms:

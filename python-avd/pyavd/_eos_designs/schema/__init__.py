@@ -5938,6 +5938,52 @@ class EosDesigns(EosDesignsRootModel):
 
                     """
 
+        class RxQueue(AvdModel):
+            """Subclass of AvdModel."""
+
+            _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}, "_custom_data": {"type": dict}}
+            count: int | None
+            """
+            Number of receive queues.
+            The maximum value is platform dependent.
+            """
+            worker: str | None
+            """
+            Worker ids specified as combination of range and/or comma separated values
+            such as 0-4,7.
+            """
+            mode: Literal["shared", "exclusive"] | None
+            """Mode applicable to the workers. Default mode is 'shared'."""
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    count: int | None | UndefinedType = Undefined,
+                    worker: str | None | UndefinedType = Undefined,
+                    mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    RxQueue.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        count:
+                           Number of receive queues.
+                           The maximum value is platform dependent.
+                        worker:
+                           Worker ids specified as combination of range and/or comma separated values
+                           such as 0-4,7.
+                        mode: Mode applicable to the workers. Default mode is 'shared'.
+                        _custom_data: _custom_data
+
+                    """
+
         class FlowTracking(AvdModel):
             """Subclass of AvdModel."""
 
@@ -5984,6 +6030,7 @@ class EosDesigns(EosDesignsRootModel):
             "wan_circuit_id": {"type": str},
             "connected_to_pathfinder": {"type": bool, "default": True},
             "cv_pathfinder_internet_exit": {"type": CvPathfinderInternetExit},
+            "rx_queue": {"type": RxQueue},
             "raw_eos_cli": {"type": str},
             "flow_tracking": {"type": FlowTracking},
             "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
@@ -6120,6 +6167,13 @@ class EosDesigns(EosDesignsRootModel):
 
         Subclass of AvdModel.
         """
+        rx_queue: RxQueue
+        """
+        Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+        Subclass of
+        AvdModel.
+        """
         raw_eos_cli: str | None
         """EOS CLI rendered directly on the interface in the final EOS configuration."""
         flow_tracking: FlowTracking
@@ -6157,6 +6211,7 @@ class EosDesigns(EosDesignsRootModel):
                 wan_circuit_id: str | None | UndefinedType = Undefined,
                 connected_to_pathfinder: bool | UndefinedType = Undefined,
                 cv_pathfinder_internet_exit: CvPathfinderInternetExit | UndefinedType = Undefined,
+                rx_queue: RxQueue | UndefinedType = Undefined,
                 raw_eos_cli: str | None | UndefinedType = Undefined,
                 flow_tracking: FlowTracking | UndefinedType = Undefined,
                 structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
@@ -6251,6 +6306,11 @@ class EosDesigns(EosDesignsRootModel):
                        PREVIEW: This key is in preview mode
 
                        Subclass of AvdModel.
+                    rx_queue:
+                       Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                       Subclass of
+                       AvdModel.
                     raw_eos_cli: EOS CLI rendered directly on the interface in the final EOS configuration.
                     flow_tracking:
                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
@@ -9426,6 +9486,12 @@ class EosDesigns(EosDesignsRootModel):
 
             Default value: `True`
             """
+            build_rss_profile: bool
+            """
+            Build RSS interface profile for supported platforms.
+
+            Default value: `False`
+            """
 
             if TYPE_CHECKING:
 
@@ -9438,6 +9504,8 @@ class EosDesigns(EosDesignsRootModel):
                     per_interface_mtu: bool | UndefinedType = Undefined,
                     bgp_update_wait_install: bool | UndefinedType = Undefined,
                     bgp_update_wait_for_convergence: bool | UndefinedType = Undefined,
+                    build_rss_profile: bool | UndefinedType = Undefined,
+                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
                     FeatureSupport.
@@ -9689,6 +9757,12 @@ class EosDesigns(EosDesignsRootModel):
             "bgp_update_wait_for_convergence" host/group_vars.
 
             Default value: `True`
+            """
+            build_rss_profile: bool
+            """
+            Build RSS interface profile for supported platforms.
+
+            Default value: `False`
             """
 
             if TYPE_CHECKING:
@@ -19174,6 +19248,52 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
+                        class RxQueue(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}, "_custom_data": {"type": dict}}
+                            count: int | None
+                            """
+                            Number of receive queues.
+                            The maximum value is platform dependent.
+                            """
+                            worker: str | None
+                            """
+                            Worker ids specified as combination of range and/or comma separated values
+                            such as 0-4,7.
+                            """
+                            mode: Literal["shared", "exclusive"] | None
+                            """Mode applicable to the workers. Default mode is 'shared'."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    count: int | None | UndefinedType = Undefined,
+                                    worker: str | None | UndefinedType = Undefined,
+                                    mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    RxQueue.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        count:
+                                           Number of receive queues.
+                                           The maximum value is platform dependent.
+                                        worker:
+                                           Worker ids specified as combination of range and/or comma separated values
+                                           such as 0-4,7.
+                                        mode: Mode applicable to the workers. Default mode is 'shared'.
+                                        _custom_data: _custom_data
+
+                                    """
+
                         class FlowTracking(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -19220,6 +19340,7 @@ class EosDesigns(EosDesignsRootModel):
                             "wan_circuit_id": {"type": str},
                             "connected_to_pathfinder": {"type": bool, "default": True},
                             "cv_pathfinder_internet_exit": {"type": CvPathfinderInternetExit},
+                            "rx_queue": {"type": RxQueue},
                             "raw_eos_cli": {"type": str},
                             "flow_tracking": {"type": FlowTracking},
                             "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
@@ -19353,6 +19474,13 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        rx_queue: RxQueue
+                        """
+                        Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                        Subclass of
+                        AvdModel.
+                        """
                         raw_eos_cli: str | None
                         """EOS CLI rendered directly on the interface in the final EOS configuration."""
                         flow_tracking: FlowTracking
@@ -19390,6 +19518,7 @@ class EosDesigns(EosDesignsRootModel):
                                 wan_circuit_id: str | None | UndefinedType = Undefined,
                                 connected_to_pathfinder: bool | UndefinedType = Undefined,
                                 cv_pathfinder_internet_exit: CvPathfinderInternetExit | UndefinedType = Undefined,
+                                rx_queue: RxQueue | UndefinedType = Undefined,
                                 raw_eos_cli: str | None | UndefinedType = Undefined,
                                 flow_tracking: FlowTracking | UndefinedType = Undefined,
                                 structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
@@ -19482,6 +19611,11 @@ class EosDesigns(EosDesignsRootModel):
                                        PREVIEW: This key is in preview mode
 
                                        Subclass of AvdModel.
+                                    rx_queue:
+                                       Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                       Subclass of
+                                       AvdModel.
                                     raw_eos_cli: EOS CLI rendered directly on the interface in the final EOS configuration.
                                     flow_tracking:
                                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
@@ -19534,6 +19668,13 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                             <interface_speed>`.
+                            """
+                            rx_queue: RxQueue
+                            """
+                            Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                            Subclass of
+                            AvdModel.
                             """
                             structured_config: EosCliConfigGen.EthernetInterfacesItem
                             """Custom structured config for the member ethernet interface."""
@@ -23003,6 +23144,57 @@ class EosDesigns(EosDesignsRootModel):
 
                                         """
 
+                            class RxQueue(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {
+                                    "count": {"type": int},
+                                    "worker": {"type": str},
+                                    "mode": {"type": str},
+                                    "_custom_data": {"type": dict},
+                                }
+                                count: int | None
+                                """
+                                Number of receive queues.
+                                The maximum value is platform dependent.
+                                """
+                                worker: str | None
+                                """
+                                Worker ids specified as combination of range and/or comma separated values
+                                such as 0-4,7.
+                                """
+                                mode: Literal["shared", "exclusive"] | None
+                                """Mode applicable to the workers. Default mode is 'shared'."""
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        count: int | None | UndefinedType = Undefined,
+                                        worker: str | None | UndefinedType = Undefined,
+                                        mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        RxQueue.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            count:
+                                               Number of receive queues.
+                                               The maximum value is platform dependent.
+                                            worker:
+                                               Worker ids specified as combination of range and/or comma separated values
+                                               such as 0-4,7.
+                                            mode: Mode applicable to the workers. Default mode is 'shared'.
+                                            _custom_data: _custom_data
+
+                                        """
+
                             class FlowTracking(AvdModel):
                                 """Subclass of AvdModel."""
 
@@ -23051,6 +23243,7 @@ class EosDesigns(EosDesignsRootModel):
                                 "wan_circuit_id": {"type": str},
                                 "connected_to_pathfinder": {"type": bool, "default": True},
                                 "cv_pathfinder_internet_exit": {"type": CvPathfinderInternetExit},
+                                "rx_queue": {"type": RxQueue},
                                 "raw_eos_cli": {"type": str},
                                 "flow_tracking": {"type": FlowTracking},
                                 "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
@@ -23184,6 +23377,13 @@ class EosDesigns(EosDesignsRootModel):
 
                             Subclass of AvdModel.
                             """
+                            rx_queue: RxQueue
+                            """
+                            Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                            Subclass of
+                            AvdModel.
+                            """
                             raw_eos_cli: str | None
                             """EOS CLI rendered directly on the interface in the final EOS configuration."""
                             flow_tracking: FlowTracking
@@ -23221,6 +23421,7 @@ class EosDesigns(EosDesignsRootModel):
                                     wan_circuit_id: str | None | UndefinedType = Undefined,
                                     connected_to_pathfinder: bool | UndefinedType = Undefined,
                                     cv_pathfinder_internet_exit: CvPathfinderInternetExit | UndefinedType = Undefined,
+                                    rx_queue: RxQueue | UndefinedType = Undefined,
                                     raw_eos_cli: str | None | UndefinedType = Undefined,
                                     flow_tracking: FlowTracking | UndefinedType = Undefined,
                                     structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
@@ -23313,6 +23514,11 @@ class EosDesigns(EosDesignsRootModel):
                                            PREVIEW: This key is in preview mode
 
                                            Subclass of AvdModel.
+                                        rx_queue:
+                                           Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                           Subclass of
+                                           AvdModel.
                                         raw_eos_cli: EOS CLI rendered directly on the interface in the final EOS configuration.
                                         flow_tracking:
                                            Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
@@ -23365,6 +23571,13 @@ class EosDesigns(EosDesignsRootModel):
                                 """
                                 Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                 <interface_speed>`.
+                                """
+                                rx_queue: RxQueue
+                                """
+                                Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                Subclass of
+                                AvdModel.
                                 """
                                 structured_config: EosCliConfigGen.EthernetInterfacesItem
                                 """Custom structured config for the member ethernet interface."""
@@ -26794,6 +27007,52 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
+                        class RxQueue(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}, "_custom_data": {"type": dict}}
+                            count: int | None
+                            """
+                            Number of receive queues.
+                            The maximum value is platform dependent.
+                            """
+                            worker: str | None
+                            """
+                            Worker ids specified as combination of range and/or comma separated values
+                            such as 0-4,7.
+                            """
+                            mode: Literal["shared", "exclusive"] | None
+                            """Mode applicable to the workers. Default mode is 'shared'."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    count: int | None | UndefinedType = Undefined,
+                                    worker: str | None | UndefinedType = Undefined,
+                                    mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    RxQueue.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        count:
+                                           Number of receive queues.
+                                           The maximum value is platform dependent.
+                                        worker:
+                                           Worker ids specified as combination of range and/or comma separated values
+                                           such as 0-4,7.
+                                        mode: Mode applicable to the workers. Default mode is 'shared'.
+                                        _custom_data: _custom_data
+
+                                    """
+
                         class FlowTracking(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -26840,6 +27099,7 @@ class EosDesigns(EosDesignsRootModel):
                             "wan_circuit_id": {"type": str},
                             "connected_to_pathfinder": {"type": bool, "default": True},
                             "cv_pathfinder_internet_exit": {"type": CvPathfinderInternetExit},
+                            "rx_queue": {"type": RxQueue},
                             "raw_eos_cli": {"type": str},
                             "flow_tracking": {"type": FlowTracking},
                             "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
@@ -26973,6 +27233,13 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        rx_queue: RxQueue
+                        """
+                        Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                        Subclass of
+                        AvdModel.
+                        """
                         raw_eos_cli: str | None
                         """EOS CLI rendered directly on the interface in the final EOS configuration."""
                         flow_tracking: FlowTracking
@@ -27010,6 +27277,7 @@ class EosDesigns(EosDesignsRootModel):
                                 wan_circuit_id: str | None | UndefinedType = Undefined,
                                 connected_to_pathfinder: bool | UndefinedType = Undefined,
                                 cv_pathfinder_internet_exit: CvPathfinderInternetExit | UndefinedType = Undefined,
+                                rx_queue: RxQueue | UndefinedType = Undefined,
                                 raw_eos_cli: str | None | UndefinedType = Undefined,
                                 flow_tracking: FlowTracking | UndefinedType = Undefined,
                                 structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
@@ -27102,6 +27370,11 @@ class EosDesigns(EosDesignsRootModel):
                                        PREVIEW: This key is in preview mode
 
                                        Subclass of AvdModel.
+                                    rx_queue:
+                                       Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                       Subclass of
+                                       AvdModel.
                                     raw_eos_cli: EOS CLI rendered directly on the interface in the final EOS configuration.
                                     flow_tracking:
                                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
@@ -27154,6 +27427,13 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                             <interface_speed>`.
+                            """
+                            rx_queue: RxQueue
+                            """
+                            Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                            Subclass of
+                            AvdModel.
                             """
                             structured_config: EosCliConfigGen.EthernetInterfacesItem
                             """Custom structured config for the member ethernet interface."""
@@ -30641,6 +30921,52 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
+                        class RxQueue(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}, "_custom_data": {"type": dict}}
+                            count: int | None
+                            """
+                            Number of receive queues.
+                            The maximum value is platform dependent.
+                            """
+                            worker: str | None
+                            """
+                            Worker ids specified as combination of range and/or comma separated values
+                            such as 0-4,7.
+                            """
+                            mode: Literal["shared", "exclusive"] | None
+                            """Mode applicable to the workers. Default mode is 'shared'."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    count: int | None | UndefinedType = Undefined,
+                                    worker: str | None | UndefinedType = Undefined,
+                                    mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    RxQueue.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        count:
+                                           Number of receive queues.
+                                           The maximum value is platform dependent.
+                                        worker:
+                                           Worker ids specified as combination of range and/or comma separated values
+                                           such as 0-4,7.
+                                        mode: Mode applicable to the workers. Default mode is 'shared'.
+                                        _custom_data: _custom_data
+
+                                    """
+
                         class FlowTracking(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -30687,6 +31013,7 @@ class EosDesigns(EosDesignsRootModel):
                             "wan_circuit_id": {"type": str},
                             "connected_to_pathfinder": {"type": bool, "default": True},
                             "cv_pathfinder_internet_exit": {"type": CvPathfinderInternetExit},
+                            "rx_queue": {"type": RxQueue},
                             "raw_eos_cli": {"type": str},
                             "flow_tracking": {"type": FlowTracking},
                             "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
@@ -30820,6 +31147,13 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        rx_queue: RxQueue
+                        """
+                        Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                        Subclass of
+                        AvdModel.
+                        """
                         raw_eos_cli: str | None
                         """EOS CLI rendered directly on the interface in the final EOS configuration."""
                         flow_tracking: FlowTracking
@@ -30857,6 +31191,7 @@ class EosDesigns(EosDesignsRootModel):
                                 wan_circuit_id: str | None | UndefinedType = Undefined,
                                 connected_to_pathfinder: bool | UndefinedType = Undefined,
                                 cv_pathfinder_internet_exit: CvPathfinderInternetExit | UndefinedType = Undefined,
+                                rx_queue: RxQueue | UndefinedType = Undefined,
                                 raw_eos_cli: str | None | UndefinedType = Undefined,
                                 flow_tracking: FlowTracking | UndefinedType = Undefined,
                                 structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
@@ -30949,6 +31284,11 @@ class EosDesigns(EosDesignsRootModel):
                                        PREVIEW: This key is in preview mode
 
                                        Subclass of AvdModel.
+                                    rx_queue:
+                                       Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                       Subclass of
+                                       AvdModel.
                                     raw_eos_cli: EOS CLI rendered directly on the interface in the final EOS configuration.
                                     flow_tracking:
                                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
@@ -31001,6 +31341,13 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                             <interface_speed>`.
+                            """
+                            rx_queue: RxQueue
+                            """
+                            Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                            Subclass of
+                            AvdModel.
                             """
                             structured_config: EosCliConfigGen.EthernetInterfacesItem
                             """Custom structured config for the member ethernet interface."""
@@ -40777,6 +41124,52 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
+                        class RxQueue(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}, "_custom_data": {"type": dict}}
+                            count: int | None
+                            """
+                            Number of receive queues.
+                            The maximum value is platform dependent.
+                            """
+                            worker: str | None
+                            """
+                            Worker ids specified as combination of range and/or comma separated values
+                            such as 0-4,7.
+                            """
+                            mode: Literal["shared", "exclusive"] | None
+                            """Mode applicable to the workers. Default mode is 'shared'."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    count: int | None | UndefinedType = Undefined,
+                                    worker: str | None | UndefinedType = Undefined,
+                                    mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    RxQueue.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        count:
+                                           Number of receive queues.
+                                           The maximum value is platform dependent.
+                                        worker:
+                                           Worker ids specified as combination of range and/or comma separated values
+                                           such as 0-4,7.
+                                        mode: Mode applicable to the workers. Default mode is 'shared'.
+                                        _custom_data: _custom_data
+
+                                    """
+
                         class FlowTracking(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -40823,6 +41216,7 @@ class EosDesigns(EosDesignsRootModel):
                             "wan_circuit_id": {"type": str},
                             "connected_to_pathfinder": {"type": bool, "default": True},
                             "cv_pathfinder_internet_exit": {"type": CvPathfinderInternetExit},
+                            "rx_queue": {"type": RxQueue},
                             "raw_eos_cli": {"type": str},
                             "flow_tracking": {"type": FlowTracking},
                             "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
@@ -40956,6 +41350,13 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        rx_queue: RxQueue
+                        """
+                        Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                        Subclass of
+                        AvdModel.
+                        """
                         raw_eos_cli: str | None
                         """EOS CLI rendered directly on the interface in the final EOS configuration."""
                         flow_tracking: FlowTracking
@@ -40993,6 +41394,7 @@ class EosDesigns(EosDesignsRootModel):
                                 wan_circuit_id: str | None | UndefinedType = Undefined,
                                 connected_to_pathfinder: bool | UndefinedType = Undefined,
                                 cv_pathfinder_internet_exit: CvPathfinderInternetExit | UndefinedType = Undefined,
+                                rx_queue: RxQueue | UndefinedType = Undefined,
                                 raw_eos_cli: str | None | UndefinedType = Undefined,
                                 flow_tracking: FlowTracking | UndefinedType = Undefined,
                                 structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
@@ -41085,6 +41487,11 @@ class EosDesigns(EosDesignsRootModel):
                                        PREVIEW: This key is in preview mode
 
                                        Subclass of AvdModel.
+                                    rx_queue:
+                                       Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                       Subclass of
+                                       AvdModel.
                                     raw_eos_cli: EOS CLI rendered directly on the interface in the final EOS configuration.
                                     flow_tracking:
                                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
@@ -41137,6 +41544,13 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                             <interface_speed>`.
+                            """
+                            rx_queue: RxQueue
+                            """
+                            Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                            Subclass of
+                            AvdModel.
                             """
                             structured_config: EosCliConfigGen.EthernetInterfacesItem
                             """Custom structured config for the member ethernet interface."""
@@ -44606,6 +45020,57 @@ class EosDesigns(EosDesignsRootModel):
 
                                         """
 
+                            class RxQueue(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {
+                                    "count": {"type": int},
+                                    "worker": {"type": str},
+                                    "mode": {"type": str},
+                                    "_custom_data": {"type": dict},
+                                }
+                                count: int | None
+                                """
+                                Number of receive queues.
+                                The maximum value is platform dependent.
+                                """
+                                worker: str | None
+                                """
+                                Worker ids specified as combination of range and/or comma separated values
+                                such as 0-4,7.
+                                """
+                                mode: Literal["shared", "exclusive"] | None
+                                """Mode applicable to the workers. Default mode is 'shared'."""
+                                _custom_data: dict[str, Any]
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        count: int | None | UndefinedType = Undefined,
+                                        worker: str | None | UndefinedType = Undefined,
+                                        mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        RxQueue.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            count:
+                                               Number of receive queues.
+                                               The maximum value is platform dependent.
+                                            worker:
+                                               Worker ids specified as combination of range and/or comma separated values
+                                               such as 0-4,7.
+                                            mode: Mode applicable to the workers. Default mode is 'shared'.
+                                            _custom_data: _custom_data
+
+                                        """
+
                             class FlowTracking(AvdModel):
                                 """Subclass of AvdModel."""
 
@@ -44654,6 +45119,7 @@ class EosDesigns(EosDesignsRootModel):
                                 "wan_circuit_id": {"type": str},
                                 "connected_to_pathfinder": {"type": bool, "default": True},
                                 "cv_pathfinder_internet_exit": {"type": CvPathfinderInternetExit},
+                                "rx_queue": {"type": RxQueue},
                                 "raw_eos_cli": {"type": str},
                                 "flow_tracking": {"type": FlowTracking},
                                 "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
@@ -44787,6 +45253,13 @@ class EosDesigns(EosDesignsRootModel):
 
                             Subclass of AvdModel.
                             """
+                            rx_queue: RxQueue
+                            """
+                            Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                            Subclass of
+                            AvdModel.
+                            """
                             raw_eos_cli: str | None
                             """EOS CLI rendered directly on the interface in the final EOS configuration."""
                             flow_tracking: FlowTracking
@@ -44824,6 +45297,7 @@ class EosDesigns(EosDesignsRootModel):
                                     wan_circuit_id: str | None | UndefinedType = Undefined,
                                     connected_to_pathfinder: bool | UndefinedType = Undefined,
                                     cv_pathfinder_internet_exit: CvPathfinderInternetExit | UndefinedType = Undefined,
+                                    rx_queue: RxQueue | UndefinedType = Undefined,
                                     raw_eos_cli: str | None | UndefinedType = Undefined,
                                     flow_tracking: FlowTracking | UndefinedType = Undefined,
                                     structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
@@ -44916,6 +45390,11 @@ class EosDesigns(EosDesignsRootModel):
                                            PREVIEW: This key is in preview mode
 
                                            Subclass of AvdModel.
+                                        rx_queue:
+                                           Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                           Subclass of
+                                           AvdModel.
                                         raw_eos_cli: EOS CLI rendered directly on the interface in the final EOS configuration.
                                         flow_tracking:
                                            Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
@@ -44968,6 +45447,13 @@ class EosDesigns(EosDesignsRootModel):
                                 """
                                 Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                 <interface_speed>`.
+                                """
+                                rx_queue: RxQueue
+                                """
+                                Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                Subclass of
+                                AvdModel.
                                 """
                                 structured_config: EosCliConfigGen.EthernetInterfacesItem
                                 """Custom structured config for the member ethernet interface."""
@@ -48397,6 +48883,52 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
+                        class RxQueue(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}, "_custom_data": {"type": dict}}
+                            count: int | None
+                            """
+                            Number of receive queues.
+                            The maximum value is platform dependent.
+                            """
+                            worker: str | None
+                            """
+                            Worker ids specified as combination of range and/or comma separated values
+                            such as 0-4,7.
+                            """
+                            mode: Literal["shared", "exclusive"] | None
+                            """Mode applicable to the workers. Default mode is 'shared'."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    count: int | None | UndefinedType = Undefined,
+                                    worker: str | None | UndefinedType = Undefined,
+                                    mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    RxQueue.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        count:
+                                           Number of receive queues.
+                                           The maximum value is platform dependent.
+                                        worker:
+                                           Worker ids specified as combination of range and/or comma separated values
+                                           such as 0-4,7.
+                                        mode: Mode applicable to the workers. Default mode is 'shared'.
+                                        _custom_data: _custom_data
+
+                                    """
+
                         class FlowTracking(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -48443,6 +48975,7 @@ class EosDesigns(EosDesignsRootModel):
                             "wan_circuit_id": {"type": str},
                             "connected_to_pathfinder": {"type": bool, "default": True},
                             "cv_pathfinder_internet_exit": {"type": CvPathfinderInternetExit},
+                            "rx_queue": {"type": RxQueue},
                             "raw_eos_cli": {"type": str},
                             "flow_tracking": {"type": FlowTracking},
                             "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
@@ -48576,6 +49109,13 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        rx_queue: RxQueue
+                        """
+                        Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                        Subclass of
+                        AvdModel.
+                        """
                         raw_eos_cli: str | None
                         """EOS CLI rendered directly on the interface in the final EOS configuration."""
                         flow_tracking: FlowTracking
@@ -48613,6 +49153,7 @@ class EosDesigns(EosDesignsRootModel):
                                 wan_circuit_id: str | None | UndefinedType = Undefined,
                                 connected_to_pathfinder: bool | UndefinedType = Undefined,
                                 cv_pathfinder_internet_exit: CvPathfinderInternetExit | UndefinedType = Undefined,
+                                rx_queue: RxQueue | UndefinedType = Undefined,
                                 raw_eos_cli: str | None | UndefinedType = Undefined,
                                 flow_tracking: FlowTracking | UndefinedType = Undefined,
                                 structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
@@ -48705,6 +49246,11 @@ class EosDesigns(EosDesignsRootModel):
                                        PREVIEW: This key is in preview mode
 
                                        Subclass of AvdModel.
+                                    rx_queue:
+                                       Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                       Subclass of
+                                       AvdModel.
                                     raw_eos_cli: EOS CLI rendered directly on the interface in the final EOS configuration.
                                     flow_tracking:
                                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
@@ -48757,6 +49303,13 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                             <interface_speed>`.
+                            """
+                            rx_queue: RxQueue
+                            """
+                            Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                            Subclass of
+                            AvdModel.
                             """
                             structured_config: EosCliConfigGen.EthernetInterfacesItem
                             """Custom structured config for the member ethernet interface."""
@@ -52244,6 +52797,52 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
+                        class RxQueue(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}, "_custom_data": {"type": dict}}
+                            count: int | None
+                            """
+                            Number of receive queues.
+                            The maximum value is platform dependent.
+                            """
+                            worker: str | None
+                            """
+                            Worker ids specified as combination of range and/or comma separated values
+                            such as 0-4,7.
+                            """
+                            mode: Literal["shared", "exclusive"] | None
+                            """Mode applicable to the workers. Default mode is 'shared'."""
+                            _custom_data: dict[str, Any]
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    count: int | None | UndefinedType = Undefined,
+                                    worker: str | None | UndefinedType = Undefined,
+                                    mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                    _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    RxQueue.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        count:
+                                           Number of receive queues.
+                                           The maximum value is platform dependent.
+                                        worker:
+                                           Worker ids specified as combination of range and/or comma separated values
+                                           such as 0-4,7.
+                                        mode: Mode applicable to the workers. Default mode is 'shared'.
+                                        _custom_data: _custom_data
+
+                                    """
+
                         class FlowTracking(AvdModel):
                             """Subclass of AvdModel."""
 
@@ -52290,6 +52889,7 @@ class EosDesigns(EosDesignsRootModel):
                             "wan_circuit_id": {"type": str},
                             "connected_to_pathfinder": {"type": bool, "default": True},
                             "cv_pathfinder_internet_exit": {"type": CvPathfinderInternetExit},
+                            "rx_queue": {"type": RxQueue},
                             "raw_eos_cli": {"type": str},
                             "flow_tracking": {"type": FlowTracking},
                             "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
@@ -52423,6 +53023,13 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        rx_queue: RxQueue
+                        """
+                        Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                        Subclass of
+                        AvdModel.
+                        """
                         raw_eos_cli: str | None
                         """EOS CLI rendered directly on the interface in the final EOS configuration."""
                         flow_tracking: FlowTracking
@@ -52460,6 +53067,7 @@ class EosDesigns(EosDesignsRootModel):
                                 wan_circuit_id: str | None | UndefinedType = Undefined,
                                 connected_to_pathfinder: bool | UndefinedType = Undefined,
                                 cv_pathfinder_internet_exit: CvPathfinderInternetExit | UndefinedType = Undefined,
+                                rx_queue: RxQueue | UndefinedType = Undefined,
                                 raw_eos_cli: str | None | UndefinedType = Undefined,
                                 flow_tracking: FlowTracking | UndefinedType = Undefined,
                                 structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
@@ -52552,6 +53160,11 @@ class EosDesigns(EosDesignsRootModel):
                                        PREVIEW: This key is in preview mode
 
                                        Subclass of AvdModel.
+                                    rx_queue:
+                                       Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                                       Subclass of
+                                       AvdModel.
                                     raw_eos_cli: EOS CLI rendered directly on the interface in the final EOS configuration.
                                     flow_tracking:
                                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_interfaces` setting.
@@ -52604,6 +53217,13 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                             <interface_speed>`.
+                            """
+                            rx_queue: RxQueue
+                            """
+                            Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+
+                            Subclass of
+                            AvdModel.
                             """
                             structured_config: EosCliConfigGen.EthernetInterfacesItem
                             """Custom structured config for the member ethernet interface."""
@@ -55036,6 +55656,7 @@ class EosDesigns(EosDesignsRootModel):
                             "bgp_update_wait_install": False,
                             "interface_storm_control": False,
                             "queue_monitor_length_notify": False,
+                            "build_rss_profile": False,
                         },
                         "management_interface": "Management1/1",
                         "p2p_uplinks_mtu": 9194,
@@ -56423,7 +57044,7 @@ class EosDesigns(EosDesignsRootModel):
     `custom_platform_settings` will be matched before the equivalent entries from `platform_settings`.
     Subclass of AvdList with `PlatformSettingsItem` items.
 
-    Default value: `lambda cls: coerce_type([{"platforms": ["default"], "feature_support": {"queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["7050X3"], "feature_support": {"queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}, "trident_forwarding_table_partition": "flexible exact-match 16384 l2-shared 98304 l3-shared 131072"}, {"platforms": ["720XP"], "feature_support": {"poe": True, "queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}, "trident_forwarding_table_partition": "flexible exact-match 16000 l2-shared 18000 l3-shared 22000"}, {"platforms": ["750", "755", "758"], "management_interface": "Management0", "feature_support": {"poe": True, "queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["720DP", "722XP", "710P"], "feature_support": {"poe": True, "queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["7010TX"], "feature_support": {"queue_monitor_length_notify": False, "per_interface_mtu": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["7280R", "7280R2", "7020R"], "lag_hardware_only": True, "reload_delay": {"mlag": 900, "non_mlag": 1020}, "tcam_profile": "vxlan-routing"}, {"platforms": ["7280R3"], "reload_delay": {"mlag": 900, "non_mlag": 1020}, "tcam_profile": "vxlan-routing"}, {"platforms": ["7500R", "7500R2"], "lag_hardware_only": True, "management_interface": "Management0", "reload_delay": {"mlag": 900, "non_mlag": 1020}, "tcam_profile": "vxlan-routing"}, {"platforms": ["7500R3", "7800R3"], "management_interface": "Management0", "reload_delay": {"mlag": 900, "non_mlag": 1020}, "tcam_profile": "vxlan-routing"}, {"platforms": ["7358X4"], "management_interface": "Management1/1", "reload_delay": {"mlag": 300, "non_mlag": 330}, "feature_support": {"queue_monitor_length_notify": False, "interface_storm_control": True, "bgp_update_wait_for_convergence": True, "bgp_update_wait_install": False}}, {"platforms": ["7368X4"], "management_interface": "Management0", "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["7300X3"], "management_interface": "Management0", "reload_delay": {"mlag": 1200, "non_mlag": 1320}, "trident_forwarding_table_partition": "flexible exact-match 16384 l2-shared 98304 l3-shared 131072"}, {"platforms": ["VEOS", "VEOS-LAB", "vEOS", "vEOS-lab"], "feature_support": {"bgp_update_wait_for_convergence": False, "bgp_update_wait_install": False, "interface_storm_control": False, "queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["CEOS", "cEOS", "ceos", "cEOSLab"], "feature_support": {"bgp_update_wait_for_convergence": False, "bgp_update_wait_install": False, "interface_storm_control": False, "queue_monitor_length_notify": False}, "management_interface": "Management0", "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["AWE-5310", "AWE-5510", "AWE-7250R", "AWE-7230R"], "feature_support": {"bgp_update_wait_for_convergence": True, "bgp_update_wait_install": False, "interface_storm_control": False, "queue_monitor_length_notify": False}, "management_interface": "Management1/1", "p2p_uplinks_mtu": 9194}, {"platforms": ["AWE-7220R"], "feature_support": {"bgp_update_wait_for_convergence": True, "bgp_update_wait_install": False, "interface_storm_control": False, "queue_monitor_length_notify": False, "poe": True}, "management_interface": "Management1", "p2p_uplinks_mtu": 9194}], target_type=cls)`
+    Default value: `lambda cls: coerce_type([{"platforms": ["default"], "feature_support": {"queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["7050X3"], "feature_support": {"queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}, "trident_forwarding_table_partition": "flexible exact-match 16384 l2-shared 98304 l3-shared 131072"}, {"platforms": ["720XP"], "feature_support": {"poe": True, "queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}, "trident_forwarding_table_partition": "flexible exact-match 16000 l2-shared 18000 l3-shared 22000"}, {"platforms": ["750", "755", "758"], "management_interface": "Management0", "feature_support": {"poe": True, "queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["720DP", "722XP", "710P"], "feature_support": {"poe": True, "queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["7010TX"], "feature_support": {"queue_monitor_length_notify": False, "per_interface_mtu": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["7280R", "7280R2", "7020R"], "lag_hardware_only": True, "reload_delay": {"mlag": 900, "non_mlag": 1020}, "tcam_profile": "vxlan-routing"}, {"platforms": ["7280R3"], "reload_delay": {"mlag": 900, "non_mlag": 1020}, "tcam_profile": "vxlan-routing"}, {"platforms": ["7500R", "7500R2"], "lag_hardware_only": True, "management_interface": "Management0", "reload_delay": {"mlag": 900, "non_mlag": 1020}, "tcam_profile": "vxlan-routing"}, {"platforms": ["7500R3", "7800R3"], "management_interface": "Management0", "reload_delay": {"mlag": 900, "non_mlag": 1020}, "tcam_profile": "vxlan-routing"}, {"platforms": ["7358X4"], "management_interface": "Management1/1", "reload_delay": {"mlag": 300, "non_mlag": 330}, "feature_support": {"queue_monitor_length_notify": False, "interface_storm_control": True, "bgp_update_wait_for_convergence": True, "bgp_update_wait_install": False}}, {"platforms": ["7368X4"], "management_interface": "Management0", "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["7300X3"], "management_interface": "Management0", "reload_delay": {"mlag": 1200, "non_mlag": 1320}, "trident_forwarding_table_partition": "flexible exact-match 16384 l2-shared 98304 l3-shared 131072"}, {"platforms": ["VEOS", "VEOS-LAB", "vEOS", "vEOS-lab"], "feature_support": {"bgp_update_wait_for_convergence": False, "bgp_update_wait_install": False, "interface_storm_control": False, "queue_monitor_length_notify": False}, "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["CEOS", "cEOS", "ceos", "cEOSLab"], "feature_support": {"bgp_update_wait_for_convergence": False, "bgp_update_wait_install": False, "interface_storm_control": False, "queue_monitor_length_notify": False}, "management_interface": "Management0", "reload_delay": {"mlag": 300, "non_mlag": 330}}, {"platforms": ["AWE-5310", "AWE-5510", "AWE-7250R", "AWE-7230R"], "feature_support": {"bgp_update_wait_for_convergence": True, "bgp_update_wait_install": False, "interface_storm_control": False, "queue_monitor_length_notify": False, "build_rss_profile": False}, "management_interface": "Management1/1", "p2p_uplinks_mtu": 9194}, {"platforms": ["AWE-7220R"], "feature_support": {"bgp_update_wait_for_convergence": True, "bgp_update_wait_install": False, "interface_storm_control": False, "queue_monitor_length_notify": False, "poe": True}, "management_interface": "Management1", "p2p_uplinks_mtu": 9194}], target_type=cls)`
     """
     platform_speed_groups: PlatformSpeedGroups
     """
