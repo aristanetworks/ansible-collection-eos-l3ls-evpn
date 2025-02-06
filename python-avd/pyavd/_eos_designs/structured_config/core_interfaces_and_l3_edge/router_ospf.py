@@ -32,6 +32,6 @@ class RouterOspfMixin(Protocol):
 
         if no_passive_interfaces:
             self.structured_config.router_ospf.process_ids.append_new(
-                    id=self.inputs.underlay_ospf_process_id,
-                    no_passive_interfaces=EosCliConfigGen.RouterOspf.ProcessIdsItem.NoPassiveInterfaces(no_passive_interfaces),
+                id=self.inputs.underlay_ospf_process_id,
+                no_passive_interfaces=EosCliConfigGen.RouterOspf.ProcessIdsItem.NoPassiveInterfaces(no_passive_interfaces),
             )
