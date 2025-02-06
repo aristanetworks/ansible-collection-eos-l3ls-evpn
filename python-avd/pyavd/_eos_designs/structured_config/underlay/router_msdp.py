@@ -24,7 +24,7 @@ class RouterMsdpMixin(Protocol):
     @structured_config_contributor
     def router_msdp(self: AvdStructuredConfigUnderlayProtocol) -> None:
         """
-        Return structured config for router_msdp.
+        Set the structured config for router_msdp.
 
         Used for to configure multicast anycast RPs for the underlay
         """
