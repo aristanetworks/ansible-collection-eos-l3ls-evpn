@@ -3,6 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+from collections import defaultdict
 from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
@@ -32,7 +33,7 @@ class VxlanInterfaceMixin(Protocol):
     @structured_config_contributor
     def vxlan_interface(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Update structured config for vxlan_interface.
+        Set structured config for vxlan_interface.
 
         Only used for VTEPs and for WAN
 
@@ -62,28 +63,32 @@ class VxlanInterfaceMixin(Protocol):
         if self.shared_utils.overlay_cvx:
             vxlan.controller_client.enabled = True
 
+        # Keep track of the VNIs added to check for duplicates
+        vnis: dict[int, list[EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem | EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem]] = defaultdict(list)
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
-                self._update_vxlan_interface_config_for_vrf(vrf, tenant)
+                self._update_vxlan_interface_config_for_vrf(vrf, tenant, vnis)
 
             if not self.shared_utils.network_services_l2:
                 continue
 
             for l2vlan in tenant.l2vlans:
                 if l2vlan.vxlan:
-                    self._update_vxlan_interface_config_for_vlan(l2vlan, tenant)
+                    self._update_vxlan_interface_config_for_vlan(l2vlan, tenant, vnis)
 
         if self.shared_utils.is_wan_server:
             # loop through wan_vrfs and add VRF VNI if not present
             for vrf in self._filtered_wan_vrfs:
-                vxlan.vrfs.append_new(name=vrf.name, vni=vrf.wan_vni)
+                wan_vrf = vxlan.vrfs.append_new(name=vrf.name, vni=vrf.wan_vni)
+                vnis[vrf.wan_vni].append(wan_vrf)
 
-        self._check_for_duplicates()
+        self._check_for_duplicates(vnis)
 
     def _update_vxlan_interface_config_for_vrf(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+        vnis: dict[int, list[EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem | EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem]],
     ) -> None:
         """
         In place updates of the vlans and vrfs in the vxlan object.
@@ -93,7 +98,7 @@ class VxlanInterfaceMixin(Protocol):
         if self.shared_utils.network_services_l2:
             for svi in vrf.svis:
                 if svi.vxlan:
-                    self._update_vxlan_interface_config_for_vlan(svi, tenant)
+                    self._update_vxlan_interface_config_for_vlan(svi, tenant, vnis)
 
         if self.shared_utils.network_services_l3 and self.shared_utils.overlay_evpn_vxlan:
             # Only configure VNI for VRF if the VRF is EVPN enabled
@@ -140,12 +145,14 @@ class VxlanInterfaceMixin(Protocol):
                     )
 
             self.structured_config.vxlan_interface.vxlan1.vxlan.vrfs.append(vxlan_vrf)
+            vnis[vxlan_vrf.vni].append(vxlan_vrf)
 
     def _update_vxlan_interface_config_for_vlan(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+        vnis: dict[int, list[EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem | EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem]],
     ) -> None:
         """
         In place update for Vxlan1 vlans list.
@@ -178,6 +185,7 @@ class VxlanInterfaceMixin(Protocol):
             vxlan_vlan.flood_vteps.extend(natural_sort(unique(vlan_id_entry)))
 
         self.structured_config.vxlan_interface.vxlan1.vxlan.vlans.append(vxlan_vlan)
+        vnis[vxlan_vlan.vni].append(vxlan_vlan)
 
     @cached_property
     def _overlay_her_flood_lists(self: AvdStructuredConfigNetworkServicesProtocol) -> dict[str | int, list]:
@@ -230,28 +238,20 @@ class VxlanInterfaceMixin(Protocol):
 
     def _check_for_duplicates(
         self: AvdStructuredConfigNetworkServicesProtocol,
+        vnis: dict[int, list[EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem | EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem]],
     ) -> None:
         """
         Raise an exception if the passed vlan or VRF object VNI is already in the vnis dictionary.
 
         If no duplicate is found, add the vlan or vrf object to the vnis dictionary
         """
-        vnis: dict[int, EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem | EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem] = {}
-        for vlan in self.structured_config.vxlan_interface.vxlan1.vxlan.vlans:
-            if vlan.vni in vnis:
-                conflicting_object_type = "VLAN" if isinstance(vnis[vlan.vni], EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem) else "VRF"
-                msg = (
-                    "Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs. "
-                    f"VLAN {vlan._as_dict()} conflicts with {conflicting_object_type} {vnis[vlan.vni]._as_dict()}."
-                )
+        for vni, items in vnis.items():
+            if len(items) > 1:
+                msg = f"Found duplicate objects with conflicting data while generating configuration for VXLAN VNI {vni}. The following items are conflicting: "
+                messages = []
+                for item in items:
+                    conflicting_object_type = "VLAN" if isinstance(vnis[item.vni], EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem) else "VRF"
+                    messages.append(f"{conflicting_object_type} {item._as_dict()}")
+                msg += ", ".join(messages)
+                msg += "."
                 raise AristaAvdInvalidInputsError(msg)
-            vnis[vlan.vni] = vlan
-        for vrf in self.structured_config.vxlan_interface.vxlan1.vxlan.vrfs:
-            if vrf.vni in vnis:
-                conflicting_object_type = "VLAN" if isinstance(vnis[vrf.vni], EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem) else "VRF"
-                msg = (
-                    f"Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs. "
-                    f"VRF {vrf._as_dict()} conflicts with {conflicting_object_type} {vnis[vrf.vni]._as_dict()}."
-                )
-                raise AristaAvdInvalidInputsError(msg)
-            vnis[vrf.vni] = vrf
