@@ -839,9 +839,10 @@ router_pim_sparse_mode:
   - name: TEN_E_L3_MULTICAST_ENABLED_PEG_OVERRIDE
     ipv4:
       rp_addresses:
-      - address: 10.40.40.40
+      - address: 10.20.20.20
         groups:
         - 232.0.0.0/21
+      - address: 10.40.40.40
   - name: TEN_E_L3_MULTICAST_EVPN_PEG_RP_NODES
     ipv4:
       rp_addresses:
@@ -853,11 +854,18 @@ router_pim_sparse_mode:
   - name: TEN_E_PEG_L3_MULTICAST_ENABLED
     ipv4:
       rp_addresses:
-      - address: 10.1.50.150
+      - address: 10.1.51.129
         groups:
         - 232.0.104.0/21
         - 232.0.96.0/21
+      - address: 10.1.52.129
+        groups:
+        - 232.0.104.0/21
+        - 232.0.96.0/21
+      - address: 10.1.50.100
+        groups:
         - 232.0.112.0/21
+      - address: 10.1.50.150
         access_lists:
         - RPS_ACL_VRF_Tenant_E_2
 service_routing_protocols_model: multi-agent
