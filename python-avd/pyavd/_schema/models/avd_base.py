@@ -62,6 +62,7 @@ class AvdBase(ABC):
     """Placeholder for Internal data used for storing internal context on data objects, without affecting other logic."""
 
     def __init__(self) -> None:
+        """Setting default values since these are slots."""
         self._created_from_null = False
         self._block_inheritance = False
 
