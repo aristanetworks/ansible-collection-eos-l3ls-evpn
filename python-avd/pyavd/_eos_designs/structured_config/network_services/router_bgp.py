@@ -124,7 +124,7 @@ class RouterBgpMixin(Protocol):
         if not self.shared_utils.network_services_l3:
             return
 
-        # For VRF default the bgp_vrf will var will be set to the global router_bgp for some settings.
+        # For VRF default the bgp_vrf variable will be set to the global router_bgp for some settings.
         bgp_vrf: EosCliConfigGen.RouterBgp.VrfsItem | EosCliConfigGen.RouterBgp
 
         for tenant in self.shared_utils.filtered_tenants:
