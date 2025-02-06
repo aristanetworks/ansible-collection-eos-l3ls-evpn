@@ -5,8 +5,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import default, strip_empties_from_list
+from pyavd._utils import default
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigMetadataProtocol
@@ -19,7 +20,7 @@ class CvPathfinderMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    def _cv_pathfinder(self: AvdStructuredConfigMetadataProtocol) -> dict | None:
+    def _cv_pathfinder(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder:
         """
         Generate metadata for CV Pathfinder feature.
 
@@ -28,118 +29,95 @@ class CvPathfinderMixin(Protocol):
         Metadata for "applications" and "internet_exit_policies" is generated in the network services module,
         since all the required data was readily available in there.
         """
-        if not self.shared_utils.is_cv_pathfinder_router:
-            return None
-
         region_name = self.shared_utils.wan_region.name if self.shared_utils.wan_region is not None else None
         site_name = self.shared_utils.wan_site.name if self.shared_utils.wan_site is not None else None
 
         # Pathfinder
         if self.shared_utils.is_cv_pathfinder_server:
-            return {
-                "role": self.shared_utils.cv_pathfinder_role,
-                "ssl_profile": self.shared_utils.wan_stun_dtls_profile_name,
-                "vtep_ip": self.shared_utils.vtep_ip,
-                "region": region_name,
-                "site": site_name,
-                "address": self.shared_utils.wan_site.location if self.shared_utils.wan_site is not None else None,
-                "interfaces": self._metadata_interfaces(),
-                "pathgroups": self._metadata_pathgroups(),
-                "regions": self._metadata_regions(),
-                "vrfs": self._metadata_vrfs(),
-            }
+            cv_pathfinder = EosCliConfigGen.Metadata.CvPathfinder(
+                role=self.shared_utils.cv_pathfinder_role,
+                ssl_profile=self.shared_utils.wan_stun_dtls_profile_name,
+                vtep_ip=self.shared_utils.vtep_ip,
+                region=region_name,
+                site=site_name,
+                address=self.shared_utils.wan_site.location if self.shared_utils.wan_site is not None else None,
+                interfaces=self._metadata_interfaces(),
+                pathgroups=self._metadata_pathgroups(),
+                regions=self._metadata_regions(),
+                vrfs=self._metadata_vrfs(),
+            )
+            if self.structured_config.router_adaptive_virtual_topology.vrfs and self.structured_config.router_path_selection.load_balance_policies:
+                cv_pathfinder.vrfs = self._metadata_vrfs()
+            return cv_pathfinder
 
         # Edge or transit
-        return {
-            "role": self.shared_utils.cv_pathfinder_role,
-            "ssl_profile": self.shared_utils.wan_stun_dtls_profile_name,
-            "vtep_ip": self.shared_utils.vtep_ip,
-            "region": region_name,
-            "zone": self.shared_utils.wan_zone["name"],
-            "site": site_name,
-            "interfaces": self._metadata_interfaces(),
-            "pathfinders": self._metadata_pathfinder_vtep_ips(),
-        }
+        cv_pathfinder = EosCliConfigGen.Metadata.CvPathfinder(
+            role=self.shared_utils.cv_pathfinder_role,
+            ssl_profile=self.shared_utils.wan_stun_dtls_profile_name,
+            vtep_ip=self.shared_utils.vtep_ip,
+            region=region_name,
+            zone=self.shared_utils.wan_zone["name"],
+            site=site_name,
+            interfaces=self._metadata_interfaces(),
+            pathfinders=self._metadata_pathfinder_vtep_ips(),
+        )
 
-    def _metadata_interfaces(self: AvdStructuredConfigMetadataProtocol) -> list:
-        return [
-            {
-                "name": interface["name"],
-                "carrier": carrier["name"],
-                "circuit_id": interface.get("wan_circuit_id"),
-                "pathgroup": carrier["path_group"],
-                "public_ip": str(interface["public_ip"]) if self.shared_utils.is_cv_pathfinder_server else None,
-            }
-            for carrier in self.shared_utils.wan_local_carriers
-            for interface in carrier["interfaces"]
-        ]
+        return cv_pathfinder
 
-    def _metadata_pathgroups(self: AvdStructuredConfigMetadataProtocol) -> list:
-        return [
-            {
-                "name": pathgroup.name,
-                "carriers": [
-                    {
-                        "name": carrier.name,
-                    }
-                    for carrier in self.inputs.wan_carriers
-                    if carrier.path_group == pathgroup.name
-                ],
-                "imported_carriers": [
-                    {
-                        "name": carrier.name,
-                    }
-                    for carrier in self.inputs.wan_carriers
-                    if carrier.path_group in [imported_pathgroup.remote for imported_pathgroup in pathgroup.import_path_groups]
-                ],
-            }
-            for pathgroup in self.inputs.wan_path_groups
-        ]
+    def _metadata_interfaces(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Interfaces:
+        interfaces = EosCliConfigGen.Metadata.CvPathfinder.Interfaces()
+        for carrier in self.shared_utils.wan_local_carriers:
+            for interface in carrier["interfaces"]:
+                interface = EosCliConfigGen.Metadata.CvPathfinder.InterfacesItem(
+                    name=interface["name"],
+                    carrier=carrier["name"],
+                    circuit_id=interface.get("wan_circuit_id"),
+                    pathgroup=carrier["path_group"],
+                    public_ip=str(interface["public_ip"]) if self.shared_utils.is_cv_pathfinder_server else None,
+                )
+                interfaces.append(interface)
+        return interfaces
 
-    def _metadata_regions(self: AvdStructuredConfigMetadataProtocol) -> list:
+    def _metadata_pathgroups(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Pathgroups:
+        path_groups = EosCliConfigGen.Metadata.CvPathfinder.Pathgroups()
+        for pathgroup in self.inputs.wan_path_groups:
+            path_group = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem(name=pathgroup.name)
+            for carrier in self.inputs.wan_carriers:
+                if carrier.path_group == pathgroup.name:
+                    path_group.CarriersItem(name=carrier.name)
+                if carrier.path_group in [imported_pathgroup.remote for imported_pathgroup in pathgroup.import_path_groups]:
+                    path_group.ImportedCarriersItem(name=carrier.name)
+            path_groups.append(path_group)
+        return path_groups
+
+    def _metadata_regions(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Regions:
         if not self.inputs.cv_pathfinder_regions:
             msg = "'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'."
             raise AristaAvdInvalidInputsError(msg)
-
+        regions_obj = EosCliConfigGen.Metadata.CvPathfinder.Regions()
         regions = self.inputs.cv_pathfinder_regions
-        return [
-            {
-                "name": region.name,
-                "id": region.id,
-                "zones": [
-                    {
-                        # TODO: Once we give configurable zones this should be updated
-                        "name": f"{region.name}-ZONE",
-                        "id": 1,
-                        "sites": [
-                            {
-                                "name": site.name,
-                                "id": site.id,
-                                "location": ({"address": site.location} if site.location else None),
-                            }
-                            for site in region.sites
-                        ],
-                    },
-                ],
-            }
-            for region in regions
-        ]
+        for region in regions:
+            region_obj = EosCliConfigGen.Metadata.CvPathfinder.RegionsItem(name=region.name, id=region.id)
+            region_obj.zones.append(region_obj.ZonesItem(name=f"{region.name}-ZONE", id=1))
+            for site in region.sites:
+                site_obj = region_obj.zones[0].SitesItem(name=site.name, id=site.id)
+                site_obj.location.address = site.location
+                region_obj.zones[0].sites.append(site_obj)
+            regions_obj.append(region_obj)
+        return regions_obj
 
-    def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadataProtocol) -> list:
-        return [
-            {
-                "vtep_ip": wan_route_server.vtep_ip,
-            }
-            for wan_route_server in self.shared_utils.filtered_wan_route_servers
-        ]
+    def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Pathfinders:
+        vtep_ips = EosCliConfigGen.Metadata.CvPathfinder.Pathfinders()
+        for wan_route_server in self.shared_utils.filtered_wan_route_servers:
+            vtep_ip = EosCliConfigGen.Metadata.CvPathfinder.PathfindersItem(vtep_ip=wan_route_server.vtep_ip)
+            vtep_ips.append(vtep_ip)
+        return vtep_ips
 
-    def _metadata_vrfs(self: AvdStructuredConfigMetadataProtocol) -> list:
+    def _metadata_vrfs(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Vrfs | None:
+        metadata_vrfs = EosCliConfigGen.Metadata.CvPathfinder.Vrfs()
         """Extracting metadata for VRFs by parsing the generated structured config and flatten it a bit (like hiding load-balance policies)."""
-        if not (avt_vrfs := self.structured_config.router_adaptive_virtual_topology.vrfs):
-            return []
-
-        if not (load_balance_policies := self.structured_config.router_path_selection.load_balance_policies):
-            return []
+        avt_vrfs = self.structured_config.router_adaptive_virtual_topology.vrfs
+        load_balance_policies = self.structured_config.router_path_selection.load_balance_policies
 
         avt_policies = self.structured_config.router_adaptive_virtual_topology.policies
 
@@ -157,51 +135,38 @@ class CvPathfinderMixin(Protocol):
                     )
                     raise AristaAvdError(msg)
 
-        metadata_vrfs = []
         for vrf in avt_vrfs:
             if not vrf.policy:
                 continue
 
             avt_policy = avt_policies[vrf.policy]
-            metadata_vrf = {
-                "name": vrf.name,
-                "vni": self._get_vni_for_vrf_name(vrf.name),
-                "avts": [],
-            }
+            metadata_vrf = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem(name=vrf.name, vni=self._get_vni_for_vrf_name(vrf.name))
             for profile in vrf.profiles:
                 if not profile.name:
                     continue
                 lb_policy = load_balance_policies[self.shared_utils.generate_lb_policy_name(profile.name)]
-                application_profiles = [
-                    match.application_profile
-                    for match in avt_policy.matches
-                    if match.avt_profile == profile.name and match.application_profile and match.application_profile != "default"
-                ]
-                metadata_vrf["avts"].append(
-                    {
-                        "constraints": {
-                            "jitter": lb_policy.jitter,
-                            "latency": lb_policy.latency,
-                            "lossrate": float(lb_policy.loss_rate) if lb_policy.loss_rate is not None else None,
-                            "hop_count": "lowest" if lb_policy.lowest_hop_count else None,
-                        },
-                        "description": "",  # TODO: Not sure we have this field anywhere
-                        "id": profile.id,
-                        "name": profile.name,
-                        "pathgroups": [
-                            {
-                                "name": pathgroup.name,
-                                "preference": "alternate" if default(pathgroup.priority, 1) > 1 else "preferred",
-                            }
-                            for pathgroup in lb_policy.path_groups
-                        ],
-                        "application_profiles": application_profiles,
-                    }
+                application_profiles = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem.ApplicationProfiles()
+                for match in avt_policy.matches:
+                    if match.avt_profile == profile.name and match.application_profile and match.application_profile != "default":
+                        application_profiles.append(match.application_profile)
+                avt = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem(
+                    description="", id=profile.id, name=profile.name, application_profiles=application_profiles
                 )
 
-            metadata_vrfs.append(metadata_vrf)
+                avt.constraints._update(
+                    jitter=lb_policy.jitter,
+                    latency=lb_policy.latency,
+                    hop_count="lowest" if lb_policy.lowest_hop_count else None,
+                )
+                if lb_policy.loss_rate:
+                    avt.constraints.lossrate = float(lb_policy.loss_rate)
 
-        return strip_empties_from_list(metadata_vrfs)
+                for pathgroup in lb_policy.path_groups:
+                    avt.PathgroupsItem(name=pathgroup.name, preference="alternate" if default(pathgroup.priority, 1) > 1 else "preferred")
+                metadata_vrf.avts.append(avt)
+
+            metadata_vrfs.append(metadata_vrf)
+        return metadata_vrfs
 
     def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadataProtocol, vrf_name: str) -> int:
         if vrf_name not in self.inputs.wan_virtual_topologies.vrfs or (wan_vni := self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni) is None:
