@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
@@ -25,4 +26,23 @@ class IpNatMixin(Protocol):
             return
 
         for policy_type in self._filtered_internet_exit_policy_types:
-            self.get_internet_exit_nat_pool_and_profile(policy_type)
+            if policy_type == "zscaler":
+                pool = EosCliConfigGen.IpNat.PoolsItem(name="PORT-ONLY-POOL", type="port-only")
+                pool.ranges.append_new(first_port=1500, last_port=65535)
+                self.structured_config.ip_nat.pools.append(pool)
+
+                profile = EosCliConfigGen.IpNat.ProfilesItem(name=self.get_internet_exit_nat_profile_name(policy_type))
+                profile.source.dynamic.append_new(
+                    access_list=self.get_internet_exit_nat_acl_name(policy_type),
+                    pool_name="PORT-ONLY-POOL",
+                    nat_type="pool",
+                )
+                self.structured_config.ip_nat.profiles.append(profile)
+
+            if policy_type == "direct":
+                profile = EosCliConfigGen.IpNat.ProfilesItem(name=self.get_internet_exit_nat_profile_name(policy_type))
+                profile.source.dynamic.append_new(
+                    access_list=self.get_internet_exit_nat_acl_name(policy_type),
+                    nat_type="overload",
+                )
+                self.structured_config.ip_nat.profiles.append(profile)

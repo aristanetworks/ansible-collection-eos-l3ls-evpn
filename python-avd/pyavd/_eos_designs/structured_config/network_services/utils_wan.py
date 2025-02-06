@@ -6,7 +6,6 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING, Literal, Protocol
 
-from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import get, get_ip_from_ip_prefix
@@ -471,30 +470,6 @@ class UtilsWanMixin(Protocol):
 
     def get_internet_exit_nat_acl_name(self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]) -> str:
         return f"ACL-{self.get_internet_exit_nat_profile_name(internet_exit_policy_type)}"
-
-    def get_internet_exit_nat_pool_and_profile(
-        self: AvdStructuredConfigNetworkServicesProtocol,
-        internet_exit_policy_type: Literal["zscaler", "direct"],
-    ) -> None:
-        if internet_exit_policy_type == "zscaler":
-            pool = EosCliConfigGen.IpNat.PoolsItem(
-                name="PORT-ONLY-POOL",
-                type="port-only",
-                ranges=EosCliConfigGen.IpNat.PoolsItem.Ranges([EosCliConfigGen.IpNat.PoolsItem.RangesItem(first_port=1500, last_port=65535)]),
-            )
-
-            profile = EosCliConfigGen.IpNat.ProfilesItem(name=self.get_internet_exit_nat_profile_name(internet_exit_policy_type))
-            profile.source.dynamic.append_new(
-                access_list=self.get_internet_exit_nat_acl_name(internet_exit_policy_type),
-                pool_name="PORT-ONLY-POOL",
-                nat_type="pool",
-            )
-            self.structured_config.ip_nat.pools.append(pool)
-            self.structured_config.ip_nat.profiles.append(profile)
-        if internet_exit_policy_type == "direct":
-            profile = EosCliConfigGen.IpNat.ProfilesItem(name=self.get_internet_exit_nat_profile_name(internet_exit_policy_type))
-            profile.source.dynamic.append_new(access_list=self.get_internet_exit_nat_acl_name(internet_exit_policy_type), nat_type="overload")
-            self.structured_config.ip_nat.profiles.append(profile)
 
     @cached_property
     def _filtered_internet_exit_policy_types(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
