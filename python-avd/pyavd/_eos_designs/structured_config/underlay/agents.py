@@ -3,8 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
+
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigUnderlayProtocol
@@ -17,12 +19,12 @@ class AgentsMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def agents(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
-        """Return structured config for agents."""
+    @structured_config_contributor
+    def agents(self: AvdStructuredConfigUnderlayProtocol) -> None:
+        """Set the structured config for agents."""
         if not self.shared_utils.is_wan_router:
-            return None
+            return
 
-        return [
-            {"name": "KernelFib", "environment_variables": [{"name": "KERNELFIB_PROGRAM_ALL_ECMP", "value": "1"}]},
-        ]
+        agent = EosCliConfigGen.AgentsItem(name="KernelFib")
+        agent.environment_variables.append_new(name="KERNELFIB_PROGRAM_ALL_ECMP", value="1")
+        self.structured_config.agents.append(agent)
