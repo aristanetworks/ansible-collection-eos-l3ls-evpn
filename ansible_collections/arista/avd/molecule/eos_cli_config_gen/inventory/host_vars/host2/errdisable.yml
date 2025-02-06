@@ -1,11 +1,14 @@
 ---
-### Errdisable ###
-
 errdisable:
   recovery:
     causes:
       - bpduguard
-      - xcvr-overheat
-      - xcvr-power-unsupported
-      - xcvr-unsupported
       - arp-inspection
+      - portsec
+      - hitless-reload-down
+      - lacp-rate-limit
+      - link-flap
+      - no-internal-vlan
+      - portchannelguard
+      - tapagg
+      - uplink-failure-detection
