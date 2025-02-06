@@ -23,7 +23,7 @@ class RouterPimSparseModeMixin(Protocol):
     @structured_config_contributor
     def router_pim_sparse_mode(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Return structured config for router_pim.
+        Set structured config for router_pim.
 
         Used for to configure RPs on the VRF
         """
