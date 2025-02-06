@@ -5,9 +5,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import get
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
+from pyavd._utils import get
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
@@ -41,7 +41,7 @@ class RouterPimSparseModeMixin(Protocol):
                         rpaddress.address = rps["address"]
                         for group in get(rps, "groups", []):
                             rpaddress.groups.append(group)
-                        for access_list in get(rps, "access_lists",[]):
+                        for access_list in get(rps, "access_lists", []):
                             rpaddress.access_lists.append(access_list)
                         rpaddresses.append_unique(rpaddress)
                     ipv4_config.rp_addresses = rpaddresses
