@@ -5,7 +5,7 @@ from __future__ import annotations
 
 import ipaddress
 from itertools import groupby as itertools_groupby
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Protocol, cast
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
@@ -212,10 +212,12 @@ class RouterBgpMixin(Protocol):
                 # Skip adding the VRF if we have no config.
                 if not bgp_vrf:
                     continue
-                if isinstance(bgp_vrf, EosCliConfigGen.RouterBgp):
+                if vrf.name == "default":
                     # VRF default is added directly under router_bgp
+                    bgp_vrf = cast(EosCliConfigGen.RouterBgp, bgp_vrf)
                     self.structured_config.router_bgp._deepmerge(bgp_vrf)
                 else:
+                    bgp_vrf = cast(EosCliConfigGen.RouterBgp.VrfsItem, bgp_vrf)
                     bgp_vrf.name = vrf_name
                     self.structured_config.router_bgp.vrfs.append(bgp_vrf)
 
