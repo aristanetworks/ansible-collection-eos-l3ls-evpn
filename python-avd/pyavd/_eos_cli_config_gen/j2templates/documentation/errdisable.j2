@@ -9,25 +9,20 @@
 ## Errdisable
 
 ### Errdisable Summary
+{%     if errdisable.detect.causes is arista.avd.defined or errdisable.recovery.causes is arista.avd.defined %}
+{%         set combined_causes = ( errdisable.detect.causes | arista.avd.default([]) + errdisable.recovery.causes | arista.avd.default([]) ) | unique %}
+
+|  Detect Cause | Detection Enabled | Recovery Enabled |
+| ------------- | ----------------- | ---------------- |
+{%         for cause in combined_causes | arista.avd.natural_sort %}
+{%             set detect_status = cause in errdisable.detect.causes | arista.avd.default([]) %}
+{%             set recovery_status = cause in errdisable.recovery.causes | arista.avd.default([]) %}
+| {{ cause }} | {{ detect_status }} | {{ recovery_status }} |
+{%         endfor %}
+{%     endif %}
 {%     if errdisable.recovery.interval is arista.avd.defined %}
 
 Errdisable recovery timer interval: {{ errdisable.recovery.interval }} seconds
-{%     endif %}
-{%     if errdisable.detect.causes is arista.avd.defined %}
-
-|  Detect Cause | Enabled |
-| ------------- | ------- |
-{%         for cause in errdisable.detect.causes | arista.avd.natural_sort %}
-| {{ cause }} | True |
-{%         endfor %}
-{%     endif %}
-{%     if errdisable.recovery.causes is arista.avd.defined %}
-
-|  Detect Cause | Enabled |
-| ------------- | ------- |
-{%         for cause in errdisable.recovery.causes | arista.avd.natural_sort %}
-| {{ cause }} | True |
-{%         endfor %}
 {%     endif %}
 
 ```eos

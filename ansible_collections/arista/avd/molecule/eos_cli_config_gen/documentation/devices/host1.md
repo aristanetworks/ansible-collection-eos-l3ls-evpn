@@ -11601,37 +11601,28 @@ ip nat synchronization
 
 ### Errdisable Summary
 
+|  Detect Cause | Detection Enabled | Recovery Enabled |
+| ------------- | ----------------- | ---------------- |
+| acl | True | False |
+| arp-inspection | True | True |
+| bpduguard | False | True |
+| dot1x | True | True |
+| hitless-reload-down | False | True |
+| lacp-rate-limit | False | True |
+| link-change | True | False |
+| link-flap | False | True |
+| no-internal-vlan | False | True |
+| portchannelguard | False | True |
+| portsec | False | True |
+| speed-misconfigured | False | True |
+| tapagg | True | True |
+| uplink-failure-detection | False | True |
+| xcvr-misconfigured | True | True |
+| xcvr-overheat | True | True |
+| xcvr-power-unsupported | True | True |
+| xcvr-unsupported | False | True |
+
 Errdisable recovery timer interval: 300 seconds
-
-|  Detect Cause | Enabled |
-| ------------- | ------- |
-| acl | True |
-| arp-inspection | True |
-| dot1x | True |
-| link-change | True |
-| tapagg | True |
-| xcvr-misconfigured | True |
-| xcvr-overheat | True |
-| xcvr-power-unsupported | True |
-
-|  Detect Cause | Enabled |
-| ------------- | ------- |
-| arp-inspection | True |
-| bpduguard | True |
-| dot1x | True |
-| hitless-reload-down | True |
-| lacp-rate-limit | True |
-| link-flap | True |
-| no-internal-vlan | True |
-| portchannelguard | True |
-| portsec | True |
-| speed-misconfigured | True |
-| tapagg | True |
-| uplink-failure-detection | True |
-| xcvr-misconfigured | True |
-| xcvr-overheat | True |
-| xcvr-power-unsupported | True |
-| xcvr-unsupported | True |
 
 ```eos
 !

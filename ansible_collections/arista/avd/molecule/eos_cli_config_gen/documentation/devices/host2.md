@@ -1504,18 +1504,18 @@ ip nat synchronization
 
 ### Errdisable Summary
 
-|  Detect Cause | Enabled |
-| ------------- | ------- |
-| arp-inspection | True |
-| bpduguard | True |
-| hitless-reload-down | True |
-| lacp-rate-limit | True |
-| link-flap | True |
-| no-internal-vlan | True |
-| portchannelguard | True |
-| portsec | True |
-| tapagg | True |
-| uplink-failure-detection | True |
+|  Detect Cause | Detection Enabled | Recovery Enabled |
+| ------------- | ----------------- | ---------------- |
+| arp-inspection | False | True |
+| bpduguard | False | True |
+| hitless-reload-down | False | True |
+| lacp-rate-limit | False | True |
+| link-flap | False | True |
+| no-internal-vlan | False | True |
+| portchannelguard | False | True |
+| portsec | False | True |
+| tapagg | False | True |
+| uplink-failure-detection | False | True |
 
 ```eos
 !
