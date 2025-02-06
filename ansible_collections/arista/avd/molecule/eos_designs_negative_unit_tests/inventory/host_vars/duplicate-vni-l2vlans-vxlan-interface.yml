@@ -33,5 +33,5 @@ tenants:
         name: vlan
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs.
-  VLAN {'id': 1, 'vni': 10001} conflicts with VLAN {'id': 111, 'vni': 10001}.
+  Found duplicate objects with conflicting data while generating configuration for VXLAN VNI 10001.
+  The following items are conflicting: L2VLAN 1 in tenant Tenant_B, SVI 111 in tenant Tenant_A.

@@ -34,5 +34,5 @@ tenants:
             description: "test"
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs.
-  VRF {'name': 'Tenant_A_WAN_Zone', 'vni': 1010} conflicts with VLAN {'id': 10, 'vni': 1010}.
+  Found duplicate objects with conflicting data while generating configuration for VXLAN VNI 1010.
+  The following items are conflicting: SVI 10 in tenant Tenant_A, VRF Tenant_A_WAN_Zone in tenant Tenant_A.
