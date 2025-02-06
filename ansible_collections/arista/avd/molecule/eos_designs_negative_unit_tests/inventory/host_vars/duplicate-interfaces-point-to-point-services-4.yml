@@ -53,6 +53,7 @@ tenants:
 
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
-  {'name': 'Ethernet6.1000', 'shutdown': False, 'peer_type': 'point_to_point_service'} conflicts with
+  {'name': 'Ethernet6.1000', 'shutdown': False, 'encapsulation_vlan': {'client': {'encapsulation': 'dot1q', 'vlan': 1000},
+  'network': {'encapsulation': 'client'}}, 'peer_type': 'point_to_point_service'} conflicts with
   {'name': 'Ethernet6.1000', 'shutdown': False, 'vrf': 'TEST', 'encapsulation_dot1q': {'vlan': 1000},
   'ip_address': '10.42.255.0/31', 'peer_type': 'l3_interface'}.

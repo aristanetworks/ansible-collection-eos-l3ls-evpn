@@ -28,7 +28,7 @@ class EthernetInterfacesMixin(Protocol):
     @structured_config_contributor
     def ethernet_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Return structured config for ethernet_interfaces.
+        Set structured config for ethernet_interfaces.
 
         Only used with L3 or L1 network services
         """
@@ -43,28 +43,28 @@ class EthernetInterfacesMixin(Protocol):
                 for vrf in tenant.vrfs:
                     # The l3_interfaces has already been filtered in filtered_tenants
                     # to only contain entries with our hostname
-                    self._update_l3_interfaces(vrf, tenant, subif_parent_interface_names)
+                    self._set_l3_interfaces(vrf, tenant, subif_parent_interface_names)
 
         if self.shared_utils.network_services_l1:
             for tenant in self.shared_utils.filtered_tenants:
                 if not tenant.point_to_point_services:
                     continue
-                self._update_point_to_point_interfaces(tenant, subif_parent_interface_names)
+                self._set_point_to_point_interfaces(tenant, subif_parent_interface_names)
 
         # Add missing parent interface names if any
         if missing_parent_interface_names := subif_parent_interface_names.difference(eth_int.name for eth_int in self.structured_config.ethernet_interfaces):
-            self._update_subif_parent_interfaces(missing_parent_interface_names)
+            self._set_subif_parent_interfaces(missing_parent_interface_names)
 
         # Add interfaces used for Internet Exit policies
-        self._update_internet_exit_policy_interfaces()
+        self._set_internet_exit_policy_interfaces()
 
-    def _update_l3_interfaces(
+    def _set_l3_interfaces(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         subif_parent_interface_names: set[str],
     ) -> None:
-        """Update the structured_config ethernet_interfaces with the l3interfaces."""
+        """Set the structured_config ethernet_interfaces with the l3interfaces."""
         for l3_interface in vrf.l3_interfaces:
             nodes_length = len(l3_interface.nodes)
             if (
@@ -174,12 +174,12 @@ class EthernetInterfacesMixin(Protocol):
 
                     interface.pim.ipv4.sparse_mode = True
 
-    def _update_point_to_point_interfaces(
+    def _set_point_to_point_interfaces(
         self: AvdStructuredConfigNetworkServicesProtocol,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         subif_parent_interface_names: set[str],
     ) -> None:
-        """Update the structured_config ethernet_interfaces with the point-to-point interfaces defined under network_services."""
+        """Set the structured_config ethernet_interfaces with the point-to-point interfaces defined under network_services."""
         for point_to_point_service in tenant.point_to_point_services._natural_sorted():
             for endpoint in point_to_point_service.endpoints:
                 if self.shared_utils.hostname not in endpoint.nodes:
@@ -207,7 +207,7 @@ class EthernetInterfacesMixin(Protocol):
                         subif_parent_interface_names.add(interface_name)
                         for subif in point_to_point_service.subinterfaces:
                             subif_name = f"{interface_name}.{subif.number}"
-                            interface = self.structured_config.ethernet_interfaces.append_new(
+                            interface = EosCliConfigGen.EthernetInterfacesItem(
                                 name=subif_name,
                                 peer_type="point_to_point_service",
                                 shutdown=False,
@@ -216,8 +216,10 @@ class EthernetInterfacesMixin(Protocol):
                             interface.encapsulation_vlan.client.vlan = subif.number
                             interface.encapsulation_vlan.network.encapsulation = "client"
 
+                            self.structured_config.ethernet_interfaces.append(interface)
+
                     else:
-                        interface = self.structured_config.ethernet_interfaces.append_new(
+                        interface = EosCliConfigGen.EthernetInterfacesItem(
                             name=interface_name,
                             peer_type="point_to_point_service",
                             shutdown=False,
@@ -226,20 +228,24 @@ class EthernetInterfacesMixin(Protocol):
                         if point_to_point_service.lldp_disable:
                             interface.lldp._update(transmit=False, receive=False)
 
-    def _update_subif_parent_interfaces(self: AvdStructuredConfigNetworkServicesProtocol, missing_parent_interface_names: set[str]) -> None:
-        """Update the ethernet_interfaces with the missing parent interfaces of l3_subinterfaces."""
+                        self.structured_config.ethernet_interfaces.append(interface)
+
+    def _set_subif_parent_interfaces(self: AvdStructuredConfigNetworkServicesProtocol, missing_parent_interface_names: set[str]) -> None:
+        """Set the ethernet_interfaces with the missing parent interfaces of l3_subinterfaces."""
         for interface_name in natural_sort(missing_parent_interface_names):
-            interface = self.structured_config.ethernet_interfaces.append_new(
+            interface = EosCliConfigGen.EthernetInterfacesItem(
                 name=interface_name,
                 peer_type="l3_interface",
                 shutdown=False,
             )
             interface.switchport.enabled = False
+            self.structured_config.ethernet_interfaces.append(interface)
 
-    def _update_internet_exit_policy_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
-        """Update the ethernet_interfaces with the interfaces defined for internet exit policies."""
+    def _set_internet_exit_policy_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
+        """Set the ethernet_interfaces with the interfaces defined for internet exit policies."""
         for internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
             for connection in connections:
                 if connection["type"] == "ethernet":
-                    interface = self.structured_config.ethernet_interfaces.append_new(name=connection["source_interface"])
+                    interface = EosCliConfigGen.EthernetInterfacesItem(name=connection["source_interface"])
                     interface.ip_nat.service_profile = self.get_internet_exit_nat_profile_name(internet_exit_policy.type)
+                    self.structured_config.ethernet_interfaces.append(interface)

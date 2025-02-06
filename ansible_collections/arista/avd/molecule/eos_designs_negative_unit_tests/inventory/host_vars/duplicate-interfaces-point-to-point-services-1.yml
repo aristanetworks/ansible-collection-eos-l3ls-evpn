@@ -55,5 +55,5 @@ tenants:
 
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
-  {'name': 'Ethernet6', 'shutdown': False, 'peer_type': 'point_to_point_service'} conflicts with
-  {'name': 'Ethernet6', 'shutdown': False, 'channel_group': {'id': 6, 'mode': 'active'}, 'peer_type': 'point_to_point_service'}.
+  {'name': 'Ethernet6', 'shutdown': False, 'peer_type': 'point_to_point_service', 'switchport': {'enabled': False}}
+  conflicts with {'name': 'Ethernet6', 'shutdown': False, 'channel_group': {'id': 6, 'mode': 'active'}, 'peer_type': 'point_to_point_service'}.
