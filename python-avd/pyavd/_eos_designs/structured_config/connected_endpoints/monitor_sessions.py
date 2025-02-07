@@ -60,7 +60,7 @@ class MonitorSessionsMixin(Protocol):
                     name=session._interface,
                     direction=session.source_settings.direction,
                 )
-                if session.source_settings.access_group.name is not None:
+                if session.source_settings.access_group.name:
                     source.access_group._update(
                         type=session.source_settings.access_group.type,
                         name=session.source_settings.access_group.name,
