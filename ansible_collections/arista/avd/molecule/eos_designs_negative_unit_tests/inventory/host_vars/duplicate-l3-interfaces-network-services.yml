@@ -50,6 +50,7 @@ tenants:
 
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
-  {'name': 'Ethernet6.101', 'description': 'TENANT_B_SITE_5', 'shutdown': False, 'ip_address': '192.168.48.2/31', 'peer_type': 'l3_interface'}
+  {'name': 'Ethernet6.101', 'description': 'TENANT_B_SITE_5', 'shutdown': False, 'vrf': 'TENANT_B_WAN', 'encapsulation_dot1q': {'vlan': 101},
+  'ip_address': '192.168.48.2/31', 'peer_type': 'l3_interface'}
   conflicts with {'name': 'Ethernet6.101', 'description': 'TENANT_B_SITE_3_OSPF', 'shutdown': False, 'vrf': 'TENANT_B_WAN',
   'encapsulation_dot1q': {'vlan': 101}, 'ip_address': '192.168.48.4/31', 'peer_type': 'l3_interface'}.
