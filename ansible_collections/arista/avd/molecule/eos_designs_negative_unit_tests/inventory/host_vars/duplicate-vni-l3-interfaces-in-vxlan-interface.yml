@@ -20,19 +20,19 @@ tenants:
         description: "Tenant_A_OP_Zone"
         vrf_vni: 10
         svis:
-          - id: '10'
+          - id: "10"
             name: Tenant_A_OP_Zone_1
 
       - name: Tenant_A_WAN_Zone
         vrf_id: 1010
         l3_interfaces:
-          - interfaces: [ Ethernet7 ]
-            ip_addresses: [ 10.10.10.10/24 ]
-            nodes: [ duplicate-vni-l3-interfaces-in-vxlan-interface ]
+          - interfaces: [Ethernet7]
+            ip_addresses: [10.10.10.10/24]
+            nodes: [duplicate-vni-l3-interfaces-in-vxlan-interface]
             mtu: 9000
             enabled: true
             description: "test"
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs for VRFs.
-  {'id': None, 'name': 'Tenant_A_WAN_Zone', 'vni': 1010} conflicts with {'id': 10, 'name': None, 'vni': 1010}.
+  Found duplicate objects with conflicting data while generating configuration for VXLAN VNI 1010.
+  The following items are conflicting: SVI 10 in tenant Tenant_A, VRF Tenant_A_WAN_Zone in tenant Tenant_A.

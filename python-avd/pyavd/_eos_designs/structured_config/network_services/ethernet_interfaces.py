@@ -85,7 +85,7 @@ class EthernetInterfacesMixin(Protocol):
                 interface_name = l3_interface.interfaces[node_index]
                 # if 'descriptions' is set, it is preferred
                 interface_description = l3_interface.descriptions[node_index] if l3_interface.descriptions else l3_interface.description
-                interface = self.structured_config.ethernet_interfaces.append_new(
+                interface = EosCliConfigGen.EthernetInterfacesItem(
                     name=interface_name,
                     peer_type="l3_interface",
                     ip_address=l3_interface.ip_addresses[node_index],
@@ -151,7 +151,7 @@ class EthernetInterfacesMixin(Protocol):
                             interface.ospf_authentication = ospf_authentication
 
                 if l3_interface.pim.enabled:
-                    if not getattr(vrf, "_evpn_l3_multicast_enabled", False):
+                    if not getattr(vrf._internal_data, "evpn_l3_multicast_enabled", False):
                         # Possibly the key was not set because `evpn_multicast` is not set to `true`.
                         if not self.shared_utils.evpn_multicast:
                             msg = (
@@ -165,7 +165,7 @@ class EthernetInterfacesMixin(Protocol):
                             )
                         raise AristaAvdError(msg)
 
-                    if not getattr(vrf, "_pim_rp_addresses", None):
+                    if not getattr(vrf._internal_data, "pim_rp_addresses", None):
                         msg = (
                             f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires at least one RP"
                             f" defined in pim_rp_addresses under VRF '{vrf.name}' or Tenant '{tenant.name}'"
@@ -173,6 +173,8 @@ class EthernetInterfacesMixin(Protocol):
                         raise AristaAvdError(msg)
 
                     interface.pim.ipv4.sparse_mode = True
+
+                self.structured_config.ethernet_interfaces.append(interface)
 
     def _set_point_to_point_interfaces(
         self: AvdStructuredConfigNetworkServicesProtocol,
