@@ -126,7 +126,7 @@ class AvdModel(AvdBase):
 
         Only walking the given kwargs improves performance compared to having named kwargs.
 
-        This method is typically overridden when TYPE_CHECKING is True, to provider proper suggestions and type hints for the arguments.
+        This method is typically overridden when TYPE_CHECKING is True, to provide proper suggestions and type hints for the arguments.
         """
         self._custom_data = {}
         [setattr(self, arg, arg_value) for arg, arg_value in kwargs.items() if arg_value is not Undefined]
