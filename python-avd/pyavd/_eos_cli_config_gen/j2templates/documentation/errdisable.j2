@@ -15,7 +15,11 @@
 |  Detect Cause | Detection Enabled | Recovery Enabled |
 | ------------- | ----------------- | ---------------- |
 {%         for cause in combined_causes | arista.avd.natural_sort %}
-{%             set detect_status = cause in errdisable.detect.causes | arista.avd.default([]) %}
+{%             if cause in errdisable.detect.causes | arista.avd.default([]) %}
+{%                 set detect_status = True %}
+{%             else %}
+{%                 set detect_status = "-" %}
+{%             endif %}
 {%             set recovery_status = cause in errdisable.recovery.causes | arista.avd.default([]) %}
 | {{ cause }} | {{ detect_status }} | {{ recovery_status }} |
 {%         endfor %}

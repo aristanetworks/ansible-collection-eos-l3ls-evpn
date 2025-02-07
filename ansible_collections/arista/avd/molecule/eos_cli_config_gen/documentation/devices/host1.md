@@ -11605,22 +11605,22 @@ ip nat synchronization
 | ------------- | ----------------- | ---------------- |
 | acl | True | False |
 | arp-inspection | True | True |
-| bpduguard | False | True |
+| bpduguard | - | True |
 | dot1x | True | True |
-| hitless-reload-down | False | True |
-| lacp-rate-limit | False | True |
+| hitless-reload-down | - | True |
+| lacp-rate-limit | - | True |
 | link-change | True | False |
-| link-flap | False | True |
-| no-internal-vlan | False | True |
-| portchannelguard | False | True |
-| portsec | False | True |
-| speed-misconfigured | False | True |
+| link-flap | - | True |
+| no-internal-vlan | - | True |
+| portchannelguard | - | True |
+| portsec | - | True |
+| speed-misconfigured | - | True |
 | tapagg | True | True |
-| uplink-failure-detection | False | True |
+| uplink-failure-detection | - | True |
 | xcvr-misconfigured | True | True |
 | xcvr-overheat | True | True |
 | xcvr-power-unsupported | True | True |
-| xcvr-unsupported | False | True |
+| xcvr-unsupported | - | True |
 
 Errdisable recovery timer interval: 300 seconds
 
