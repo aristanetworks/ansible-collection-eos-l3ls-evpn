@@ -20,7 +20,7 @@ class CvPathfinderMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    def _cv_pathfinder(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder:
+    def _cv_pathfinder(self: AvdStructuredConfigMetadataProtocol) -> None:
         """
         Generate metadata for CV Pathfinder feature.
 
@@ -34,50 +34,45 @@ class CvPathfinderMixin(Protocol):
 
         # Pathfinder
         if self.shared_utils.is_cv_pathfinder_server:
-            cv_pathfinder = EosCliConfigGen.Metadata.CvPathfinder(
+            self.structured_config.metadata.cv_pathfinder._update(
                 role=self.shared_utils.cv_pathfinder_role,
                 ssl_profile=self.shared_utils.wan_stun_dtls_profile_name,
                 vtep_ip=self.shared_utils.vtep_ip,
                 region=region_name,
                 site=site_name,
-                address=self.shared_utils.wan_site.location if self.shared_utils.wan_site is not None else None,
-                interfaces=self._metadata_interfaces(),
-                pathgroups=self._metadata_pathgroups(),
-                regions=self._metadata_regions(),
-                vrfs=self._metadata_vrfs(),
             )
+            if self.shared_utils.wan_site is not None:
+                self.structured_config.metadata.cv_pathfinder.address = self.shared_utils.wan_site.location
+            self._metadata_interfaces()
+            self._metadata_pathgroups()
+            self._metadata_regions()
+            self._metadata_vrfs()
             if self.structured_config.router_adaptive_virtual_topology.vrfs and self.structured_config.router_path_selection.load_balance_policies:
-                cv_pathfinder.vrfs = self._metadata_vrfs()
-            return cv_pathfinder
+                self._metadata_vrfs()
 
         # Edge or transit
-        return EosCliConfigGen.Metadata.CvPathfinder(
+        self.structured_config.metadata.cv_pathfinder._update(
             role=self.shared_utils.cv_pathfinder_role,
             ssl_profile=self.shared_utils.wan_stun_dtls_profile_name,
             vtep_ip=self.shared_utils.vtep_ip,
             region=region_name,
-            zone=self.shared_utils.wan_zone["name"],
+            # TODO: zone=self.shared_utils.wan_zone["name"],
             site=site_name,
-            interfaces=self._metadata_interfaces(),
-            pathfinders=self._metadata_pathfinder_vtep_ips(),
         )
+        self._metadata_interfaces()
+        self._metadata_pathfinder_vtep_ips()
 
-    def _metadata_interfaces(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Interfaces:
-        interfaces = EosCliConfigGen.Metadata.CvPathfinder.Interfaces()
+    def _metadata_interfaces(self: AvdStructuredConfigMetadataProtocol) -> None:
         for carrier in self.shared_utils.wan_local_carriers:
             for interface in carrier["interfaces"]:
                 pathfinder_interface = EosCliConfigGen.Metadata.CvPathfinder.InterfacesItem(
-                    name=interface["name"],
-                    carrier=carrier["name"],
-                    circuit_id=interface.get("wan_circuit_id"),
-                    pathgroup=carrier["path_group"],
-                    public_ip=str(interface["public_ip"]) if self.shared_utils.is_cv_pathfinder_server else None,
+                    name=interface["name"], carrier=carrier["name"], circuit_id=interface.get("wan_circuit_id"), pathgroup=carrier["path_group"]
                 )
-                interfaces.append(pathfinder_interface)
-        return interfaces
+                if self.shared_utils.is_cv_pathfinder_server:
+                    pathfinder_interface.public_ip = str(interface["public_ip"])
+                self.structured_config.metadata.cv_pathfinder.interfaces.append(pathfinder_interface)
 
-    def _metadata_pathgroups(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Pathgroups:
-        path_groups = EosCliConfigGen.Metadata.CvPathfinder.Pathgroups()
+    def _metadata_pathgroups(self: AvdStructuredConfigMetadataProtocol) -> None:
         for pathgroup in self.inputs.wan_path_groups:
             path_group = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem(name=pathgroup.name)
             carriers_data = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem.Carriers()
@@ -91,14 +86,12 @@ class CvPathfinderMixin(Protocol):
                     imported_carriers_data.append(imported_carrier_data)
             path_group.carriers = carriers_data
             path_group.imported_carriers = imported_carriers_data
-            path_groups.append(path_group)
-        return path_groups
+            self.structured_config.metadata.cv_pathfinder.pathgroups.append(path_group)
 
-    def _metadata_regions(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Regions:
+    def _metadata_regions(self: AvdStructuredConfigMetadataProtocol) -> None:
         if not self.inputs.cv_pathfinder_regions:
             msg = "'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'."
             raise AristaAvdInvalidInputsError(msg)
-        regions_obj = EosCliConfigGen.Metadata.CvPathfinder.Regions()
         regions = self.inputs.cv_pathfinder_regions
         for region in regions:
             region_obj = EosCliConfigGen.Metadata.CvPathfinder.RegionsItem(name=region.name, id=region.id)
@@ -107,18 +100,14 @@ class CvPathfinderMixin(Protocol):
                 site_obj = region_obj.zones[0].SitesItem(name=site.name, id=site.id)
                 site_obj.location.address = site.location
                 region_obj.zones[0].sites.append(site_obj)
-            regions_obj.append(region_obj)
-        return regions_obj
+            self.structured_config.metadata.cv_pathfinder.regions.append(region_obj)
 
-    def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Pathfinders:
-        vtep_ips = EosCliConfigGen.Metadata.CvPathfinder.Pathfinders()
+    def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadataProtocol) -> None:
         for wan_route_server in self.shared_utils.filtered_wan_route_servers:
             vtep_ip = EosCliConfigGen.Metadata.CvPathfinder.PathfindersItem(vtep_ip=wan_route_server.vtep_ip)
-            vtep_ips.append(vtep_ip)
-        return vtep_ips
+        self.structured_config.metadata.cv_pathfinder.pathfinders.append(vtep_ip)
 
-    def _metadata_vrfs(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Vrfs | None:
-        metadata_vrfs = EosCliConfigGen.Metadata.CvPathfinder.Vrfs()
+    def _metadata_vrfs(self: AvdStructuredConfigMetadataProtocol) -> None:
         """Extracting metadata for VRFs by parsing the generated structured config and flatten it a bit (like hiding load-balance policies)."""
         avt_vrfs = self.structured_config.router_adaptive_virtual_topology.vrfs
         load_balance_policies = self.structured_config.router_path_selection.load_balance_policies
@@ -172,8 +161,7 @@ class CvPathfinderMixin(Protocol):
                 avt.pathgroups = avt_path_groups
                 metadata_vrf.avts.append(avt)
 
-            metadata_vrfs.append(metadata_vrf)
-        return metadata_vrfs
+            self.structured_config.metadata.cv_pathfinder.vrfs.append(metadata_vrf)
 
     def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadataProtocol, vrf_name: str) -> int:
         if vrf_name not in self.inputs.wan_virtual_topologies.vrfs or (wan_vni := self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni) is None:

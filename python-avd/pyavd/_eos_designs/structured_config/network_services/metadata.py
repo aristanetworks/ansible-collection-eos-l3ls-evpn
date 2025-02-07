@@ -31,15 +31,15 @@ class MetadataMixin(Protocol):
         if not self.shared_utils.is_cv_pathfinder_router:
             return
         if self._filtered_internet_exit_policies_and_connections:
-            self.structured_config.metadata.cv_pathfinder._update(internet_exit_policies=self.get_cv_pathfinder_metadata_internet_exit_policies())
+            self.get_cv_pathfinder_metadata_internet_exit_policies()
+
         if self.shared_utils.is_cv_pathfinder_server and self.application_traffic_recognition is not None:
-            self.structured_config.metadata.cv_pathfinder._update(applications=self.get_cv_pathfinder_metadata_applications())
+            self.get_cv_pathfinder_metadata_applications()
 
     def get_cv_pathfinder_metadata_internet_exit_policies(
         self: AvdStructuredConfigNetworkServicesProtocol,
-    ) -> EosCliConfigGen.Metadata.CvPathfinder.InternetExitPolicies:
+    ) -> None:
         """Generate metadata.cv_pathfinder.internet_exit_policies if available."""
-        internet_exit_polices = EosCliConfigGen.Metadata.CvPathfinder.InternetExitPolicies()
         for internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
             # Currently only supporting zscaler
             if internet_exit_policy.type != "zscaler":
@@ -51,8 +51,8 @@ class MetadataMixin(Protocol):
                 type=internet_exit_policy.type,
                 city=self._zscaler_endpoints.device_location.city,
                 country=self._zscaler_endpoints.device_location.country,
-                upload_bandwidth=internet_exit_policy.zscaler.upload_bandwidth,
-                download_bandwidth=internet_exit_policy.zscaler.download_bandwidth,
+                # TODO: upload_bandwidth=internet_exit_policy.zscaler.upload_bandwidth,
+                # TODO: download_bandwidth=internet_exit_policy.zscaler.download_bandwidth,
                 firewall=internet_exit_policy.zscaler.firewall.enabled,
                 ips_control=internet_exit_policy.zscaler.firewall.ips,
                 acceptable_use_policy=internet_exit_policy.zscaler.acceptable_use_policy,
@@ -70,16 +70,14 @@ class MetadataMixin(Protocol):
                     )
                 )
             internet_exit_police.tunnels = tunnels
-            internet_exit_polices.append(internet_exit_police)
-        return internet_exit_polices
 
-    def get_cv_pathfinder_metadata_applications(self: AvdStructuredConfigNetworkServicesProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Applications:
+            self.structured_config.metadata.cv_pathfinder.internet_exit_policies.append(internet_exit_police)
+
+    def get_cv_pathfinder_metadata_applications(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """Generate metadata.cv_pathfinder.applications if available."""
         applications = get(self.application_traffic_recognition, "applications", default=[])
         user_defined_app_names = set(get_all(applications, "ipv4_applications.name") + get_all(applications, "ipv6_applications.name"))
-
         categories = get(self.application_traffic_recognition, "categories", default=[])
-        cv_pathfinder_metadata_applications = EosCliConfigGen.Metadata.CvPathfinder.Applications()
         profiles = EosCliConfigGen.Metadata.CvPathfinder.Applications.Profiles()
         for profile in get(self.application_traffic_recognition, "application_profiles", default=[]):
             application_profile = EosCliConfigGen.Metadata.CvPathfinder.Applications.ProfilesItem(
@@ -87,17 +85,17 @@ class MetadataMixin(Protocol):
             )
             for application in get(profile, "applications", default=[]):
                 if application["name"] not in user_defined_app_names:
-                    profile_builtin_application = application_profile.BuiltinApplicationsItem(
-                        name=application["name"], services=get_all(application, "service")
-                    )
+                    profile_builtin_application = application_profile.BuiltinApplicationsItem(name=application["name"])
+                    # TODO: Need to fix the support of services
                     application_profile.builtin_applications.append(profile_builtin_application)
                 if application["name"] in user_defined_app_names:
                     profile_user_defined_application = application_profile.UserDefinedApplicationsItem(name=application["name"])
                     application_profile.user_defined_applications.append(profile_user_defined_application)
             for category in get(profile, "categories", default=[]):
-                profile_category = application_profile.CategoriesItem(category=category["name"], services=get_all(category, "service"))
+                profile_category = application_profile.CategoriesItem(category=category["name"])
+                # TODO: Need to fix the support of services
                 application_profile.categories.append(profile_category)
-        cv_pathfinder_metadata_applications.profiles = profiles
+        self.structured_config.metadata.cv_pathfinder.applications.profiles = profiles
         category_builtin_applications = EosCliConfigGen.Metadata.CvPathfinder.Applications.Categories.BuiltinApplications()
         category_user_defined_applications = EosCliConfigGen.Metadata.CvPathfinder.Applications.Categories.UserDefinedApplications()
         for category in categories:
@@ -105,16 +103,17 @@ class MetadataMixin(Protocol):
                 if application["name"] not in user_defined_app_names:
                     category_builtin_applications.append(
                         EosCliConfigGen.Metadata.CvPathfinder.Applications.Categories.BuiltinApplicationsItem(
-                            name=application["name"], category=category["name"], services=get(category, "service")
+                            name=application["name"], category=category["name"]
                         )
                     )
+                    # TODO: Need to fix the support of services
                 if application["name"] in user_defined_app_names:
                     category_user_defined_applications.append(
                         EosCliConfigGen.Metadata.CvPathfinder.Applications.Categories.UserDefinedApplicationsItem(
                             name=application["name"], category=category["name"]
                         )
                     )
-        cv_pathfinder_metadata_applications.categories._update(
-            builtin_applications=category_builtin_applications, user_defined_applications=category_user_defined_applications
-        )
-        return cv_pathfinder_metadata_applications
+        if category_builtin_applications:
+            self.structured_config.metadata.cv_pathfinder.applications.categories.builtin_applications = category_builtin_applications
+        if category_user_defined_applications:
+            self.structured_config.metadata.cv_pathfinder.applications.categories.user_defined_applications = category_user_defined_applications
