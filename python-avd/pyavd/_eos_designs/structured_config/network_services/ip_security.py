@@ -3,10 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import strip_null_from_data
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
@@ -19,14 +19,13 @@ class IpSecurityMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def ip_security(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
+    @structured_config_contributor
+    def ip_security(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """ip_security set based on cv_pathfinder_internet_exit_policies."""
         if not self._filtered_internet_exit_policies_and_connections:
-            return None
+            return
 
-        ip_security = {"ike_policies": [], "sa_policies": [], "profiles": []}
-        for internet_exit_policy, _connections in self._filtered_internet_exit_policies_and_connections:
+        for internet_exit_policy, _ in self._filtered_internet_exit_policies_and_connections:
             # Currently we only need ipsec for zscaler.
             if internet_exit_policy.type != "zscaler":
                 continue
@@ -38,39 +37,28 @@ class IpSecurityMixin(Protocol):
             profile_name = f"IE-{policy_name}-PROFILE"
             ufqdn, ipsec_key = self._get_ipsec_credentials(internet_exit_policy)
 
-            ip_security["ike_policies"].append(
-                {
-                    "name": ike_policy_name,
-                    "local_id_fqdn": ufqdn,
-                    "ike_lifetime": 24,
-                    "encryption": "aes256",
-                    "dh_group": 24,
-                },
+            self.structured_config.ip_security.ike_policies.append_new(
+                name=ike_policy_name,
+                local_id_fqdn=ufqdn,
+                ike_lifetime=24,
+                encryption="aes256",
+                dh_group=24,
             )
-            ip_security["sa_policies"].append(
-                {
-                    "name": sa_policy_name,
-                    "pfs_dh_group": 24,
-                    "sa_lifetime": {"value": 8},
-                    "esp": {
-                        "integrity": "sha256",
-                        "encryption": "aes256" if encrypt_traffic else "disabled",
-                    },
-                },
+            self.structured_config.ip_security.sa_policies.append_new(
+                name=sa_policy_name,
+                pfs_dh_group=24,
+                sa_lifetime=EosCliConfigGen.IpSecurity.SaPoliciesItem.SaLifetime(value=8),
+                esp=EosCliConfigGen.IpSecurity.SaPoliciesItem.Esp(integrity="sha256", encryption="aes256" if encrypt_traffic else "disabled"),
             )
-            ip_security["profiles"].append(
-                {
-                    "name": profile_name,
-                    "ike_policy": ike_policy_name,
-                    "sa_policy": sa_policy_name,
-                    "shared_key": ipsec_key,
-                    "dpd": {
-                        "interval": 10,
-                        "time": 60,
-                        "action": "clear",
-                    },
-                    "connection": "start",
-                },
+            self.structured_config.ip_security.profiles.append_new(
+                name=profile_name,
+                ike_policy=ike_policy_name,
+                sa_policy=sa_policy_name,
+                shared_key=ipsec_key,
+                dpd=EosCliConfigGen.IpSecurity.ProfilesItem.Dpd(
+                    interval=10,
+                    time=60,
+                    action="clear",
+                ),
+                connection="start",
             )
-
-        return strip_null_from_data(ip_security) or None
