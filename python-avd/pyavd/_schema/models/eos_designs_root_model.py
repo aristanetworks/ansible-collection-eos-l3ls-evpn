@@ -38,8 +38,8 @@ class EosDesignsRootModel(AvdModel):
 
         Args:
             data: A mapping containing the EosDesigns input data to be loaded.
-            keep_extra_keys: Store all unknown keys in the _custom_data dict and include it again in the output of _to_dict().
-                By default only keys starting with _ will be stored in _custom_data. This will change the behavior to store _all_ keys.
+            keep_extra_keys: Store all unknown keys in the self._custom_data dict and include it again in the output of _to_dict().
+                By default only keys starting with _ will be stored. This will change the behavior to store _all_ keys.
             load_custom_structured_config: Some custom structured config contains inline Jinja templates relying on variables produced by EosDesignsFacts.
                 To avoid such templates breaking the type checks, we can skip loading custom_structured_configuration during the facts phase by setting this
                 to False.
