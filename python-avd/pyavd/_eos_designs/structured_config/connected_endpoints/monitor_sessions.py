@@ -61,11 +61,7 @@ class MonitorSessionsMixin(Protocol):
                     direction=session.source_settings.direction,
                 )
                 if session.source_settings.access_group.name:
-                    source.access_group._update(
-                        type=session.source_settings.access_group.type,
-                        name=session.source_settings.access_group.name,
-                        priority=session.source_settings.access_group.priority,
-                    )
+                    source.access_group = session.source_settings.access_group._cast_as(EosCliConfigGen.MonitorSessionsItem.SourcesItem.AccessGroup)
                 monitor_session.sources.append(source)
 
             if session_settings := merged_settings.session_settings:
