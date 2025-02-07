@@ -33,7 +33,7 @@ class PortChannelInterfacesMixin(Protocol):
         if not self.shared_utils.network_services_l1:
             return
 
-        subif_parent_interfaces: set[EosCliConfigGen.PortChannelInterfacesItem] = set()
+        subif_parent_interfaces: list[EosCliConfigGen.PortChannelInterfacesItem] = []
         """Set to collect all the parent interface names of all the subinterfaces defined under l3_interfaces or point_to_point_services in network_services."""
 
         for tenant in self.shared_utils.filtered_tenants:
@@ -43,13 +43,13 @@ class PortChannelInterfacesMixin(Protocol):
             self._set_point_to_point_interfaces(tenant, subif_parent_interfaces)
 
             for subif_parent_interface in subif_parent_interfaces:
-                if subif_parent_interface not in self.structured_config.port_channel_interfaces:
+                if subif_parent_interface.name not in self.structured_config.port_channel_interfaces:
                     self.structured_config.port_channel_interfaces.append(subif_parent_interface)
 
     def _set_point_to_point_interfaces(
         self: AvdStructuredConfigNetworkServicesProtocol,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
-        subif_parent_interfaces: set[EosCliConfigGen.PortChannelInterfacesItem],
+        subif_parent_interfaces: list[EosCliConfigGen.PortChannelInterfacesItem],
     ) -> None:
         """Set the structured_config port_channel_interfaces with the point-to-point interfaces defined under network_services."""
         for point_to_point_service in tenant.point_to_point_services._natural_sorted():
@@ -80,7 +80,8 @@ class PortChannelInterfacesMixin(Protocol):
                         if port_channel_mode == "active":
                             parent_interface.lacp_id = short_esi.replace(":", ".")
 
-                    subif_parent_interfaces.add(parent_interface)
+                    # TODO: See to refactor
+                    subif_parent_interfaces.append(parent_interface)
 
                     for subif in point_to_point_service.subinterfaces:
                         subif_name = f"{interface_name}.{subif.number}"
