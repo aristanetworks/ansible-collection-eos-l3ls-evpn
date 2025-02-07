@@ -3,17 +3,35 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+from collections import defaultdict
+from dataclasses import dataclass, field
 from functools import cached_property
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Literal, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.schema import EosDesigns
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import append_if_not_duplicate, default, unique
+from pyavd._utils import default, unique
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
-    from pyavd._eos_designs.schema import EosDesigns
-
     from . import AvdStructuredConfigNetworkServicesProtocol
+
+
+@dataclass(frozen=True, order=True)
+class VniContext:
+    vni: int
+    """The VNI."""
+    source_type: Literal["L2VLAN", "VRF", "SVI"]
+    """The source type of the VNI."""
+    name: str
+    """The VRF name or the VLAN ID as a string."""
+    tenant: str = field(compare=False)
+    """The tenant name."""
+
+    def __repr__(self) -> str:
+        return f"{self.source_type} {self.name} in tenant {self.tenant}"
 
 
 class VxlanInterfaceMixin(Protocol):
@@ -24,9 +42,13 @@ class VxlanInterfaceMixin(Protocol):
     """
 
     @cached_property
-    def vxlan_interface(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
+    def _multi_vtep(self: AvdStructuredConfigNetworkServicesProtocol) -> bool:
+        return self.shared_utils.mlag is True and self.shared_utils.evpn_multicast is True
+
+    @structured_config_contributor
+    def vxlan_interface(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Returns structured config for vxlan_interface.
+        Set structured config for vxlan_interface.
 
         Only used for VTEPs and for WAN
 
@@ -34,142 +56,83 @@ class VxlanInterfaceMixin(Protocol):
         all Network Services deployed on this device.
         """
         if not (self.shared_utils.overlay_vtep or self.shared_utils.is_wan_router):
-            return None
+            return
 
-        vxlan = {
-            "udp_port": 4789,
-        }
+        self.structured_config.vxlan_interface.vxlan1.description = f"{self.shared_utils.hostname}_VTEP"
+
+        vxlan = self.structured_config.vxlan_interface.vxlan1.vxlan
+        vxlan.udp_port = 4789
 
         if self._multi_vtep:
-            vxlan["source_interface"] = "Loopback0"
-            vxlan["mlag_source_interface"] = self.shared_utils.vtep_loopback
+            vxlan.source_interface = "Loopback0"
+            vxlan.mlag_source_interface = self.shared_utils.vtep_loopback
         else:
-            vxlan["source_interface"] = self.shared_utils.vtep_loopback
+            vxlan.source_interface = self.shared_utils.vtep_loopback
 
         if self.shared_utils.mlag_l3 and self.shared_utils.network_services_l3 and self.shared_utils.overlay_evpn:
-            vxlan["virtual_router_encapsulation_mac_address"] = "mlag-system-id"
+            vxlan.virtual_router_encapsulation_mac_address = "mlag-system-id"
 
         if self.shared_utils.overlay_her and not self.inputs.overlay_her_flood_list_per_vni and (common := self._overlay_her_flood_lists.get("common")):
-            vxlan["flood_vteps"] = natural_sort(unique(common))
+            vxlan.flood_vteps.extend(natural_sort(unique(common)))
 
         if self.shared_utils.overlay_cvx:
-            vxlan["controller_client"] = {"enabled": True}
+            vxlan.controller_client.enabled = True
 
-        vlans: list[dict] = []
-        vrfs: list[dict] = []
-        # vnis is a list of dicts only used for duplication checks across multiple types of objects all having "vni" as a key.
-        vnis: list[dict] = []
-
+        # Keep track of the VNIs added to check for duplicates
+        # The entries are {<vni>: (<type>, <name>, <tenant>)}
+        vnis: dict[int, set[VniContext]] = defaultdict(set)
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
-                self._get_vxlan_interface_config_for_vrf(vrf, tenant, vrfs, vlans, vnis)
+                self._set_vxlan_interface_config_for_vrf(vrf, tenant, vnis)
 
             if not self.shared_utils.network_services_l2:
                 continue
 
             for l2vlan in tenant.l2vlans:
-                if vlan := self._get_vxlan_interface_config_for_vlan(l2vlan, tenant):
-                    # Duplicate check is not done on the actual list of vlans, but instead on our local "vnis" list.
-                    # This is necessary to find duplicate VNIs across multiple object types.
-                    append_if_not_duplicate(
-                        list_of_dicts=vnis,
-                        primary_key="vni",
-                        new_dict=vlan,
-                        context="VXLAN VNIs for L2VLANs",
-                        context_keys=["id", "name", "vni"],
-                    )
-                    # Here we append to the actual list of VRFs, so duplication check is on the VLAN ID here.
-                    append_if_not_duplicate(
-                        list_of_dicts=vlans,
-                        primary_key="id",
-                        new_dict=vlan,
-                        context="VXLAN VNIs for L2VLANs",
-                        context_keys=["id", "vni"],
-                    )
+                if l2vlan.vxlan:
+                    self._set_vxlan_interface_config_for_vlan(l2vlan, tenant, vnis)
 
         if self.shared_utils.is_wan_server:
             # loop through wan_vrfs and add VRF VNI if not present
-            for vrf in self._filtered_wan_vrfs:
-                # Duplicate check is not done on the actual list of vlans, but instead on our local "vnis" list.
-                # This is necessary to find duplicate VNIs across multiple object types.
-                vrf_data = {"name": vrf.name, "vni": vrf.wan_vni}
-                append_if_not_duplicate(
-                    list_of_dicts=vnis,
-                    primary_key="vni",
-                    new_dict=vrf_data,
-                    context="VXLAN VNIs for VRFs",
-                    context_keys=["id", "name", "vni"],
-                )
-                # Here we append to the actual list of VRFs, so duplication check is on the VRF here.
-                append_if_not_duplicate(
-                    list_of_dicts=vrfs,
-                    primary_key="name",
-                    new_dict=vrf_data,
-                    context="VXLAN VNIs for VRFs",
-                    context_keys=["name", "vni"],
-                )
+            for wan_vrf in self._filtered_wan_vrfs:
+                vrf = vxlan.vrfs.append_new(name=wan_vrf.name, vni=wan_vrf.wan_vni)
+                vnis[wan_vrf.wan_vni].add(VniContext(vni=wan_vrf.wan_vni, name=wan_vrf.name, tenant="", source_type="VRF"))
 
-        if vlans:
-            vxlan["vlans"] = vlans
+        self._check_for_duplicates(vnis)
 
-        if vrfs:
-            vxlan["vrfs"] = vrfs
-
-        return {
-            "vxlan1": {
-                "description": f"{self.shared_utils.hostname}_VTEP",
-                "vxlan": vxlan,
-            },
-        }
-
-    def _get_vxlan_interface_config_for_vrf(
+    def _set_vxlan_interface_config_for_vrf(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
-        vrfs: list[dict],
-        vlans: list[dict],
-        vnis: list[dict],
+        vnis: dict[int, set[VniContext]],
     ) -> None:
-        """In place updates of the vlans, vnis and vrfs list."""
+        """
+        Set one Vxlan1 VRF in structured_config and its associated SVI VLANs.
+
+        the VRF is set only if the device has L3 services
+        the SVI VLANs are set only if the device has L2 services
+        """
         if self.shared_utils.network_services_l2:
             for svi in vrf.svis:
-                if vlan := self._get_vxlan_interface_config_for_vlan(svi, tenant):
-                    # Duplicate check is not done on the actual list of vlans, but instead on our local "vnis" list.
-                    # This is necessary to find duplicate VNIs across multiple object types.
-                    append_if_not_duplicate(
-                        list_of_dicts=vnis,
-                        primary_key="vni",
-                        new_dict=vlan,
-                        context="VXLAN VNIs for SVIs",
-                        context_keys=["id", "name", "vni"],
-                    )
-                    # Here we append to the actual list of VRFs, so duplication check is on the VLAN ID here.
-                    append_if_not_duplicate(
-                        list_of_dicts=vlans,
-                        primary_key="id",
-                        new_dict=vlan,
-                        context="VXLAN VNIs for SVIs",
-                        context_keys=["id", "vni"],
-                    )
+                if svi.vxlan:
+                    self._set_vxlan_interface_config_for_vlan(svi, tenant, vnis)
 
         if self.shared_utils.network_services_l3 and self.shared_utils.overlay_evpn_vxlan:
-            vrf_name = vrf.name
-
             # Only configure VNI for VRF if the VRF is EVPN enabled
             if "evpn" not in vrf.address_families:
                 return
 
             if self.shared_utils.is_wan_router:
                 # Every VRF with EVPN on a WAN router must have a wan_vni defined.
-                if vrf_name not in self._filtered_wan_vrfs:
+                if vrf.name not in self._filtered_wan_vrfs:
                     msg = (
-                        f"The VRF '{vrf_name}' does not have a `wan_vni` defined under 'wan_virtual_topologies'. "
+                        f"The VRF '{vrf.name}' does not have a `wan_vni` defined under 'wan_virtual_topologies'. "
                         "If this VRF was not intended to be extended over the WAN, but still required to be configured on the WAN router, "
                         "set 'address_families: []' under the VRF definition. If this VRF was not intended to be configured on the WAN router, "
                         "use the VRF filter 'deny_vrfs' under the node settings."
                     )
                     raise AristaAvdInvalidInputsError(msg)
-                vni = self._filtered_wan_vrfs[vrf_name].wan_vni
+                vni = self._filtered_wan_vrfs[vrf.name].wan_vni
             else:
                 vni = default(vrf.vrf_vni, vrf.vrf_id)
 
@@ -181,63 +144,47 @@ class VxlanInterfaceMixin(Protocol):
             # NOTE: this can never be None here, it would be caught previously in the code
             vrf_id: int = default(vrf.vrf_id, vrf.vrf_vni)
 
-            vrf_data = {"name": vrf_name, "vni": vni}
+            vxlan_vrf = EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VrfsItem(name=vrf.name, vni=vni)
 
             if getattr(vrf, "_evpn_l3_multicast_enabled", False):
                 if vrf_multicast_group := getattr(vrf, "_evpn_l3_multicast_group_ip", None):
-                    vrf_data["multicast_group"] = vrf_multicast_group
+                    vxlan_vrf.multicast_group = vrf_multicast_group
                 else:
                     if not tenant.evpn_l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool:
                         msg = f"'evpn_l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool' for Tenant: {tenant.name} is required."
                         raise AristaAvdInvalidInputsError(msg)
 
-                    vrf_data["multicast_group"] = self.shared_utils.ip_addressing.evpn_underlay_l3_multicast_group(
+                    vxlan_vrf.multicast_group = self.shared_utils.ip_addressing.evpn_underlay_l3_multicast_group(
                         tenant.evpn_l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool,
                         vni,
                         vrf_id,
                         tenant.evpn_l3_multicast.evpn_underlay_l3_multicast_group_ipv4_pool_offset,
                     )
 
-            # Duplicate check is not done on the actual list of vlans, but instead on our local "vnis" list.
-            # This is necessary to find duplicate VNIs across multiple object types.
-            append_if_not_duplicate(
-                list_of_dicts=vnis,
-                primary_key="vni",
-                new_dict=vrf_data,
-                context="VXLAN VNIs for VRFs",
-                context_keys=["id", "name", "vni"],
-            )
-            # Here we append to the actual list of VRFs, so duplication check is on the VRF here.
-            append_if_not_duplicate(
-                list_of_dicts=vrfs,
-                primary_key="name",
-                new_dict=vrf_data,
-                context="VXLAN VNIs for VRFs",
-                context_keys=["name", "vni"],
-            )
+            self.structured_config.vxlan_interface.vxlan1.vxlan.vrfs.append(vxlan_vrf)
+            vnis[vxlan_vrf.vni].add(VniContext(vni=vxlan_vrf.vni, name=vxlan_vrf.name, tenant=tenant.name, source_type="VRF"))
 
-    def _get_vxlan_interface_config_for_vlan(
+    def _set_vxlan_interface_config_for_vlan(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
-    ) -> dict:
+        vnis: dict[int, set[VniContext]],
+    ) -> None:
         """
-        vxlan_interface logic for one vlan.
+        Set one Vxlan1 vlan in structured_config.
 
         Can be used for both svis and l2vlans
         """
-        if not vlan.vxlan:
-            return {}
+        vxlan_vlan = EosCliConfigGen.VxlanInterface.Vxlan1.Vxlan.VlansItem(id=vlan.id)
 
-        vxlan_interface_vlan = {"id": vlan.id}
         if vlan.vni_override:
-            vxlan_interface_vlan["vni"] = vlan.vni_override
+            vxlan_vlan.vni = vlan.vni_override
         else:
             if tenant.mac_vrf_vni_base is None:
                 msg = f"'mac_vrf_vni_base' for Tenant: {tenant.name} is required."
                 raise AristaAvdInvalidInputsError(msg)
-            vxlan_interface_vlan["vni"] = tenant.mac_vrf_vni_base + vlan.id
+            vxlan_vlan.vni = tenant.mac_vrf_vni_base + vlan.id
 
         vlan_evpn_l2_multicast_enabled = bool(default(vlan.evpn_l2_multicast.enabled, tenant.evpn_l2_multicast.enabled)) and self.shared_utils.evpn_multicast
         if vlan_evpn_l2_multicast_enabled is True:
@@ -245,16 +192,18 @@ class VxlanInterfaceMixin(Protocol):
                 msg = f"'evpn_l2_multicast.underlay_l2_multicast_group_ipv4_pool' for Tenant: {tenant.name} is required."
                 raise AristaAvdInvalidInputsError(msg)
 
-            vxlan_interface_vlan["multicast_group"] = self.shared_utils.ip_addressing.evpn_underlay_l2_multicast_group(
+            vxlan_vlan.multicast_group = self.shared_utils.ip_addressing.evpn_underlay_l2_multicast_group(
                 tenant.evpn_l2_multicast.underlay_l2_multicast_group_ipv4_pool,
                 vlan.id,
                 tenant.evpn_l2_multicast.underlay_l2_multicast_group_ipv4_pool_offset,
             )
 
         if self.shared_utils.overlay_her and self.inputs.overlay_her_flood_list_per_vni and (vlan_id_entry := self._overlay_her_flood_lists.get(vlan.id)):
-            vxlan_interface_vlan["flood_vteps"] = natural_sort(unique(vlan_id_entry))
+            vxlan_vlan.flood_vteps.extend(natural_sort(unique(vlan_id_entry)))
 
-        return vxlan_interface_vlan
+        self.structured_config.vxlan_interface.vxlan1.vxlan.vlans.append(vxlan_vlan)
+        vlan_type = "L2VLAN" if isinstance(vlan, EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem) else "SVI"
+        vnis[vxlan_vlan.vni].add(VniContext(vni=vxlan_vlan.vni, name=str(vxlan_vlan.id), tenant=tenant.name, source_type=vlan_type))
 
     @cached_property
     def _overlay_her_flood_lists(self: AvdStructuredConfigNetworkServicesProtocol) -> dict[str | int, list]:
@@ -305,6 +254,15 @@ class VxlanInterfaceMixin(Protocol):
 
         return overlay_her_flood_lists
 
-    @cached_property
-    def _multi_vtep(self: AvdStructuredConfigNetworkServicesProtocol) -> bool:
-        return self.shared_utils.mlag is True and self.shared_utils.evpn_multicast is True
+    def _check_for_duplicates(
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        vnis: dict[int, set[VniContext]],
+    ) -> None:
+        """Pass through the vnis dictionary and raise an exception for any duplicate found."""
+        for vni, items in vnis.items():
+            if len(items) > 1:
+                msg = (
+                    f"Found duplicate objects with conflicting data while generating configuration for VXLAN VNI {vni}. "
+                    f"The following items are conflicting: {', '.join(f'{item}' for item in sorted(items))}."
+                )
+                raise AristaAvdInvalidInputsError(msg)

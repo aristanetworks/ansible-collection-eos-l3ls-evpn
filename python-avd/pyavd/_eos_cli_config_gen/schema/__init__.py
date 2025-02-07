@@ -12372,6 +12372,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}, "_custom_data": {"type": dict}}
                 number: int
+                """
+                Valid values are 1-16777215 microseconds. This is regardless of whether the specified unit is
+                milliseconds or microseconds.
+                """
                 unit: Literal["microseconds", "milliseconds"]
                 _custom_data: dict[str, Any]
 
@@ -12391,8 +12395,73 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Subclass of AvdModel.
 
                         Args:
-                            number: number
+                            number:
+                               Valid values are 1-16777215 microseconds. This is regardless of whether the specified unit is
+                               milliseconds or microseconds.
                             unit: unit
+                            _custom_data: _custom_data
+
+                        """
+
+            class MinDelayDynamic(AvdModel):
+                """Subclass of AvdModel."""
+
+                class TwampLightFallback(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}, "_custom_data": {"type": dict}}
+                    number: int
+                    """
+                    Valid values are 1-16777215 microseconds.
+                    This is regardless of whether the specified unit is
+                    milliseconds or microseconds.
+                    """
+                    unit: Literal["microseconds", "milliseconds"]
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            number: int | UndefinedType = Undefined,
+                            unit: Literal["microseconds", "milliseconds"] | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            TwampLightFallback.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                number:
+                                   Valid values are 1-16777215 microseconds.
+                                   This is regardless of whether the specified unit is
+                                   milliseconds or microseconds.
+                                unit: unit
+                                _custom_data: _custom_data
+
+                            """
+
+                _fields: ClassVar[dict] = {"twamp_light_fallback": {"type": TwampLightFallback}, "_custom_data": {"type": dict}}
+                twamp_light_fallback: TwampLightFallback
+                """Subclass of AvdModel."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self, *, twamp_light_fallback: TwampLightFallback | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                    ) -> None:
+                        """
+                        MinDelayDynamic.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            twamp_light_fallback: Subclass of AvdModel.
                             _custom_data: _custom_data
 
                         """
@@ -12404,6 +12473,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "metric": {"type": int},
                 "bandwidth": {"type": Bandwidth},
                 "min_delay_static": {"type": MinDelayStatic},
+                "min_delay_dynamic": {"type": MinDelayDynamic},
                 "_custom_data": {"type": dict},
             }
             enabled: bool | None
@@ -12425,7 +12495,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             Subclass of AvdModel.
             """
             min_delay_static: MinDelayStatic
-            """Subclass of AvdModel."""
+            """
+            Mutually exclusive with min_delay_dynamic, if both are defined min_delay_static takes precedence.
+            Subclass of AvdModel.
+            """
+            min_delay_dynamic: MinDelayDynamic
+            """
+            Mutually exclusive with min_delay_static, if both are defined min_delay_static takes precedence.
+            Subclass of AvdModel.
+            """
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -12439,6 +12517,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     metric: int | None | UndefinedType = Undefined,
                     bandwidth: Bandwidth | UndefinedType = Undefined,
                     min_delay_static: MinDelayStatic | UndefinedType = Undefined,
+                    min_delay_dynamic: MinDelayDynamic | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -12460,7 +12539,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            Interface maximum reservable bandwidth.
 
                            Subclass of AvdModel.
-                        min_delay_static: Subclass of AvdModel.
+                        min_delay_static:
+                           Mutually exclusive with min_delay_dynamic, if both are defined min_delay_static takes precedence.
+                           Subclass of AvdModel.
+                        min_delay_dynamic:
+                           Mutually exclusive with min_delay_static, if both are defined min_delay_static takes precedence.
+                           Subclass of AvdModel.
                         _custom_data: _custom_data
 
                     """
@@ -26851,7 +26935,149 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        _fields: ClassVar[dict] = {"ip": {"type": bool}, "ldp": {"type": Ldp}, "icmp": {"type": Icmp}, "rsvp": {"type": Rsvp}, "_custom_data": {"type": dict}}
+        class Tunnel(AvdModel):
+            """Subclass of AvdModel."""
+
+            class Termination(AvdModel):
+                """Subclass of AvdModel."""
+
+                class Model(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"ttl": {"type": str}, "dscp": {"type": str}, "_custom_data": {"type": dict}}
+                    ttl: Literal["pipe", "uniform"]
+                    dscp: Literal["pipe", "uniform"]
+                    """The DSCP model `uniform` is supported only on specific hardware platforms."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            ttl: Literal["pipe", "uniform"] | UndefinedType = Undefined,
+                            dscp: Literal["pipe", "uniform"] | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            Model.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                ttl: ttl
+                                dscp: The DSCP model `uniform` is supported only on specific hardware platforms.
+                                _custom_data: _custom_data
+
+                            """
+
+                class PhpModel(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"ttl": {"type": str}, "dscp": {"type": str}, "_custom_data": {"type": dict}}
+                    ttl: Literal["pipe", "uniform"]
+                    dscp: Literal["pipe", "uniform"]
+                    """The DSCP model `uniform` is supported only on specific hardware platforms."""
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            ttl: Literal["pipe", "uniform"] | UndefinedType = Undefined,
+                            dscp: Literal["pipe", "uniform"] | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            PhpModel.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                ttl: ttl
+                                dscp: The DSCP model `uniform` is supported only on specific hardware platforms.
+                                _custom_data: _custom_data
+
+                            """
+
+                _fields: ClassVar[dict] = {"model": {"type": Model}, "php_model": {"type": PhpModel}, "_custom_data": {"type": dict}}
+                model: Model
+                """Subclass of AvdModel."""
+                php_model: PhpModel
+                """
+                Used on PHP router in the absence of any VPN routes and explicit null VRF labels.
+
+                Subclass of
+                AvdModel.
+                """
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        model: Model | UndefinedType = Undefined,
+                        php_model: PhpModel | UndefinedType = Undefined,
+                        _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        Termination.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            model: Subclass of AvdModel.
+                            php_model:
+                               Used on PHP router in the absence of any VPN routes and explicit null VRF labels.
+
+                               Subclass of
+                               AvdModel.
+                            _custom_data: _custom_data
+
+                        """
+
+            _fields: ClassVar[dict] = {"termination": {"type": Termination}, "_custom_data": {"type": dict}}
+            termination: Termination
+            """
+            Controls selection of the TTL/DSCP values by LER when decapsulating MPLS packets.
+
+            Subclass of
+            AvdModel.
+            """
+            _custom_data: dict[str, Any]
+
+            if TYPE_CHECKING:
+
+                def __init__(self, *, termination: Termination | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined) -> None:
+                    """
+                    Tunnel.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        termination:
+                           Controls selection of the TTL/DSCP values by LER when decapsulating MPLS packets.
+
+                           Subclass of
+                           AvdModel.
+                        _custom_data: _custom_data
+
+                    """
+
+        _fields: ClassVar[dict] = {
+            "ip": {"type": bool},
+            "ldp": {"type": Ldp},
+            "icmp": {"type": Icmp},
+            "rsvp": {"type": Rsvp},
+            "tunnel": {"type": Tunnel},
+            "_custom_data": {"type": dict},
+        }
         ip: bool | None
         ldp: Ldp
         """Subclass of AvdModel."""
@@ -26864,6 +27090,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         """
         rsvp: Rsvp
         """Subclass of AvdModel."""
+        tunnel: Tunnel
+        """
+        Configure MPLS tunnel.
+
+        Subclass of AvdModel.
+        """
         _custom_data: dict[str, Any]
 
         if TYPE_CHECKING:
@@ -26875,6 +27107,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 ldp: Ldp | UndefinedType = Undefined,
                 icmp: Icmp | UndefinedType = Undefined,
                 rsvp: Rsvp | UndefinedType = Undefined,
+                tunnel: Tunnel | UndefinedType = Undefined,
                 _custom_data: dict[str, Any] | UndefinedType = Undefined,
             ) -> None:
                 """
@@ -26892,6 +27125,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                        Subclass
                        of AvdModel.
                     rsvp: Subclass of AvdModel.
+                    tunnel:
+                       Configure MPLS tunnel.
+
+                       Subclass of AvdModel.
                     _custom_data: _custom_data
 
                 """
@@ -33124,6 +33361,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}, "_custom_data": {"type": dict}}
                 number: int
+                """
+                Valid values are 1-16777215 microseconds.
+                This is regardless of whether the specified unit is
+                milliseconds or microseconds.
+                """
                 unit: Literal["microseconds", "milliseconds"]
                 _custom_data: dict[str, Any]
 
@@ -33143,8 +33385,74 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Subclass of AvdModel.
 
                         Args:
-                            number: number
+                            number:
+                               Valid values are 1-16777215 microseconds.
+                               This is regardless of whether the specified unit is
+                               milliseconds or microseconds.
                             unit: unit
+                            _custom_data: _custom_data
+
+                        """
+
+            class MinDelayDynamic(AvdModel):
+                """Subclass of AvdModel."""
+
+                class TwampLightFallback(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}, "_custom_data": {"type": dict}}
+                    number: int
+                    """
+                    Valid values are 1-16777215 microseconds.
+                    This is regardless of whether the specified unit is
+                    milliseconds or microseconds.
+                    """
+                    unit: Literal["microseconds", "milliseconds"]
+                    _custom_data: dict[str, Any]
+
+                    if TYPE_CHECKING:
+
+                        def __init__(
+                            self,
+                            *,
+                            number: int | UndefinedType = Undefined,
+                            unit: Literal["microseconds", "milliseconds"] | UndefinedType = Undefined,
+                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
+                        ) -> None:
+                            """
+                            TwampLightFallback.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                number:
+                                   Valid values are 1-16777215 microseconds.
+                                   This is regardless of whether the specified unit is
+                                   milliseconds or microseconds.
+                                unit: unit
+                                _custom_data: _custom_data
+
+                            """
+
+                _fields: ClassVar[dict] = {"twamp_light_fallback": {"type": TwampLightFallback}, "_custom_data": {"type": dict}}
+                twamp_light_fallback: TwampLightFallback
+                """Subclass of AvdModel."""
+                _custom_data: dict[str, Any]
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self, *, twamp_light_fallback: TwampLightFallback | UndefinedType = Undefined, _custom_data: dict[str, Any] | UndefinedType = Undefined
+                    ) -> None:
+                        """
+                        MinDelayDynamic.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            twamp_light_fallback: Subclass of AvdModel.
                             _custom_data: _custom_data
 
                         """
@@ -33156,6 +33464,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "metric": {"type": int},
                 "bandwidth": {"type": Bandwidth},
                 "min_delay_static": {"type": MinDelayStatic},
+                "min_delay_dynamic": {"type": MinDelayDynamic},
                 "_custom_data": {"type": dict},
             }
             enabled: bool | None
@@ -33177,7 +33486,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             Subclass of AvdModel.
             """
             min_delay_static: MinDelayStatic
-            """Subclass of AvdModel."""
+            """
+            Mutually exclusive with min_delay_dynamic, if both are defined min_delay_static takes precedence.
+            Subclass of AvdModel.
+            """
+            min_delay_dynamic: MinDelayDynamic
+            """
+            Mutually exclusive with min_delay_static, if both are defined min_delay_static takes precedence.
+            Subclass of AvdModel.
+            """
             _custom_data: dict[str, Any]
 
             if TYPE_CHECKING:
@@ -33191,6 +33508,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     metric: int | None | UndefinedType = Undefined,
                     bandwidth: Bandwidth | UndefinedType = Undefined,
                     min_delay_static: MinDelayStatic | UndefinedType = Undefined,
+                    min_delay_dynamic: MinDelayDynamic | UndefinedType = Undefined,
                     _custom_data: dict[str, Any] | UndefinedType = Undefined,
                 ) -> None:
                     """
@@ -33212,7 +33530,12 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            Interface maximum reservable bandwidth.
 
                            Subclass of AvdModel.
-                        min_delay_static: Subclass of AvdModel.
+                        min_delay_static:
+                           Mutually exclusive with min_delay_dynamic, if both are defined min_delay_static takes precedence.
+                           Subclass of AvdModel.
+                        min_delay_dynamic:
+                           Mutually exclusive with min_delay_static, if both are defined min_delay_static takes precedence.
+                           Subclass of AvdModel.
                         _custom_data: _custom_data
 
                     """
