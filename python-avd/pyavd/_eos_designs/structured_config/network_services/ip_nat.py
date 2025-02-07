@@ -3,9 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from collections import defaultdict
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
+
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
@@ -18,22 +19,30 @@ class IpNatMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def ip_nat(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
-        """Returns structured config for ip_nat."""
+    @structured_config_contributor
+    def ip_nat(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
+        """Set the structured config for ip_nat."""
         if not self.shared_utils.is_cv_pathfinder_client:
-            return None
-
-        ip_nat = defaultdict(list)
+            return
 
         for policy_type in self._filtered_internet_exit_policy_types:
-            pool, profile = self.get_internet_exit_nat_pool_and_profile(policy_type)
-            if pool:
-                ip_nat["pools"].append(pool)
-            if profile:
-                ip_nat["profiles"].append(profile)
+            if policy_type == "zscaler":
+                pool = EosCliConfigGen.IpNat.PoolsItem(name="PORT-ONLY-POOL", type="port-only")
+                pool.ranges.append_new(first_port=1500, last_port=65535)
+                self.structured_config.ip_nat.pools.append(pool)
 
-        if ip_nat:
-            return ip_nat
+                profile = EosCliConfigGen.IpNat.ProfilesItem(name=self.get_internet_exit_nat_profile_name(policy_type))
+                profile.source.dynamic.append_new(
+                    access_list=self.get_internet_exit_nat_acl_name(policy_type),
+                    pool_name="PORT-ONLY-POOL",
+                    nat_type="pool",
+                )
+                self.structured_config.ip_nat.profiles.append(profile)
 
-        return None
+            if policy_type == "direct":
+                profile = EosCliConfigGen.IpNat.ProfilesItem(name=self.get_internet_exit_nat_profile_name(policy_type))
+                profile.source.dynamic.append_new(
+                    access_list=self.get_internet_exit_nat_acl_name(policy_type),
+                    nat_type="overload",
+                )
+                self.structured_config.ip_nat.profiles.append(profile)

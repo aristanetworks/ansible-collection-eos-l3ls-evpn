@@ -9345,6 +9345,51 @@ keys:
           shutdown:
             type: bool
             description: Make `shutdown` key false for `no shutdown` cli.
+      tunnel:
+        description: Configure MPLS tunnel.
+        type: dict
+        keys:
+          termination:
+            description: Controls selection of the TTL/DSCP values by LER when decapsulating
+              MPLS packets.
+            type: dict
+            keys:
+              model:
+                type: dict
+                keys:
+                  ttl:
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+                  dscp:
+                    description: The DSCP model `uniform` is supported only on specific
+                      hardware platforms.
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+              php_model:
+                description: Used on PHP router in the absence of any VPN routes and
+                  explicit null VRF labels.
+                type: dict
+                keys:
+                  ttl:
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+                  dscp:
+                    description: The DSCP model `uniform` is supported only on specific
+                      hardware platforms.
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
   name_server:
     documentation_options:
       table: ip-name-servers
