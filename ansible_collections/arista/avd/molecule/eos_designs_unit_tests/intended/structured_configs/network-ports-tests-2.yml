@@ -758,6 +758,8 @@ monitor_sessions:
     direction: both
   - name: Port-Channel44
     direction: both
+  - name: Port-Channel44
+    direction: both
   destinations:
   - Ethernet17
   encapsulation_gre_metadata_tx: true
