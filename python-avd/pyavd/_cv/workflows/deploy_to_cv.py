@@ -143,6 +143,7 @@ async def deploy_to_cv(
                         + [config.device for config in configs if config.device is not None]
                     ),
                     workspace_id=result.workspace.id,
+                    workspace_force=result.workspace.force,
                     skip_missing_devices=skip_missing_devices,
                     warnings=result.warnings,
                     cv_client=cv_client,

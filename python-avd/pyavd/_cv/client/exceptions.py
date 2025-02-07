@@ -84,3 +84,7 @@ class CVMessageSizeExceeded(CVClientException):
     """Maximum GRPC message size"""
     size: int
     """Actual GRPC message size"""
+
+
+class CVInactiveDevices(CVClientException):
+    """Inactive devices are targeted for configuration update without forcing Workspace submission."""

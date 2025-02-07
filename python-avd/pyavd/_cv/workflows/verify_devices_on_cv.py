@@ -6,20 +6,28 @@ from __future__ import annotations
 from logging import getLogger
 from typing import TYPE_CHECKING
 
-from pyavd._cv.client.exceptions import CVResourceNotFound
+from pyavd._cv.api.arista.inventory.v1 import StreamingStatus
+from pyavd._cv.client.exceptions import CVInactiveDevices, CVResourceNotFound
 
 from .models import CVDevice
 
 if TYPE_CHECKING:
+    from pyavd._cv.api.arista.inventory.v1 import Device
     from pyavd._cv.client import CVClient
 
 LOGGER = getLogger(__name__)
 
 
 async def verify_devices_on_cv(
-    *, devices: list[CVDevice], workspace_id: str, skip_missing_devices: bool, warnings: list[Exception], cv_client: CVClient
+    *,
+    devices: list[CVDevice],
+    workspace_id: str,
+    workspace_force: bool,
+    skip_missing_devices: bool,
+    warnings: list[Exception],
+    cv_client: CVClient,
 ) -> None:
-    """Verify that the given Devices are already present in the CloudVision Inventory & I&T Studio."""
+    """Verify that the given Devices are already present in the CloudVision Inventory & I&T Studio and actively stream."""
     LOGGER.info("verify_devices_on_cv: %s", len(devices))
 
     # Return if we have nothing to do.
@@ -27,7 +35,7 @@ async def verify_devices_on_cv(
         return
 
     existing_devices = await verify_devices_in_cloudvision_inventory(
-        devices=devices, skip_missing_devices=skip_missing_devices, warnings=warnings, cv_client=cv_client
+        devices=devices, workspace_force=workspace_force, skip_missing_devices=skip_missing_devices, warnings=warnings, cv_client=cv_client
     )
     await verify_devices_in_topology_studio(existing_devices, workspace_id, cv_client)
     return
@@ -36,12 +44,15 @@ async def verify_devices_on_cv(
 async def verify_devices_in_cloudvision_inventory(
     *,
     devices: list[CVDevice],
+    workspace_force: bool,
     skip_missing_devices: bool,
     warnings: list[Exception],
     cv_client: CVClient,
 ) -> list[CVDevice]:
     """
     Verify that the given Devices are already present in the CloudVision Inventory.
+
+    Verify that devices targeted for configuration update are actively streaming unless cv_submit_workspace_force is True.
 
     Then in-place update the given objects with missing information like
     system MAC address and serial number.
@@ -98,6 +109,19 @@ async def verify_devices_in_cloudvision_inventory(
         device._exists_on_cv = True
         device.serial_number = found_device_dict_by_hostname[device.hostname].key.device_id
         device.system_mac_address = found_device_dict_by_hostname[device.hostname].system_mac_address
+
+    # Verify streaming status for devices targeted for configuration update
+    serial_numbers_of_appended_devices: list[str] = []
+    present_devices: list[CVDevice] = []
+    for device in devices:
+        if device._exists_on_cv and device.serial_number not in serial_numbers_of_appended_devices:
+            present_devices.append(device)
+            serial_numbers_of_appended_devices.append(device.serial_number)
+
+    if present_devices and found_device_dict_by_serial:
+        verify_devices_streaming_status(
+            workspace_force=workspace_force, present_devices=present_devices, found_device_dict_by_serial=found_device_dict_by_serial, warnings=warnings
+        )
 
     # Now we know which devices are on CV, so we can dig deeper and check for them in I&T Studio
     # If a device is found, we will ensure hostname is correct and if not, update the hostname.
@@ -176,5 +200,53 @@ def missing_devices_handler(*, missing_devices: list[CVDevice], skip_missing_dev
     exception = CVResourceNotFound("Missing devices on CloudVision", *unique_missing_devices)
     if not skip_missing_devices:
         raise exception
+
+    return exception
+
+
+def verify_devices_streaming_status(
+    *,
+    workspace_force: bool,
+    present_devices: list[CVDevice],
+    found_device_dict_by_serial: dict[str, Device],
+    warnings: list[Exception],
+) -> None:
+    """
+    Verify streaming status of devices targeted by configuration update.
+
+    Raise an exception if any device is inactive and Workspace submission is not forced.
+    """
+    inactive_devices_targeted_for_config_update: list[tuple[CVDevice, dict[str, str]]] = [
+        (present_device, {"current_streaming_status": str(found_device_dict_by_serial[present_device.serial_number].streaming_status)})
+        for present_device in present_devices
+        if found_device_dict_by_serial[present_device.serial_number].streaming_status != StreamingStatus.ACTIVE
+    ]
+
+    if inactive_devices_targeted_for_config_update:
+        warnings.append(
+            inactive_devices_handler(
+                workspace_force=workspace_force,
+                inactive_devices_targeted_for_config_update=inactive_devices_targeted_for_config_update,
+            )
+        )
+
+
+def inactive_devices_handler(
+    *,
+    workspace_force: bool,
+    inactive_devices_targeted_for_config_update: list[tuple[CVDevice, dict[str, str]]],
+) -> Exception:
+    """Generate an informative exception when unforced Workspace submission is planned for inactive device(s)."""
+    if not workspace_force:
+        exception = CVInactiveDevices(
+            "Inactive devices are targeted for configuration update without forcing Workspace submission!", inactive_devices_targeted_for_config_update
+        )
+        raise exception
+    exception = CVInactiveDevices("Inactive devices are targeted for configuration update", inactive_devices_targeted_for_config_update)
+
+    LOGGER.warning(
+        "verify_devices_streaming_status: Inactive devices are targeted for configuration update: %s",
+        inactive_devices_targeted_for_config_update,
+    )
 
     return exception

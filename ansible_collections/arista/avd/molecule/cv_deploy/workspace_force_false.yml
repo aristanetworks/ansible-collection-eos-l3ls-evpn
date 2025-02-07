@@ -45,12 +45,18 @@
             cv_devices: [ avd-ci-leaf1, avd-ci-core1 ]
             cv_submit_workspace_force: false
       rescue:
+
+        - name: Display CVP result
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
         - name: Check CVP returns
           run_once: true
           ansible.builtin.assert:
             that:
               # errors and warnings
-              - "'Failed to submit workspace' in cv_deploy_results.errors[0]"
+              - "'Inactive devices are targeted for configuration update without forcing Workspace submission!' in cv_deploy_results.errors[0]"
 
     - name: Cleanup orphan workspace
       run_once: true

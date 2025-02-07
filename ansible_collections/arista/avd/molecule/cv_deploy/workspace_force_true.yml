@@ -54,6 +54,7 @@
         that:
           # errors and warnings
           - cv_deploy_results.errors == []
+          - "'Inactive devices are targeted for configuration update' in cv_deploy_results.warnings[0]"
 
     - name: Cleanup orphan CC
       run_once: true
