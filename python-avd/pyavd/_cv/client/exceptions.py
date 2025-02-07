@@ -86,5 +86,9 @@ class CVMessageSizeExceeded(CVClientException):
     """Actual GRPC message size"""
 
 
+class CVWorkspaceSubmitInactiveDevices(CVClientException):
+    """Can not submit unforced Workspace due to the presence of inactive devices."""
+
+
 class CVInactiveDevices(CVClientException):
-    """Inactive devices are targeted for configuration update without forcing Workspace submission."""
+    """Inactive devices present."""

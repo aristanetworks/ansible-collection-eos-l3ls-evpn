@@ -56,7 +56,7 @@
           ansible.builtin.assert:
             that:
               # errors and warnings
-              - "'Inactive devices are targeted for configuration update without forcing Workspace submission!' in cv_deploy_results.errors[0]"
+              - "'Can not submit unforced Workspace due to the presence of inactive devices' in cv_deploy_results.errors[0]"
 
     - name: Cleanup orphan workspace
       run_once: true
