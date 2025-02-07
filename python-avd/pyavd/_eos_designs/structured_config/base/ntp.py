@@ -3,19 +3,17 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdError
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigBase
+    from . import AvdStructuredConfigBaseProtocol
 
 
-class NtpMixin(UtilsMixin):
+class NtpMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class NtpMixin(UtilsMixin):
     """
 
     @structured_config_contributor
-    def ntp(self: AvdStructuredConfigBase) -> None:
+    def ntp(self: AvdStructuredConfigBaseProtocol) -> None:
         """Ntp set based on "ntp_settings" data-model."""
         if not (ntp_settings := self.inputs.ntp_settings):
             return

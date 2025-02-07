@@ -19,8 +19,8 @@ spine:
       mgmt_ip: 172.16.1.11/24
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for IP address defined under BGP neighbor for
-  underlay. {'ip_address': '10.255.255.3', 'peer_group': 'IPv4-UNDERLAY-PEERS',
-  'description': 'duplicate-ip-address-2_Ethernet1', 'peer': 'duplicate-ip-address-2'}
-  conflicts with {'ip_address': '10.255.255.3', 'peer_group': 'IPv4-UNDERLAY-PEERS',
-  'description': 'duplicate-ip-address-1_Ethernet1', 'peer': 'duplicate-ip-address-1'}.
+  Found duplicate objects with conflicting data while generating configuration for Neighbors.
+  {'ip_address': '10.255.255.3', 'peer_group': 'IPv4-UNDERLAY-PEERS', 'remote_as': '65101',
+  'peer': 'duplicate-ip-address-2', 'description': 'duplicate-ip-address-2_Ethernet1'}
+  conflicts with {'ip_address': '10.255.255.3', 'peer_group': 'IPv4-UNDERLAY-PEERS', 'remote_as': '65101',
+  'peer': 'duplicate-ip-address-1', 'description': 'duplicate-ip-address-1_Ethernet1'}.

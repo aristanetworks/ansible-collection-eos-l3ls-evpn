@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 import re
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
@@ -14,13 +14,11 @@ from pyavd._utils import Undefined
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigConnectedEndpoints
+    from . import AvdStructuredConfigConnectedEndpointsProtocol
 
 
-class EthernetInterfacesMixin(UtilsMixin):
+class EthernetInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -28,7 +26,7 @@ class EthernetInterfacesMixin(UtilsMixin):
     """
 
     @structured_config_contributor
-    def ethernet_interfaces(self: AvdStructuredConfigConnectedEndpoints) -> None:
+    def ethernet_interfaces(self: AvdStructuredConfigConnectedEndpointsProtocol) -> None:
         """
         Return structured config for ethernet_interfaces.
 
@@ -50,11 +48,11 @@ class EthernetInterfacesMixin(UtilsMixin):
         network_ports_ethernet_interfaces = EosCliConfigGen.EthernetInterfaces()
         for network_port in self._filtered_network_ports:
             connected_endpoint = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem(name=network_port.endpoint or Undefined)
-            connected_endpoint._type = "network_port"
+            connected_endpoint._internal_data.type = "network_port"
             network_port_as_adapter = network_port._cast_as(
                 EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem, ignore_extra_keys=True
             )
-            network_port_as_adapter._context = network_port._context
+            network_port_as_adapter._internal_data.context = network_port._internal_data.context
             for ethernet_interface_name in range_expand(network_port.switch_ports):
                 # Skip the interface if it was already created by some other feature like connected endpoints or uplinks etc.
                 if ethernet_interface_name in self.structured_config.ethernet_interfaces:
@@ -76,7 +74,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             self.structured_config.ethernet_interfaces.extend(network_ports_ethernet_interfaces)
 
     def _update_ethernet_interface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         ethernet_interface: EosCliConfigGen.EthernetInterfacesItem,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
@@ -120,7 +118,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             )
 
     def _get_ethernet_interface_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         node_index: int,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
@@ -165,7 +163,7 @@ class EthernetInterfacesMixin(UtilsMixin):
             name=adapter.switch_ports[node_index],
             peer=peer,
             peer_interface=peer_interface,
-            peer_type=connected_endpoint._type,
+            peer_type=connected_endpoint._internal_data.type,
             port_profile=adapter.profile,
             description=self.shared_utils.interface_descriptions.connected_endpoints_ethernet_interface(
                 InterfaceDescriptionData(
@@ -173,7 +171,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                     interface=adapter.switch_ports[node_index],
                     peer=peer,
                     peer_interface=peer_interface,
-                    peer_type=connected_endpoint._type,
+                    peer_type=connected_endpoint._internal_data.type,
                     description=interface_description,
                     port_channel_id=channel_group_id if port_channel_mode is not None else None,
                 ),
@@ -210,10 +208,9 @@ class EthernetInterfacesMixin(UtilsMixin):
                     )
                     raise AristaAvdInvalidInputsError(msg)
 
-                profile = self.shared_utils.get_merged_port_profile(profile_name, context=f"{adapter._context}.port_channel.lacp_fallback.individual")._cast_as(
-                    EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem
-                )
-                profile._context = adapter._context
+                profile = self.shared_utils.get_merged_port_profile(
+                    profile_name, context=f"{adapter._internal_data.context}.port_channel.lacp_fallback.individual"
+                )._cast_as(EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem)
                 self._update_ethernet_interface_cfg(profile, ethernet_interface, connected_endpoint)
 
             if adapter.port_channel.mode != "on" and adapter.port_channel.lacp_timer.mode is not None:
