@@ -415,33 +415,6 @@ metadata:
           preference: alternate
         - name: LAN_HA
           preference: preferred
-    applications:
-      profiles:
-      - name: VIDEO
-        builtin_applications:
-        - name: skype
-        user_defined_applications:
-        - name: CUSTOM-APPLICATION-1
-        categories:
-        - category: VIDEO1
-        transport_protocols:
-        - rtp
-      - name: VOICE
-        builtin_applications:
-        - name: CUSTOM-VOICE-APPLICATION
-      - name: MPLS-ONLY
-      - name: APP-PROFILE-CONTROL-PLANE
-        user_defined_applications:
-        - name: APP-CONTROL-PLANE
-      categories:
-        builtin_applications:
-        - name: microsoft-teams
-          category: VIDEO1
-        user_defined_applications:
-        - name: CUSTOM-APPLICATION-2
-          category: VIDEO1
-        - name: CUSTOM-DSCP-APPLICATION
-          category: VIDEO1
 platform:
   sfe:
     data_plane_cpu_allocation_max: 3

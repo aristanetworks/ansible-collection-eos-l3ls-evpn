@@ -11,7 +11,6 @@ from pyavd._schema.models.avd_base import AvdBase
 from pyavd._utils import default, get_v2
 
 if TYPE_CHECKING:
-    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
     from pyavd._eos_designs.schema import EosDesigns
 
     from . import AvdStructuredConfigMetadataProtocol
@@ -60,7 +59,7 @@ class CvTagsMixin(Protocol):
         if self.inputs.generate_cv_tags.device_tags:
             device_tags.extend(self._get_device_tags())
 
-        if self.inputs.generate_cv_tags.interface_tags and not self.shared_utils.is_cv_pathfinder_router:
+        if self.inputs.generate_cv_tags.interface_tags or self.shared_utils.is_cv_pathfinder_router:
             interface_tags = self._get_interface_tags()
         return EosCliConfigGen.Metadata.CvTags(device_tags=device_tags, interface_tags=interface_tags)
 
@@ -68,17 +67,22 @@ class CvTagsMixin(Protocol):
         """Return list of topology_hint tags."""
         default_type_hint = self.shared_utils.node_type_key_data.cv_tags_topology_type
         topology_hints = EosCliConfigGen.Metadata.CvTags.DeviceTags()
-        topology_hints.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_datacenter", value=self.inputs.dc_name))
-        topology_hints.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_fabric", value=self.shared_utils.fabric_name))
-        topology_hints.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_pod", value=self.inputs.pod_name))
-        topology_hints.append(
-            EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_type", value=default(self.inputs.cv_tags_topology_type, default_type_hint))
-        )
-        topology_hints.append(
-            EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(
-                name="topology_hint_rack", value=default(self.shared_utils.node_config.rack, self.shared_utils.group)
+        if self.inputs.dc_name:
+            topology_hints.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_datacenter", value=self.inputs.dc_name))
+        if self.shared_utils.fabric_name:
+            topology_hints.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_fabric", value=self.shared_utils.fabric_name))
+        if self.inputs.pod_name:
+            topology_hints.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_pod", value=self.inputs.pod_name))
+        if default(self.inputs.cv_tags_topology_type, default_type_hint):
+            topology_hints.append(
+                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_type", value=default(self.inputs.cv_tags_topology_type, default_type_hint))
             )
-        )
+        if default(self.shared_utils.node_config.rack, self.shared_utils.group):
+            topology_hints.append(
+                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(
+                    name="topology_hint_rack", value=default(self.shared_utils.node_config.rack, self.shared_utils.group)
+                )
+            )
         return topology_hints
 
     def _get_cv_pathfinder_device_tags(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvTags.DeviceTags:
@@ -96,8 +100,10 @@ class CvTagsMixin(Protocol):
         region_name = self.shared_utils.wan_region.name if self.shared_utils.wan_region is not None else None
         site_name = self.shared_utils.wan_site.name if self.shared_utils.wan_site is not None else None
         device_tags = EosCliConfigGen.Metadata.CvTags.DeviceTags()
-        device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="Role", value=self.shared_utils.cv_pathfinder_role))
-        device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="Region", value=region_name))
+        if self.shared_utils.cv_pathfinder_role:
+            device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="Role", value=self.shared_utils.cv_pathfinder_role))
+        if region_name:
+            device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="Region", value=region_name))
 
         if self.shared_utils.is_cv_pathfinder_server:
             device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="PathfinderSet", value=self.shared_utils.group or "PATHFINDERS"))
@@ -224,6 +230,8 @@ class CvTagsMixin(Protocol):
         """Return list of wan interface tags for cv_pathfinder solution for a given wan interface."""
         tags = EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.Tags()
         tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Type", value="wan"))
-        tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Carrier", value=wan_interface.wan_carrier))
-        tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Circuit", value=wan_interface.wan_circuit_id))
+        if wan_interface.wan_carrier:
+            tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Carrier", value=wan_interface.wan_carrier))
+        if wan_interface.wan_circuit_id:
+            tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Circuit", value=wan_interface.wan_circuit_id))
         return tags

@@ -3,7 +3,6 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import Protocol
 
 from pyavd._eos_designs.structured_config.structured_config_generator import (
@@ -11,7 +10,6 @@ from pyavd._eos_designs.structured_config.structured_config_generator import (
     StructuredConfigGeneratorProtocol,
     structured_config_contributor,
 )
-from pyavd._utils import strip_empties_from_dict
 
 from .cv_pathfinder import CvPathfinderMixin
 from .cv_tags import CvTagsMixin
@@ -32,7 +30,7 @@ class AvdStructuredConfigMetadataProtocol(CvTagsMixin, CvPathfinderMixin, Struct
             dc_name=self.inputs.dc_name,
             fabric_name=self.shared_utils.fabric_name,
         )
-        if self.inputs.generate_cv_tags and not self.shared_utils.is_cv_pathfinder_router:
+        if self.inputs.generate_cv_tags or self.shared_utils.is_cv_pathfinder_router:
             self.structured_config.metadata.cv_tags = self._cv_tags()
         if self.shared_utils.is_cv_pathfinder_router:
             self.structured_config.metadata.cv_pathfinder = self._cv_pathfinder()

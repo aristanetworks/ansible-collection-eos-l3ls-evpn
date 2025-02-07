@@ -51,7 +51,7 @@ class CvPathfinderMixin(Protocol):
             return cv_pathfinder
 
         # Edge or transit
-        cv_pathfinder = EosCliConfigGen.Metadata.CvPathfinder(
+        return EosCliConfigGen.Metadata.CvPathfinder(
             role=self.shared_utils.cv_pathfinder_role,
             ssl_profile=self.shared_utils.wan_stun_dtls_profile_name,
             vtep_ip=self.shared_utils.vtep_ip,
@@ -62,31 +62,35 @@ class CvPathfinderMixin(Protocol):
             pathfinders=self._metadata_pathfinder_vtep_ips(),
         )
 
-        return cv_pathfinder
-
     def _metadata_interfaces(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Interfaces:
         interfaces = EosCliConfigGen.Metadata.CvPathfinder.Interfaces()
         for carrier in self.shared_utils.wan_local_carriers:
             for interface in carrier["interfaces"]:
-                interface = EosCliConfigGen.Metadata.CvPathfinder.InterfacesItem(
+                pathfinder_interface = EosCliConfigGen.Metadata.CvPathfinder.InterfacesItem(
                     name=interface["name"],
                     carrier=carrier["name"],
                     circuit_id=interface.get("wan_circuit_id"),
                     pathgroup=carrier["path_group"],
                     public_ip=str(interface["public_ip"]) if self.shared_utils.is_cv_pathfinder_server else None,
                 )
-                interfaces.append(interface)
+                interfaces.append(pathfinder_interface)
         return interfaces
 
     def _metadata_pathgroups(self: AvdStructuredConfigMetadataProtocol) -> EosCliConfigGen.Metadata.CvPathfinder.Pathgroups:
         path_groups = EosCliConfigGen.Metadata.CvPathfinder.Pathgroups()
         for pathgroup in self.inputs.wan_path_groups:
             path_group = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem(name=pathgroup.name)
+            carriers_data = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem.Carriers()
+            imported_carriers_data = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem.ImportedCarriers()
             for carrier in self.inputs.wan_carriers:
                 if carrier.path_group == pathgroup.name:
-                    path_group.CarriersItem(name=carrier.name)
+                    carrier_data = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem.CarriersItem(name=carrier.name)
+                    carriers_data.append(carrier_data)
                 if carrier.path_group in [imported_pathgroup.remote for imported_pathgroup in pathgroup.import_path_groups]:
-                    path_group.ImportedCarriersItem(name=carrier.name)
+                    imported_carrier_data = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem.ImportedCarriersItem(name=carrier.name)
+                    imported_carriers_data.append(imported_carrier_data)
+            path_group.carriers = carriers_data
+            path_group.imported_carriers = imported_carriers_data
             path_groups.append(path_group)
         return path_groups
 
@@ -149,9 +153,7 @@ class CvPathfinderMixin(Protocol):
                 for match in avt_policy.matches:
                     if match.avt_profile == profile.name and match.application_profile and match.application_profile != "default":
                         application_profiles.append(match.application_profile)
-                avt = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem(
-                    description="", id=profile.id, name=profile.name, application_profiles=application_profiles
-                )
+                avt = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem(id=profile.id, name=profile.name, application_profiles=application_profiles)
 
                 avt.constraints._update(
                     jitter=lb_policy.jitter,
@@ -159,10 +161,15 @@ class CvPathfinderMixin(Protocol):
                     hop_count="lowest" if lb_policy.lowest_hop_count else None,
                 )
                 if lb_policy.loss_rate:
-                    avt.constraints.lossrate = float(lb_policy.loss_rate)
-
+                    avt.constraints.lossrate = str(float(lb_policy.loss_rate))
+                avt_path_groups = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem.Pathgroups()
                 for pathgroup in lb_policy.path_groups:
-                    avt.PathgroupsItem(name=pathgroup.name, preference="alternate" if default(pathgroup.priority, 1) > 1 else "preferred")
+                    avt_path_groups.append(
+                        EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem.PathgroupsItem(
+                            name=pathgroup.name, preference="alternate" if default(pathgroup.priority, 1) > 1 else "preferred"
+                        )
+                    )
+                avt.pathgroups = avt_path_groups
                 metadata_vrf.avts.append(avt)
 
             metadata_vrfs.append(metadata_vrf)

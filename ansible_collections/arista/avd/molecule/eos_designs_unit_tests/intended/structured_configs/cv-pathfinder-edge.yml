@@ -386,49 +386,6 @@ metadata:
       carrier: Comcast-5G
       circuit_id: AF830
       pathgroup: LTE
-    internet_exit_policies:
-    - name: ZSCALER-EXIT-POLICY-1
-      type: zscaler
-      city: Santa Clara, CA
-      country: United States
-      firewall: false
-      ips_control: false
-      acceptable_use_policy: false
-      vpn_credentials:
-      - fqdn: cv-pathfinder-edge_ZSCALER-EXIT-POLICY-1@test.local
-        vpn_type: UFQDN
-        pre_shared_key: 0007054B145A1F0E0928424A0C0B4812160C093B101807091F10105E222E2A351B69777F7D2D3A5547666C7F7A616A672374332B7C68263639327A3E2A3B0468
-      tunnels:
-      - name: Tunnel100
-        preference: Preferred
-        endpoint:
-          ip_address: 10.37.121.1
-          datacenter: FMT1
-          city: Fremont, CA
-          country: United States
-          region: us-west1
-          latitude: '37'
-          longitude: '-121'
-      - name: Tunnel101
-        preference: Alternate
-        endpoint:
-          ip_address: 10.39.77.1
-          datacenter: WAS1
-          city: Washington, DC
-          country: United States
-          region: us-east1
-          latitude: '39'
-          longitude: '-77'
-      - name: Tunnel102
-        preference: Alternate
-        endpoint:
-          ip_address: 10.50.9.1
-          datacenter: FRA4
-          city: Frankfurt
-          country: Germany
-          region: eu-west1
-          latitude: '50'
-          longitude: '9'
 monitor_connectivity:
   shutdown: false
   interface_sets:
