@@ -15,14 +15,15 @@ if TYPE_CHECKING:
     from pyavd._cv.api.arista.inventory.v1 import Device
     from pyavd._cv.client import CVClient
 
+    from .models import CVWorkspace
+
 LOGGER = getLogger(__name__)
 
 
 async def verify_devices_on_cv(
     *,
     devices: list[CVDevice],
-    workspace_id: str,
-    workspace_force: bool,
+    workspace: CVWorkspace,
     skip_missing_devices: bool,
     warnings: list[Exception],
     cv_client: CVClient,
@@ -40,10 +41,10 @@ async def verify_devices_on_cv(
         warnings=warnings,
         cv_client=cv_client,
         verify_streaming=True,
-        raise_if_inactive=not workspace_force,
+        raise_if_inactive=((not workspace.force) and workspace.requested_state == "submitted"),
         inactive_exception_class=CVWorkspaceSubmitInactiveDevices,
     )
-    await verify_devices_in_topology_studio(existing_devices, workspace_id, cv_client)
+    await verify_devices_in_topology_studio(existing_devices, workspace.id, cv_client)
     return
 
 
