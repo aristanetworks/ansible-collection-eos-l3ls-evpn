@@ -31,9 +31,9 @@ class MetadataMixin(Protocol):
         if not self.shared_utils.is_cv_pathfinder_router:
             return
         if self._filtered_internet_exit_policies_and_connections:
-            self.structured_config.metadata.cv_pathfinder._update(internet_exit_policies = self.get_cv_pathfinder_metadata_internet_exit_policies())
+            self.structured_config.metadata.cv_pathfinder._update(internet_exit_policies=self.get_cv_pathfinder_metadata_internet_exit_policies())
         if self.shared_utils.is_cv_pathfinder_server and self.application_traffic_recognition is not None:
-            self.structured_config.metadata.cv_pathfinder._update(applications = self.get_cv_pathfinder_metadata_applications())
+            self.structured_config.metadata.cv_pathfinder._update(applications=self.get_cv_pathfinder_metadata_applications())
 
     def get_cv_pathfinder_metadata_internet_exit_policies(
         self: AvdStructuredConfigNetworkServicesProtocol,
