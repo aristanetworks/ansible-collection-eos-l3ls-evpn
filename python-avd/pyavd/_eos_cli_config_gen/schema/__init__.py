@@ -62015,7 +62015,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class VlanRange(AvdModel):
                     """Subclass of AvdModel."""
 
-                    _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}, "_custom_data": {"type": dict}}
+                    _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}}
                     vlans: str
                     """e.g. "94,96,100-110"."""
                     vnis: str
@@ -62023,17 +62023,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Set `vnis` in the correct sequence as `vlans`.
                     e.g. "10094,10096,10100-10110".
                     """
-                    _custom_data: dict[str, Any]
 
                     if TYPE_CHECKING:
 
-                        def __init__(
-                            self,
-                            *,
-                            vlans: str | UndefinedType = Undefined,
-                            vnis: str | UndefinedType = Undefined,
-                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
-                        ) -> None:
+                        def __init__(self, *, vlans: str | UndefinedType = Undefined, vnis: str | UndefinedType = Undefined) -> None:
                             """
                             VlanRange.
 
@@ -62045,7 +62038,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                 vnis:
                                    Set `vnis` in the correct sequence as `vlans`.
                                    e.g. "10094,10096,10100-10110".
-                                _custom_data: _custom_data
 
                             """
 
@@ -62432,7 +62424,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class VlanRange(AvdModel):
                     """Subclass of AvdModel."""
 
-                    _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}, "_custom_data": {"type": dict}}
+                    _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}}
                     vlans: str
                     """e.g. "94,96,100-110"."""
                     vnis: str
@@ -62440,17 +62432,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Set `vnis` in the correct sequence as `vlans`.
                     e.g. "10094,10096,10100-10110".
                     """
-                    _custom_data: dict[str, Any]
 
                     if TYPE_CHECKING:
 
-                        def __init__(
-                            self,
-                            *,
-                            vlans: str | UndefinedType = Undefined,
-                            vnis: str | UndefinedType = Undefined,
-                            _custom_data: dict[str, Any] | UndefinedType = Undefined,
-                        ) -> None:
+                        def __init__(self, *, vlans: str | UndefinedType = Undefined, vnis: str | UndefinedType = Undefined) -> None:
                             """
                             VlanRange.
 
@@ -62462,7 +62447,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                                 vnis:
                                    Set `vnis` in the correct sequence as `vlans`.
                                    e.g. "10094,10096,10100-10110".
-                                _custom_data: _custom_data
 
                             """
 
