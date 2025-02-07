@@ -471,51 +471,6 @@ class UtilsWanMixin(Protocol):
     def get_internet_exit_nat_acl_name(self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]) -> str:
         return f"ACL-{self.get_internet_exit_nat_profile_name(internet_exit_policy_type)}"
 
-    def get_internet_exit_nat_pool_and_profile(
-        self: AvdStructuredConfigNetworkServicesProtocol,
-        internet_exit_policy_type: Literal["zscaler", "direct"],
-    ) -> tuple[dict | None, dict | None]:
-        if internet_exit_policy_type == "zscaler":
-            pool = {
-                "name": "PORT-ONLY-POOL",
-                "type": "port-only",
-                "ranges": [
-                    {
-                        "first_port": 1500,
-                        "last_port": 65535,
-                    },
-                ],
-            }
-
-            profile = {
-                "name": self.get_internet_exit_nat_profile_name(internet_exit_policy_type),
-                "source": {
-                    "dynamic": [
-                        {
-                            "access_list": self.get_internet_exit_nat_acl_name(internet_exit_policy_type),
-                            "pool_name": "PORT-ONLY-POOL",
-                            "nat_type": "pool",
-                        },
-                    ],
-                },
-            }
-            return pool, profile
-        if internet_exit_policy_type == "direct":
-            profile_name = self.get_internet_exit_nat_profile_name(internet_exit_policy_type)
-            profile = {
-                "name": profile_name,
-                "source": {
-                    "dynamic": [
-                        {
-                            "access_list": self.get_internet_exit_nat_acl_name(internet_exit_policy_type),
-                            "nat_type": "overload",
-                        },
-                    ],
-                },
-            }
-            return None, profile
-        return None
-
     @cached_property
     def _filtered_internet_exit_policy_types(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
         return sorted({internet_exit_policy.type for internet_exit_policy, _connections in self._filtered_internet_exit_policies_and_connections})
