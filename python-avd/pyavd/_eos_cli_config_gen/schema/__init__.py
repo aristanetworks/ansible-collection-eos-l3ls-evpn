@@ -18,206 +18,14 @@ if TYPE_CHECKING:
 class EosCliConfigGen(EosCliConfigGenRootModel):
     """Subclass of AvdModel."""
 
-    __slots__ = (
-        "aaa_accounting",
-        "aaa_authentication",
-        "aaa_authorization",
-        "aaa_root",
-        "aaa_server_groups",
-        "access_lists",
-        "address_locking",
-        "agents",
-        "aliases",
-        "application_traffic_recognition",
-        "arp",
-        "as_path",
-        "avd_data_validation_mode",
-        "banners",
-        "bgp_groups",
-        "boot",
-        "class_maps",
-        "clock",
-        "community_lists",
-        "config_comment",
-        "config_end",
-        "custom_templates",
-        "cvx",
-        "daemon_terminattr",
-        "daemons",
-        "dhcp_relay",
-        "dhcp_servers",
-        "dns_domain",
-        "domain_list",
-        "dot1x",
-        "dps_interfaces",
-        "dynamic_prefix_lists",
-        "enable_password",
-        "eos_cli",
-        "eos_cli_config_gen_configuration",
-        "eos_cli_config_gen_documentation",
-        "errdisable",
-        "ethernet_interfaces",
-        "event_handlers",
-        "event_monitor",
-        "flow_tracking",
-        "generate_default_config",
-        "generate_device_documentation",
-        "hardware",
-        "hardware_counters",
-        "hostname",
-        "interface_defaults",
-        "interface_groups",
-        "interface_profiles",
-        "ip_access_lists",
-        "ip_access_lists_max_entries",
-        "ip_community_lists",
-        "ip_dhcp_relay",
-        "ip_dhcp_snooping",
-        "ip_domain_lookup",
-        "ip_extcommunity_lists",
-        "ip_extcommunity_lists_regexp",
-        "ip_ftp_client_source_interfaces",
-        "ip_hardware",
-        "ip_http_client_source_interfaces",
-        "ip_icmp_redirect",
-        "ip_igmp_snooping",
-        "ip_name_server_groups",
-        "ip_name_servers",
-        "ip_nat",
-        "ip_radius_source_interfaces",
-        "ip_routing",
-        "ip_routing_ipv6_interfaces",
-        "ip_security",
-        "ip_ssh_client_source_interfaces",
-        "ip_tacacs_source_interfaces",
-        "ip_telnet_client_source_interfaces",
-        "ip_tftp_client_source_interfaces",
-        "ip_virtual_router_mac_address",
-        "ip_virtual_router_mac_address_advertisement_interval",
-        "ipv6_access_lists",
-        "ipv6_dhcp_relay",
-        "ipv6_hardware",
-        "ipv6_icmp_redirect",
-        "ipv6_neighbor",
-        "ipv6_prefix_lists",
-        "ipv6_standard_access_lists",
-        "ipv6_static_routes",
-        "ipv6_unicast_routing",
-        "is_deployed",
-        "l2_protocol",
-        "lacp",
-        "link_tracking_groups",
-        "lldp",
-        "load_interval",
-        "local_users",
-        "logging",
-        "loopback_interfaces",
-        "mac_access_lists",
-        "mac_address_table",
-        "mac_security",
-        "maintenance",
-        "management_accounts",
-        "management_api_gnmi",
-        "management_api_http",
-        "management_api_models",
-        "management_console",
-        "management_cvx",
-        "management_defaults",
-        "management_interfaces",
-        "management_security",
-        "management_ssh",
-        "management_tech_support",
-        "match_list_input",
-        "mcs_client",
-        "metadata",
-        "mlag_configuration",
-        "monitor_connectivity",
-        "monitor_layer1",
-        "monitor_server_radius",
-        "monitor_session_default_encapsulation_gre",
-        "monitor_sessions",
-        "monitor_telemetry_influx",
-        "monitor_telemetry_postcard_policy",
-        "mpls",
-        "ntp",
-        "patch_panel",
-        "peer_filters",
-        "platform",
-        "poe",
-        "policy_maps",
-        "port_channel_interfaces",
-        "prefix_lists",
-        "priority_flow_control",
-        "prompt",
-        "ptp",
-        "qos",
-        "qos_profiles",
-        "queue_monitor_length",
-        "queue_monitor_streaming",
-        "radius_server",
-        "redundancy",
-        "roles",
-        "route_maps",
-        "router_adaptive_virtual_topology",
-        "router_bfd",
-        "router_bgp",
-        "router_general",
-        "router_igmp",
-        "router_internet_exit",
-        "router_isis",
-        "router_l2_vpn",
-        "router_msdp",
-        "router_multicast",
-        "router_ospf",
-        "router_path_selection",
-        "router_pim_sparse_mode",
-        "router_segment_security",
-        "router_service_insertion",
-        "router_traffic_engineering",
-        "service_routing_configuration_bgp",
-        "service_routing_protocols_model",
-        "service_unsupported_transceiver",
-        "sflow",
-        "snmp_server",
-        "spanning_tree",
-        "standard_access_lists",
-        "static_routes",
-        "stun",
-        "switchport_default",
-        "switchport_port_security",
-        "sync_e",
-        "system",
-        "tacacs_servers",
-        "tap_aggregation",
-        "tcam_profile",
-        "terminal",
-        "trackers",
-        "traffic_policies",
-        "transceiver_qsfp_default_mode_4x10",
-        "tunnel_interfaces",
-        "virtual_source_nat_vrfs",
-        "vlan_interfaces",
-        "vlan_internal_order",
-        "vlans",
-        "vmtracer_sessions",
-        "vrfs",
-        "vxlan_interface",
-    )
-
     class AaaAccounting(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("commands", "dot1x", "exec", "system")
 
         class Exec(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("console", "default")
-
             class Console(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("group", "logging", "type")
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "logging": {"type": bool}}
                 type: Literal["none", "start-stop", "stop-only"]
@@ -249,8 +57,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Default(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("group", "logging", "type")
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "logging": {"type": bool}}
                 type: Literal["none", "start-stop", "stop-only"] | None
@@ -304,12 +110,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class System(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("default",)
-
             class Default(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("group", "type")
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}}
                 type: Literal["none", "start-stop", "stop-only"] | None
@@ -357,12 +159,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Dot1x(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("default",)
-
             class Default(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("group", "type")
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}}
                 type: Literal["start-stop", "stop-only"] | None
@@ -407,12 +205,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Commands(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("console", "default")
-
             class ConsoleItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("commands", "group", "logging", "type")
 
                 _fields: ClassVar[dict] = {"commands": {"type": str}, "type": {"type": str}, "group": {"type": str}, "logging": {"type": bool}}
                 commands: str | None
@@ -453,8 +247,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class DefaultItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("commands", "group", "logging", "type")
 
                 _fields: ClassVar[dict] = {"commands": {"type": str}, "type": {"type": str}, "group": {"type": str}, "logging": {"type": bool}}
                 commands: str | None
@@ -551,12 +343,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class AaaAuthentication(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("dot1x", "enable", "login", "policies")
-
         class Login(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("console", "default")
 
             _fields: ClassVar[dict] = {"default": {"type": str}, "console": {"type": str}}
             default: str | None
@@ -606,8 +394,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Enable(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("default",)
-
             _fields: ClassVar[dict] = {"default": {"type": str}}
             default: str | None
             """
@@ -642,8 +428,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Dot1x(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("default",)
-
             _fields: ClassVar[dict] = {"default": {"type": str}}
             default: str | None
             """
@@ -676,12 +460,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Policies(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("local", "lockout", "on_failure_log", "on_success_log")
-
             class Local(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("allow_nopassword",)
 
                 _fields: ClassVar[dict] = {"allow_nopassword": {"type": bool}}
                 allow_nopassword: bool | None
@@ -702,8 +482,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Lockout(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("duration", "failure", "window")
 
                 _fields: ClassVar[dict] = {"failure": {"type": int}, "duration": {"type": int}, "window": {"type": int}}
                 failure: int | None
@@ -806,12 +584,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class AaaAuthorization(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("commands", "config_commands", "dynamic", "exec", "policy", "serial_console")
-
         class Policy(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("local_default_role",)
 
             _fields: ClassVar[dict] = {"local_default_role": {"type": str}}
             local_default_role: str | None
@@ -832,8 +606,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Exec(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("default",)
 
             _fields: ClassVar[dict] = {"default": {"type": str}}
             default: str | None
@@ -869,8 +641,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Dynamic(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("dot1x_additional_groups",)
-
             class Dot1xAdditionalGroups(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
 
@@ -897,12 +667,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Commands(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("all_default", "privilege")
-
             class PrivilegeItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("default", "level")
 
                 _fields: ClassVar[dict] = {"level": {"type": str}, "default": {"type": str}}
                 level: str | None
@@ -1027,12 +793,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class AaaRoot(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("disabled", "secret")
-
         class Secret(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("sha512_password",)
 
             _fields: ClassVar[dict] = {"sha512_password": {"type": str}}
             sha512_password: str | None
@@ -1075,12 +837,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class AaaServerGroupsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "servers", "type")
-
         class ServersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("server", "vrf")
 
             _fields: ClassVar[dict] = {"server": {"type": str}, "vrf": {"type": str}}
             server: str | None
@@ -1147,12 +905,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class AccessListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("counters_per_entry", "name", "permit_response_traffic", "sequence_numbers")
-
         class SequenceNumbersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "sequence")
 
             _fields: ClassVar[dict] = {"sequence": {"type": int}, "action": {"type": str}}
             sequence: int
@@ -1242,8 +996,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class AddressLocking(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("dhcp_servers_ipv4", "disabled", "leases", "local_interface", "locked_address")
-
         class DhcpServersIpv4(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -1251,8 +1003,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class LeasesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ip", "mac")
 
             _fields: ClassVar[dict] = {"ip": {"type": str}, "mac": {"type": str}}
             ip: str
@@ -1282,8 +1032,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class LockedAddress(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("expiration_mac_disabled", "ipv4_enforcement_disabled", "ipv6_enforcement_disabled")
 
             _fields: ClassVar[dict] = {
                 "expiration_mac_disabled": {"type": bool},
@@ -1365,12 +1113,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class AgentsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("environment_variables", "name")
-
         class EnvironmentVariablesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "value")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "value": {"type": str}}
             name: str
@@ -1431,17 +1175,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ApplicationTrafficRecognition(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("application_profiles", "applications", "categories", "field_sets")
-
         class CategoriesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("applications", "name")
-
             class ApplicationsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "service")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "service": {"type": str}}
                 name: str | None
@@ -1527,12 +1265,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class FieldSets(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4_prefixes", "l4_ports")
-
             class L4PortsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "port_values")
 
                 class PortValues(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -1569,8 +1303,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Ipv4PrefixesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "prefix_values")
 
                 class PrefixValues(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -1647,23 +1379,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Applications(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4_applications", "l4_applications")
-
             class Ipv4ApplicationsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = (
-                    "dest_prefix_set_name",
-                    "dscp_ranges",
-                    "name",
-                    "protocol_ranges",
-                    "protocols",
-                    "src_prefix_set_name",
-                    "tcp_dest_port_set_name",
-                    "tcp_src_port_set_name",
-                    "udp_dest_port_set_name",
-                    "udp_src_port_set_name",
-                )
 
                 class DscpRanges(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -1853,16 +1570,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class L4ApplicationsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = (
-                    "name",
-                    "protocol_ranges",
-                    "protocols",
-                    "tcp_dest_port_set_name",
-                    "tcp_src_port_set_name",
-                    "udp_dest_port_set_name",
-                    "udp_src_port_set_name",
-                )
 
                 class Protocols(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -2057,12 +1764,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ApplicationProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("application_transports", "applications", "categories", "name")
-
             class ApplicationsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "service")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "service": {"type": str}}
                 name: str | None
@@ -2117,8 +1820,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class CategoriesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "service")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "service": {"type": str}}
                 name: str | None
@@ -2295,12 +1996,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Arp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("aging", "persistent", "static_entries")
-
         class Persistent(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("enabled", "refresh_delay")
 
             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "refresh_delay": {"type": int}}
             enabled: bool
@@ -2326,8 +2023,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Aging(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("timeout_default",)
-
             _fields: ClassVar[dict] = {"timeout_default": {"type": int}}
             timeout_default: int | None
             """Timeout in seconds."""
@@ -2348,8 +2043,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class StaticEntriesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ipv4_address", "mac_address", "vrf")
 
             _fields: ClassVar[dict] = {"ipv4_address": {"type": str}, "vrf": {"type": str}, "mac_address": {"type": str}}
             ipv4_address: str
@@ -2426,17 +2119,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class AsPath(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("access_lists", "regex_mode")
-
         class AccessListsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("entries", "name")
-
             class EntriesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("match", "origin", "type")
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "match": {"type": str}, "origin": {"type": str, "default": "any"}}
                 type: Literal["permit", "deny"] | None
@@ -2525,8 +2212,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Banners(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("login", "motd")
-
         _fields: ClassVar[dict] = {"login": {"type": str}, "motd": {"type": str}}
         login: str | None
         """Multiline string ending with EOF on the last line."""
@@ -2550,8 +2235,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class BgpGroupsItem(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("bgp_maintenance_profiles", "name", "neighbors", "vrf")
 
         class Neighbors(AvdList[str]):
             """Subclass of AvdList with `str` items."""
@@ -2611,12 +2294,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Boot(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("secret",)
-
         class Secret(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("hash_algorithm", "key")
 
             _fields: ClassVar[dict] = {"hash_algorithm": {"type": str, "default": "sha512"}, "key": {"type": str}}
             hash_algorithm: Literal["md5", "sha512"]
@@ -2662,17 +2341,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ClassMaps(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("pbr", "qos")
-
         class PbrItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ip", "name")
-
             class Ip(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("access_group",)
 
                 _fields: ClassVar[dict] = {"access_group": {"type": str}}
                 access_group: str | None
@@ -2723,12 +2396,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class QosItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("cos", "dscp", "ecn", "ip", "ipv6", "name", "vlan")
-
             class Ip(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("access_group",)
 
                 _fields: ClassVar[dict] = {"access_group": {"type": str}}
                 access_group: str | None
@@ -2750,8 +2419,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Ipv6(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("access_group",)
 
                 _fields: ClassVar[dict] = {"access_group": {"type": str}}
                 access_group: str | None
@@ -2899,8 +2566,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Clock(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("timezone",)
-
         _fields: ClassVar[dict] = {"timezone": {"type": str}}
         timezone: str | None
 
@@ -2920,8 +2585,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class CommunityListsItem(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("action", "name")
 
         _fields: ClassVar[dict] = {"name": {"type": str}, "action": {"type": str}}
         name: str
@@ -2964,8 +2627,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Cvx(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("peer_hosts", "services", "shutdown")
-
         class PeerHosts(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -2974,17 +2635,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Services(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("mcs", "vxlan")
-
             class Mcs(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("redis", "shutdown")
-
                 class Redis(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("password", "password_type")
 
                     _fields: ClassVar[dict] = {"password": {"type": str}, "password_type": {"type": str, "default": "7"}}
                     password: str | None
@@ -3031,8 +2686,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Vxlan(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("shutdown", "vtep_mac_learning")
 
                 _fields: ClassVar[dict] = {"shutdown": {"type": bool}, "vtep_mac_learning": {"type": str}}
                 shutdown: bool | None
@@ -3118,30 +2771,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class DaemonTerminattr(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "clusters",
-            "cvaddrs",
-            "cvauth",
-            "cvconfig",
-            "cvgnmi",
-            "cvobscurekeyfile",
-            "cvproxy",
-            "cvsourceintf",
-            "cvsourceip",
-            "cvvrf",
-            "disable_aaa",
-            "ecodhcpaddr",
-            "grpcaddr",
-            "grpcreadonly",
-            "ingestexclude",
-            "ipfix",
-            "ipfixaddr",
-            "sflow",
-            "sflowaddr",
-            "smashexcludes",
-            "taillogs",
-        )
-
         class Cvaddrs(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -3150,8 +2779,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ClustersItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("cvaddrs", "cvauth", "cvobscurekeyfile", "cvproxy", "cvsourceintf", "cvsourceip", "cvvrf", "name")
-
             class Cvaddrs(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
 
@@ -3159,8 +2786,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Cvauth(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ca_file", "cert_file", "key", "key_file", "method", "token_file")
 
                 _fields: ClassVar[dict] = {
                     "method": {"type": str},
@@ -3339,8 +2964,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Cvauth(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ca_file", "cert_file", "key", "key_file", "method", "token_file")
 
             _fields: ClassVar[dict] = {
                 "method": {"type": str},
@@ -3638,8 +3261,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class DaemonsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("enabled", "exec", "name")
-
         _fields: ClassVar[dict] = {"name": {"type": str}, "exec": {"type": str}, "enabled": {"type": bool, "default": True}}
         name: str
         """Daemon Name."""
@@ -3675,8 +3296,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class DhcpRelay(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("mlag_peerlink_requests_disabled", "servers", "tunnel_requests_disabled")
 
         class Servers(AvdList[str]):
             """Subclass of AvdList with `str` items."""
@@ -3714,25 +3333,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class DhcpServersItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "disabled",
-            "dns_domain_name_ipv4",
-            "dns_domain_name_ipv6",
-            "dns_servers_ipv4",
-            "dns_servers_ipv6",
-            "eos_cli",
-            "ipv4_vendor_options",
-            "lease_time_ipv4",
-            "lease_time_ipv6",
-            "subnets",
-            "tftp_server",
-            "vrf",
-        )
-
         class LeaseTimeIpv4(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("days", "hours", "minutes")
 
             _fields: ClassVar[dict] = {"days": {"type": int}, "hours": {"type": int}, "minutes": {"type": int}}
             days: int
@@ -3759,8 +3361,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class LeaseTimeIpv6(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("days", "hours", "minutes")
 
             _fields: ClassVar[dict] = {"days": {"type": int}, "hours": {"type": int}, "minutes": {"type": int}}
             days: int
@@ -3798,8 +3398,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class TftpServer(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("file_ipv4", "file_ipv6")
-
             _fields: ClassVar[dict] = {"file_ipv4": {"type": str}, "file_ipv6": {"type": str}}
             file_ipv4: str | None
             """Name of TFTP file for IPv4 clients."""
@@ -3824,12 +3422,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Ipv4VendorOptionsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("sub_options", "vendor_id")
-
             class SubOptionsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("array_ipv4_address", "code", "ipv4_address", "string")
 
                 class ArrayIpv4Address(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -3946,8 +3540,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SubnetsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("default_gateway", "dns_servers", "lease_time", "name", "ranges", "reservations", "subnet")
-
             class DnsServers(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
 
@@ -3955,8 +3547,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class RangesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("end", "start")
 
                 _fields: ClassVar[dict] = {"start": {"type": str}, "end": {"type": str}}
                 start: str
@@ -3985,8 +3575,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class LeaseTime(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("days", "hours", "minutes")
-
                 _fields: ClassVar[dict] = {"days": {"type": int}, "hours": {"type": int}, "minutes": {"type": int}}
                 days: int
                 hours: int
@@ -4012,8 +3600,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class ReservationsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("hostname", "ipv4_address", "ipv6_address", "mac_address")
 
                 _fields: ClassVar[dict] = {
                     "mac_address": {"type": str},
@@ -4243,23 +3829,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Dot1x(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "aaa",
-            "captive_portal",
-            "dynamic_authorization",
-            "mac_based_authentication",
-            "protocol_bpdu_bypass",
-            "protocol_lldp_bypass",
-            "radius_av_pair",
-            "radius_av_pair_username_format",
-            "supplicant",
-            "system_auth_control",
-        )
-
         class MacBasedAuthentication(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("delay", "hold_period")
 
             _fields: ClassVar[dict] = {"delay": {"type": int}, "hold_period": {"type": int}}
             delay: int | None
@@ -4282,8 +3853,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class RadiusAvPairUsernameFormat(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("delimiter", "mac_string_case")
 
             _fields: ClassVar[dict] = {"delimiter": {"type": str}, "mac_string_case": {"type": str}}
             delimiter: Literal["colon", "hyphen", "none", "period"]
@@ -4314,17 +3883,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class RadiusAvPair(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("dhcp", "framed_mtu", "lldp", "service_type")
-
             class Lldp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("system_description", "system_name")
-
                 class SystemName(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("auth_only", "enabled")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "auth_only": {"type": bool}}
                     enabled: bool
@@ -4347,8 +3910,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SystemDescription(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("auth_only", "enabled")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "auth_only": {"type": bool}}
                     enabled: bool
@@ -4409,12 +3970,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Dhcp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("hostname", "parameter_request_list", "vendor_class_id")
-
                 class Hostname(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("auth_only", "enabled")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "auth_only": {"type": bool}}
                     enabled: bool
@@ -4438,8 +3995,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class ParameterRequestList(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("auth_only", "enabled")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "auth_only": {"type": bool}}
                     enabled: bool
                     auth_only: bool | None
@@ -4461,8 +4016,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class VendorClassId(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("auth_only", "enabled")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "auth_only": {"type": bool}}
                     enabled: bool
@@ -4573,22 +4126,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Aaa(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("accounting_update_interval", "unresponsive")
-
             class Unresponsive(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("action", "eap_response", "phone_action", "recovery_action_reauthenticate")
 
                 class Action(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("apply_alternate", "apply_cached_results", "cached_results_timeout", "traffic_allow", "traffic_allow_vlan")
-
                     class CachedResultsTimeout(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("time_duration", "time_duration_unit")
 
                         _fields: ClassVar[dict] = {"time_duration": {"type": int}, "time_duration_unit": {"type": str}}
                         time_duration: int | None
@@ -4681,12 +4226,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class PhoneAction(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("apply_alternate", "apply_cached_results", "cached_results_timeout", "traffic_allow")
-
                     class CachedResultsTimeout(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("time_duration", "time_duration_unit")
 
                         _fields: ClassVar[dict] = {"time_duration": {"type": int}, "time_duration_unit": {"type": str}}
                         time_duration: int | None
@@ -4857,8 +4398,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class CaptivePortal(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("access_list_ipv4", "enabled", "ssl_profile", "start_limit_infinite", "url")
-
             _fields: ClassVar[dict] = {
                 "enabled": {"type": bool},
                 "url": {"type": str},
@@ -4911,12 +4450,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Supplicant(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("disconnect_cached_results_timeout", "logging", "profiles")
-
             class ProfilesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("eap_method", "identity", "name", "passphrase", "passphrase_type", "ssl_profile")
 
                 _fields: ClassVar[dict] = {
                     "name": {"type": str},
@@ -5111,12 +4646,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class DpsInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("description", "eos_cli", "flow_tracker", "ip_address", "mtu", "name", "shutdown", "tcp_mss_ceiling")
-
         class FlowTracker(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("hardware", "sampled")
 
             _fields: ClassVar[dict] = {"sampled": {"type": str}, "hardware": {"type": str}}
             sampled: str | None
@@ -5141,8 +4672,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class TcpMssCeiling(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("direction", "ipv4", "ipv6")
 
             _fields: ClassVar[dict] = {"ipv4": {"type": int}, "ipv6": {"type": int}, "direction": {"type": str}}
             ipv4: int | None
@@ -5241,12 +4770,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class DynamicPrefixListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("match_map", "name", "prefix_list")
-
         class PrefixList(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ipv4", "ipv6")
 
             _fields: ClassVar[dict] = {"ipv4": {"type": str}, "ipv6": {"type": str}}
             ipv4: str | None
@@ -5307,8 +4832,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class EnablePassword(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("disabled", "hash_algorithm", "key")
-
         _fields: ClassVar[dict] = {"disabled": {"type": bool}, "hash_algorithm": {"type": str}, "key": {"type": str}}
         disabled: bool | None
         """Set to `true` to configure `no enable password` which is the EOS default."""
@@ -5348,8 +4871,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class EosCliConfigGenConfiguration(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("enable", "hide_passwords")
-
         _fields: ClassVar[dict] = {"enable": {"type": bool, "default": True}, "hide_passwords": {"type": bool, "default": False}}
         enable: bool
         """
@@ -5384,8 +4905,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class EosCliConfigGenDocumentation(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("enable", "hide_passwords", "toc")
 
         _fields: ClassVar[dict] = {
             "enable": {"type": bool, "default": True},
@@ -5435,12 +4954,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Errdisable(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("detect", "recovery")
-
         class Detect(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("causes",)
 
             class Causes(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -5467,8 +4982,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Recovery(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("causes", "interval")
 
             class Causes(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -5524,129 +5037,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class EthernetInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "access_group_in",
-            "access_group_out",
-            "address_locking",
-            "bfd",
-            "bgp",
-            "channel_group",
-            "comment",
-            "description",
-            "dhcp_client_accept_default_route",
-            "dhcp_server_ipv4",
-            "dhcp_server_ipv6",
-            "dot1x",
-            "encapsulation_dot1q",
-            "encapsulation_dot1q_vlan",
-            "encapsulation_vlan",
-            "eos_cli",
-            "error_correction_encoding",
-            "evpn_ethernet_segment",
-            "flow_tracker",
-            "flowcontrol",
-            "ip_address",
-            "ip_address_secondaries",
-            "ip_helpers",
-            "ip_igmp_host_proxy",
-            "ip_nat",
-            "ip_proxy_arp",
-            "ip_verify_unicast_source_reachable_via",
-            "ipv6_access_group_in",
-            "ipv6_access_group_out",
-            "ipv6_address",
-            "ipv6_address_link_local",
-            "ipv6_dhcp_relay_destinations",
-            "ipv6_enable",
-            "ipv6_nd_managed_config_flag",
-            "ipv6_nd_prefixes",
-            "ipv6_nd_ra_disabled",
-            "isis_authentication",
-            "isis_authentication_key",
-            "isis_authentication_mode",
-            "isis_bfd",
-            "isis_circuit_type",
-            "isis_enable",
-            "isis_hello_padding",
-            "isis_metric",
-            "isis_network_point_to_point",
-            "isis_passive",
-            "l2_mru",
-            "l2_mtu",
-            "l2_protocol",
-            "lacp_port_priority",
-            "lacp_timer",
-            "link_tracking",
-            "link_tracking_groups",
-            "lldp",
-            "load_interval",
-            "logging",
-            "mac_access_group_in",
-            "mac_access_group_out",
-            "mac_security",
-            "mac_timestamp",
-            "mode",
-            "mpls",
-            "mtu",
-            "multicast",
-            "name",
-            "native_vlan",
-            "native_vlan_tag",
-            "ospf_area",
-            "ospf_authentication",
-            "ospf_authentication_key",
-            "ospf_cost",
-            "ospf_message_digest_keys",
-            "ospf_network_point_to_point",
-            "peer",
-            "peer_interface",
-            "peer_type",
-            "phone",
-            "pim",
-            "poe",
-            "port_profile",
-            "priority_flow_control",
-            "profile",
-            "ptp",
-            "pvlan_mapping",
-            "qos",
-            "service_policy",
-            "service_profile",
-            "sflow",
-            "shape",
-            "shutdown",
-            "snmp_trap_link_change",
-            "spanning_tree_bpdufilter",
-            "spanning_tree_bpduguard",
-            "spanning_tree_guard",
-            "spanning_tree_portfast",
-            "speed",
-            "storm_control",
-            "switchport",
-            "sync_e",
-            "tcp_mss_ceiling",
-            "traffic_engineering",
-            "traffic_policy",
-            "transceiver",
-            "trunk_groups",
-            "trunk_private_vlan_secondary",
-            "tx_queues",
-            "type",
-            "uc_tx_queues",
-            "validate_lldp",
-            "validate_state",
-            "vlan_id",
-            "vlan_translations",
-            "vlans",
-            "vmtracer",
-            "vrf",
-            "vrrp_ids",
-        )
-
         class Phone(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("trunk", "vlan")
 
             _fields: ClassVar[dict] = {"trunk": {"type": str}, "vlan": {"type": int}}
             trunk: Literal["tagged", "tagged phone", "untagged", "untagged phone"] | None
@@ -5674,8 +5066,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class L2Protocol(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("encapsulation_dot1q_vlan", "forwarding_profile")
 
             _fields: ClassVar[dict] = {"encapsulation_dot1q_vlan": {"type": int}, "forwarding_profile": {"type": str}}
             encapsulation_dot1q_vlan: int | None
@@ -5708,12 +5098,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressLocking(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("address_family", "ipv4", "ipv4_enforcement_disabled", "ipv6")
-
             class AddressFamily(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ipv4", "ipv6")
 
                 _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}}
                 ipv4: bool | None
@@ -5809,8 +5195,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Flowcontrol(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("received",)
-
             _fields: ClassVar[dict] = {"received": {"type": str}}
             received: Literal["desired", "on", "off"] | None
 
@@ -5830,8 +5214,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class FlowTracker(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("hardware", "sampled")
 
             _fields: ClassVar[dict] = {"sampled": {"type": str}, "hardware": {"type": str}}
             sampled: str | None
@@ -5856,8 +5238,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class ErrorCorrectionEncoding(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("enabled", "fire_code", "reed_solomon")
 
             _fields: ClassVar[dict] = {"enabled": {"type": bool, "default": True}, "fire_code": {"type": bool}, "reed_solomon": {"type": bool}}
             enabled: bool
@@ -5890,8 +5270,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class LinkTrackingGroupsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("direction", "name")
-
             _fields: ClassVar[dict] = {"name": {"type": str}, "direction": {"type": str}}
             name: str
             """Group name."""
@@ -5923,8 +5301,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class LinkTracking(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("direction", "groups")
 
             class Groups(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -5963,12 +5339,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class EvpnEthernetSegment(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("designated_forwarder_election", "identifier", "mpls", "redundancy", "route_target")
-
             class DesignatedForwarderElection(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("algorithm", "candidate_reachability_required", "dont_preempt", "hold_time", "preference_value", "subsequent_hold_time")
 
                 _fields: ClassVar[dict] = {
                     "algorithm": {"type": str},
@@ -6017,8 +5389,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Mpls(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("shared_index", "tunnel_flood_filter_time")
 
                 _fields: ClassVar[dict] = {"shared_index": {"type": int}, "tunnel_flood_filter_time": {"type": int}}
                 shared_index: int | None
@@ -6087,8 +5457,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class EncapsulationDot1q(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("inner_vlan", "vlan")
-
             _fields: ClassVar[dict] = {"vlan": {"type": int}, "inner_vlan": {"type": int}}
             vlan: int
             """VLAD ID."""
@@ -6113,17 +5481,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class EncapsulationVlan(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("client", "network")
-
             class Client(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dot1q", "encapsulation", "inner_encapsulation", "inner_vlan", "outer_vlan", "unmatched", "vlan")
-
                 class Dot1q(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("inner", "outer", "vlan")
 
                     _fields: ClassVar[dict] = {"vlan": {"type": int}, "outer": {"type": int}, "inner": {"type": int}}
                     vlan: int | None
@@ -6209,12 +5571,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Network(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("client", "dot1q", "encapsulation", "inner_encapsulation", "inner_vlan", "outer_vlan", "vlan")
-
                 class Dot1q(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("inner", "outer", "vlan")
 
                     _fields: ClassVar[dict] = {"vlan": {"type": int}, "outer": {"type": int}, "inner": {"type": int}}
                     vlan: int | None
@@ -6343,8 +5701,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IpHelpersItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ip_helper", "source_interface", "vrf")
-
             _fields: ClassVar[dict] = {"ip_helper": {"type": str}, "source_interface": {"type": str}, "vrf": {"type": str}}
             ip_helper: str
             source_interface: str | None
@@ -6384,17 +5740,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IpNat(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("destination", "service_profile", "source")
-
             class Destination(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dynamic", "static")
-
                 class DynamicItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("access_list", "comment", "pool_name", "priority")
 
                     _fields: ClassVar[dict] = {"access_list": {"type": str}, "comment": {"type": str}, "pool_name": {"type": str}, "priority": {"type": int}}
                     access_list: str
@@ -6435,19 +5785,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class StaticItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = (
-                        "access_list",
-                        "comment",
-                        "direction",
-                        "group",
-                        "original_ip",
-                        "original_port",
-                        "priority",
-                        "protocol",
-                        "translated_ip",
-                        "translated_port",
-                    )
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -6553,12 +5890,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Source(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dynamic", "static")
-
                 class DynamicItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("access_list", "comment", "nat_type", "pool_name", "priority")
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -6616,19 +5949,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class StaticItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = (
-                        "access_list",
-                        "comment",
-                        "direction",
-                        "group",
-                        "original_ip",
-                        "original_port",
-                        "priority",
-                        "protocol",
-                        "translated_ip",
-                        "translated_port",
-                    )
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -6764,8 +6084,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Ipv6NdPrefixesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv6_prefix", "no_autoconfig_flag", "preferred_lifetime", "valid_lifetime")
-
             _fields: ClassVar[dict] = {
                 "ipv6_prefix": {"type": str},
                 "valid_lifetime": {"type": str},
@@ -6812,8 +6130,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Ipv6DhcpRelayDestinationsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("address", "link_address", "local_interface", "source_address", "vrf")
 
             _fields: ClassVar[dict] = {
                 "address": {"type": str},
@@ -6871,17 +6187,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Multicast(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4", "ipv6")
-
             class Ipv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("boundaries", "static")
-
                 class BoundariesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("boundary", "out")
 
                     _fields: ClassVar[dict] = {"boundary": {"type": str}, "out": {"type": bool}}
                     boundary: str | None
@@ -6931,12 +6241,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Ipv6(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("boundaries", "static")
-
                 class BoundariesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("boundary",)
 
                     _fields: ClassVar[dict] = {"boundary": {"type": str}}
                     boundary: str | None
@@ -7005,8 +6311,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class OspfMessageDigestKeysItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("hash_algorithm", "id", "key")
-
             _fields: ClassVar[dict] = {"id": {"type": int}, "hash_algorithm": {"type": str}, "key": {"type": str}}
             id: int
             hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None
@@ -7045,17 +6349,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Pim(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4",)
-
             class Ipv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bfd", "bidirectional", "border_router", "dr_priority", "hello", "sparse_mode")
-
                 class Hello(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("count", "interval")
 
                     _fields: ClassVar[dict] = {"count": {"type": str}, "interval": {"type": int}}
                     count: str | None
@@ -7145,8 +6443,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class MacSecurity(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("profile",)
-
             _fields: ClassVar[dict] = {"profile": {"type": str}}
             profile: str | None
 
@@ -7166,8 +6462,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class TcpMssCeiling(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("direction", "ipv4_segment_size", "ipv6_segment_size")
 
             _fields: ClassVar[dict] = {"ipv4_segment_size": {"type": int}, "ipv6_segment_size": {"type": int}, "direction": {"type": str}}
             ipv4_segment_size: int | None
@@ -7199,8 +6493,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ChannelGroup(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("id", "mode")
-
             _fields: ClassVar[dict] = {"id": {"type": int}, "mode": {"type": str}}
             id: int | None
             mode: Literal["on", "active", "passive"] | None
@@ -7225,17 +6517,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IsisAuthentication(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("both", "level_1", "level_2")
-
             class Both(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -7290,8 +6576,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -7311,8 +6595,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -7409,12 +6691,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Level1(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -7469,8 +6747,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -7490,8 +6766,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -7588,12 +6862,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Level2(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -7648,8 +6918,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -7669,8 +6937,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -7812,12 +7078,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Poe(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("disabled", "legacy_detect", "limit", "link_down", "negotiation_lldp", "priority", "reboot", "shutdown")
-
             class Reboot(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("action",)
 
                 _fields: ClassVar[dict] = {"action": {"type": str}}
                 action: Literal["maintain", "power-off"] | None
@@ -7839,8 +7101,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class LinkDown(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("action", "power_off_delay")
 
                 _fields: ClassVar[dict] = {"action": {"type": str}, "power_off_delay": {"type": int}}
                 action: Literal["maintain", "power-off"] | None
@@ -7876,8 +7136,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Shutdown(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("action",)
-
                 _fields: ClassVar[dict] = {"action": {"type": str}}
                 action: Literal["maintain", "power-off"] | None
                 """PoE action for interface."""
@@ -7898,8 +7156,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Limit(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("field_class", "fixed", "watts")
 
                 _fields: ClassVar[dict] = {"field_class": {"type": int}, "watts": {"type": str}, "fixed": {"type": bool}}
                 _field_to_key_map: ClassVar[dict] = {"field_class": "class"}
@@ -8039,12 +7295,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Ptp(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("announce", "delay_mechanism", "delay_req", "enable", "profile", "role", "sync_message", "transport", "vlan")
-
             class Announce(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interval", "timeout")
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}, "timeout": {"type": int}}
                 interval: int | None
@@ -8068,12 +7320,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Profile(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("g8275_1",)
-
                 class G82751(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("destination_mac_address",)
 
                     _fields: ClassVar[dict] = {"destination_mac_address": {"type": str}}
                     destination_mac_address: Literal["forwardable", "non-forwardable"] | None
@@ -8112,8 +7360,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class SyncMessage(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interval",)
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}}
                 interval: int | None
@@ -8194,12 +7440,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class StormControl(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("all", "broadcast", "multicast", "unknown_unicast")
-
             class All(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("level", "unit")
 
                 _fields: ClassVar[dict] = {"level": {"type": str}, "unit": {"type": str, "default": "percent"}}
                 level: str | None
@@ -8229,8 +7471,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Broadcast(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("level", "unit")
-
                 _fields: ClassVar[dict] = {"level": {"type": str}, "unit": {"type": str, "default": "percent"}}
                 level: str | None
                 """Configure maximum storm-control level."""
@@ -8259,8 +7499,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Multicast(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("level", "unit")
-
                 _fields: ClassVar[dict] = {"level": {"type": str}, "unit": {"type": str, "default": "percent"}}
                 level: str | None
                 """Configure maximum storm-control level."""
@@ -8288,8 +7526,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class UnknownUnicast(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("level", "unit")
 
                 _fields: ClassVar[dict] = {"level": {"type": str}, "unit": {"type": str, "default": "percent"}}
                 level: str | None
@@ -8358,12 +7594,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Logging(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("event",)
-
             class Event(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("congestion_drops", "link_status", "spanning_tree", "storm_control_discards")
 
                 _fields: ClassVar[dict] = {
                     "link_status": {"type": bool},
@@ -8422,8 +7654,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Lldp(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("receive", "transmit", "ztp_vlan")
-
             _fields: ClassVar[dict] = {"transmit": {"type": bool}, "receive": {"type": bool}, "ztp_vlan": {"type": int}}
             transmit: bool | None
             receive: bool | None
@@ -8454,8 +7684,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class VlanTranslationsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("direction", "field_from", "to")
 
             _fields: ClassVar[dict] = {"field_from": {"type": str}, "to": {"type": int}, "direction": {"type": str, "default": "both"}}
             _field_to_key_map: ClassVar[dict] = {"field_from": "from"}
@@ -8497,26 +7725,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Dot1x(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "aaa",
-                "authentication_failure",
-                "eapol",
-                "host_mode",
-                "mac_based_access_list",
-                "mac_based_authentication",
-                "pae",
-                "port_control",
-                "port_control_force_authorized_phone",
-                "reauthentication",
-                "reauthorization_request_limit",
-                "timeout",
-                "unauthorized",
-            )
-
             class Pae(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("mode",)
 
                 _fields: ClassVar[dict] = {"mode": {"type": str}}
                 mode: Literal["authenticator"] | None
@@ -8537,8 +7747,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class AuthenticationFailure(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("action", "allow_vlan")
 
                 _fields: ClassVar[dict] = {"action": {"type": str}, "allow_vlan": {"type": int}}
                 action: Literal["allow", "drop"] | None
@@ -8563,8 +7771,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class HostMode(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("mode", "multi_host_authenticated")
 
                 _fields: ClassVar[dict] = {"mode": {"type": str}, "multi_host_authenticated": {"type": bool}}
                 mode: Literal["multi-host", "single-host"] | None
@@ -8592,8 +7798,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class MacBasedAuthentication(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("always", "enabled", "host_mode_common")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "always": {"type": bool}, "host_mode_common": {"type": bool}}
                 enabled: bool | None
@@ -8624,8 +7828,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Timeout(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("idle_host", "quiet_period", "reauth_period", "reauth_timeout_ignore", "tx_period")
 
                 _fields: ClassVar[dict] = {
                     "idle_host": {"type": int},
@@ -8670,8 +7872,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Unauthorized(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("access_vlan_membership_egress", "native_vlan_membership_egress")
-
                 _fields: ClassVar[dict] = {"access_vlan_membership_egress": {"type": bool}, "native_vlan_membership_egress": {"type": bool}}
                 access_vlan_membership_egress: bool | None
                 native_vlan_membership_egress: bool | None
@@ -8699,12 +7899,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Eapol(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("authentication_failure_fallback_mba", "disabled")
-
                 class AuthenticationFailureFallbackMba(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "timeout")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "timeout": {"type": int}}
                     enabled: bool | None
@@ -8753,29 +7949,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Aaa(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("unresponsive",)
-
                 class Unresponsive(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("action", "eap_response", "phone_action")
 
                     class Action(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = (
-                            "apply_alternate",
-                            "apply_cached_results",
-                            "cached_results_timeout",
-                            "traffic_allow",
-                            "traffic_allow_access_list",
-                            "traffic_allow_vlan",
-                        )
-
                         class CachedResultsTimeout(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("time_duration", "time_duration_unit")
 
                             _fields: ClassVar[dict] = {"time_duration": {"type": int}, "time_duration_unit": {"type": str}}
                             time_duration: int | None
@@ -8873,12 +8054,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class PhoneAction(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("apply_alternate", "apply_cached_results", "cached_results_timeout", "traffic_allow")
-
                         class CachedResultsTimeout(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("time_duration", "time_duration_unit")
 
                             _fields: ClassVar[dict] = {"time_duration": {"type": int}, "time_duration_unit": {"type": str}}
                             time_duration: int | None
@@ -9116,8 +8293,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Shape(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("rate",)
-
             _fields: ClassVar[dict] = {"rate": {"type": str}}
             rate: str | None
             """
@@ -9154,8 +8329,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Qos(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("cos", "dscp", "trust")
-
             _fields: ClassVar[dict] = {"trust": {"type": str}, "dscp": {"type": int}, "cos": {"type": int}}
             trust: Literal["dscp", "cos", "disabled"] | None
             dscp: int | None
@@ -9188,12 +8361,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PriorityFlowControl(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enabled", "priorities")
-
             class PrioritiesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("no_drop", "priority")
 
                 _fields: ClassVar[dict] = {"priority": {"type": int}, "no_drop": {"type": bool}}
                 priority: int
@@ -9244,8 +8413,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Bfd(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("echo", "interval", "min_rx", "multiplier")
-
             _fields: ClassVar[dict] = {"echo": {"type": bool}, "interval": {"type": int}, "min_rx": {"type": int}, "multiplier": {"type": int}}
             echo: bool | None
             interval: int | None
@@ -9281,12 +8448,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ServicePolicy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("pbr", "qos")
-
             class Pbr(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("input",)
 
                 _fields: ClassVar[dict] = {"input": {"type": str}}
                 input: str | None
@@ -9308,8 +8471,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Qos(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("input",)
 
                 _fields: ClassVar[dict] = {"input": {"type": str}}
                 input: str
@@ -9353,12 +8514,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Mpls(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ip", "ldp")
-
             class Ldp(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("igp_sync", "interface")
 
                 _fields: ClassVar[dict] = {"interface": {"type": bool}, "igp_sync": {"type": bool}}
                 interface: bool | None
@@ -9402,8 +8559,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class LacpTimer(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("mode", "multiplier")
-
             _fields: ClassVar[dict] = {"mode": {"type": str}, "multiplier": {"type": int}}
             mode: Literal["fast", "normal"] | None
             multiplier: int | None
@@ -9428,12 +8583,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Transceiver(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("frequency", "frequency_unit", "media")
-
             class Media(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("override",)
 
                 _fields: ClassVar[dict] = {"override": {"type": str}}
                 override: str | None
@@ -9486,8 +8637,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class TrafficPolicy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("input", "output")
-
             _fields: ClassVar[dict] = {"input": {"type": str}, "output": {"type": str}}
             input: str | None
             """Ingress traffic policy."""
@@ -9512,8 +8661,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Bgp(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("session_tracker",)
-
             _fields: ClassVar[dict] = {"session_tracker": {"type": str}}
             session_tracker: str | None
             """Name of session tracker."""
@@ -9535,17 +8682,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IpIgmpHostProxy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("access_lists", "enabled", "groups", "report_interval", "version")
-
             class GroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("exclude", "group", "include")
-
                 class ExcludeItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("source",)
 
                     _fields: ClassVar[dict] = {"source": {"type": str}}
                     source: str
@@ -9573,8 +8714,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class IncludeItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("source",)
 
                     _fields: ClassVar[dict] = {"source": {"type": str}}
                     source: str
@@ -9658,8 +8797,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AccessListsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("name",)
-
                 _fields: ClassVar[dict] = {"name": {"type": str}}
                 name: str
 
@@ -9739,12 +8876,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Sflow(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("egress", "enable")
-
             class Egress(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enable", "unmodified_enable")
 
                 _fields: ClassVar[dict] = {"enable": {"type": bool}, "unmodified_enable": {"type": bool}}
                 enable: bool | None
@@ -9788,8 +8921,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SyncE(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enable", "priority")
-
             _fields: ClassVar[dict] = {"enable": {"type": bool}, "priority": {"type": str}}
             enable: bool | None
             priority: str | None
@@ -9818,22 +8949,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class UcTxQueuesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("id", "random_detect")
-
             class RandomDetect(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ecn",)
 
                 class Ecn(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("count", "threshold")
-
                     class Threshold(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("max", "max_probability", "min", "units", "weight")
 
                         _fields: ClassVar[dict] = {
                             "units": {"type": str},
@@ -9956,22 +9079,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class TxQueuesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("id", "random_detect")
-
             class RandomDetect(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ecn",)
 
                 class Ecn(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("count", "threshold")
-
                     class Threshold(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("max", "max_probability", "min", "units", "weight")
 
                         _fields: ClassVar[dict] = {
                             "units": {"type": str},
@@ -10094,12 +9209,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrrpIdsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("advertisement", "id", "ipv4", "ipv6", "preempt", "priority_level", "timers", "tracked_object")
-
             class Advertisement(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interval",)
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}}
                 interval: int | None
@@ -10122,12 +9233,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Preempt(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("delay", "enabled")
-
                 class Delay(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("minimum", "reload")
 
                     _fields: ClassVar[dict] = {"minimum": {"type": int}, "reload": {"type": int}}
                     minimum: int | None
@@ -10173,12 +9280,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Timers(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("delay",)
-
                 class Delay(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("reload",)
 
                     _fields: ClassVar[dict] = {"reload": {"type": int}}
                     reload: int | None
@@ -10219,8 +9322,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class TrackedObjectItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("decrement", "name", "shutdown")
-
                 _fields: ClassVar[dict] = {"name": {"type": str}, "decrement": {"type": int}, "shutdown": {"type": bool}}
                 name: str
                 """Tracked object name."""
@@ -10260,8 +9361,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Ipv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("address", "version")
-
                 _fields: ClassVar[dict] = {"address": {"type": str}, "version": {"type": int}}
                 address: str
                 """Virtual IPv4 address."""
@@ -10284,8 +9383,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Ipv6(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("address",)
 
                 _fields: ClassVar[dict] = {"address": {"type": str}}
                 address: str
@@ -10374,28 +9471,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Switchport(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "access_vlan",
-                "backup",
-                "backup_link",
-                "dot1q",
-                "enabled",
-                "mode",
-                "phone",
-                "port_security",
-                "pvlan_mapping",
-                "source_interface",
-                "tap",
-                "tool",
-                "trunk",
-                "vlan_forwarding_accept_all",
-                "vlan_translations",
-            )
-
             class Trunk(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("allowed_vlan", "groups", "native_vlan", "native_vlan_tag", "private_vlan_secondary")
 
                 class Groups(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -10488,8 +9565,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Phone(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("trunk", "vlan")
-
                 _fields: ClassVar[dict] = {"vlan": {"type": int}, "trunk": {"type": str}}
                 vlan: int | None
                 """Warning: This should not be combined with `ethernet_interfaces[].phone.vlan`."""
@@ -10518,8 +9593,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Dot1q(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ethertype", "vlan_tag")
 
                 _fields: ClassVar[dict] = {"ethertype": {"type": int}, "vlan_tag": {"type": str}}
                 ethertype: int | None
@@ -10550,12 +9623,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class VlanTranslations(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("direction_both", "direction_in", "direction_out", "in_required", "out_required")
-
                 class DirectionInItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1q_tunnel", "field_from", "inner_vlan_from", "to")
 
                     _fields: ClassVar[dict] = {
                         "field_from": {"type": str},
@@ -10604,8 +9673,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class DirectionOutItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1q_tunnel_to", "field_from", "inner_vlan_to", "to")
 
                     _fields: ClassVar[dict] = {
                         "field_from": {"type": str},
@@ -10662,8 +9729,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class DirectionBothItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1q_tunnel", "field_from", "inner_vlan_from", "network", "to")
 
                     _fields: ClassVar[dict] = {
                         "field_from": {"type": str},
@@ -10790,8 +9855,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class BackupLink(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("interface", "prefer_vlan")
-
                 _fields: ClassVar[dict] = {"interface": {"type": str}, "prefer_vlan": {"type": str}}
                 interface: str | None
                 """Backup interface. Example - Ethernet4, Vlan10 etc."""
@@ -10815,8 +9878,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Backup(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("dest_macaddr", "initial_mac_move_delay", "mac_move_burst", "mac_move_burst_interval", "preemption_delay")
 
                 _fields: ClassVar[dict] = {
                     "dest_macaddr": {"type": str},
@@ -10872,12 +9933,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PortSecurity(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "mac_address_maximum", "violation", "vlan_default_mac_address_maximum", "vlans")
-
                 class MacAddressMaximum(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("disabled", "limit")
 
                     _fields: ClassVar[dict] = {"disabled": {"type": bool}, "limit": {"type": int}}
                     disabled: bool | None
@@ -10902,8 +9959,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Violation(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("mode", "protect_log")
 
                     _fields: ClassVar[dict] = {"mode": {"type": str}, "protect_log": {"type": bool}}
                     mode: Literal["shutdown", "protect"] | None
@@ -10933,8 +9988,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class VlansItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("mac_address_maximum", "range")
 
                     _fields: ClassVar[dict] = {"range": {"type": str}, "mac_address_maximum": {"type": int}}
                     range: str
@@ -11034,12 +10087,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Tap(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("allowed_vlan", "default", "encapsulation", "identity", "mac_address", "mpls_pop_all", "native_vlan", "truncation")
-
                 class Default(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("groups", "interfaces", "nexthop_groups")
 
                     class Groups(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -11112,8 +10161,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Identity(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("id", "inner_vlan")
-
                     _fields: ClassVar[dict] = {"id": {"type": int}, "inner_vlan": {"type": int}}
                     id: int | None
                     """Tap port VLAN ID (1-4094) or DzGRE extended ID (1-65535)."""
@@ -11138,8 +10185,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Truncation(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "size")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "size": {"type": int}}
                     enabled: bool | None
                     size: int | None
@@ -11162,8 +10207,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class MacAddress(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("destination", "source")
 
                     _fields: ClassVar[dict] = {"source": {"type": str}, "destination": {"type": str}}
                     source: str | None
@@ -11189,17 +10232,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Encapsulation(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("gre", "vxlan_strip")
-
                     class Gre(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("destinations", "protocols", "strip")
-
                         class ProtocolsItem(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("feature_header_length", "protocol", "re_encapsulation_ethernet_header", "strip")
 
                             _fields: ClassVar[dict] = {
                                 "protocol": {"type": str},
@@ -11271,12 +10308,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         class DestinationsItem(AvdModel):
                             """Subclass of AvdModel."""
 
-                            __slots__ = ("destination", "protocols", "source", "strip")
-
                             class ProtocolsItem(AvdModel):
                                 """Subclass of AvdModel."""
-
-                                __slots__ = ("feature_header_length", "protocol", "re_encapsulation_ethernet_header", "strip")
 
                                 _fields: ClassVar[dict] = {
                                     "protocol": {"type": str},
@@ -11547,12 +10580,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Tool(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("allowed_vlan", "dot1q_remove_outer_vlan_tag", "encapsulation", "groups", "identity", "mpls_pop_all")
-
                 class Encapsulation(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1br_strip", "vn_tag_strip")
 
                     _fields: ClassVar[dict] = {"dot1br_strip": {"type": bool}, "vn_tag_strip": {"type": bool}}
                     dot1br_strip: bool | None
@@ -11579,8 +10608,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Identity(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1q_dzgre_source", "qinq_dzgre_source", "tag")
 
                     _fields: ClassVar[dict] = {"tag": {"type": str}, "dot1q_dzgre_source": {"type": str}, "qinq_dzgre_source": {"type": str}}
                     tag: Literal["dot1q", "qinq"] | None
@@ -11843,8 +10870,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class TrafficEngineering(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("administrative_groups", "bandwidth", "enabled", "metric", "min_delay_dynamic", "min_delay_static", "srlg")
-
             class AdministrativeGroups(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
 
@@ -11852,8 +10877,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Bandwidth(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("number", "unit")
 
                 _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}}
                 number: int
@@ -11878,8 +10901,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class MinDelayStatic(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("number", "unit")
 
                 _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}}
                 number: int
@@ -11911,12 +10932,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class MinDelayDynamic(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("twamp_light_fallback",)
-
                 class TwampLightFallback(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("number", "unit")
 
                     _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}}
                     number: int
@@ -12740,22 +11757,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class EventHandlersItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "actions",
-            "asynchronous",
-            "delay",
-            "name",
-            "trigger",
-            "trigger_on_counters",
-            "trigger_on_intf",
-            "trigger_on_logging",
-            "trigger_on_maintenance",
-        )
-
         class Actions(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("bash_command", "increment_device_health_metric", "log")
 
             _fields: ClassVar[dict] = {"bash_command": {"type": str}, "log": {"type": bool}, "increment_device_health_metric": {"type": str}}
             bash_command: str | None
@@ -12789,8 +11792,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class TriggerOnCounters(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("condition", "granularity_per_source", "poll_interval")
 
             _fields: ClassVar[dict] = {"condition": {"type": str}, "granularity_per_source": {"type": bool}, "poll_interval": {"type": int}}
             condition: str | None
@@ -12838,8 +11839,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class TriggerOnLogging(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("poll_interval", "regex")
-
             _fields: ClassVar[dict] = {"poll_interval": {"type": int}, "regex": {"type": str}}
             poll_interval: int | None
             """Set the polling interval in seconds."""
@@ -12863,8 +11862,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class TriggerOnIntf(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("interface", "ip", "ipv6", "operstatus")
 
             _fields: ClassVar[dict] = {"interface": {"type": str}, "ip": {"type": bool}, "ipv6": {"type": bool}, "operstatus": {"type": bool}}
             interface: str
@@ -12911,8 +11908,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class TriggerOnMaintenance(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "bgp_peer", "interface", "operation", "stage", "unit", "vrf")
 
             _fields: ClassVar[dict] = {
                 "operation": {"type": str},
@@ -13077,8 +12072,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class EventMonitor(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("enabled",)
-
         _fields: ClassVar[dict] = {"enabled": {"type": bool}}
         enabled: bool | None
 
@@ -13099,17 +12092,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class FlowTracking(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("hardware", "sampled")
-
         class Sampled(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("encapsulation", "hardware_offload", "sample", "shutdown", "trackers")
-
             class Encapsulation(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ipv4_ipv6", "mpls")
 
                 _fields: ClassVar[dict] = {"ipv4_ipv6": {"type": bool}, "mpls": {"type": bool}}
                 ipv4_ipv6: bool | None
@@ -13132,8 +12119,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class HardwareOffload(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ipv4", "ipv6", "threshold_minimum")
 
                 _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}, "threshold_minimum": {"type": int}}
                 ipv4: bool | None
@@ -13168,12 +12153,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class TrackersItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("exporters", "name", "record_export", "table_size")
-
                 class RecordExport(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("mpls", "on_inactive_timeout", "on_interval")
 
                     _fields: ClassVar[dict] = {"mpls": {"type": bool}, "on_inactive_timeout": {"type": int}, "on_interval": {"type": int}}
                     mpls: bool | None
@@ -13208,12 +12189,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class ExportersItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("collector", "format", "local_interface", "name", "template_interval")
-
                     class Collector(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("host", "port")
 
                         _fields: ClassVar[dict] = {"host": {"type": str}, "port": {"type": int}}
                         host: str | None
@@ -13238,8 +12215,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Format(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("ipfix_version",)
 
                         _fields: ClassVar[dict] = {"ipfix_version": {"type": int}}
                         ipfix_version: int | None
@@ -13401,12 +12376,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Hardware(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("record", "shutdown", "trackers")
-
             class Record(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("format_ipfix_standard_timestamps_counters",)
 
                 _fields: ClassVar[dict] = {"format_ipfix_standard_timestamps_counters": {"type": bool}}
                 format_ipfix_standard_timestamps_counters: bool | None
@@ -13429,12 +12400,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class TrackersItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("exporters", "name", "record_export")
-
                 class RecordExport(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("on_inactive_timeout", "on_interval")
 
                     _fields: ClassVar[dict] = {"on_inactive_timeout": {"type": int}, "on_interval": {"type": int}}
                     on_inactive_timeout: int | None
@@ -13462,12 +12429,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class ExportersItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("collector", "format", "local_interface", "name", "template_interval")
-
                     class Collector(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("host", "port")
 
                         _fields: ClassVar[dict] = {"host": {"type": str}, "port": {"type": int}}
                         host: str | None
@@ -13492,8 +12455,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Format(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("ipfix_version",)
 
                         _fields: ClassVar[dict] = {"ipfix_version": {"type": int}}
                         ipfix_version: int | None
@@ -13654,12 +12615,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Hardware(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("access_list", "port_groups", "speed_groups")
-
         class AccessList(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("mechanism",)
 
             _fields: ClassVar[dict] = {"mechanism": {"type": str}}
             mechanism: Literal["algomatch", "none", "tcam"] | None
@@ -13680,8 +12637,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class SpeedGroupsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("serdes", "speed_group")
 
             _fields: ClassVar[dict] = {"speed_group": {"type": str}, "serdes": {"type": str}}
             speed_group: str
@@ -13712,8 +12667,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class PortGroupsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("port_group", "select")
 
             _fields: ClassVar[dict] = {"port_group": {"type": str}, "select": {"type": str}}
             port_group: str
@@ -13775,12 +12728,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class HardwareCounters(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("features",)
-
         class FeaturesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("address_type", "direction", "layer3", "name", "prefix", "units_packets", "vrf")
 
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
@@ -14060,12 +13009,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class InterfaceDefaults(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("ethernet", "mtu")
-
         class Ethernet(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("shutdown",)
 
             _fields: ClassVar[dict] = {"shutdown": {"type": bool}}
             shutdown: bool | None
@@ -14106,8 +13051,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class InterfaceGroupsItem(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("bgp_maintenance_profiles", "interface_maintenance_profiles", "interfaces", "name")
 
         class Interfaces(AvdList[str]):
             """Subclass of AvdList with `str` items."""
@@ -14173,8 +13116,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class InterfaceProfilesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("commands", "name")
-
         class Commands(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -14211,36 +13152,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpAccessListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("counters_per_entry", "entries", "name", "permit_response_traffic")
-
         class EntriesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = (
-                "action",
-                "destination",
-                "destination_ports",
-                "destination_ports_match",
-                "dscp",
-                "fragments",
-                "icmp_code",
-                "icmp_type",
-                "log",
-                "nexthop_group",
-                "protocol",
-                "remark",
-                "sequence",
-                "source",
-                "source_ports",
-                "source_ports_match",
-                "tcp_flags",
-                "tracked",
-                "ttl",
-                "ttl_match",
-                "vlan_inner",
-                "vlan_mask",
-                "vlan_number",
-            )
 
             class SourcePorts(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -14486,12 +13399,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpCommunityListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("entries", "name")
-
         class EntriesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "communities", "regexp")
 
             class Communities(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -14591,8 +13500,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpDhcpRelay(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("all_subnets", "always_on", "information_option")
-
         _fields: ClassVar[dict] = {"always_on": {"type": bool}, "all_subnets": {"type": bool}, "information_option": {"type": bool}}
         always_on: bool | None
         """DhcpRelay Agent will be in always-on mode."""
@@ -14626,12 +13533,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpDhcpSnooping(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("bridging", "enabled", "information_option", "vlan")
-
         class InformationOption(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("circuit_id_format", "circuit_id_type", "enabled")
 
             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "circuit_id_type": {"type": str}, "circuit_id_format": {"type": str}}
             enabled: bool | None
@@ -14719,12 +13622,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpDomainLookup(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("source_interfaces",)
-
         class SourceInterfacesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "vrf")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
             name: str
@@ -14774,12 +13673,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpExtcommunityListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("entries", "name")
-
         class EntriesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("extcommunities", "type")
 
             _fields: ClassVar[dict] = {"type": {"type": str}, "extcommunities": {"type": str}}
             type: Literal["permit", "deny"]
@@ -14842,12 +13737,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpExtcommunityListsRegexpItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("entries", "name")
-
         class EntriesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("regexp", "type")
 
             _fields: ClassVar[dict] = {"type": {"type": str}, "regexp": {"type": str}}
             type: Literal["permit", "deny"]
@@ -14908,8 +13799,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpFtpClientSourceInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "vrf")
-
         _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
         name: str
         """Interface Name."""
@@ -14939,22 +13828,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpHardware(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("fib",)
-
         class Fib(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("optimize",)
 
             class Optimize(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("prefixes",)
-
                 class Prefixes(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("profile",)
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}}
                     profile: Literal["internet", "urpf-internet"] | None
@@ -15030,8 +13911,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpHttpClientSourceInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "vrf")
-
         _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
         name: str | None
         """Interface Name."""
@@ -15060,22 +13939,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpIgmpSnooping(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("fast_leave", "globally_enabled", "interface_restart_query", "proxy", "querier", "restart_query_interval", "robustness_variable", "vlans")
-
         class Querier(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = (
-                "address",
-                "enabled",
-                "last_member_query_count",
-                "last_member_query_interval",
-                "max_response_time",
-                "query_interval",
-                "startup_query_count",
-                "startup_query_interval",
-                "version",
-            )
 
             _fields: ClassVar[dict] = {
                 "enabled": {"type": bool},
@@ -15136,22 +14001,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VlansItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enabled", "fast_leave", "id", "max_groups", "proxy", "querier")
-
             class Querier(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = (
-                    "address",
-                    "enabled",
-                    "last_member_query_count",
-                    "last_member_query_interval",
-                    "max_response_time",
-                    "query_interval",
-                    "startup_query_count",
-                    "startup_query_interval",
-                    "version",
-                )
 
                 _fields: ClassVar[dict] = {
                     "enabled": {"type": bool},
@@ -15326,12 +14177,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpNameServerGroupsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("dns_domain", "ip_domain_list", "name", "name_servers")
-
         class NameServersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ip_address", "priority", "vrf")
 
             _fields: ClassVar[dict] = {"ip_address": {"type": str}, "vrf": {"type": str}, "priority": {"type": int}}
             ip_address: str
@@ -15406,8 +14253,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpNameServersItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("ip_address", "priority", "vrf")
-
         _fields: ClassVar[dict] = {"ip_address": {"type": str}, "vrf": {"type": str}, "priority": {"type": int}}
         ip_address: str
         """IPv4 or IPv6 address for DNS server."""
@@ -15446,22 +14291,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpNat(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("kernel_buffer_size", "pools", "profiles", "synchronization", "translation")
-
         class ProfilesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("destination", "name", "source", "vrf")
 
             class Destination(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dynamic", "static")
-
                 class DynamicItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("access_list", "comment", "pool_name", "priority")
 
                     _fields: ClassVar[dict] = {"access_list": {"type": str}, "comment": {"type": str}, "pool_name": {"type": str}, "priority": {"type": int}}
                     access_list: str
@@ -15502,19 +14339,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class StaticItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = (
-                        "access_list",
-                        "comment",
-                        "direction",
-                        "group",
-                        "original_ip",
-                        "original_port",
-                        "priority",
-                        "protocol",
-                        "translated_ip",
-                        "translated_port",
-                    )
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -15620,12 +14444,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Source(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dynamic", "static")
-
                 class DynamicItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("access_list", "comment", "nat_type", "pool_name", "priority")
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -15683,19 +14503,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class StaticItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = (
-                        "access_list",
-                        "comment",
-                        "direction",
-                        "group",
-                        "original_ip",
-                        "original_port",
-                        "priority",
-                        "protocol",
-                        "translated_ip",
-                        "translated_port",
-                    )
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -15841,12 +14648,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PoolsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "prefix_length", "ranges", "type", "utilization_log_threshold")
-
             class RangesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("first_ip", "first_port", "last_ip", "last_port")
 
                 _fields: ClassVar[dict] = {"first_ip": {"type": str}, "last_ip": {"type": str}, "first_port": {"type": int}, "last_port": {"type": int}}
                 first_ip: str | None
@@ -15957,12 +14760,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Synchronization(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("description", "expiry_interval", "local_interface", "peer_address", "port_range", "shutdown")
-
             class PortRange(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("first_port", "last_port", "split_disabled")
 
                 _fields: ClassVar[dict] = {"first_port": {"type": int}, "last_port": {"type": int}, "split_disabled": {"type": bool}}
                 first_port: int | None
@@ -16042,12 +14841,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Translation(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("address_selection", "counters", "low_mark", "max_entries", "timeouts")
-
             class AddressSelection(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("any", "hash_field_source_ip")
 
                 _fields: ClassVar[dict] = {"any": {"type": bool}, "hash_field_source_ip": {"type": bool}}
                 any: bool | None
@@ -16070,8 +14865,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class LowMark(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("host_percentage", "percentage")
 
                 _fields: ClassVar[dict] = {"percentage": {"type": int}, "host_percentage": {"type": int}}
                 percentage: int | None
@@ -16097,12 +14890,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class MaxEntries(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("host_limit", "ip_limits", "limit")
-
                 class IpLimitsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("ip", "limit")
 
                     _fields: ClassVar[dict] = {"ip": {"type": str}, "limit": {"type": int}}
                     ip: str
@@ -16161,8 +14950,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class TimeoutsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("protocol", "timeout")
 
                 _fields: ClassVar[dict] = {"protocol": {"type": str}, "timeout": {"type": int}}
                 protocol: Literal["tcp", "udp"]
@@ -16281,8 +15068,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpRadiusSourceInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "vrf")
-
         _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
         name: str | None
         """Interface Name."""
@@ -16312,12 +15097,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpSecurity(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("connection_tx_interface_match_source_ip", "hardware_encryption_disabled", "ike_policies", "key_controller", "profiles", "sa_policies")
-
         class IkePoliciesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("dh_group", "encryption", "ike_lifetime", "integrity", "local_id", "local_id_fqdn", "name")
 
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
@@ -16399,12 +15180,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SaPoliciesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("esp", "name", "pfs_dh_group", "sa_lifetime")
-
             class SaLifetime(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("unit", "value")
 
                 _fields: ClassVar[dict] = {"value": {"type": int}, "unit": {"type": str, "default": "hours"}}
                 value: int | None
@@ -16449,8 +15226,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Esp(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("encryption", "integrity")
 
                 _fields: ClassVar[dict] = {"integrity": {"type": str}, "encryption": {"type": str}}
                 integrity: Literal["disabled", "sha1", "sha256", "sha384", "sha512", "md5"] | None
@@ -16521,12 +15296,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("connection", "dpd", "flow_parallelization_encapsulation_udp", "ike_policy", "mode", "name", "sa_policy", "shared_key")
-
             class Dpd(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("action", "interval", "time")
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}, "time": {"type": int}, "action": {"type": str}}
                 interval: int
@@ -16654,8 +15425,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class KeyController(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("profile",)
-
             _fields: ClassVar[dict] = {"profile": {"type": str}}
             profile: str | None
             """IPsec profile name to use."""
@@ -16760,8 +15529,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpSshClientSourceInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "vrf")
-
         _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str, "default": "default"}}
         name: str | None
         """Interface Name."""
@@ -16791,8 +15558,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpTacacsSourceInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "vrf")
-
         _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
         name: str | None
         """Interface name."""
@@ -16820,8 +15585,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class IpTelnetClientSourceInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("name", "vrf")
 
         _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
         name: str
@@ -16852,8 +15615,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class IpTftpClientSourceInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "vrf")
-
         _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
         name: str
         """Interface Name."""
@@ -16883,12 +15644,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Ipv6AccessListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("counters_per_entry", "name", "sequence_numbers")
-
         class SequenceNumbersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "sequence")
 
             _fields: ClassVar[dict] = {"sequence": {"type": int}, "action": {"type": str}}
             sequence: int
@@ -16962,12 +15719,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Ipv6DhcpRelay(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("all_subnets", "always_on", "option")
-
         class Option(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("link_layer_address", "remote_id_format")
 
             _fields: ClassVar[dict] = {"link_layer_address": {"type": bool}, "remote_id_format": {"type": str}}
             link_layer_address: bool | None
@@ -17040,22 +15793,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Ipv6Hardware(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("fib",)
-
         class Fib(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("optimize",)
 
             class Optimize(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("prefixes",)
-
                 class Prefixes(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("profile",)
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}}
                     profile: str | None
@@ -17132,12 +15877,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Ipv6Neighbor(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("persistent", "static_entries")
-
         class StaticEntriesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("interface", "ipv6_address", "mac_address", "vrf")
 
             _fields: ClassVar[dict] = {"ipv6_address": {"type": str}, "vrf": {"type": str}, "interface": {"type": str}, "mac_address": {"type": str}}
             ipv6_address: str
@@ -17179,8 +15920,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Persistent(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("enabled", "refresh_delay")
 
             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "refresh_delay": {"type": int}}
             enabled: bool
@@ -17241,12 +15980,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Ipv6PrefixListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "sequence_numbers")
-
         class SequenceNumbersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "sequence")
 
             _fields: ClassVar[dict] = {"sequence": {"type": int}, "action": {"type": str}}
             sequence: int
@@ -17312,12 +16047,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Ipv6StandardAccessListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("counters_per_entry", "name", "sequence_numbers")
-
         class SequenceNumbersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "sequence")
 
             _fields: ClassVar[dict] = {"sequence": {"type": int}, "action": {"type": str}}
             sequence: int
@@ -17391,8 +16122,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Ipv6StaticRoutesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("destination_address_prefix", "distance", "gateway", "interface", "metric", "name", "tag", "track_bfd", "vrf")
-
         _fields: ClassVar[dict] = {
             "vrf": {"type": str},
             "destination_address_prefix": {"type": str},
@@ -17460,17 +16189,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class L2Protocol(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("forwarding_profiles",)
-
         class ForwardingProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "protocols")
-
             class ProtocolsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("forward", "name", "tagged_forward", "untagged_forward")
 
                 _fields: ClassVar[dict] = {
                     "name": {"type": str},
@@ -17562,17 +16285,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Lacp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("port_id", "rate_limit", "system_priority")
-
         class PortId(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("range",)
-
             class Range(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("begin", "end")
 
                 _fields: ClassVar[dict] = {"begin": {"type": int}, "end": {"type": int}}
                 begin: int | None
@@ -17615,8 +16332,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class RateLimit(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("default",)
 
             _fields: ClassVar[dict] = {"default": {"type": bool}}
             default: bool | None
@@ -17683,8 +16398,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class LinkTrackingGroupsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("links_minimum", "name", "recovery_delay")
-
         _fields: ClassVar[dict] = {"name": {"type": str}, "links_minimum": {"type": int}, "recovery_delay": {"type": int}}
         name: str
         links_minimum: int | None
@@ -17722,12 +16435,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Lldp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("holdtime", "management_address", "receive_packet_tagged_drop", "run", "timer", "timer_reinitialization", "tlvs", "vrf")
-
         class TlvsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "transmit")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "transmit": {"type": bool}}
             name: Literal[
@@ -17840,8 +16549,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class LoadInterval(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("default",)
-
         _fields: ClassVar[dict] = {"default": {"type": int}}
         default: int | None
         """Default load interval in seconds."""
@@ -17862,8 +16569,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class LocalUsersItem(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("disabled", "name", "no_password", "privilege", "role", "secondary_ssh_key", "sha512_password", "shell", "ssh_key")
 
         _fields: ClassVar[dict] = {
             "name": {"type": str},
@@ -17956,26 +16661,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Logging(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "buffered",
-            "console",
-            "event",
-            "facility",
-            "format",
-            "level",
-            "monitor",
-            "policy",
-            "repeat_messages",
-            "source_interface",
-            "synchronous",
-            "trap",
-            "vrfs",
-        )
-
         class Buffered(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("level", "size")
 
             _fields: ClassVar[dict] = {"size": {"type": int}, "level": {"type": str}}
             size: int | None
@@ -18007,8 +16694,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Synchronous(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("level",)
-
             _fields: ClassVar[dict] = {"level": {"type": str, "default": "critical"}}
             level: Literal["alerts", "all", "critical", "debugging", "emergencies", "errors", "informational", "notifications", "warnings", "disabled"]
             """
@@ -18038,8 +16723,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Format(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("hostname", "rfc5424", "sequence_numbers", "timestamp")
 
             _fields: ClassVar[dict] = {"timestamp": {"type": str}, "hostname": {"type": str}, "sequence_numbers": {"type": bool}, "rfc5424": {"type": bool}}
             timestamp: (
@@ -18085,12 +16768,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("hosts", "name", "source_interface")
-
             class HostsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "ports", "protocol", "ssl_profile")
 
                 class Ports(AvdList[int]):
                     """Subclass of AvdList with `int` items."""
@@ -18183,17 +16862,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Policy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("match",)
-
             class Match(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("match_lists",)
-
                 class MatchListsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("action", "name")
 
                     _fields: ClassVar[dict] = {"name": {"type": str}, "action": {"type": str}}
                     name: str
@@ -18261,17 +16934,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Event(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("congestion_drops_interval", "global_link_status", "storm_control")
-
             class StormControl(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("discards",)
-
                 class Discards(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("field_global", "interval")
 
                     _fields: ClassVar[dict] = {"field_global": {"type": bool}, "interval": {"type": int}}
                     _field_to_key_map: ClassVar[dict] = {"field_global": "global"}
@@ -18348,8 +17015,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class LevelItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("facility", "severity")
 
             _fields: ClassVar[dict] = {"facility": {"type": str}, "severity": {"type": str}}
             facility: str
@@ -18607,27 +17272,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class LoopbackInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "description",
-            "eos_cli",
-            "ip_address",
-            "ip_address_secondaries",
-            "ip_proxy_arp",
-            "ipv6_address",
-            "ipv6_enable",
-            "isis_bfd",
-            "isis_enable",
-            "isis_metric",
-            "isis_network_point_to_point",
-            "isis_passive",
-            "mpls",
-            "name",
-            "node_segment",
-            "ospf_area",
-            "shutdown",
-            "vrf",
-        )
-
         class IpAddressSecondaries(AvdList[str]):
             """Subclass of AvdList with `str` items."""
 
@@ -18636,12 +17280,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Mpls(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ldp",)
-
             class Ldp(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interface",)
 
                 _fields: ClassVar[dict] = {"interface": {"type": bool}}
                 interface: bool | None
@@ -18680,8 +17320,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class NodeSegment(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ipv4_index", "ipv6_index")
 
             _fields: ClassVar[dict] = {"ipv4_index": {"type": int}, "ipv6_index": {"type": int}}
             ipv4_index: int | None
@@ -18813,12 +17451,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MacAccessListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("counters_per_entry", "entries", "name")
-
         class EntriesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "sequence")
 
             _fields: ClassVar[dict] = {"sequence": {"type": int}, "action": {"type": str}}
             sequence: int | None
@@ -18883,17 +17517,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MacAddressTable(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("aging_time", "notification_host_flap")
-
         class NotificationHostFlap(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("detection", "logging")
-
             class Detection(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("moves", "window")
 
                 _fields: ClassVar[dict] = {"window": {"type": int}, "moves": {"type": int}}
                 window: int | None
@@ -18960,12 +17588,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MacSecurity(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("fips_restrictions", "license", "profiles")
-
         class License(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("license_key", "license_name")
 
             _fields: ClassVar[dict] = {"license_name": {"type": str}, "license_key": {"type": str}}
             license_name: str
@@ -18989,12 +17613,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("cipher", "connection_keys", "l2_protocols", "mka", "name", "sci", "traffic_unprotected")
-
             class ConnectionKeysItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("encrypted_key", "fallback", "id")
 
                 _fields: ClassVar[dict] = {"id": {"type": str}, "encrypted_key": {"type": str}, "fallback": {"type": bool}}
                 id: str
@@ -19033,12 +17653,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Mka(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key_server_priority", "session")
-
                 class Session(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("rekey_period",)
 
                     _fields: ClassVar[dict] = {"rekey_period": {"type": int}}
                     rekey_period: int | None
@@ -19081,12 +17697,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class L2Protocols(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("ethernet_flow_control", "lldp")
-
                 class EthernetFlowControl(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("mode",)
 
                     _fields: ClassVar[dict] = {"mode": {"type": str}}
                     mode: Literal["encrypt", "bypass"]
@@ -19107,8 +17719,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Lldp(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("mode",)
 
                     _fields: ClassVar[dict] = {"mode": {"type": str}}
                     mode: Literal["bypass", "bypass unauthorized"]
@@ -19152,8 +17762,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class TrafficUnprotected(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("action", "allow_active_sak")
 
                 _fields: ClassVar[dict] = {"action": {"type": str}, "allow_active_sak": {"type": bool}}
                 action: Literal["allow", "drop"]
@@ -19269,17 +17877,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Maintenance(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("bgp_profiles", "default_bgp_profile", "default_interface_profile", "default_unit_profile", "interface_profiles", "unit_profiles", "units")
-
         class InterfaceProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "rate_monitoring", "shutdown")
-
             class RateMonitoring(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("load_interval", "threshold")
 
                 _fields: ClassVar[dict] = {"load_interval": {"type": int}, "threshold": {"type": int}}
                 load_interval: int | None
@@ -19304,8 +17906,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Shutdown(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("max_delay",)
 
                 _fields: ClassVar[dict] = {"max_delay": {"type": int}}
                 max_delay: int | None
@@ -19364,12 +17964,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class BgpProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("initiator", "name")
-
             class Initiator(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("route_map_inout",)
 
                 _fields: ClassVar[dict] = {"route_map_inout": {"type": str}}
                 route_map_inout: str | None
@@ -19420,12 +18016,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class UnitProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "on_boot")
-
             class OnBoot(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("duration",)
 
                 _fields: ClassVar[dict] = {"duration": {"type": int}}
                 duration: int | None
@@ -19476,12 +18068,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class UnitsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("groups", "name", "profile", "quiesce")
-
             class Groups(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("bgp_groups", "interface_groups")
 
                 class BgpGroups(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -19613,12 +18201,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementAccounts(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("password",)
-
         class Password(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("policy",)
 
             _fields: ClassVar[dict] = {"policy": {"type": str}}
             policy: str | None
@@ -19658,17 +18242,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementApiGnmi(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("provider", "transport")
-
         class Transport(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("grpc", "grpc_tunnels")
-
             class GrpcItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ip_access_group", "name", "notification_timestamp", "port", "ssl_profile", "vrf")
 
                 _fields: ClassVar[dict] = {
                     "name": {"type": str},
@@ -19753,12 +18331,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class GrpcTunnelsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("destination", "gnmi_ssl_profile", "local_interface", "name", "shutdown", "target", "tunnel_ssl_profile", "vrf")
-
                 class Destination(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("address", "port")
 
                     _fields: ClassVar[dict] = {"address": {"type": str}, "port": {"type": int}}
                     address: str
@@ -19784,8 +18358,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class LocalInterface(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("name", "port")
-
                     _fields: ClassVar[dict] = {"name": {"type": str}, "port": {"type": int}}
                     name: str
                     """Interface name."""
@@ -19809,8 +18381,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Target(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("target_ids", "use_serial_number")
 
                     class TargetIds(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -19960,12 +18530,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementApiHttp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("default_services", "enable_http", "enable_https", "enable_unix", "enable_vrfs", "https_ssl_profile", "protocol_https_certificate")
-
         class EnableVrfsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("access_group", "ipv6_access_group", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "access_group": {"type": str}, "ipv6_access_group": {"type": str}}
             name: str
@@ -20006,8 +18572,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class ProtocolHttpsCertificate(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("certificate", "private_key")
 
             _fields: ClassVar[dict] = {"certificate": {"type": str}, "private_key": {"type": str}}
             certificate: str | None
@@ -20084,17 +18648,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementApiModels(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("providers",)
-
         class ProvidersItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "paths")
-
             class PathsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("disabled", "path")
 
                 _fields: ClassVar[dict] = {"path": {"type": str}, "disabled": {"type": bool, "default": False}}
                 path: str | None
@@ -20167,8 +18725,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementConsole(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("idle_timeout",)
-
         _fields: ClassVar[dict] = {"idle_timeout": {"type": int}}
         idle_timeout: int | None
 
@@ -20188,8 +18744,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class ManagementCvx(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("server_hosts", "shutdown", "source_interface", "vrf")
 
         class ServerHosts(AvdList[str]):
             """Subclass of AvdList with `str` items."""
@@ -20232,12 +18786,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementDefaults(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("secret",)
-
         class Secret(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("hash",)
 
             _fields: ClassVar[dict] = {"hash": {"type": str}}
             hash: Literal["md5", "sha512"] | None
@@ -20277,28 +18827,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "description",
-            "eos_cli",
-            "gateway",
-            "ip_address",
-            "ipv6_address",
-            "ipv6_enable",
-            "ipv6_gateway",
-            "lldp",
-            "mac_address",
-            "mtu",
-            "name",
-            "shutdown",
-            "speed",
-            "type",
-            "vrf",
-        )
-
         class Lldp(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("receive", "transmit", "ztp_vlan")
 
             _fields: ClassVar[dict] = {"transmit": {"type": bool}, "receive": {"type": bool}, "ztp_vlan": {"type": int}}
             transmit: bool | None
@@ -20437,12 +18967,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementSecurity(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("entropy_sources", "password", "shared_secret_profiles", "ssl_profiles")
-
         class EntropySources(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("cpu_jitter", "hardware", "hardware_exclusive", "haveged")
 
             _fields: ClassVar[dict] = {
                 "hardware": {"type": bool},
@@ -20486,17 +19012,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Password(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("encryption_key_common", "encryption_reversible", "minimum_length", "policies")
-
             class PoliciesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("maximum", "minimum", "name")
-
                 class Minimum(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("digits", "length", "lower", "special", "upper")
 
                     _fields: ClassVar[dict] = {
                         "digits": {"type": int},
@@ -20539,8 +19059,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Maximum(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("repetitive", "sequential")
 
                     _fields: ClassVar[dict] = {"repetitive": {"type": int}, "sequential": {"type": int}}
                     repetitive: int | None
@@ -20636,22 +19154,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SslProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "certificate",
-                "certificate_revocation_lists",
-                "chain_certificate",
-                "cipher_list",
-                "ciphers",
-                "fips_restrictions",
-                "name",
-                "tls_versions",
-                "trust_certificate",
-            )
-
             class Ciphers(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("v1_0", "v1_3")
 
                 _fields: ClassVar[dict] = {"v1_0": {"type": str}, "v1_3": {"type": str}}
                 v1_0: str | None
@@ -20689,8 +19193,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class TrustCertificate(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("certificates", "policy_expiry_date_ignore", "requirement", "system")
-
                 class Certificates(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
 
@@ -20698,8 +19200,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Requirement(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("basic_constraint_ca", "hostname_fqdn")
 
                     _fields: ClassVar[dict] = {"basic_constraint_ca": {"type": bool}, "hostname_fqdn": {"type": bool}}
                     basic_constraint_ca: bool | None
@@ -20781,8 +19281,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class ChainCertificate(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("certificates", "requirement")
-
                 class Certificates(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
 
@@ -20790,8 +19288,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Requirement(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("basic_constraint_ca", "include_root_ca")
 
                     _fields: ClassVar[dict] = {"basic_constraint_ca": {"type": bool}, "include_root_ca": {"type": bool}}
                     basic_constraint_ca: bool | None
@@ -20854,8 +19350,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Certificate(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("file", "key")
 
                 _fields: ClassVar[dict] = {"file": {"type": str}, "key": {"type": str}}
                 file: str | None
@@ -20994,17 +19488,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SharedSecretProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("profile", "secrets")
-
             class SecretsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("local_time", "name", "receive_lifetime", "secret", "secret_type", "transmit_lifetime")
-
                 class ReceiveLifetime(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("end_date_time", "infinite", "start_date_time")
 
                     _fields: ClassVar[dict] = {"infinite": {"type": bool}, "start_date_time": {"type": str}, "end_date_time": {"type": str}}
                     infinite: bool | None
@@ -21063,8 +19551,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class TransmitLifetime(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("end_date_time", "infinite", "start_date_time")
 
                     _fields: ClassVar[dict] = {"infinite": {"type": bool}, "start_date_time": {"type": str}, "end_date_time": {"type": str}}
                     infinite: bool | None
@@ -21251,27 +19737,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementSsh(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "access_groups",
-            "authentication",
-            "cipher",
-            "client_alive",
-            "connection",
-            "enable",
-            "fips_restrictions",
-            "hostkey",
-            "idle_timeout",
-            "ipv6_access_groups",
-            "key_exchange",
-            "log_level",
-            "mac",
-            "vrfs",
-        )
-
         class Authentication(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("empty_passwords", "protocols")
 
             class Protocols(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -21314,8 +19781,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AccessGroupsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "vrf")
-
             _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
             name: str | None
             """Standard ACL Name."""
@@ -21344,8 +19809,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Ipv6AccessGroupsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "vrf")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
             name: str | None
@@ -21390,8 +19853,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Hostkey(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("client_strict_checking", "server", "server_cert")
 
             class Server(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -21438,8 +19899,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Connection(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("limit", "per_host")
-
             _fields: ClassVar[dict] = {"limit": {"type": int}, "per_host": {"type": int}}
             limit: int | None
             """Maximum total number of SSH sessions to device."""
@@ -21463,8 +19922,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("enable", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "enable": {"type": bool}}
             name: str
@@ -21496,8 +19953,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class ClientAlive(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("count_max", "interval")
 
             _fields: ClassVar[dict] = {"count_max": {"type": int}, "interval": {"type": int}}
             count_max: int | None
@@ -21638,17 +20093,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ManagementTechSupport(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("policy_show_tech_support",)
-
         class PolicyShowTechSupport(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("exclude_commands", "include_commands")
-
             class ExcludeCommandsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("command", "type")
 
                 _fields: ClassVar[dict] = {"command": {"type": str}, "type": {"type": str, "default": "text"}}
                 command: str | None
@@ -21682,8 +20131,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class IncludeCommandsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("command",)
 
                 _fields: ClassVar[dict] = {"command": {"type": str}}
                 command: str | None
@@ -21752,12 +20199,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MatchListInput(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("prefix_ipv4", "prefix_ipv6", "string")
-
         class PrefixIpv4Item(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "prefixes")
 
             class Prefixes(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -21804,8 +20247,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PrefixIpv6Item(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "prefixes")
-
             class Prefixes(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
 
@@ -21851,12 +20292,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class StringItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "sequence_numbers")
-
             class SequenceNumbersItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("match_regex", "sequence")
 
                 _fields: ClassVar[dict] = {"sequence": {"type": int}, "match_regex": {"type": str}}
                 sequence: int
@@ -21947,12 +20384,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class McsClient(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("cvx_secondary", "shutdown")
-
         class CvxSecondary(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "server_hosts", "shutdown")
 
             class ServerHosts(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -22010,17 +20443,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Metadata(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("cv_pathfinder", "cv_tags", "dc_name", "fabric_name", "platform", "pod_name", "rack", "system_mac_address")
-
         class CvTags(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("device_tags", "interface_tags")
-
             class DeviceTagsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "value")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "value": {"type": str}}
                 name: str
@@ -22049,12 +20476,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class InterfaceTagsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("interface", "tags")
-
                 class TagsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("name", "value")
 
                     _fields: ClassVar[dict] = {"name": {"type": str}, "value": {"type": str}}
                     name: str
@@ -22129,27 +20552,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class CvPathfinder(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "address",
-                "applications",
-                "interfaces",
-                "internet_exit_policies",
-                "pathfinders",
-                "pathgroups",
-                "region",
-                "regions",
-                "role",
-                "site",
-                "ssl_profile",
-                "vrfs",
-                "vtep_ip",
-                "zone",
-            )
-
             class PathfindersItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("vtep_ip",)
 
                 _fields: ClassVar[dict] = {"vtep_ip": {"type": str}}
                 vtep_ip: str
@@ -22175,8 +20579,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class InterfacesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("carrier", "circuit_id", "name", "pathgroup", "public_ip")
 
                 _fields: ClassVar[dict] = {
                     "name": {"type": str},
@@ -22225,12 +20627,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PathgroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("carriers", "imported_carriers", "name")
-
                 class CarriersItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("name",)
 
                     _fields: ClassVar[dict] = {"name": {"type": str}}
                     name: str | None
@@ -22256,8 +20654,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class ImportedCarriersItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("name",)
 
                     _fields: ClassVar[dict] = {"name": {"type": str}}
                     name: str | None
@@ -22318,22 +20714,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RegionsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("id", "name", "zones")
-
                 class ZonesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("id", "name", "sites")
 
                     class SitesItem(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("id", "location", "name")
-
                         class Location(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("address",)
 
                             _fields: ClassVar[dict] = {"address": {"type": str}}
                             address: str | None
@@ -22454,17 +20842,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class VrfsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("avts", "name", "vni")
-
                 class AvtsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("application_profiles", "constraints", "description", "id", "name", "pathgroups")
-
                     class Constraints(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("hop_count", "jitter", "latency", "lossrate")
 
                         _fields: ClassVar[dict] = {"jitter": {"type": int}, "latency": {"type": int}, "lossrate": {"type": str}, "hop_count": {"type": str}}
                         jitter: int | None
@@ -22498,8 +20880,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class PathgroupsItem(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("name", "preference")
 
                         _fields: ClassVar[dict] = {"name": {"type": str}, "preference": {"type": str}}
                         name: str | None
@@ -22617,24 +20997,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class InternetExitPoliciesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "acceptable_use_policy",
-                    "city",
-                    "country",
-                    "download_bandwidth",
-                    "firewall",
-                    "ips_control",
-                    "name",
-                    "tunnels",
-                    "type",
-                    "upload_bandwidth",
-                    "vpn_credentials",
-                )
-
                 class VpnCredentialsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("fqdn", "pre_shared_key", "vpn_type")
 
                     _fields: ClassVar[dict] = {"fqdn": {"type": str}, "vpn_type": {"type": str}, "pre_shared_key": {"type": str}}
                     fqdn: str
@@ -22671,12 +21035,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class TunnelsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("endpoint", "name", "preference")
-
                     class Endpoint(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("city", "country", "datacenter", "ip_address", "latitude", "longitude", "region")
 
                         _fields: ClassVar[dict] = {
                             "ip_address": {"type": str},
@@ -22831,17 +21191,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Applications(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("categories", "profiles")
-
                 class ProfilesItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("builtin_applications", "categories", "name", "transport_protocols", "user_defined_applications")
-
                     class BuiltinApplicationsItem(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("name", "services")
 
                         class Services(AvdList[str]):
                             """Subclass of AvdList with `str` items."""
@@ -22876,8 +21230,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class UserDefinedApplicationsItem(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("name",)
-
                         _fields: ClassVar[dict] = {"name": {"type": str}}
                         name: str | None
 
@@ -22902,8 +21254,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class CategoriesItem(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("category", "services")
 
                         class Services(AvdList[str]):
                             """Subclass of AvdList with `str` items."""
@@ -22991,12 +21341,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Categories(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("builtin_applications", "user_defined_applications")
-
                     class BuiltinApplicationsItem(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("category", "name", "services")
 
                         class Services(AvdList[str]):
                             """Subclass of AvdList with `str` items."""
@@ -23038,8 +21384,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class UserDefinedApplicationsItem(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("category", "name")
 
                         _fields: ClassVar[dict] = {"name": {"type": str}, "category": {"type": str}}
                         name: str | None
@@ -23260,24 +21604,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MlagConfiguration(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "domain_id",
-            "dual_primary_detection_delay",
-            "dual_primary_recovery_delay_mlag",
-            "dual_primary_recovery_delay_non_mlag",
-            "heartbeat_interval",
-            "local_interface",
-            "peer_address",
-            "peer_address_heartbeat",
-            "peer_link",
-            "reload_delay_mlag",
-            "reload_delay_non_mlag",
-        )
-
         class PeerAddressHeartbeat(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("peer_ip", "vrf")
 
             _fields: ClassVar[dict] = {"peer_ip": {"type": str}, "vrf": {"type": str}}
             peer_ip: str | None
@@ -23376,12 +21704,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MonitorConnectivity(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("address_only", "hosts", "interface_sets", "interval", "local_interfaces", "name_server_group", "shutdown", "vrfs")
-
         class InterfaceSetsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("interfaces", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "interfaces": {"type": str}}
             name: str | None
@@ -23417,8 +21741,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class HostsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("address_only", "description", "icmp_echo_size", "ip", "local_interfaces", "name", "url")
 
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
@@ -23493,12 +21815,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("address_only", "description", "hosts", "interface_sets", "local_interfaces", "name")
-
             class InterfaceSetsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interfaces", "name")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "interfaces": {"type": str}}
                 name: str | None
@@ -23526,8 +21844,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class HostsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("address_only", "description", "icmp_echo_size", "ip", "local_interfaces", "name", "url")
 
                 _fields: ClassVar[dict] = {
                     "name": {"type": str},
@@ -23738,12 +22054,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MonitorLayer1(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("enabled", "logging_mac_fault", "logging_transceiver")
-
         class LoggingTransceiver(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("communication", "dom", "enabled")
 
             _fields: ClassVar[dict] = {"dom": {"type": bool}, "communication": {"type": bool}, "enabled": {"type": bool}}
             dom: bool | None
@@ -23820,17 +22132,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MonitorServerRadius(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("probe", "service_dot1x")
-
         class Probe(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("access_request", "interval", "method", "threshold_failure")
-
             class AccessRequest(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("password", "password_type", "username")
 
                 _fields: ClassVar[dict] = {"username": {"type": str}, "password": {"type": str}, "password_type": {"type": str, "default": "7"}}
                 username: str | None
@@ -23938,8 +22244,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MonitorSessionDefaultEncapsulationGre(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("payload",)
-
         _fields: ClassVar[dict] = {"payload": {"type": str}}
         payload: Literal["full-packet", "inner-packet"] | None
         """Mirroring GRE payload type configuration commands."""
@@ -23961,28 +22265,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MonitorSessionsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "access_group",
-            "destinations",
-            "encapsulation_gre_metadata_tx",
-            "header_remove_size",
-            "name",
-            "rate_limit_per_egress_chip",
-            "rate_limit_per_ingress_chip",
-            "sample",
-            "sources",
-            "truncate",
-        )
-
         class SourcesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("access_group", "direction", "name")
-
             class AccessGroup(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "priority", "type")
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "name": {"type": str}, "priority": {"type": int}}
                 type: Literal["ip", "ipv6", "mac"] | None
@@ -24054,8 +22341,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AccessGroup(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "type")
-
             _fields: ClassVar[dict] = {"type": {"type": str}, "name": {"type": str}}
             type: Literal["ip", "ipv6", "mac"] | None
             name: str | None
@@ -24080,8 +22365,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Truncate(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("enabled", "size")
 
             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "size": {"type": int}}
             enabled: bool | None
@@ -24200,12 +22483,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MonitorTelemetryInflux(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("destinations", "source_group_standard_disabled", "source_sockets", "tags", "vrf")
-
         class DestinationsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("data_retention_policy", "database", "name", "password", "password_type", "url", "username")
 
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
@@ -24268,8 +22547,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SourceSocketsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("connection_limit", "name", "url")
-
             _fields: ClassVar[dict] = {"name": {"type": str}, "connection_limit": {"type": int}, "url": {"type": str}}
             name: str
             """Label of the socket connection."""
@@ -24308,8 +22585,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class TagsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "value")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "value": {"type": str}}
             name: str
@@ -24403,17 +22678,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class MonitorTelemetryPostcardPolicy(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("disabled", "ingress", "marker_vxlan", "profiles", "sample_policies")
-
         class Ingress(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("collection", "sample")
-
             class Collection(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("destination", "source", "version")
 
                 _fields: ClassVar[dict] = {"source": {"type": str}, "destination": {"type": str}, "version": {"type": int}}
                 source: str | None
@@ -24448,12 +22717,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Sample(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("rate", "tcp_udp_checksum")
-
                 class TcpUdpChecksum(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("mask", "value")
 
                     _fields: ClassVar[dict] = {"value": {"type": int}, "mask": {"type": str}}
                     value: int | None
@@ -24547,8 +22812,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class MarkerVxlan(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enabled", "header_word_zero_bit")
-
             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "header_word_zero_bit": {"type": int}}
             enabled: bool | None
             """Enable vxlan marking using default bit 0."""
@@ -24571,8 +22834,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class ProfilesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ingress_sample_policy", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "ingress_sample_policy": {"type": str}}
             name: str
@@ -24604,17 +22865,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SamplePoliciesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("match_rules", "name")
-
             class MatchRulesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("destination_prefix", "name", "protocols", "source_prefix", "type")
-
                 class ProtocolsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("destination_ports", "protocol", "source_ports")
 
                     class SourcePorts(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -24845,12 +23100,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Mpls(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("icmp", "ip", "ldp", "rsvp", "tunnel")
-
         class Ldp(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("interface_disabled_default", "router_id", "shutdown", "transport_address_interface")
 
             _fields: ClassVar[dict] = {
                 "interface_disabled_default": {"type": bool},
@@ -24891,8 +23142,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Icmp(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("fragmentation_needed_tunneling", "ttl_exceeded_tunneling")
-
             _fields: ClassVar[dict] = {"fragmentation_needed_tunneling": {"type": bool}, "ttl_exceeded_tunneling": {"type": bool}}
             fragmentation_needed_tunneling: bool | None
             """Enables the MPLS tunneling of MTU exceeded ICMP replies (fragmentation needed, packet too big)."""
@@ -24922,28 +23171,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Rsvp(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "authentication",
-                "fast_reroute",
-                "graceful_restart",
-                "hello",
-                "hitless_restart",
-                "ip_access_group",
-                "ipv6_access_group",
-                "label_local_termination",
-                "mtu_signaling",
-                "neighbors",
-                "p2mp",
-                "preemption_method",
-                "refresh",
-                "shutdown",
-                "srlg",
-            )
-
             class Refresh(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interval", "method")
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}, "method": {"type": str}}
                 interval: int | None
@@ -24980,12 +23209,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Authentication(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("active_index", "password_indexes", "sequence_number_window", "type")
-
                 class PasswordIndexesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("index", "password", "password_type")
 
                     _fields: ClassVar[dict] = {"index": {"type": int}, "password_type": {"type": str, "default": "7"}, "password": {"type": str}}
                     index: int
@@ -25070,12 +23295,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("authentication", "ip_address", "ipv6_address")
-
                 class Authentication(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("index", "type")
 
                     _fields: ClassVar[dict] = {"index": {"type": int}, "type": {"type": str}}
                     index: int | None
@@ -25145,8 +23366,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class FastReroute(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bypass_tunnel_optimization_interval", "mode", "reversion")
-
                 _fields: ClassVar[dict] = {"mode": {"type": str}, "reversion": {"type": str}, "bypass_tunnel_optimization_interval": {"type": int}}
                 mode: Literal["link-protection", "node-protection", "none"] | None
                 """
@@ -25203,8 +23422,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Srlg(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "strict")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "strict": {"type": bool}}
                 enabled: bool | None
                 """Select SRLG behavior."""
@@ -25228,8 +23445,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class PreemptionMethod(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("preemption", "timer")
 
                 _fields: ClassVar[dict] = {"preemption": {"type": str}, "timer": {"type": int}}
                 preemption: Literal["hard", "soft"] | None
@@ -25256,12 +23471,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class GracefulRestart(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("role_helper", "role_speaker")
-
                 class RoleHelper(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "timer_recovery", "timer_restart")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "timer_recovery": {"type": int}, "timer_restart": {"type": int}}
                     enabled: bool | None
@@ -25294,8 +23505,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class RoleSpeaker(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "timer_recovery", "timer_restart")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "timer_recovery": {"type": int}, "timer_restart": {"type": int}}
                     enabled: bool | None
@@ -25350,8 +23559,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Hello(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("interval", "multiplier")
-
                 _fields: ClassVar[dict] = {"interval": {"type": int}, "multiplier": {"type": int}}
                 interval: int | None
                 """Time between hello messages in seconds."""
@@ -25375,8 +23582,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class HitlessRestart(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "timer_recovery")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "timer_recovery": {"type": int}}
                 enabled: bool | None
@@ -25405,8 +23610,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class P2mp(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled",)
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}}
                 enabled: bool | None
@@ -25543,17 +23746,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Tunnel(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("termination",)
-
             class Termination(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("model", "php_model")
-
                 class Model(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dscp", "ttl")
 
                     _fields: ClassVar[dict] = {"ttl": {"type": str}, "dscp": {"type": str}}
                     ttl: Literal["pipe", "uniform"]
@@ -25579,8 +23776,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class PhpModel(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dscp", "ttl")
 
                     _fields: ClassVar[dict] = {"ttl": {"type": str}, "dscp": {"type": str}}
                     ttl: Literal["pipe", "uniform"]
@@ -25717,12 +23912,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Ntp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("authenticate", "authenticate_servers_only", "authentication_keys", "local_interface", "servers", "trusted_keys")
-
         class LocalInterface(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "vrf")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
             name: str | None
@@ -25747,8 +23938,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class ServersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("burst", "iburst", "key", "local_interface", "maxpoll", "minpoll", "name", "preferred", "version", "vrf")
 
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
@@ -25823,8 +24012,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class AuthenticationKeysItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("hash_algorithm", "id", "key", "key_type")
 
             _fields: ClassVar[dict] = {"id": {"type": int}, "hash_algorithm": {"type": str}, "key": {"type": str}, "key_type": {"type": str}}
             id: int
@@ -25915,22 +24102,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class PatchPanel(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("connector", "patches")
-
         class Connector(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("interface",)
 
             class Interface(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("patch", "recovery")
-
                 class Patch(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("bgp_vpws_remote_failure_errdisable",)
 
                     _fields: ClassVar[dict] = {"bgp_vpws_remote_failure_errdisable": {"type": bool}}
                     bgp_vpws_remote_failure_errdisable: bool | None
@@ -25952,12 +24131,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Recovery(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("review_delay",)
-
                     class ReviewDelay(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("max", "min")
 
                         _fields: ClassVar[dict] = {"min": {"type": int}, "max": {"type": int}}
                         min: int
@@ -26040,12 +24215,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PatchesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("connectors", "enabled", "name")
-
             class ConnectorsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("endpoint", "id", "type")
 
                 _fields: ClassVar[dict] = {"id": {"type": str}, "type": {"type": str}, "endpoint": {"type": str}}
                 id: str
@@ -26161,12 +24332,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class PeerFiltersItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "sequence_numbers")
-
         class SequenceNumbersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("match", "sequence")
 
             _fields: ClassVar[dict] = {"sequence": {"type": int}, "match": {"type": str}}
             sequence: int
@@ -26232,17 +24399,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Platform(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("sand", "sfe", "trident")
-
         class Trident(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("forwarding_table_partition", "l3", "mmu")
-
             class L3(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("routing_mac_address_per_vlan",)
 
                 _fields: ClassVar[dict] = {"routing_mac_address_per_vlan": {"type": bool}}
                 routing_mac_address_per_vlan: bool | None
@@ -26265,22 +24426,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Mmu(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("active_profile", "queue_profiles")
-
                 class QueueProfilesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("multicast_queues", "name", "unicast_queues")
 
                     class MulticastQueuesItem(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("drop", "id", "reserved", "threshold", "unit")
-
                         class Drop(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("precedence", "threshold")
 
                             _fields: ClassVar[dict] = {"precedence": {"type": int}, "threshold": {"type": str}}
                             precedence: Literal[1, 2]
@@ -26367,12 +24520,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class UnicastQueuesItem(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("drop", "id", "reserved", "threshold", "unit")
-
                         class Drop(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("precedence", "threshold")
 
                             _fields: ClassVar[dict] = {"precedence": {"type": int}, "threshold": {"type": str}}
                             precedence: Literal[1, 2]
@@ -26556,12 +24705,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Sand(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("forwarding_mode", "lag", "mdb_profile", "multicast_replication", "qos_maps")
-
             class QosMapsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("to_network_qos", "traffic_class")
 
                 _fields: ClassVar[dict] = {"traffic_class": {"type": int}, "to_network_qos": {"type": int}}
                 traffic_class: int | None
@@ -26592,8 +24737,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Lag(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("hardware_only", "mode")
-
                 _fields: ClassVar[dict] = {"hardware_only": {"type": bool}, "mode": {"type": str}}
                 hardware_only: bool | None
                 mode: str | None
@@ -26615,8 +24758,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class MulticastReplication(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("default",)
 
                 _fields: ClassVar[dict] = {"default": {"type": str}}
                 default: Literal["ingress", "egress"] | None
@@ -26681,8 +24822,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Sfe(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("data_plane_cpu_allocation_max",)
-
             _fields: ClassVar[dict] = {"data_plane_cpu_allocation_max": {"type": int}}
             data_plane_cpu_allocation_max: int | None
             """Maximum number of CPUs used for data plane traffic forwarding."""
@@ -26744,12 +24883,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Poe(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("interface_shutdown", "reboot")
-
         class Reboot(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action",)
 
             _fields: ClassVar[dict] = {"action": {"type": str}}
             action: Literal["power-off", "maintain"] | None
@@ -26771,8 +24906,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class InterfaceShutdown(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action",)
 
             _fields: ClassVar[dict] = {"action": {"type": str}}
             action: Literal["power-off", "maintain"] | None
@@ -26830,27 +24963,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class PolicyMaps(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("copp_system_policy", "pbr", "qos")
-
         class PbrItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("classes", "name")
 
             class ClassesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("drop", "index", "name", "set")
-
                 class Set(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("nexthop",)
-
                     class Nexthop(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("ip_address", "recursive")
 
                         _fields: ClassVar[dict] = {"ip_address": {"type": str}, "recursive": {"type": bool}}
                         ip_address: str | None
@@ -26974,17 +25097,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class QosItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("classes", "name")
-
             class ClassesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("name", "police", "set")
-
                 class Set(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("cos", "drop_precedence", "dscp", "traffic_class")
 
                     _fields: ClassVar[dict] = {"cos": {"type": int}, "dscp": {"type": str}, "traffic_class": {"type": int}, "drop_precedence": {"type": int}}
                     cos: int | None
@@ -27019,22 +25136,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Police(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = (
-                        "action",
-                        "higher_rate",
-                        "higher_rate_burst_size",
-                        "higher_rate_burst_size_unit",
-                        "higher_rate_unit",
-                        "rate",
-                        "rate_burst_size",
-                        "rate_burst_size_unit",
-                        "rate_unit",
-                    )
-
                     class Action(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("dscp_value", "type")
 
                         _fields: ClassVar[dict] = {"type": {"type": str}, "dscp_value": {"type": str}}
                         type: Literal["dscp", "drop-precedence"] | None
@@ -27200,12 +25303,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class CoppSystemPolicy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("classes",)
-
             class ClassesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("bandwidth", "name", "rate_unit", "shape")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "shape": {"type": int}, "bandwidth": {"type": int}, "rate_unit": {"type": str}}
                 name: str
@@ -27319,114 +25418,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class PortChannelInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "access_group_in",
-            "access_group_out",
-            "bfd",
-            "bgp",
-            "comment",
-            "description",
-            "dhcp_client_accept_default_route",
-            "dhcp_server_ipv4",
-            "dhcp_server_ipv6",
-            "encapsulation_dot1q",
-            "encapsulation_dot1q_vlan",
-            "encapsulation_vlan",
-            "eos_cli",
-            "evpn_ethernet_segment",
-            "flow_tracker",
-            "ip_address",
-            "ip_igmp_host_proxy",
-            "ip_nat",
-            "ip_proxy_arp",
-            "ip_verify_unicast_source_reachable_via",
-            "ipv6_access_group_in",
-            "ipv6_access_group_out",
-            "ipv6_address",
-            "ipv6_address_link_local",
-            "ipv6_enable",
-            "ipv6_nd_managed_config_flag",
-            "ipv6_nd_prefixes",
-            "ipv6_nd_ra_disabled",
-            "isis_authentication",
-            "isis_authentication_key",
-            "isis_authentication_mode",
-            "isis_bfd",
-            "isis_circuit_type",
-            "isis_enable",
-            "isis_hello_padding",
-            "isis_metric",
-            "isis_network_point_to_point",
-            "isis_passive",
-            "l2_mru",
-            "l2_mtu",
-            "l2_protocol",
-            "lacp_fallback_mode",
-            "lacp_fallback_timeout",
-            "lacp_id",
-            "link_tracking",
-            "link_tracking_groups",
-            "logging",
-            "mac_access_group_in",
-            "mac_access_group_out",
-            "min_links",
-            "mlag",
-            "mode",
-            "mpls",
-            "mtu",
-            "name",
-            "native_vlan",
-            "native_vlan_tag",
-            "ospf_area",
-            "ospf_authentication",
-            "ospf_authentication_key",
-            "ospf_cost",
-            "ospf_message_digest_keys",
-            "ospf_network_point_to_point",
-            "peer",
-            "peer_interface",
-            "peer_type",
-            "phone",
-            "pim",
-            "profile",
-            "ptp",
-            "pvlan_mapping",
-            "qos",
-            "service_policy",
-            "service_profile",
-            "sflow",
-            "shape",
-            "shutdown",
-            "snmp_trap_link_change",
-            "spanning_tree_bpdufilter",
-            "spanning_tree_bpduguard",
-            "spanning_tree_guard",
-            "spanning_tree_portfast",
-            "storm_control",
-            "switchport",
-            "traffic_engineering",
-            "traffic_policy",
-            "trunk_groups",
-            "trunk_private_vlan_secondary",
-            "type",
-            "validate_lldp",
-            "validate_state",
-            "vlan_id",
-            "vlan_translations",
-            "vlans",
-            "vmtracer",
-            "vrf",
-        )
-
         class Logging(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("event",)
-
             class Event(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("link_status", "storm_control_discards")
 
                 _fields: ClassVar[dict] = {"link_status": {"type": bool}, "storm_control_discards": {"type": bool}}
                 link_status: bool | None
@@ -27471,8 +25467,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class EncapsulationDot1q(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("inner_vlan", "vlan")
-
             _fields: ClassVar[dict] = {"vlan": {"type": int}, "inner_vlan": {"type": int}}
             vlan: int
             """VLAD ID."""
@@ -27497,17 +25491,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class EncapsulationVlan(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("client", "network")
-
             class Client(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dot1q", "encapsulation", "inner_encapsulation", "inner_vlan", "outer_vlan", "unmatched", "vlan")
-
                 class Dot1q(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("inner", "outer", "vlan")
 
                     _fields: ClassVar[dict] = {"vlan": {"type": int}, "outer": {"type": int}, "inner": {"type": int}}
                     vlan: int | None
@@ -27593,12 +25581,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Network(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("client", "dot1q", "encapsulation", "inner_encapsulation", "inner_vlan", "outer_vlan", "vlan")
-
                 class Dot1q(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("inner", "outer", "vlan")
 
                     _fields: ClassVar[dict] = {"vlan": {"type": int}, "outer": {"type": int}, "inner": {"type": int}}
                     vlan: int | None
@@ -27722,8 +25706,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class LinkTrackingGroupsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("direction", "name")
-
             _fields: ClassVar[dict] = {"name": {"type": str}, "direction": {"type": str}}
             name: str
             """Group name."""
@@ -27755,8 +25737,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class LinkTracking(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("direction", "groups")
 
             class Groups(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -27795,8 +25775,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Phone(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("trunk", "vlan")
-
             _fields: ClassVar[dict] = {"trunk": {"type": str}, "vlan": {"type": int}}
             trunk: Literal["tagged", "untagged"] | None
             vlan: int | None
@@ -27820,8 +25798,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class L2Protocol(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("encapsulation_dot1q_vlan", "forwarding_profile")
 
             _fields: ClassVar[dict] = {"encapsulation_dot1q_vlan": {"type": int}, "forwarding_profile": {"type": str}}
             encapsulation_dot1q_vlan: int | None
@@ -27853,8 +25829,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Qos(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("cos", "dscp", "trust")
 
             _fields: ClassVar[dict] = {"trust": {"type": str}, "dscp": {"type": int}, "cos": {"type": int}}
             trust: Literal["dscp", "cos", "disabled"] | None
@@ -27888,12 +25862,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Bfd(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("echo", "interval", "min_rx", "multiplier", "neighbor", "per_link")
-
             class PerLink(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "rfc_7130")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rfc_7130": {"type": bool}}
                 enabled: bool | None
@@ -27969,12 +25939,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ServicePolicy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("pbr", "qos")
-
             class Pbr(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("input",)
 
                 _fields: ClassVar[dict] = {"input": {"type": str}}
                 input: str | None
@@ -27996,8 +25962,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Qos(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("input",)
 
                 _fields: ClassVar[dict] = {"input": {"type": str}}
                 input: str
@@ -28041,12 +26005,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Mpls(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ip", "ldp")
-
             class Ldp(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("igp_sync", "interface")
 
                 _fields: ClassVar[dict] = {"interface": {"type": bool}, "igp_sync": {"type": bool}}
                 interface: bool | None
@@ -28090,8 +26050,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VlanTranslationsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("direction", "field_from", "to")
-
             _fields: ClassVar[dict] = {"field_from": {"type": str}, "to": {"type": int}, "direction": {"type": str, "default": "both"}}
             _field_to_key_map: ClassVar[dict] = {"field_from": "from"}
             _key_to_field_map: ClassVar[dict] = {"from": "field_from"}
@@ -28132,8 +26090,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Shape(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("rate",)
-
             _fields: ClassVar[dict] = {"rate": {"type": str}}
             rate: str | None
             """
@@ -28170,12 +26126,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class StormControl(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("all", "broadcast", "multicast", "unknown_unicast")
-
             class All(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("level", "unit")
 
                 _fields: ClassVar[dict] = {"level": {"type": str}, "unit": {"type": str, "default": "percent"}}
                 level: str | None
@@ -28205,8 +26157,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Broadcast(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("level", "unit")
-
                 _fields: ClassVar[dict] = {"level": {"type": str}, "unit": {"type": str, "default": "percent"}}
                 level: str | None
                 """Configure maximum storm-control level."""
@@ -28235,8 +26185,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Multicast(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("level", "unit")
-
                 _fields: ClassVar[dict] = {"level": {"type": str}, "unit": {"type": str, "default": "percent"}}
                 level: str | None
                 """Configure maximum storm-control level."""
@@ -28264,8 +26212,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class UnknownUnicast(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("level", "unit")
 
                 _fields: ClassVar[dict] = {"level": {"type": str}, "unit": {"type": str, "default": "percent"}}
                 level: str | None
@@ -28334,17 +26280,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IsisAuthentication(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("both", "level_1", "level_2")
-
             class Both(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -28399,8 +26339,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -28420,8 +26358,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -28518,12 +26454,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Level1(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -28578,8 +26510,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -28599,8 +26529,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -28697,12 +26625,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Level2(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -28757,8 +26681,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -28778,8 +26700,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -28921,8 +26841,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class TrafficPolicy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("input", "output")
-
             _fields: ClassVar[dict] = {"input": {"type": str}, "output": {"type": str}}
             input: str | None
             """Ingress traffic policy."""
@@ -28947,12 +26865,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class EvpnEthernetSegment(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("designated_forwarder_election", "identifier", "mpls", "redundancy", "route_target")
-
             class DesignatedForwarderElection(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("algorithm", "candidate_reachability_required", "dont_preempt", "hold_time", "preference_value", "subsequent_hold_time")
 
                 _fields: ClassVar[dict] = {
                     "algorithm": {"type": str},
@@ -29005,8 +26919,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Mpls(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("shared_index", "tunnel_flood_filter_time")
 
                 _fields: ClassVar[dict] = {"shared_index": {"type": int}, "tunnel_flood_filter_time": {"type": int}}
                 shared_index: int | None
@@ -29075,12 +26987,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Ptp(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("announce", "delay_mechanism", "delay_req", "enable", "mpass", "profile", "role", "sync_message", "transport", "vlan")
-
             class Announce(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interval", "timeout")
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}, "timeout": {"type": int}}
                 interval: int | None
@@ -29104,12 +27012,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Profile(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("g8275_1",)
-
                 class G82751(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("destination_mac_address",)
 
                     _fields: ClassVar[dict] = {"destination_mac_address": {"type": str}}
                     destination_mac_address: Literal["forwardable", "non-forwardable"] | None
@@ -29148,8 +27052,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class SyncMessage(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interval",)
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}}
                 interval: int | None
@@ -29248,17 +27150,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IpNat(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("destination", "service_profile", "source")
-
             class Destination(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dynamic", "static")
-
                 class DynamicItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("access_list", "comment", "pool_name", "priority")
 
                     _fields: ClassVar[dict] = {"access_list": {"type": str}, "comment": {"type": str}, "pool_name": {"type": str}, "priority": {"type": int}}
                     access_list: str
@@ -29299,19 +27195,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class StaticItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = (
-                        "access_list",
-                        "comment",
-                        "direction",
-                        "group",
-                        "original_ip",
-                        "original_port",
-                        "priority",
-                        "protocol",
-                        "translated_ip",
-                        "translated_port",
-                    )
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -29417,12 +27300,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Source(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dynamic", "static")
-
                 class DynamicItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("access_list", "comment", "nat_type", "pool_name", "priority")
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -29480,19 +27359,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class StaticItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = (
-                        "access_list",
-                        "comment",
-                        "direction",
-                        "group",
-                        "original_ip",
-                        "original_port",
-                        "priority",
-                        "protocol",
-                        "translated_ip",
-                        "translated_port",
-                    )
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -29628,8 +27494,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Ipv6NdPrefixesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv6_prefix", "no_autoconfig_flag", "preferred_lifetime", "valid_lifetime")
-
             _fields: ClassVar[dict] = {
                 "ipv6_prefix": {"type": str},
                 "valid_lifetime": {"type": str},
@@ -29677,17 +27541,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Pim(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4",)
-
             class Ipv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bfd", "bidirectional", "border_router", "dr_priority", "hello", "sparse_mode")
-
                 class Hello(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("count", "interval")
 
                     _fields: ClassVar[dict] = {"count": {"type": str}, "interval": {"type": int}}
                     count: str | None
@@ -29777,8 +27635,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class OspfMessageDigestKeysItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("hash_algorithm", "id", "key")
-
             _fields: ClassVar[dict] = {"id": {"type": int}, "hash_algorithm": {"type": str}, "key": {"type": str}}
             id: int
             hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None
@@ -29817,8 +27673,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class FlowTracker(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("hardware", "sampled")
-
             _fields: ClassVar[dict] = {"sampled": {"type": str}, "hardware": {"type": str}}
             sampled: str | None
             """Sampled flow tracker name."""
@@ -29843,8 +27697,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Bgp(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("session_tracker",)
-
             _fields: ClassVar[dict] = {"session_tracker": {"type": str}}
             session_tracker: str | None
             """Name of session tracker."""
@@ -29866,17 +27718,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IpIgmpHostProxy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("access_lists", "enabled", "groups", "report_interval", "version")
-
             class GroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("exclude", "group", "include")
-
                 class ExcludeItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("source",)
 
                     _fields: ClassVar[dict] = {"source": {"type": str}}
                     source: str
@@ -29904,8 +27750,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class IncludeItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("source",)
 
                     _fields: ClassVar[dict] = {"source": {"type": str}}
                     source: str
@@ -29989,8 +27833,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AccessListsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("name",)
-
                 _fields: ClassVar[dict] = {"name": {"type": str}}
                 name: str
 
@@ -30070,12 +27912,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Sflow(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("egress", "enable")
-
             class Egress(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enable", "unmodified_enable")
 
                 _fields: ClassVar[dict] = {"enable": {"type": bool}, "unmodified_enable": {"type": bool}}
                 enable: bool | None
@@ -30119,28 +27957,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Switchport(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "access_vlan",
-                "backup",
-                "backup_link",
-                "dot1q",
-                "enabled",
-                "mode",
-                "phone",
-                "port_security",
-                "pvlan_mapping",
-                "source_interface",
-                "tap",
-                "tool",
-                "trunk",
-                "vlan_forwarding_accept_all",
-                "vlan_translations",
-            )
-
             class Trunk(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("allowed_vlan", "groups", "native_vlan", "native_vlan_tag", "private_vlan_secondary")
 
                 class Groups(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -30233,8 +28051,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Phone(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("trunk", "vlan")
-
                 _fields: ClassVar[dict] = {"vlan": {"type": int}, "trunk": {"type": str}}
                 vlan: int | None
                 """Warning: This should not be combined with `port_channel_interfaces[].phone.vlan`."""
@@ -30264,8 +28080,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Dot1q(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("ethertype", "vlan_tag")
-
                 _fields: ClassVar[dict] = {"ethertype": {"type": int}, "vlan_tag": {"type": str}}
                 ethertype: int | None
                 """Ethertype/TPID (Tag Protocol IDentifier) for VLAN tagged frames."""
@@ -30294,12 +28108,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class VlanTranslations(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("direction_both", "direction_in", "direction_out", "in_required", "out_required")
-
                 class DirectionInItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1q_tunnel", "field_from", "inner_vlan_from", "to")
 
                     _fields: ClassVar[dict] = {
                         "field_from": {"type": str},
@@ -30348,8 +28158,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class DirectionOutItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1q_tunnel_to", "field_from", "inner_vlan_to", "to")
 
                     _fields: ClassVar[dict] = {
                         "field_from": {"type": str},
@@ -30406,8 +28214,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class DirectionBothItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1q_tunnel", "field_from", "inner_vlan_from", "network", "to")
 
                     _fields: ClassVar[dict] = {
                         "field_from": {"type": str},
@@ -30534,8 +28340,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class BackupLink(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("interface", "prefer_vlan")
-
                 _fields: ClassVar[dict] = {"interface": {"type": str}, "prefer_vlan": {"type": str}}
                 interface: str
                 """Backup interface. Example - Ethernet4, Vlan10 etc."""
@@ -30559,8 +28363,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Backup(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("dest_macaddr", "initial_mac_move_delay", "mac_move_burst", "mac_move_burst_interval", "preemption_delay")
 
                 _fields: ClassVar[dict] = {
                     "dest_macaddr": {"type": str},
@@ -30616,12 +28418,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PortSecurity(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "mac_address_maximum", "violation", "vlan_default_mac_address_maximum", "vlans")
-
                 class MacAddressMaximum(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("disabled", "limit")
 
                     _fields: ClassVar[dict] = {"disabled": {"type": bool}, "limit": {"type": int}}
                     disabled: bool | None
@@ -30646,8 +28444,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Violation(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("mode", "protect_log")
 
                     _fields: ClassVar[dict] = {"mode": {"type": str}, "protect_log": {"type": bool}}
                     mode: Literal["shutdown", "protect"] | None
@@ -30677,8 +28473,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class VlansItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("mac_address_maximum", "range")
 
                     _fields: ClassVar[dict] = {"range": {"type": str}, "mac_address_maximum": {"type": int}}
                     range: str
@@ -30778,12 +28572,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Tap(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("allowed_vlan", "default", "encapsulation", "identity", "mac_address", "mpls_pop_all", "native_vlan", "truncation")
-
                 class Default(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("groups", "interfaces", "nexthop_groups")
 
                     class Groups(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -30856,8 +28646,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Identity(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("id", "inner_vlan")
-
                     _fields: ClassVar[dict] = {"id": {"type": int}, "inner_vlan": {"type": int}}
                     id: int | None
                     """Tap port VLAN ID (1-4094) or DzGRE extended ID (1-65535)."""
@@ -30882,8 +28670,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Truncation(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "size")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "size": {"type": int}}
                     enabled: bool | None
                     size: int | None
@@ -30906,8 +28692,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class MacAddress(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("destination", "source")
 
                     _fields: ClassVar[dict] = {"source": {"type": str}, "destination": {"type": str}}
                     source: str | None
@@ -30933,17 +28717,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Encapsulation(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("gre", "vxlan_strip")
-
                     class Gre(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("destinations", "protocols", "strip")
-
                         class ProtocolsItem(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("feature_header_length", "protocol", "re_encapsulation_ethernet_header", "strip")
 
                             _fields: ClassVar[dict] = {
                                 "protocol": {"type": str},
@@ -31015,12 +28793,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         class DestinationsItem(AvdModel):
                             """Subclass of AvdModel."""
 
-                            __slots__ = ("destination", "protocols", "source", "strip")
-
                             class ProtocolsItem(AvdModel):
                                 """Subclass of AvdModel."""
-
-                                __slots__ = ("feature_header_length", "protocol", "re_encapsulation_ethernet_header", "strip")
 
                                 _fields: ClassVar[dict] = {
                                     "protocol": {"type": str},
@@ -31291,12 +29065,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Tool(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("allowed_vlan", "dot1q_remove_outer_vlan_tag", "encapsulation", "groups", "identity", "mpls_pop_all")
-
                 class Encapsulation(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1br_strip", "vn_tag_strip")
 
                     _fields: ClassVar[dict] = {"dot1br_strip": {"type": bool}, "vn_tag_strip": {"type": bool}}
                     dot1br_strip: bool | None
@@ -31323,8 +29093,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Identity(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dot1q_dzgre_source", "qinq_dzgre_source", "tag")
 
                     _fields: ClassVar[dict] = {"tag": {"type": str}, "dot1q_dzgre_source": {"type": str}, "qinq_dzgre_source": {"type": str}}
                     tag: Literal["dot1q", "qinq"] | None
@@ -31580,8 +29348,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class TrafficEngineering(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("administrative_groups", "bandwidth", "enabled", "metric", "min_delay_dynamic", "min_delay_static", "srlg")
-
             class AdministrativeGroups(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
 
@@ -31589,8 +29355,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Bandwidth(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("number", "unit")
 
                 _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}}
                 number: int
@@ -31615,8 +29379,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class MinDelayStatic(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("number", "unit")
 
                 _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}}
                 number: int
@@ -31650,12 +29412,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class MinDelayDynamic(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("twamp_light_fallback",)
-
                 class TwampLightFallback(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("number", "unit")
 
                     _fields: ClassVar[dict] = {"number": {"type": int}, "unit": {"type": str}}
                     number: int
@@ -32324,12 +30082,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class PrefixListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "sequence_numbers")
-
         class SequenceNumbersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "sequence")
 
             _fields: ClassVar[dict] = {"sequence": {"type": int}, "action": {"type": str}}
             sequence: int
@@ -32395,12 +30149,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class PriorityFlowControl(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("all_off", "watchdog")
-
         class Watchdog(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "override_action_drop", "polling_interval", "recovery_time", "timeout")
 
             _fields: ClassVar[dict] = {
                 "action": {"type": str},
@@ -32501,25 +30251,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Ptp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "clock_identity",
-            "domain",
-            "forward_unicast",
-            "message_type",
-            "mode",
-            "mode_one_step",
-            "monitor",
-            "priority1",
-            "priority2",
-            "profile",
-            "source",
-            "ttl",
-        )
-
         class Source(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ip",)
 
             _fields: ClassVar[dict] = {"ip": {"type": str}}
             ip: str | None
@@ -32542,12 +30275,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class MessageType(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("event", "general")
-
             class General(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("dscp",)
 
                 _fields: ClassVar[dict] = {"dscp": {"type": int}}
                 dscp: int | None
@@ -32568,8 +30297,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Event(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("dscp",)
 
                 _fields: ClassVar[dict] = {"dscp": {"type": int}}
                 dscp: int | None
@@ -32612,17 +30339,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Monitor(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enabled", "missing_message", "threshold")
-
             class Threshold(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("drop", "mean_path_delay", "offset_from_master")
-
                 class Drop(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("mean_path_delay", "offset_from_master")
 
                     _fields: ClassVar[dict] = {"offset_from_master": {"type": int}, "mean_path_delay": {"type": int}}
                     offset_from_master: int | None
@@ -32676,12 +30397,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class MissingMessage(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("intervals", "sequence_ids")
-
                 class Intervals(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("announce", "follow_up", "sync")
 
                     _fields: ClassVar[dict] = {"announce": {"type": int}, "follow_up": {"type": int}, "sync": {"type": int}}
                     announce: int | None
@@ -32712,8 +30429,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SequenceIds(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("announce", "delay_resp", "enabled", "follow_up", "sync")
 
                     _fields: ClassVar[dict] = {
                         "enabled": {"type": bool},
@@ -32883,12 +30598,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Qos(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("map", "random_detect", "rewrite_dscp")
-
         class Map(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("cos", "dscp", "exp", "traffic_class")
 
             class Cos(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -32947,17 +30658,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class RandomDetect(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ecn",)
-
             class Ecn(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("allow_non_ect",)
-
                 class AllowNonEct(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("chip_based", "enabled")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "chip_based": {"type": bool}}
                     enabled: bool | None
@@ -33069,12 +30774,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class QosProfilesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("cos", "dscp", "mc_tx_queues", "name", "priority_flow_control", "service_policy", "shape", "trust", "tx_queues", "uc_tx_queues")
-
         class Shape(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("rate",)
 
             _fields: ClassVar[dict] = {"rate": {"type": str}}
             rate: str | None
@@ -33102,12 +30803,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ServicePolicy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("type",)
-
             class Type(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("qos_input",)
 
                 _fields: ClassVar[dict] = {"qos_input": {"type": str}}
                 qos_input: str | None
@@ -33148,12 +30845,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class TxQueuesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bandwidth_guaranteed_percent", "bandwidth_percent", "comment", "id", "priority", "random_detect", "shape")
-
             class Shape(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("rate",)
 
                 _fields: ClassVar[dict] = {"rate": {"type": str}}
                 rate: str | None
@@ -33181,17 +30874,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RandomDetect(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("drop", "ecn")
-
                 class Ecn(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("count", "threshold")
-
                     class Threshold(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("max", "max_probability", "min", "units", "weight")
 
                         _fields: ClassVar[dict] = {
                             "units": {"type": str},
@@ -33266,12 +30953,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Drop(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("threshold",)
-
                     class Threshold(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("drop_precedence", "drop_probability", "max", "min", "units", "weight")
 
                         _fields: ClassVar[dict] = {
                             "units": {"type": str},
@@ -33436,12 +31119,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class UcTxQueuesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bandwidth_guaranteed_percent", "bandwidth_percent", "comment", "id", "priority", "random_detect", "shape")
-
             class Shape(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("rate",)
 
                 _fields: ClassVar[dict] = {"rate": {"type": str}}
                 rate: str | None
@@ -33469,17 +31148,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RandomDetect(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("drop", "ecn")
-
                 class Ecn(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("count", "threshold")
-
                     class Threshold(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("max", "max_probability", "min", "units", "weight")
 
                         _fields: ClassVar[dict] = {
                             "units": {"type": str},
@@ -33549,12 +31222,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Drop(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("threshold",)
-
                     class Threshold(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("drop_precedence", "drop_probability", "max", "min", "units", "weight")
 
                         _fields: ClassVar[dict] = {
                             "units": {"type": str},
@@ -33719,12 +31388,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class McTxQueuesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bandwidth_guaranteed_percent", "bandwidth_percent", "comment", "id", "priority", "shape")
-
             class Shape(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("rate",)
 
                 _fields: ClassVar[dict] = {"rate": {"type": str}}
                 rate: str | None
@@ -33805,17 +31470,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PriorityFlowControl(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enabled", "priorities", "watchdog")
-
             class Watchdog(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("action", "enabled", "timer")
-
                 class Timer(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("forced", "polling_interval", "recovery_time", "timeout")
 
                     _fields: ClassVar[dict] = {
                         "timeout": {"type": str},
@@ -33946,8 +31605,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class PrioritiesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("no_drop", "priority")
 
                 _fields: ClassVar[dict] = {"priority": {"type": int}, "no_drop": {"type": bool}}
                 priority: int
@@ -34112,12 +31769,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class QueueMonitorLength(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("cpu", "default_thresholds", "enabled", "log", "notifying", "tx_latency")
-
         class DefaultThresholds(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("high", "low")
 
             _fields: ClassVar[dict] = {"high": {"type": int}, "low": {"type": int}}
             high: int
@@ -34148,12 +31801,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Cpu(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("thresholds",)
-
             class Thresholds(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("high", "low")
 
                 _fields: ClassVar[dict] = {"high": {"type": int}, "low": {"type": int}}
                 high: int
@@ -34243,8 +31892,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class QueueMonitorStreaming(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("enable", "ip_access_group", "ipv6_access_group", "max_connections", "vrf")
-
         _fields: ClassVar[dict] = {
             "enable": {"type": bool},
             "ip_access_group": {"type": str},
@@ -34289,12 +31936,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RadiusServer(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("attribute_32_include_in_access_req", "deadtime", "dynamic_authorization", "hosts", "tls_ssl_profile")
-
         class Attribute32IncludeInAccessReq(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("format", "hostname")
 
             _fields: ClassVar[dict] = {"hostname": {"type": bool}, "format": {"type": str}}
             hostname: bool | None
@@ -34318,8 +31961,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class DynamicAuthorization(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("port", "tls_ssl_profile")
 
             _fields: ClassVar[dict] = {"port": {"type": int}, "tls_ssl_profile": {"type": str}}
             port: int | None
@@ -34345,12 +31986,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class HostsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("host", "key", "retransmit", "timeout", "tls", "vrf")
-
             class Tls(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "port", "ssl_profile")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "ssl_profile": {"type": str}, "port": {"type": int}}
                 enabled: bool | None
@@ -34494,8 +32131,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Redundancy(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("protocol",)
-
         _fields: ClassVar[dict] = {"protocol": {"type": str}}
         protocol: str | None
         """Redundancy Protocol."""
@@ -34517,12 +32152,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RolesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "sequence_numbers")
-
         class SequenceNumbersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "command", "mode", "sequence")
 
             _fields: ClassVar[dict] = {"sequence": {"type": int}, "action": {"type": str}, "mode": {"type": str}, "command": {"type": str}}
             sequence: int | None
@@ -34593,12 +32224,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouteMapsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("name", "sequence_numbers")
-
         class SequenceNumbersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("description", "field_continue", "match", "sequence", "set", "sub_route_map", "type")
 
             class Match(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
@@ -34612,8 +32239,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Continue(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "sequence_number")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "sequence_number": {"type": int}}
                 enabled: bool | None
@@ -34740,12 +32365,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterAdaptiveVirtualTopology(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("gateway_vxlan", "policies", "profiles", "region", "site", "topology_role", "vrfs", "zone")
-
         class Region(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("id", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "id": {"type": int}}
             name: str
@@ -34769,8 +32390,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Zone(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("id", "name")
-
             _fields: ClassVar[dict] = {"name": {"type": str}, "id": {"type": int}}
             name: str
             id: int
@@ -34792,8 +32411,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Site(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("id", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "id": {"type": int}}
             name: str
@@ -34817,12 +32434,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ProfilesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("internet_exit_policy", "load_balance_policy", "metric_order", "name", "outlier_elimination")
-
             class MetricOrder(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("preferred_metric",)
 
                 _fields: ClassVar[dict] = {"preferred_metric": {"type": str}}
                 preferred_metric: Literal["jitter", "latency", "load", "loss-rate"]
@@ -34844,12 +32457,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class OutlierElimination(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("disabled", "threshold")
-
                 class Threshold(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("jitter", "latency", "load", "loss_rate")
 
                     _fields: ClassVar[dict] = {"jitter": {"type": int}, "latency": {"type": int}, "load": {"type": str}, "loss_rate": {"type": str}}
                     jitter: int | None
@@ -34981,12 +32590,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PoliciesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("matches", "name")
-
             class MatchesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("application_profile", "avt_profile", "dscp", "traffic_class")
 
                 _fields: ClassVar[dict] = {
                     "application_profile": {"type": str},
@@ -35063,12 +32668,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "policy", "profiles")
-
             class ProfilesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("id", "name")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "id": {"type": int}}
                 name: str | None
@@ -35243,22 +32844,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterBfd(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "interval",
-            "local_address",
-            "min_rx",
-            "multihop",
-            "multiplier",
-            "sbfd",
-            "session_snapshot_interval",
-            "session_snapshot_interval_dangerous",
-            "slow_timer",
-        )
-
         class Multihop(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("interval", "min_rx", "multiplier")
 
             _fields: ClassVar[dict] = {"interval": {"type": int}, "min_rx": {"type": int}, "multiplier": {"type": int}}
             interval: int | None
@@ -35292,17 +32879,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Sbfd(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("initiator_interval", "initiator_measurement_round_trip", "initiator_multiplier", "local_interface", "reflector")
-
             class LocalInterface(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("name", "protocols")
-
                 class Protocols(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("ipv4", "ipv6")
 
                     _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}}
                     ipv4: bool | None
@@ -35346,8 +32927,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Reflector(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("local_discriminator", "min_rx")
 
                 _fields: ClassVar[dict] = {"min_rx": {"type": int}, "local_discriminator": {"type": str}}
                 min_rx: int | None
@@ -35485,54 +33064,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterBgp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "address_family_evpn",
-            "address_family_flow_spec_ipv4",
-            "address_family_flow_spec_ipv6",
-            "address_family_ipv4",
-            "address_family_ipv4_labeled_unicast",
-            "address_family_ipv4_multicast",
-            "address_family_ipv4_sr_te",
-            "address_family_ipv6",
-            "address_family_ipv6_multicast",
-            "address_family_ipv6_sr_te",
-            "address_family_link_state",
-            "address_family_path_selection",
-            "address_family_rtc",
-            "address_family_vpn_ipv4",
-            "address_family_vpn_ipv6",
-            "aggregate_addresses",
-            "as_notation",
-            "bgp",
-            "bgp_cluster_id",
-            "bgp_defaults",
-            "distance",
-            "eos_cli",
-            "field_as",
-            "graceful_restart",
-            "graceful_restart_helper",
-            "listen_ranges",
-            "maximum_paths",
-            "neighbor_default",
-            "neighbor_interfaces",
-            "neighbors",
-            "peer_groups",
-            "redistribute",
-            "redistribute_routes",
-            "router_id",
-            "session_trackers",
-            "timers",
-            "updates",
-            "vlan_aware_bundles",
-            "vlans",
-            "vpws",
-            "vrfs",
-        )
-
         class Timers(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("hold_time", "keepalive_time", "min_hold_time", "send_failure_hold_time")
 
             _fields: ClassVar[dict] = {
                 "keepalive_time": {"type": int},
@@ -35593,8 +33126,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Distance(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("external_routes", "internal_routes", "local_routes")
-
             _fields: ClassVar[dict] = {"external_routes": {"type": int}, "internal_routes": {"type": int}, "local_routes": {"type": int}}
             external_routes: int
             internal_routes: int
@@ -35624,8 +33155,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class GracefulRestart(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("enabled", "restart_time", "stalepath_time")
 
             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "restart_time": {"type": int}, "stalepath_time": {"type": int}}
             enabled: bool | None
@@ -35658,8 +33187,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class GracefulRestartHelper(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("enabled", "long_lived", "restart_time")
 
             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "restart_time": {"type": int}, "long_lived": {"type": bool}}
             enabled: bool | None
@@ -35707,8 +33234,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class MaximumPaths(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ecmp", "paths")
-
             _fields: ClassVar[dict] = {"paths": {"type": int}, "ecmp": {"type": int}}
             paths: int
             ecmp: int | None
@@ -35730,8 +33255,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Updates(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("wait_for_convergence", "wait_install")
 
             _fields: ClassVar[dict] = {"wait_for_convergence": {"type": bool}, "wait_install": {"type": bool}}
             wait_for_convergence: bool | None
@@ -35778,12 +33301,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Bgp(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("additional_paths", "bestpath", "default", "redistribute_internal", "route_reflector_preserve_attributes")
-
             class Default(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ipv4_unicast", "ipv4_unicast_transport_ipv6")
 
                 _fields: ClassVar[dict] = {"ipv4_unicast": {"type": bool}, "ipv4_unicast_transport_ipv6": {"type": bool}}
                 ipv4_unicast: bool | None
@@ -35811,8 +33330,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RouteReflectorPreserveAttributes(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("always", "enabled")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "always": {"type": bool}}
                 enabled: bool | None
                 always: bool | None
@@ -35835,8 +33352,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Bestpath(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("d_path",)
-
                 _fields: ClassVar[dict] = {"d_path": {"type": bool}}
                 d_path: bool | None
 
@@ -35856,8 +33371,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class AdditionalPaths(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("receive", "send", "send_limit")
 
                 _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                 receive: bool | None
@@ -35958,8 +33471,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ListenRangesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("peer_filter", "peer_group", "peer_id_include_router_id", "prefix", "remote_as")
-
             _fields: ClassVar[dict] = {
                 "prefix": {"type": str},
                 "peer_id_include_router_id": {"type": bool},
@@ -36030,8 +33541,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class NeighborDefault(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("send_community",)
-
             _fields: ClassVar[dict] = {"send_community": {"type": str}}
             send_community: (
                 Literal["all", "large", "extended", "standard", "extended large", "standard large", "standard extended", "standard extended large"] | None
@@ -36062,47 +33571,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PeerGroupsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "allowas_in",
-                "as_path",
-                "bfd",
-                "bfd_timers",
-                "default_originate",
-                "description",
-                "ebgp_multihop",
-                "link_bandwidth",
-                "local_as",
-                "maximum_routes",
-                "maximum_routes_warning_limit",
-                "maximum_routes_warning_only",
-                "missing_policy",
-                "name",
-                "next_hop_self",
-                "next_hop_unchanged",
-                "passive",
-                "password",
-                "remote_as",
-                "remove_private_as",
-                "remove_private_as_ingress",
-                "rib_in_pre_policy_retain",
-                "route_map_in",
-                "route_map_out",
-                "route_reflector_client",
-                "send_community",
-                "session_tracker",
-                "shared_secret",
-                "shutdown",
-                "timers",
-                "ttl_maximum_hops",
-                "type",
-                "update_source",
-                "weight",
-            )
-
             class AsPath(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("prepend_own_disabled", "remote_as_replace_out")
 
                 _fields: ClassVar[dict] = {"remote_as_replace_out": {"type": bool}, "prepend_own_disabled": {"type": bool}}
                 remote_as_replace_out: bool | None
@@ -36129,8 +33599,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class RemovePrivateAs(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("all", "enabled", "replace_as")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "all": {"type": bool}, "replace_as": {"type": bool}}
                 enabled: bool | None
@@ -36162,8 +33630,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RemovePrivateAsIngress(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "replace_as")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "replace_as": {"type": bool}}
                 enabled: bool | None
                 replace_as: bool | None
@@ -36185,8 +33651,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class BfdTimers(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interval", "min_rx", "multiplier")
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}, "min_rx": {"type": int}, "multiplier": {"type": int}}
                 interval: int
@@ -36215,8 +33679,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class DefaultOriginate(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("always", "enabled", "route_map")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "always": {"type": bool}, "route_map": {"type": str}}
                 enabled: bool | None
@@ -36249,12 +33711,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class MissingPolicy(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("direction_in", "direction_out")
-
                 class DirectionIn(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                     _fields: ClassVar[dict] = {
                         "action": {"type": str},
@@ -36297,8 +33755,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class DirectionOut(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                     _fields: ClassVar[dict] = {
                         "action": {"type": str},
@@ -36379,8 +33835,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class LinkBandwidth(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("default", "enabled")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "default": {"type": str}}
                 enabled: bool | None
                 default: str | None
@@ -36403,8 +33857,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class AllowasIn(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "times")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "times": {"type": int}}
                 enabled: bool | None
@@ -36429,8 +33881,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RibInPrePolicyRetain(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("all", "enabled")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "all": {"type": bool}}
                 enabled: bool | None
                 all: bool | None
@@ -36452,8 +33902,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class SharedSecret(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("hash_algorithm", "profile")
 
                 _fields: ClassVar[dict] = {"profile": {"type": str}, "hash_algorithm": {"type": str}}
                 profile: str
@@ -36723,47 +34171,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class NeighborsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "allowas_in",
-                "as_path",
-                "bfd",
-                "bfd_timers",
-                "default_originate",
-                "description",
-                "ebgp_multihop",
-                "ip_address",
-                "link_bandwidth",
-                "local_as",
-                "maximum_routes",
-                "maximum_routes_warning_limit",
-                "maximum_routes_warning_only",
-                "missing_policy",
-                "next_hop_self",
-                "passive",
-                "password",
-                "peer",
-                "peer_group",
-                "remote_as",
-                "remove_private_as",
-                "remove_private_as_ingress",
-                "rib_in_pre_policy_retain",
-                "route_map_in",
-                "route_map_out",
-                "route_reflector_client",
-                "send_community",
-                "session_tracker",
-                "shared_secret",
-                "shutdown",
-                "timers",
-                "ttl_maximum_hops",
-                "update_source",
-                "weight",
-            )
-
             class AsPath(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("prepend_own_disabled", "remote_as_replace_out")
 
                 _fields: ClassVar[dict] = {"remote_as_replace_out": {"type": bool}, "prepend_own_disabled": {"type": bool}}
                 remote_as_replace_out: bool | None
@@ -36790,8 +34199,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class BfdTimers(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interval", "min_rx", "multiplier")
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}, "min_rx": {"type": int}, "multiplier": {"type": int}}
                 interval: int
@@ -36820,8 +34227,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class DefaultOriginate(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("always", "enabled", "route_map")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "always": {"type": bool}, "route_map": {"type": str}}
                 enabled: bool | None
@@ -36853,12 +34258,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class MissingPolicy(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("direction_in", "direction_out")
-
                 class DirectionIn(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                     _fields: ClassVar[dict] = {
                         "action": {"type": str},
@@ -36901,8 +34302,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class DirectionOut(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                     _fields: ClassVar[dict] = {
                         "action": {"type": str},
@@ -36983,8 +34382,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AllowasIn(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "times")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "times": {"type": int}}
                 enabled: bool | None
                 times: int | None
@@ -37007,8 +34404,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class LinkBandwidth(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("default", "enabled")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "default": {"type": str}}
                 enabled: bool | None
@@ -37033,8 +34428,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RibInPrePolicyRetain(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("all", "enabled")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "all": {"type": bool}}
                 enabled: bool | None
                 all: bool | None
@@ -37056,8 +34449,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class RemovePrivateAs(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("all", "enabled", "replace_as")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "all": {"type": bool}, "replace_as": {"type": bool}}
                 enabled: bool | None
@@ -37089,8 +34480,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RemovePrivateAsIngress(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "replace_as")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "replace_as": {"type": bool}}
                 enabled: bool | None
                 replace_as: bool | None
@@ -37112,8 +34501,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class SharedSecret(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("hash_algorithm", "profile")
 
                 _fields: ClassVar[dict] = {"profile": {"type": str}, "hash_algorithm": {"type": str}}
                 profile: str
@@ -37382,8 +34769,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class NeighborInterfacesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("description", "name", "peer", "peer_filter", "peer_group", "remote_as")
-
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
                 "remote_as": {"type": str},
@@ -37451,8 +34836,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AggregateAddressesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("advertise_only", "as_set", "attribute_map", "match_map", "prefix", "summary_only")
-
             _fields: ClassVar[dict] = {
                 "prefix": {"type": str},
                 "advertise_only": {"type": bool},
@@ -37509,12 +34892,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Redistribute(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("attached_host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user")
-
             class AttachedHost(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "route_map")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                 enabled: bool
@@ -37538,8 +34917,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "route_map")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                 enabled: bool
                 route_map: str | None
@@ -37561,8 +34938,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Connected(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}, "include_leaked": {"type": bool}}
                 enabled: bool
@@ -37608,8 +34983,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Dynamic(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "rcf", "route_map")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}}
                 enabled: bool
                 route_map: str | None
@@ -37649,8 +35022,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Isis(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                 _fields: ClassVar[dict] = {
                     "enabled": {"type": bool},
@@ -37706,12 +35077,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Ospf(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                 class MatchExternal(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
@@ -37744,8 +35111,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class MatchInternal(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "include_leaked", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
                     route_map: str | None
@@ -37776,8 +35141,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class MatchNssaExternal(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                     _fields: ClassVar[dict] = {
                         "enabled": {"type": bool},
@@ -37888,12 +35251,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Ospfv3(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                 class MatchExternal(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
@@ -37926,8 +35285,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class MatchInternal(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "include_leaked", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
                     route_map: str | None
@@ -37958,8 +35315,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class MatchNssaExternal(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                     _fields: ClassVar[dict] = {
                         "enabled": {"type": bool},
@@ -38070,8 +35425,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Rip(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "route_map")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                 enabled: bool
                 route_map: str | None
@@ -38093,8 +35446,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Static(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}, "include_leaked": {"type": bool}}
                 enabled: bool
@@ -38139,8 +35490,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class User(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "rcf")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}}
                 enabled: bool
@@ -38243,8 +35592,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class RedistributeRoutesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
-
             _fields: ClassVar[dict] = {
                 "source_protocol": {"type": str},
                 "route_map": {"type": str},
@@ -38315,23 +35662,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VlanAwareBundlesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "description",
-                "eos_cli",
-                "name",
-                "no_redistribute_routes",
-                "rd",
-                "rd_evpn_domain",
-                "redistribute_routes",
-                "route_targets",
-                "tenant",
-                "vlan",
-            )
-
             class RdEvpnDomain(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("domain", "rd")
 
                 _fields: ClassVar[dict] = {"domain": {"type": str}, "rd": {"type": str}}
                 domain: Literal["remote", "all"] | None
@@ -38358,8 +35690,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RouteTargets(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("both", "export", "export_evpn_domains", "field_import", "import_evpn_domains", "import_export_evpn_domains")
-
                 class Both(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
 
@@ -38377,8 +35707,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class ImportEvpnDomainsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("domain", "route_target")
 
                     _fields: ClassVar[dict] = {"domain": {"type": str}, "route_target": {"type": str}}
                     domain: Literal["remote", "all"] | None
@@ -38409,8 +35737,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class ExportEvpnDomainsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("domain", "route_target")
-
                     _fields: ClassVar[dict] = {"domain": {"type": str}, "route_target": {"type": str}}
                     domain: Literal["remote", "all"] | None
                     route_target: str | None
@@ -38439,8 +35765,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class ImportExportEvpnDomainsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("domain", "route_target")
 
                     _fields: ClassVar[dict] = {"domain": {"type": str}, "route_target": {"type": str}}
                     domain: Literal["remote", "all"] | None
@@ -38613,12 +35937,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VlansItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("eos_cli", "id", "no_redistribute_routes", "rd", "rd_evpn_domain", "redistribute_routes", "route_targets", "tenant")
-
             class RdEvpnDomain(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("domain", "rd")
 
                 _fields: ClassVar[dict] = {"domain": {"type": str}, "rd": {"type": str}}
                 domain: Literal["remote", "all"] | None
@@ -38645,8 +35965,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RouteTargets(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("both", "export", "export_evpn_domains", "field_import", "import_evpn_domains", "import_export_evpn_domains")
-
                 class Both(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
 
@@ -38664,8 +35982,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class ImportEvpnDomainsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("domain", "route_target")
 
                     _fields: ClassVar[dict] = {"domain": {"type": str}, "route_target": {"type": str}}
                     domain: Literal["remote", "all"] | None
@@ -38696,8 +36012,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class ExportEvpnDomainsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("domain", "route_target")
-
                     _fields: ClassVar[dict] = {"domain": {"type": str}, "route_target": {"type": str}}
                     domain: Literal["remote", "all"] | None
                     route_target: str | None
@@ -38726,8 +36040,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class ImportExportEvpnDomainsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("domain", "route_target")
 
                     _fields: ClassVar[dict] = {"domain": {"type": str}, "route_target": {"type": str}}
                     domain: Literal["remote", "all"] | None
@@ -38889,12 +36201,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VpwsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("label_flow", "mpls_control_word", "mtu", "name", "pseudowires", "rd", "route_targets")
-
             class RouteTargets(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("import_export",)
 
                 _fields: ClassVar[dict] = {"import_export": {"type": str}}
                 import_export: str | None
@@ -38916,8 +36224,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class PseudowiresItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("id_local", "id_remote", "name")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "id_local": {"type": int}, "id_remote": {"type": int}}
                 name: str
@@ -39017,32 +36323,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyEvpn(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "bgp",
-                "bgp_additional_paths",
-                "domain_identifier",
-                "domain_identifier_remote",
-                "evpn_ethernet_segment",
-                "evpn_hostflap_detection",
-                "layer_2_fec_in_place_update",
-                "neighbor_default",
-                "neighbors",
-                "next_hop",
-                "next_hop_mpls_resolution_ribs",
-                "next_hop_unchanged",
-                "peer_groups",
-                "route",
-            )
-
             class NeighborDefault(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("encapsulation", "next_hop_self_received_evpn_routes", "next_hop_self_source_interface")
-
                 class NextHopSelfReceivedEvpnRoutes(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enable", "inter_domain")
 
                     _fields: ClassVar[dict] = {"enable": {"type": bool}, "inter_domain": {"type": bool}}
                     enable: bool | None
@@ -39100,8 +36385,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NextHopMplsResolutionRibsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("rib_name", "rib_type")
-
                 _fields: ClassVar[dict] = {"rib_type": {"type": str}, "rib_name": {"type": str}}
                 rib_type: Literal["system-connected", "tunnel-rib-colored", "tunnel-rib"]
                 """Type of RIB. For 'tunnel-rib', use 'rib_name' to specify the name of the Tunnel-RIB to use."""
@@ -39136,23 +36419,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "activate",
-                    "additional_paths",
-                    "default_route",
-                    "encapsulation",
-                    "ip_address",
-                    "next_hop_self_source_interface",
-                    "rcf_in",
-                    "rcf_out",
-                    "route_map_in",
-                    "route_map_out",
-                )
-
                 class DefaultRoute(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}, "route_map": {"type": str}}
                     enabled: bool | None
@@ -39189,8 +36457,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -39331,24 +36597,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "activate",
-                    "additional_paths",
-                    "default_route",
-                    "domain_remote",
-                    "encapsulation",
-                    "name",
-                    "next_hop_self_source_interface",
-                    "rcf_in",
-                    "rcf_out",
-                    "route_map_in",
-                    "route_map_out",
-                )
-
                 class DefaultRoute(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}, "route_map": {"type": str}}
                     enabled: bool | None
@@ -39385,8 +36635,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -39532,8 +36780,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class EvpnHostflapDetection(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "expiry_timeout", "threshold", "window")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "window": {"type": int}, "threshold": {"type": int}, "expiry_timeout": {"type": int}}
                 enabled: bool | None
                 window: int | None
@@ -39570,8 +36816,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NextHop(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("resolution_disabled",)
-
                 _fields: ClassVar[dict] = {"resolution_disabled": {"type": bool}}
                 resolution_disabled: bool | None
 
@@ -39591,13 +36835,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Route(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = (
-                    "export_ethernet_segment_ip_mass_withdraw",
-                    "import_ethernet_segment_ip_mass_withdraw",
-                    "import_match_failure_action",
-                    "import_overlay_index_gateway",
-                )
 
                 _fields: ClassVar[dict] = {
                     "import_match_failure_action": {"type": str},
@@ -39637,12 +36874,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("additional_paths",)
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -39717,8 +36950,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Layer2FecInPlaceUpdate(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "timeout")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "timeout": {"type": int}}
                 enabled: bool
                 timeout: int | None
@@ -39741,8 +36972,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class EvpnEthernetSegmentItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("domain", "identifier", "route_target_import")
 
                 _fields: ClassVar[dict] = {"domain": {"type": str}, "identifier": {"type": str}, "route_target_import": {"type": str}}
                 domain: Literal["all", "local", "remote"]
@@ -39783,12 +37012,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class BgpAdditionalPaths(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("receive", "send")
-
                 class Send(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("any", "backup", "ecmp", "ecmp_limit", "limit")
 
                     _fields: ClassVar[dict] = {
                         "any": {"type": bool},
@@ -39974,17 +37199,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyRtc(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("peer_groups",)
-
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "default_route_target", "name")
-
                 class DefaultRouteTarget(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("encoding_origin_as_omit", "only")
 
                     _fields: ClassVar[dict] = {"only": {"type": bool}, "encoding_origin_as_omit": {"type": str}}
                     only: bool | None
@@ -40064,12 +37283,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyIpv4(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bgp", "neighbors", "networks", "peer_groups", "redistribute", "redistribute_routes")
-
             class NetworksItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("prefix", "route_map")
 
                 _fields: ClassVar[dict] = {"prefix": {"type": str}, "route_map": {"type": str}}
                 prefix: str
@@ -40102,12 +37317,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("additional_paths", "redistribute_internal")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("install", "install_ecmp_primary", "receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {
                         "install": {"type": bool},
@@ -40201,24 +37412,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "activate",
-                    "additional_paths",
-                    "default_originate",
-                    "name",
-                    "next_hop",
-                    "prefix_list_in",
-                    "prefix_list_out",
-                    "rcf_in",
-                    "rcf_out",
-                    "route_map_in",
-                    "route_map_out",
-                )
-
                 class DefaultOriginate(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("always", "route_map")
 
                     _fields: ClassVar[dict] = {"always": {"type": bool}, "route_map": {"type": str}}
                     always: bool | None
@@ -40242,8 +37437,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("prefix_list", "receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"prefix_list": {"type": str}, "receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     prefix_list: str | None
@@ -40304,12 +37497,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class NextHop(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("address_family_ipv6",)
-
                     class AddressFamilyIpv6(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "originate")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "originate": {"type": bool}}
                         enabled: bool
@@ -40441,23 +37630,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "activate",
-                    "additional_paths",
-                    "default_originate",
-                    "ip_address",
-                    "prefix_list_in",
-                    "prefix_list_out",
-                    "rcf_in",
-                    "rcf_out",
-                    "route_map_in",
-                    "route_map_out",
-                )
-
                 class DefaultOriginate(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("always", "route_map")
 
                     _fields: ClassVar[dict] = {"always": {"type": bool}, "route_map": {"type": str}}
                     always: bool | None
@@ -40480,8 +37654,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("prefix_list", "receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"prefix_list": {"type": str}, "receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     prefix_list: str | None
@@ -40626,12 +37798,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Redistribute(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("attached_host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user")
-
                 class AttachedHost(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
@@ -40655,8 +37823,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -40678,8 +37844,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Connected(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
@@ -40725,8 +37889,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Dynamic(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "rcf", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -40766,8 +37928,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Isis(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {
                         "enabled": {"type": bool},
@@ -40823,12 +37983,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Ospf(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                     class MatchExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
@@ -40861,8 +38017,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class MatchInternal(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
                         route_map: str | None
@@ -40893,8 +38047,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchNssaExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -41005,12 +38157,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Ospfv3(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                     class MatchExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
@@ -41043,8 +38191,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class MatchInternal(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
                         route_map: str | None
@@ -41075,8 +38221,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchNssaExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -41187,8 +38331,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Rip(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -41210,8 +38352,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Static(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
@@ -41256,8 +38396,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class User(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}}
                     enabled: bool
@@ -41359,8 +38497,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class RedistributeRoutesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
 
                 _fields: ClassVar[dict] = {
                     "source_protocol": {"type": str},
@@ -41491,26 +38627,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyIpv4LabeledUnicast(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "aigp_session",
-                "bgp",
-                "graceful_restart",
-                "label_local_termination",
-                "lfib_entry_installation_skipped",
-                "neighbor_default",
-                "neighbors",
-                "networks",
-                "next_hop_resolution_ribs",
-                "next_hops",
-                "peer_groups",
-                "tunnel_source_protocols",
-                "update_wait_for_convergence",
-            )
-
             class AigpSession(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("confederation", "ebgp", "ibgp")
 
                 _fields: ClassVar[dict] = {"confederation": {"type": bool}, "ebgp": {"type": bool}, "ibgp": {"type": bool}}
                 confederation: bool | None
@@ -41542,12 +38660,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("additional_paths", "missing_policy", "next_hop_unchanged")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -41604,12 +38718,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class MissingPolicy(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("direction_in", "direction_out")
-
                     class DirectionIn(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                         _fields: ClassVar[dict] = {
                             "action": {"type": str},
@@ -41652,8 +38762,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class DirectionOut(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                         _fields: ClassVar[dict] = {
                             "action": {"type": str},
@@ -41774,8 +38882,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborDefault(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("next_hop_self",)
-
                 _fields: ClassVar[dict] = {"next_hop_self": {"type": bool}}
                 next_hop_self: bool | None
 
@@ -41796,31 +38902,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "activate",
-                    "additional_paths",
-                    "aigp_session",
-                    "graceful_restart",
-                    "graceful_restart_helper",
-                    "maximum_advertised_routes",
-                    "maximum_advertised_routes_warning_limit",
-                    "missing_policy",
-                    "multi_path",
-                    "name",
-                    "next_hop_self",
-                    "next_hop_self_source_interface",
-                    "next_hop_self_v4_mapped_v6_source_interface",
-                    "next_hop_unchanged",
-                    "rcf_in",
-                    "rcf_out",
-                    "route_map_in",
-                    "route_map_out",
-                )
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -41877,8 +38960,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class GracefulRestartHelper(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("stale_route_map",)
-
                     _fields: ClassVar[dict] = {"stale_route_map": {"type": str}}
                     stale_route_map: str | None
 
@@ -41899,12 +38980,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class MissingPolicy(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("direction_in", "direction_out")
-
                     class DirectionIn(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                         _fields: ClassVar[dict] = {
                             "action": {"type": str},
@@ -41947,8 +39024,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class DirectionOut(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                         _fields: ClassVar[dict] = {
                             "action": {"type": str},
@@ -42163,31 +39238,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "activate",
-                    "additional_paths",
-                    "aigp_session",
-                    "graceful_restart",
-                    "graceful_restart_helper",
-                    "ip_address",
-                    "maximum_advertised_routes",
-                    "maximum_advertised_routes_warning_limit",
-                    "missing_policy",
-                    "multi_path",
-                    "next_hop_self",
-                    "next_hop_self_source_interface",
-                    "next_hop_self_v4_mapped_v6_source_interface",
-                    "next_hop_unchanged",
-                    "rcf_in",
-                    "rcf_out",
-                    "route_map_in",
-                    "route_map_out",
-                )
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -42244,8 +39296,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class GracefulRestartHelper(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("stale_route_map",)
-
                     _fields: ClassVar[dict] = {"stale_route_map": {"type": str}}
                     stale_route_map: str | None
 
@@ -42266,12 +39316,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class MissingPolicy(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("direction_in", "direction_out")
-
                     class DirectionIn(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                         _fields: ClassVar[dict] = {
                             "action": {"type": str},
@@ -42314,8 +39360,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class DirectionOut(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("action", "include_community_list", "include_prefix_list", "include_sub_route_map")
 
                         _fields: ClassVar[dict] = {
                             "action": {"type": str},
@@ -42529,8 +39573,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NetworksItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("prefix", "route_map")
-
                 _fields: ClassVar[dict] = {"prefix": {"type": str}, "route_map": {"type": str}}
                 prefix: str
                 """IPv4 prefix "A.B.C.D/E" or IPv6 prefix "A:B:C:D:E:F:G:H/I"."""
@@ -42562,8 +39604,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NextHopsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("ip_address", "lfib_backup_ip_forwarding")
-
                 _fields: ClassVar[dict] = {"ip_address": {"type": str}, "lfib_backup_ip_forwarding": {"type": bool}}
                 ip_address: str
                 lfib_backup_ip_forwarding: bool | None
@@ -42594,8 +39634,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class NextHopResolutionRibsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("rib_name", "rib_type")
 
                 _fields: ClassVar[dict] = {"rib_type": {"type": str}, "rib_name": {"type": str}}
                 rib_type: Literal["system-connected", "tunnel-rib-colored", "tunnel-rib"]
@@ -42630,8 +39668,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class TunnelSourceProtocolsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("protocol", "rcf")
 
                 _fields: ClassVar[dict] = {"protocol": {"type": str}, "rcf": {"type": str}}
                 protocol: Literal["isis segment-routing", "ldp"]
@@ -42769,17 +39805,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyIpv4Multicast(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bgp", "neighbors", "peer_groups", "redistribute", "redistribute_routes")
-
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("additional_paths",)
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive",)
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}}
                     receive: bool | None
@@ -42819,12 +39849,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "additional_paths", "name", "route_map_in", "route_map_out")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive",)
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}}
                     receive: bool | None
@@ -42896,12 +39922,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "additional_paths", "ip_address", "route_map_in", "route_map_out")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive",)
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}}
                     receive: bool | None
@@ -42972,12 +39994,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Redistribute(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("attached_host", "connected", "isis", "ospf", "ospfv3", "static")
-
                 class AttachedHost(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
@@ -43001,8 +40019,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Connected(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -43024,8 +40040,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Isis(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {
                         "enabled": {"type": bool},
@@ -43081,12 +40095,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Ospf(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                     class MatchExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
@@ -43110,8 +40120,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class MatchInternal(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -43133,8 +40141,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchNssaExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "nssa_type", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "nssa_type": {"type": int}, "route_map": {"type": str}}
                         enabled: bool
@@ -43231,12 +40237,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Ospfv3(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                     class MatchExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
@@ -43260,8 +40262,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class MatchInternal(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -43283,8 +40283,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchNssaExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "nssa_type", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "nssa_type": {"type": int}, "route_map": {"type": str}}
                         enabled: bool
@@ -43381,8 +40379,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Static(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -43453,8 +40449,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class RedistributeRoutesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
 
                 _fields: ClassVar[dict] = {
                     "source_protocol": {"type": str},
@@ -43577,12 +40571,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyIpv4SrTe(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("neighbors", "peer_groups")
-
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("activate", "ip_address", "route_map_in", "route_map_out")
 
                 _fields: ClassVar[dict] = {
                     "ip_address": {"type": str},
@@ -43630,8 +40620,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("activate", "name", "route_map_in", "route_map_out")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "activate": {"type": bool}, "route_map_in": {"type": str}, "route_map_out": {"type": str}}
                 name: str
@@ -43697,12 +40685,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyIpv6(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bgp", "neighbors", "networks", "peer_groups", "redistribute", "redistribute_routes")
-
             class NetworksItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("prefix", "route_map")
 
                 _fields: ClassVar[dict] = {"prefix": {"type": str}, "route_map": {"type": str}}
                 prefix: str
@@ -43735,12 +40719,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("additional_paths", "redistribute_internal")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("install", "install_ecmp_primary", "receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {
                         "install": {"type": bool},
@@ -43834,12 +40814,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "additional_paths", "name", "prefix_list_in", "prefix_list_out", "rcf_in", "rcf_out", "route_map_in", "route_map_out")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("prefix_list", "receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"prefix_list": {"type": str}, "receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     prefix_list: str | None
@@ -43980,22 +40956,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "activate",
-                    "additional_paths",
-                    "ip_address",
-                    "prefix_list_in",
-                    "prefix_list_out",
-                    "rcf_in",
-                    "rcf_out",
-                    "route_map_in",
-                    "route_map_out",
-                )
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("prefix_list", "receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"prefix_list": {"type": str}, "receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     prefix_list: str | None
@@ -44135,12 +41097,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Redistribute(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("attached_host", "bgp", "connected", "dhcp", "dynamic", "isis", "ospfv3", "static", "user")
-
                 class AttachedHost(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
@@ -44164,8 +41122,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -44187,8 +41143,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Connected(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
@@ -44234,8 +41188,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Dhcp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -44257,8 +41209,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Dynamic(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}}
                     enabled: bool
@@ -44299,8 +41249,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Isis(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {
                         "enabled": {"type": bool},
@@ -44356,12 +41304,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Ospfv3(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                     class MatchExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
@@ -44394,8 +41338,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class MatchInternal(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
                         route_map: str | None
@@ -44426,8 +41368,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchNssaExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -44538,8 +41478,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Static(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
                     route_map: str | None
@@ -44583,8 +41521,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class User(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}}
                     enabled: bool
@@ -44681,8 +41617,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class RedistributeRoutesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
 
                 _fields: ClassVar[dict] = {
                     "source_protocol": {"type": str},
@@ -44809,17 +41743,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyIpv6Multicast(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bgp", "neighbors", "networks", "peer_groups", "redistribute", "redistribute_routes")
-
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("additional_paths", "missing_policy")
-
                 class MissingPolicy(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("direction_in_action", "direction_out_action")
 
                     _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                     direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -44847,8 +41775,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive",)
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}}
                     receive: bool | None
@@ -44893,12 +41819,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "additional_paths", "ip_address", "route_map_in", "route_map_out")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive",)
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}}
                     receive: bool | None
@@ -44969,12 +41891,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "additional_paths", "name")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive",)
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}}
                     receive: bool | None
@@ -45032,8 +41950,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NetworksItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("prefix", "route_map")
-
                 _fields: ClassVar[dict] = {"prefix": {"type": str}, "route_map": {"type": str}}
                 prefix: str
                 """IPv6 prefix "A:B:C:D:E:F:G:H/I"."""
@@ -45064,12 +41980,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Redistribute(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("connected", "isis", "ospf", "ospfv3", "static")
-
                 class Connected(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
@@ -45092,8 +42004,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Isis(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {
                         "enabled": {"type": bool},
@@ -45149,12 +42059,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Ospf(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                     class MatchExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
@@ -45178,8 +42084,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class MatchInternal(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -45201,8 +42105,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchNssaExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "nssa_type", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "nssa_type": {"type": int}, "route_map": {"type": str}}
                         enabled: bool
@@ -45299,12 +42201,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Ospfv3(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                     class MatchExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
@@ -45328,8 +42226,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class MatchInternal(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -45351,8 +42247,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchNssaExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "nssa_type", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "nssa_type": {"type": int}, "route_map": {"type": str}}
                         enabled: bool
@@ -45449,8 +42343,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Static(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -45516,8 +42408,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class RedistributeRoutesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
 
                 _fields: ClassVar[dict] = {
                     "source_protocol": {"type": str},
@@ -45645,12 +42535,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyIpv6SrTe(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("neighbors", "peer_groups")
-
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("activate", "ip_address", "route_map_in", "route_map_out")
 
                 _fields: ClassVar[dict] = {
                     "ip_address": {"type": str},
@@ -45698,8 +42584,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("activate", "name", "route_map_in", "route_map_out")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "activate": {"type": bool}, "route_map_in": {"type": str}, "route_map_out": {"type": str}}
                 name: str
@@ -45765,17 +42649,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyLinkState(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bgp", "neighbors", "path_selection", "peer_groups")
-
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("missing_policy",)
-
                 class MissingPolicy(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("direction_in_action", "direction_out_action")
 
                     _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                     direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -45822,12 +42700,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "missing_policy", "name")
-
                 class MissingPolicy(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("direction_in_action", "direction_out_action")
 
                     _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                     direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -45892,12 +42766,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "ip_address", "missing_policy")
-
                 class MissingPolicy(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("direction_in_action", "direction_out_action")
 
                     _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                     direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -45961,12 +42831,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PathSelection(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("roles",)
-
                 class Roles(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("consumer", "producer", "propagator")
 
                     _fields: ClassVar[dict] = {"producer": {"type": bool}, "consumer": {"type": bool}, "propagator": {"type": bool}}
                     producer: bool | None
@@ -46055,17 +42921,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyFlowSpecIpv4(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bgp", "neighbors", "peer_groups")
-
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("missing_policy",)
-
                 class MissingPolicy(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("direction_in_action", "direction_out_action")
 
                     _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                     direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -46112,8 +42972,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "ip_address")
-
                 _fields: ClassVar[dict] = {"ip_address": {"type": str}, "activate": {"type": bool}}
                 ip_address: str
                 activate: bool | None
@@ -46142,8 +43000,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("activate", "name")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "activate": {"type": bool}}
                 name: str
@@ -46205,17 +43061,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyFlowSpecIpv6(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bgp", "neighbors", "peer_groups")
-
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("missing_policy",)
-
                 class MissingPolicy(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("direction_in_action", "direction_out_action")
 
                     _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                     direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -46262,8 +43112,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "ip_address")
-
                 _fields: ClassVar[dict] = {"ip_address": {"type": str}, "activate": {"type": bool}}
                 ip_address: str
                 activate: bool | None
@@ -46292,8 +43140,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("activate", "name")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "activate": {"type": bool}}
                 name: str
@@ -46355,17 +43201,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyPathSelection(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bgp", "neighbors", "peer_groups")
-
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("additional_paths",)
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -46440,12 +43280,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "additional_paths", "ip_address")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -46537,12 +43373,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "additional_paths", "name")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -46665,17 +43497,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyVpnIpv4(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("domain_identifier", "neighbor_default_encapsulation_mpls_next_hop_self", "neighbors", "peer_groups", "route")
-
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "default_route", "name", "rcf_in", "rcf_out", "route_map_in", "route_map_out")
-
                 class DefaultRoute(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}, "route_map": {"type": str}}
                     enabled: bool | None
@@ -46783,8 +43609,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Route(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("import_match_failure_action",)
-
                 _fields: ClassVar[dict] = {"import_match_failure_action": {"type": str}}
                 import_match_failure_action: Literal["discard"] | None
 
@@ -46805,12 +43629,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "default_route", "ip_address", "rcf_in", "rcf_out", "route_map_in", "route_map_out")
-
                 class DefaultRoute(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}, "route_map": {"type": str}}
                     enabled: bool | None
@@ -46916,8 +43736,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class NeighborDefaultEncapsulationMplsNextHopSelf(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("source_interface",)
 
                 _fields: ClassVar[dict] = {"source_interface": {"type": str}}
                 source_interface: str | None
@@ -46982,17 +43800,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyVpnIpv6(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("domain_identifier", "neighbor_default_encapsulation_mpls_next_hop_self", "neighbors", "peer_groups", "route")
-
             class PeerGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "default_route", "name", "rcf_in", "rcf_out", "route_map_in", "route_map_out")
-
                 class DefaultRoute(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}, "route_map": {"type": str}}
                     enabled: bool | None
@@ -47100,8 +43912,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Route(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("import_match_failure_action",)
-
                 _fields: ClassVar[dict] = {"import_match_failure_action": {"type": str}}
                 import_match_failure_action: Literal["discard"] | None
 
@@ -47122,12 +43932,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("activate", "default_route", "ip_address", "rcf_in", "rcf_out", "route_map_in", "route_map_out")
-
                 class DefaultRoute(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}, "route_map": {"type": str}}
                     enabled: bool | None
@@ -47234,8 +44040,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborDefaultEncapsulationMplsNextHopSelf(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("source_interface",)
-
                 _fields: ClassVar[dict] = {"source_interface": {"type": str}}
                 source_interface: str | None
 
@@ -47299,44 +44103,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "address_family_flow_spec_ipv4",
-                "address_family_flow_spec_ipv6",
-                "address_family_ipv4",
-                "address_family_ipv4_multicast",
-                "address_family_ipv6",
-                "address_family_ipv6_multicast",
-                "aggregate_addresses",
-                "bgp",
-                "default_route_exports",
-                "eos_cli",
-                "evpn_multicast",
-                "evpn_multicast_address_family",
-                "evpn_multicast_gateway_dr_election",
-                "listen_ranges",
-                "maximum_paths",
-                "name",
-                "neighbor_interfaces",
-                "neighbors",
-                "networks",
-                "rd",
-                "redistribute",
-                "redistribute_routes",
-                "route_targets",
-                "router_id",
-                "timers",
-                "updates",
-            )
-
             class Bgp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("additional_paths", "redistribute_internal")
-
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("install", "install_ecmp_primary", "receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {
                         "install": {"type": bool},
@@ -47430,12 +44201,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class EvpnMulticastAddressFamily(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("ipv4",)
-
                 class Ipv4(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("transit",)
 
                     _fields: ClassVar[dict] = {"transit": {"type": bool}}
                     transit: bool | None
@@ -47475,8 +44242,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class EvpnMulticastGatewayDrElection(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("algorithm", "preference_value")
 
                 _fields: ClassVar[dict] = {"algorithm": {"type": str}, "preference_value": {"type": int}}
                 algorithm: Literal["hrw", "modulus", "preference"]
@@ -47519,8 +44284,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class DefaultRouteExportsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("address_family", "always", "rcf", "route_map")
 
                 _fields: ClassVar[dict] = {"address_family": {"type": str}, "always": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}}
                 address_family: Literal["evpn", "vpn-ipv4", "vpn-ipv6"]
@@ -47571,12 +44334,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RouteTargets(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("export", "field_import")
-
                 class ImportItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("address_family", "rcf", "route_map", "route_targets", "vpn_route_filter_rcf")
 
                     class RouteTargets(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -47653,8 +44412,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class ExportItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("address_family", "rcf", "route_map", "route_targets", "vrf_route_filter_rcf")
 
                     class RouteTargets(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -47755,8 +44512,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NetworksItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("prefix", "route_map")
-
                 _fields: ClassVar[dict] = {"prefix": {"type": str}, "route_map": {"type": str}}
                 prefix: str
                 """IPv4 prefix "A.B.C.D/E" or IPv6 prefix "A:B:C:D:E:F:G:H/I"."""
@@ -47787,8 +44542,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class MaximumPaths(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("ecmp", "paths")
-
                 _fields: ClassVar[dict] = {"paths": {"type": int}, "ecmp": {"type": int}}
                 paths: int
                 ecmp: int | None
@@ -47810,8 +44563,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Updates(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("wait_for_convergence", "wait_install")
 
                 _fields: ClassVar[dict] = {"wait_for_convergence": {"type": bool}, "wait_install": {"type": bool}}
                 wait_for_convergence: bool | None
@@ -47852,8 +44603,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class ListenRangesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("peer_filter", "peer_group", "peer_id_include_router_id", "prefix", "remote_as")
 
                 _fields: ClassVar[dict] = {
                     "prefix": {"type": str},
@@ -47925,42 +44674,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "additional_paths",
-                    "allowas_in",
-                    "as_path",
-                    "bfd",
-                    "bfd_timers",
-                    "default_originate",
-                    "description",
-                    "ebgp_multihop",
-                    "ip_address",
-                    "local_as",
-                    "maximum_routes",
-                    "maximum_routes_warning_limit",
-                    "maximum_routes_warning_only",
-                    "next_hop_self",
-                    "passive",
-                    "password",
-                    "peer_group",
-                    "remote_as",
-                    "remove_private_as",
-                    "remove_private_as_ingress",
-                    "rib_in_pre_policy_retain",
-                    "route_map_in",
-                    "route_map_out",
-                    "route_reflector_client",
-                    "send_community",
-                    "shutdown",
-                    "timers",
-                    "update_source",
-                    "weight",
-                )
-
                 class RemovePrivateAs(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("all", "enabled", "replace_as")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "all": {"type": bool}, "replace_as": {"type": bool}}
                     enabled: bool | None
@@ -47992,8 +44707,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class RemovePrivateAsIngress(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "replace_as")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "replace_as": {"type": bool}}
                     enabled: bool | None
                     replace_as: bool | None
@@ -48015,8 +44728,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class AsPath(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("prepend_own_disabled", "remote_as_replace_out")
 
                     _fields: ClassVar[dict] = {"remote_as_replace_out": {"type": bool}, "prepend_own_disabled": {"type": bool}}
                     remote_as_replace_out: bool | None
@@ -48046,8 +44757,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class BfdTimers(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("interval", "min_rx", "multiplier")
 
                     _fields: ClassVar[dict] = {"interval": {"type": int}, "min_rx": {"type": int}, "multiplier": {"type": int}}
                     interval: int
@@ -48081,8 +44790,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class RibInPrePolicyRetain(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("all", "enabled")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "all": {"type": bool}}
                     enabled: bool | None
                     all: bool | None
@@ -48104,8 +44811,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class AllowasIn(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "times")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "times": {"type": int}}
                     enabled: bool | None
@@ -48129,8 +44834,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class DefaultOriginate(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("always", "enabled", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "always": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool | None
@@ -48161,8 +44864,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class AdditionalPaths(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("receive", "send", "send_limit")
 
                     _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                     receive: bool | None
@@ -48425,8 +45126,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class NeighborInterfacesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("description", "name", "peer_filter", "peer_group", "remote_as")
-
                 _fields: ClassVar[dict] = {
                     "name": {"type": str},
                     "remote_as": {"type": str},
@@ -48489,12 +45188,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Redistribute(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("attached_host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user")
-
                 class AttachedHost(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
@@ -48518,8 +45213,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -48541,8 +45234,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Connected(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
@@ -48588,8 +45279,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Dynamic(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "rcf", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -48629,8 +45318,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Isis(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {
                         "enabled": {"type": bool},
@@ -48686,12 +45373,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Ospf(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                     class MatchExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
@@ -48724,8 +45407,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class MatchInternal(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
                         route_map: str | None
@@ -48756,8 +45437,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchNssaExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -48868,12 +45547,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Ospfv3(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                     class MatchExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
@@ -48906,8 +45581,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class MatchInternal(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                         enabled: bool
                         route_map: str | None
@@ -48938,8 +45611,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchNssaExternal(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -49050,8 +45721,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Rip(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                     enabled: bool
                     route_map: str | None
@@ -49073,8 +45742,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Static(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
@@ -49119,8 +45786,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class User(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "rcf")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}}
                     enabled: bool
@@ -49223,8 +45888,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class RedistributeRoutesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
-
                 _fields: ClassVar[dict] = {
                     "source_protocol": {"type": str},
                     "route_map": {"type": str},
@@ -49296,8 +45959,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AggregateAddressesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("advertise_only", "as_set", "attribute_map", "match_map", "prefix", "summary_only")
-
                 _fields: ClassVar[dict] = {
                     "prefix": {"type": str},
                     "advertise_only": {"type": bool},
@@ -49352,17 +46013,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AddressFamilyIpv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bgp", "neighbors", "networks", "redistribute", "redistribute_routes")
-
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("additional_paths", "missing_policy", "redistribute_internal")
-
                     class MissingPolicy(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("direction_in_action", "direction_out_action")
 
                         _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                         direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -49390,8 +46045,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class AdditionalPaths(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("install", "install_ecmp_primary", "receive", "send", "send_limit")
 
                         _fields: ClassVar[dict] = {
                             "install": {"type": bool},
@@ -49496,28 +46149,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class NeighborsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = (
-                        "activate",
-                        "additional_paths",
-                        "ip_address",
-                        "next_hop",
-                        "prefix_list_in",
-                        "prefix_list_out",
-                        "rcf_in",
-                        "rcf_out",
-                        "route_map_in",
-                        "route_map_out",
-                    )
-
                     class NextHop(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("address_family_ipv6",)
-
                         class AddressFamilyIpv6(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "originate")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "originate": {"type": bool}}
                             enabled: bool
@@ -49558,8 +46194,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class AdditionalPaths(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("receive", "send", "send_limit")
 
                         _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                         receive: bool | None
@@ -49700,8 +46334,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class NetworksItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("prefix", "route_map")
-
                     _fields: ClassVar[dict] = {"prefix": {"type": str}, "route_map": {"type": str}}
                     prefix: str
                     """IPv4 prefix "A.B.C.D/E"."""
@@ -49732,12 +46364,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Redistribute(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("attached_host", "bgp", "connected", "dynamic", "isis", "ospf", "ospfv3", "rip", "static", "user")
-
                     class AttachedHost(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
@@ -49761,8 +46389,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Bgp(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -49784,8 +46410,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Connected(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -49836,8 +46460,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Dynamic(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "rcf", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -49877,8 +46499,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Isis(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -49934,12 +46554,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Ospf(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                         class MatchExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "include_leaked", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                             enabled: bool
@@ -49972,8 +46588,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         class MatchInternal(AvdModel):
                             """Subclass of AvdModel."""
 
-                            __slots__ = ("enabled", "include_leaked", "route_map")
-
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                             enabled: bool
                             route_map: str | None
@@ -50004,8 +46618,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         class MatchNssaExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                             _fields: ClassVar[dict] = {
                                 "enabled": {"type": bool},
@@ -50116,12 +46728,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Ospfv3(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                         class MatchExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "include_leaked", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                             enabled: bool
@@ -50154,8 +46762,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         class MatchInternal(AvdModel):
                             """Subclass of AvdModel."""
 
-                            __slots__ = ("enabled", "include_leaked", "route_map")
-
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                             enabled: bool
                             route_map: str | None
@@ -50186,8 +46792,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         class MatchNssaExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                             _fields: ClassVar[dict] = {
                                 "enabled": {"type": bool},
@@ -50298,8 +46902,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Rip(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -50321,8 +46923,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Static(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -50372,8 +46972,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class User(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "rcf")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}}
                         enabled: bool
@@ -50475,8 +47073,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class RedistributeRoutesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
 
                     _fields: ClassVar[dict] = {
                         "source_protocol": {"type": str},
@@ -50601,17 +47197,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AddressFamilyIpv6(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bgp", "neighbors", "networks", "redistribute", "redistribute_routes")
-
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("additional_paths", "missing_policy", "redistribute_internal")
-
                     class MissingPolicy(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("direction_in_action", "direction_out_action")
 
                         _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                         direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -50639,8 +47229,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class AdditionalPaths(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("install", "install_ecmp_primary", "receive", "send", "send_limit")
 
                         _fields: ClassVar[dict] = {
                             "install": {"type": bool},
@@ -50745,22 +47333,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class NeighborsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = (
-                        "activate",
-                        "additional_paths",
-                        "ip_address",
-                        "prefix_list_in",
-                        "prefix_list_out",
-                        "rcf_in",
-                        "rcf_out",
-                        "route_map_in",
-                        "route_map_out",
-                    )
-
                     class AdditionalPaths(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("receive", "send", "send_limit")
 
                         _fields: ClassVar[dict] = {"receive": {"type": bool}, "send": {"type": str}, "send_limit": {"type": int}}
                         receive: bool | None
@@ -50896,8 +47470,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class NetworksItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("prefix", "route_map")
-
                     _fields: ClassVar[dict] = {"prefix": {"type": str}, "route_map": {"type": str}}
                     prefix: str
                     """IPv6 prefix "A:B:C:D:E:F:G:H/I"."""
@@ -50928,12 +47500,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Redistribute(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("attached_host", "bgp", "connected", "dhcp", "dynamic", "isis", "ospfv3", "static", "user")
-
                     class AttachedHost(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
@@ -50957,8 +47525,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Bgp(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -50980,8 +47546,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Connected(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -51032,8 +47596,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Dhcp(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -51055,8 +47617,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Dynamic(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "rcf", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "rcf": {"type": str}}
                         enabled: bool
@@ -51097,8 +47657,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Isis(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -51154,12 +47712,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Ospfv3(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                         class MatchExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "include_leaked", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                             enabled: bool
@@ -51192,8 +47746,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         class MatchInternal(AvdModel):
                             """Subclass of AvdModel."""
 
-                            __slots__ = ("enabled", "include_leaked", "route_map")
-
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                             enabled: bool
                             route_map: str | None
@@ -51224,8 +47776,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         class MatchNssaExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                             _fields: ClassVar[dict] = {
                                 "enabled": {"type": bool},
@@ -51336,8 +47886,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Static(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "rcf", "route_map")
-
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
                             "route_map": {"type": str},
@@ -51386,8 +47934,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class User(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "rcf")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}}
                         enabled: bool
@@ -51484,8 +48030,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class RedistributeRoutesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
 
                     _fields: ClassVar[dict] = {
                         "source_protocol": {"type": str},
@@ -51608,17 +48152,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AddressFamilyIpv4Multicast(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bgp", "neighbors", "networks", "redistribute", "redistribute_routes")
-
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("additional_paths", "missing_policy")
-
                     class MissingPolicy(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("direction_in_action", "direction_out_action")
 
                         _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                         direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -51646,8 +48184,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class AdditionalPaths(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("receive",)
 
                         _fields: ClassVar[dict] = {"receive": {"type": bool}}
                         receive: bool | None
@@ -51692,12 +48228,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class NeighborsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("activate", "additional_paths", "ip_address", "route_map_in", "route_map_out")
-
                     class AdditionalPaths(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("receive",)
 
                         _fields: ClassVar[dict] = {"receive": {"type": bool}}
                         receive: bool | None
@@ -51768,8 +48300,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class NetworksItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("prefix", "route_map")
-
                     _fields: ClassVar[dict] = {"prefix": {"type": str}, "route_map": {"type": str}}
                     prefix: str
                     """IPv6 prefix "A.B.C.D/E"."""
@@ -51800,12 +48330,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Redistribute(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("attached_host", "connected", "isis", "ospf", "ospfv3", "static")
-
                     class AttachedHost(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
@@ -51829,8 +48355,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Connected(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -51852,8 +48376,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Isis(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -51909,12 +48431,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Ospf(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                         class MatchExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                             enabled: bool
@@ -51938,8 +48456,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         class MatchInternal(AvdModel):
                             """Subclass of AvdModel."""
 
-                            __slots__ = ("enabled", "route_map")
-
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                             enabled: bool
                             route_map: str | None
@@ -51961,8 +48477,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         class MatchNssaExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "nssa_type", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "nssa_type": {"type": int}, "route_map": {"type": str}}
                             enabled: bool
@@ -52059,12 +48573,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Ospfv3(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "include_leaked", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                         class MatchExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "include_leaked", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                             enabled: bool
@@ -52097,8 +48607,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         class MatchInternal(AvdModel):
                             """Subclass of AvdModel."""
 
-                            __slots__ = ("enabled", "include_leaked", "route_map")
-
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                             enabled: bool
                             route_map: str | None
@@ -52129,8 +48637,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         class MatchNssaExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "include_leaked", "nssa_type", "route_map")
 
                             _fields: ClassVar[dict] = {
                                 "enabled": {"type": bool},
@@ -52241,8 +48747,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Static(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -52313,8 +48817,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class RedistributeRoutesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
 
                     _fields: ClassVar[dict] = {
                         "source_protocol": {"type": str},
@@ -52437,17 +48939,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AddressFamilyIpv6Multicast(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bgp", "neighbors", "networks", "redistribute", "redistribute_routes")
-
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("additional_paths", "missing_policy")
-
                     class MissingPolicy(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("direction_in_action", "direction_out_action")
 
                         _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                         direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -52475,8 +48971,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class AdditionalPaths(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("receive",)
 
                         _fields: ClassVar[dict] = {"receive": {"type": bool}}
                         receive: bool | None
@@ -52521,12 +49015,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class NeighborsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("activate", "additional_paths", "ip_address", "route_map_in", "route_map_out")
-
                     class AdditionalPaths(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("receive",)
 
                         _fields: ClassVar[dict] = {"receive": {"type": bool}}
                         receive: bool | None
@@ -52597,8 +49087,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class NetworksItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("prefix", "route_map")
-
                     _fields: ClassVar[dict] = {"prefix": {"type": str}, "route_map": {"type": str}}
                     prefix: str
                     """IPv6 prefix "A:B:C:D:E:F:G:H/I"."""
@@ -52629,12 +49117,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Redistribute(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("connected", "isis", "ospf", "ospfv3", "static")
-
                     class Connected(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "route_map")
 
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
@@ -52657,8 +49141,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class Isis(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("enabled", "include_leaked", "isis_level", "rcf", "route_map")
 
                         _fields: ClassVar[dict] = {
                             "enabled": {"type": bool},
@@ -52714,12 +49196,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Ospf(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                         class MatchExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                             enabled: bool
@@ -52743,8 +49221,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         class MatchInternal(AvdModel):
                             """Subclass of AvdModel."""
 
-                            __slots__ = ("enabled", "route_map")
-
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                             enabled: bool
                             route_map: str | None
@@ -52766,8 +49242,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         class MatchNssaExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "nssa_type", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "nssa_type": {"type": int}, "route_map": {"type": str}}
                             enabled: bool
@@ -52864,12 +49338,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Ospfv3(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "match_external", "match_internal", "match_nssa_external", "route_map")
-
                         class MatchExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                             enabled: bool
@@ -52893,8 +49363,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         class MatchInternal(AvdModel):
                             """Subclass of AvdModel."""
 
-                            __slots__ = ("enabled", "route_map")
-
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                             enabled: bool
                             route_map: str | None
@@ -52916,8 +49384,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         class MatchNssaExternal(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("enabled", "nssa_type", "route_map")
 
                             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "nssa_type": {"type": int}, "route_map": {"type": str}}
                             enabled: bool
@@ -53014,8 +49480,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     class Static(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("enabled", "route_map")
-
                         _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}}
                         enabled: bool
                         route_map: str | None
@@ -53081,8 +49545,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class RedistributeRoutesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("include_leaked", "ospf_route_type", "rcf", "route_map", "source_protocol")
 
                     _fields: ClassVar[dict] = {
                         "source_protocol": {"type": str},
@@ -53205,17 +49667,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AddressFamilyFlowSpecIpv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bgp", "neighbors")
-
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("missing_policy",)
-
                     class MissingPolicy(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("direction_in_action", "direction_out_action")
 
                         _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                         direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -53261,8 +49717,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class NeighborsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("activate", "ip_address")
 
                     _fields: ClassVar[dict] = {"ip_address": {"type": str}, "activate": {"type": bool}}
                     ip_address: str
@@ -53314,17 +49768,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AddressFamilyFlowSpecIpv6(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bgp", "neighbors")
-
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("missing_policy",)
-
                     class MissingPolicy(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("direction_in_action", "direction_out_action")
 
                         _fields: ClassVar[dict] = {"direction_in_action": {"type": str}, "direction_out_action": {"type": str}}
                         direction_in_action: Literal["deny", "deny-in-out", "permit"] | None
@@ -53370,8 +49818,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class NeighborsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("activate", "ip_address")
 
                     _fields: ClassVar[dict] = {"ip_address": {"type": str}, "activate": {"type": bool}}
                     ip_address: str
@@ -53616,8 +50062,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class SessionTrackersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "recovery_delay")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "recovery_delay": {"type": int}}
             name: str
@@ -53915,12 +50359,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterGeneral(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("control_functions", "nexthop_fast_failover", "router_id", "vrfs")
-
         class RouterId(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ipv4", "ipv6")
 
             _fields: ClassVar[dict] = {"ipv4": {"type": str}, "ipv6": {"type": str}}
             ipv4: str | None
@@ -53946,12 +50386,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("leak_routes", "name", "routes")
-
             class LeakRoutesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("source_vrf", "subscribe_policy")
 
                 _fields: ClassVar[dict] = {"source_vrf": {"type": str}, "subscribe_policy": {"type": str}}
                 source_vrf: str | None
@@ -53981,12 +50417,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Routes(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dynamic_prefix_lists",)
-
                 class DynamicPrefixListsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("name",)
 
                     _fields: ClassVar[dict] = {"name": {"type": str}}
                     name: str | None
@@ -54069,12 +50501,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ControlFunctions(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("code_units",)
-
             class CodeUnitsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("content", "name")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "content": {"type": str}}
                 name: str
@@ -54197,12 +50625,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterIgmp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("host_proxy_match_mroute", "ssm_aware", "vrfs")
-
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("host_proxy_match_mroute", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "host_proxy_match_mroute": {"type": str}}
             name: str
@@ -54295,17 +50719,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterInternetExit(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("exit_groups", "policies")
-
         class PoliciesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("exit_groups", "name")
-
             class ExitGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name",)
 
                 _fields: ClassVar[dict] = {"name": {"type": str}}
                 name: str | None
@@ -54370,12 +50788,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ExitGroupsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("fib_default", "local_connections", "name")
-
             class LocalConnectionsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name",)
 
                 _fields: ClassVar[dict] = {"name": {"type": str}}
                 name: str | None
@@ -54495,36 +50909,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterIsis(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "address_family_ipv4",
-            "address_family_ipv6",
-            "advertise",
-            "authentication",
-            "eos_cli",
-            "graceful_restart",
-            "instance",
-            "is_hostname",
-            "is_type",
-            "log_adjacency_changes",
-            "mpls_ldp_sync_default",
-            "net",
-            "redistribute_routes",
-            "router_id",
-            "segment_routing_mpls",
-            "set_overload_bit",
-            "spf_interval",
-            "timers",
-        )
-
         class Timers(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("csnp", "local_convergence", "lsp")
-
             class LocalConvergence(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("delay", "protected_prefixes")
 
                 _fields: ClassVar[dict] = {"protected_prefixes": {"type": bool}, "delay": {"type": int, "default": 10000}}
                 protected_prefixes: bool | None
@@ -54553,12 +50942,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Lsp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("generation", "min_remaining_lifetime", "out_delay", "refresh_interval")
-
                 class Generation(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("initial_wait_time", "interval", "wait_time")
 
                     _fields: ClassVar[dict] = {"interval": {"type": int}, "initial_wait_time": {"type": int}, "wait_time": {"type": int}}
                     interval: int
@@ -54632,12 +51017,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Csnp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("generation",)
-
                 class Generation(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("interval", "p2p_disabled")
 
                     _fields: ClassVar[dict] = {"interval": {"type": int}, "p2p_disabled": {"type": bool}}
                     interval: int | None
@@ -54725,17 +51106,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SetOverloadBit(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enabled", "on_startup")
-
             class OnStartup(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("delay", "wait_for_bgp")
-
                 class WaitForBgp(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "timeout")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "timeout": {"type": int}}
                     enabled: bool | None
@@ -54801,17 +51176,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Authentication(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("both", "level_1", "level_2")
-
             class Both(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -54866,8 +51235,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -54887,8 +51254,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -54985,12 +51350,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Level1(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -55045,8 +51406,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -55066,8 +51425,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -55164,12 +51521,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Level2(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -55224,8 +51577,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -55245,8 +51596,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -55388,8 +51737,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Advertise(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("passive_only",)
-
             _fields: ClassVar[dict] = {"passive_only": {"type": bool}}
             passive_only: bool | None
 
@@ -55409,8 +51756,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class RedistributeRoutesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("include_leaked", "ospf_route_type", "route_map", "source_protocol")
 
             _fields: ClassVar[dict] = {
                 "source_protocol": {"type": str},
@@ -55457,17 +51802,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyIpv4(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bfd_all_interfaces", "enabled", "fast_reroute_ti_lfa", "maximum_paths", "tunnel_source_labeled_unicast")
-
             class FastRerouteTiLfa(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("level", "mode", "srlg")
-
                 class Srlg(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enable", "strict")
 
                     _fields: ClassVar[dict] = {"enable": {"type": bool}, "strict": {"type": bool}}
                     enable: bool | None
@@ -55525,8 +51864,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class TunnelSourceLabeledUnicast(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "rcf")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "rcf": {"type": str}}
                 enabled: bool | None
@@ -55593,17 +51930,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class AddressFamilyIpv6(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bfd_all_interfaces", "enabled", "fast_reroute_ti_lfa", "maximum_paths")
-
             class FastRerouteTiLfa(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("level", "mode", "srlg")
-
                 class Srlg(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enable", "strict")
 
                     _fields: ClassVar[dict] = {"enable": {"type": bool}, "strict": {"type": bool}}
                     enable: bool | None
@@ -55700,12 +52031,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SegmentRoutingMpls(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enabled", "prefix_segments", "router_id")
-
             class PrefixSegmentsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("index", "prefix")
 
                 _fields: ClassVar[dict] = {"prefix": {"type": str}, "index": {"type": int}}
                 prefix: str | None
@@ -55762,8 +52089,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SpfInterval(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("hold_interval", "interval", "interval_unit", "wait_interval")
-
             _fields: ClassVar[dict] = {
                 "interval": {"type": int},
                 "interval_unit": {"type": str},
@@ -55815,12 +52140,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class GracefulRestart(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enabled", "restart_hold_time", "t2")
-
             class T2(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("level_1_wait_time", "level_2_wait_time")
 
                 _fields: ClassVar[dict] = {"level_1_wait_time": {"type": int}, "level_2_wait_time": {"type": int}}
                 level_1_wait_time: int | None
@@ -55983,20 +52304,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterL2Vpn(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "arp_learning_bridged",
-            "arp_proxy",
-            "arp_selective_install",
-            "nd_learning_bridged",
-            "nd_proxy",
-            "nd_rs_flooding_disabled",
-            "virtual_router_nd_ra_flooding_disabled",
-        )
-
         class ArpProxy(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("prefix_list",)
 
             _fields: ClassVar[dict] = {"prefix_list": {"type": str}}
             prefix_list: str | None
@@ -56018,8 +52327,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class NdProxy(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("prefix_list",)
 
             _fields: ClassVar[dict] = {"prefix_list": {"type": str}}
             prefix_list: str | None
@@ -56096,20 +52403,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterMsdp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "connection_retry_interval",
-            "forward_register_packets",
-            "group_limits",
-            "originator_id_local_interface",
-            "peers",
-            "rejected_limit",
-            "vrfs",
-        )
-
         class GroupLimitsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("limit", "source_prefix")
 
             _fields: ClassVar[dict] = {"source_prefix": {"type": str}, "limit": {"type": int}}
             source_prefix: str
@@ -56142,12 +52437,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PeersItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("default_peer", "description", "disabled", "ipv4_address", "keepalive", "local_interface", "mesh_groups", "sa_filter", "sa_limit")
-
             class DefaultPeer(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "prefix_list")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "prefix_list": {"type": str}}
                 enabled: bool | None
@@ -56171,8 +52462,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class MeshGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name",)
 
                 _fields: ClassVar[dict] = {"name": {"type": str}}
                 name: str
@@ -56202,8 +52491,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Keepalive(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("hold_timer", "keepalive_timer")
-
                 _fields: ClassVar[dict] = {"keepalive_timer": {"type": int}, "hold_timer": {"type": int}}
                 keepalive_timer: int
                 hold_timer: int
@@ -56226,8 +52513,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class SaFilter(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("in_list", "out_list")
 
                 _fields: ClassVar[dict] = {"in_list": {"type": str}, "out_list": {"type": str}}
                 in_list: str | None
@@ -56322,20 +52607,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "connection_retry_interval",
-                "forward_register_packets",
-                "group_limits",
-                "name",
-                "originator_id_local_interface",
-                "peers",
-                "rejected_limit",
-            )
-
             class GroupLimitsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("limit", "source_prefix")
 
                 _fields: ClassVar[dict] = {"source_prefix": {"type": str}, "limit": {"type": int}}
                 source_prefix: str
@@ -56368,12 +52641,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class PeersItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("default_peer", "description", "disabled", "ipv4_address", "keepalive", "local_interface", "mesh_groups", "sa_filter", "sa_limit")
-
                 class DefaultPeer(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "prefix_list")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "prefix_list": {"type": str}}
                     enabled: bool | None
@@ -56397,8 +52666,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class MeshGroupsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("name",)
 
                     _fields: ClassVar[dict] = {"name": {"type": str}}
                     name: str
@@ -56428,8 +52695,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Keepalive(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("hold_timer", "keepalive_timer")
-
                     _fields: ClassVar[dict] = {"keepalive_timer": {"type": int}, "hold_timer": {"type": int}}
                     keepalive_timer: int
                     hold_timer: int
@@ -56452,8 +52717,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SaFilter(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("in_list", "out_list")
 
                     _fields: ClassVar[dict] = {"in_list": {"type": str}, "out_list": {"type": str}}
                     in_list: str | None
@@ -56659,17 +52922,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterMulticast(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("ipv4", "ipv6", "vrfs")
-
         class Ipv4(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("activity_polling_interval", "counters", "multipath", "routing", "rpf", "software_forwarding")
-
             class Counters(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("rate_period_decay",)
 
                 _fields: ClassVar[dict] = {"rate_period_decay": {"type": int}}
                 rate_period_decay: int | None
@@ -56692,17 +52949,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Rpf(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("routes",)
-
                 class RoutesItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("destinations", "source_prefix")
-
                     class DestinationsItem(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("distance", "nexthop")
 
                         _fields: ClassVar[dict] = {"nexthop": {"type": str}, "distance": {"type": int}}
                         nexthop: str
@@ -56823,8 +53074,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Ipv6(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("activity_polling_interval",)
-
             _fields: ClassVar[dict] = {"activity_polling_interval": {"type": int}}
             activity_polling_interval: int | None
             """MFIB entry activity polling interval."""
@@ -56846,12 +53095,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4", "name")
-
             class Ipv4(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("routing",)
 
                 _fields: ClassVar[dict] = {"routing": {"type": bool}}
                 routing: bool | None
@@ -56926,42 +53171,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterOspf(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("process_ids",)
-
         class ProcessIdsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = (
-                "areas",
-                "auto_cost_reference_bandwidth",
-                "bfd_adjacency_state_any",
-                "bfd_enable",
-                "default_information_originate",
-                "distance",
-                "distribute_list_in",
-                "eos_cli",
-                "graceful_restart",
-                "graceful_restart_helper",
-                "id",
-                "log_adjacency_changes_detail",
-                "max_lsa",
-                "max_metric",
-                "maximum_paths",
-                "mpls_ldp_sync_default",
-                "network_prefixes",
-                "no_passive_interfaces",
-                "passive_interface_default",
-                "redistribute",
-                "router_id",
-                "summary_addresses",
-                "timers",
-                "vrf",
-            )
-
             class Distance(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("external", "inter_area", "intra_area")
 
                 _fields: ClassVar[dict] = {"external": {"type": int}, "inter_area": {"type": int}, "intra_area": {"type": int}}
                 external: int | None
@@ -56992,8 +53206,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class NetworkPrefixesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("area", "ipv4_prefix")
 
                 _fields: ClassVar[dict] = {"ipv4_prefix": {"type": str}, "area": {"type": str}}
                 ipv4_prefix: str
@@ -57029,8 +53241,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class DistributeListIn(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("route_map",)
-
                 _fields: ClassVar[dict] = {"route_map": {"type": str}}
                 route_map: str | None
 
@@ -57051,17 +53261,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Timers(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("lsa", "spf_delay")
-
                 class Lsa(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("rx_min_interval", "tx_delay")
-
                     class TxDelay(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("initial", "max", "min")
 
                         _fields: ClassVar[dict] = {"initial": {"type": int}, "min": {"type": int}, "max": {"type": int}}
                         initial: int | None
@@ -57117,8 +53321,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class SpfDelay(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("initial", "max", "min")
-
                     _fields: ClassVar[dict] = {"initial": {"type": int}, "min": {"type": int}, "max": {"type": int}}
                     initial: int | None
                     """Initial SPF schedule delay in msecs."""
@@ -57173,8 +53375,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class DefaultInformationOriginate(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("always", "metric", "metric_type")
-
                 _fields: ClassVar[dict] = {"always": {"type": bool}, "metric": {"type": int}, "metric_type": {"type": int}}
                 always: bool | None
                 metric: int | None
@@ -57206,8 +53406,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class SummaryAddressesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("attribute_map", "not_advertise", "prefix", "tag")
 
                 _fields: ClassVar[dict] = {"prefix": {"type": str}, "tag": {"type": int}, "attribute_map": {"type": str}, "not_advertise": {"type": bool}}
                 prefix: str
@@ -57250,12 +53448,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Redistribute(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bgp", "connected", "static")
-
                 class Static(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
@@ -57288,8 +53482,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Connected(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled", "include_leaked", "route_map")
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
                     route_map: str | None
@@ -57320,8 +53512,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Bgp(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("enabled", "include_leaked", "route_map")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "route_map": {"type": str}, "include_leaked": {"type": bool}}
                     enabled: bool
@@ -57384,12 +53574,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AreasItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("default_information_originate", "filter", "id", "no_summary", "nssa_only", "type")
-
                 class Filter(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("networks", "prefix_list")
 
                     class Networks(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -57419,8 +53605,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class DefaultInformationOriginate(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("metric", "metric_type")
 
                     _fields: ClassVar[dict] = {"metric": {"type": int}, "metric_type": {"type": int}}
                     metric: int | None
@@ -57501,17 +53685,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class MaxMetric(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("router_lsa",)
-
                 class RouterLsa(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("external_lsa", "include_stub", "on_startup", "summary_lsa")
-
                     class ExternalLsa(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("override_metric",)
 
                         _fields: ClassVar[dict] = {"override_metric": {"type": int}}
                         override_metric: int | None
@@ -57532,8 +53710,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class SummaryLsa(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("override_metric",)
 
                         _fields: ClassVar[dict] = {"override_metric": {"type": int}}
                         override_metric: int | None
@@ -57615,8 +53791,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class GracefulRestart(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "grace_period")
 
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "grace_period": {"type": int}}
                 enabled: bool
@@ -57797,22 +53971,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterPathSelection(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("interfaces", "load_balance_policies", "path_groups", "peer_dynamic_source", "policies", "tcp_mss_ceiling", "vrfs")
-
         class PathGroupsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("dynamic_peers", "flow_assignment", "id", "ipsec_profile", "keepalive", "local_interfaces", "local_ips", "name", "static_peers")
 
             class LocalInterfacesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("name", "public_address", "stun")
-
                 class Stun(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("server_profiles",)
 
                     class ServerProfiles(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -57884,12 +54050,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class LocalIpsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("ip_address", "public_address", "stun")
-
                 class Stun(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("server_profiles",)
 
                     class ServerProfiles(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -57960,8 +54122,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class DynamicPeers(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("enabled", "ip_local", "ipsec")
-
                 _fields: ClassVar[dict] = {"enabled": {"type": bool}, "ip_local": {"type": bool}, "ipsec": {"type": bool}}
                 enabled: bool | None
                 """Enable `peer dynamic`."""
@@ -57994,8 +54154,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class StaticPeersItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ipv4_addresses", "name", "router_ip")
 
                 class Ipv4Addresses(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -58048,8 +54206,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Keepalive(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("auto", "failure_threshold", "interval")
 
                 _fields: ClassVar[dict] = {"auto": {"type": bool, "default": False}, "interval": {"type": int}, "failure_threshold": {"type": int}}
                 auto: bool
@@ -58168,12 +54324,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class LoadBalancePoliciesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("jitter", "latency", "loss_rate", "lowest_hop_count", "name", "path_groups")
-
             class PathGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "priority")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "priority": {"type": int}}
                 name: str
@@ -58281,12 +54433,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PoliciesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("default_match", "name", "rules")
-
             class DefaultMatch(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("load_balance",)
 
                 _fields: ClassVar[dict] = {"load_balance": {"type": str}}
                 load_balance: str | None
@@ -58308,8 +54456,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class RulesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("application_profile", "id", "load_balance")
 
                 _fields: ClassVar[dict] = {"id": {"type": int}, "application_profile": {"type": str}, "load_balance": {"type": str}}
                 id: int
@@ -58387,8 +54533,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "path_selection_policy")
-
             _fields: ClassVar[dict] = {"name": {"type": str}, "path_selection_policy": {"type": str}}
             name: str
             """VRF name."""
@@ -58419,8 +54563,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class TcpMssCeiling(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("direction", "ipv4_segment_size")
 
             _fields: ClassVar[dict] = {"ipv4_segment_size": {"type": str}, "direction": {"type": str, "default": "ingress"}}
             ipv4_segment_size: str | None
@@ -58470,12 +54612,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class InterfacesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("metric_bandwidth", "name")
-
             class MetricBandwidth(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("receive", "transmit")
 
                 _fields: ClassVar[dict] = {"receive": {"type": int}, "transmit": {"type": int}}
                 receive: int | None
@@ -58582,17 +54720,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterPimSparseMode(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("ipv4", "vrfs")
-
         class Ipv4(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("anycast_rps", "bfd", "make_before_break", "rp_addresses", "ssm_range")
-
             class RpAddressesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("access_lists", "address", "groups", "hashmask", "override", "priority")
 
                 class Groups(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -58658,12 +54790,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AnycastRpsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("address", "other_anycast_rp_addresses")
-
                 class OtherAnycastRpAddressesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("address", "register_count")
 
                     _fields: ClassVar[dict] = {"address": {"type": str}, "register_count": {"type": int}}
                     address: str
@@ -58777,17 +54905,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4", "name")
-
             class Ipv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bfd", "make_before_break", "rp_addresses")
-
                 class RpAddressesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("access_lists", "address", "groups", "hashmask", "override", "priority")
 
                     class Groups(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -58932,17 +55054,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterSegmentSecurity(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("enabled", "policies", "vrfs")
-
         class PoliciesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "sequence_numbers")
-
             class SequenceNumbersItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("action", "application", "log", "next_hop", "sequence", "stateless")
 
                 _fields: ClassVar[dict] = {
                     "sequence": {"type": int},
@@ -59040,17 +55156,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "segments")
-
             class SegmentsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("definition", "fallback_policy", "name", "policies")
-
                 class Definition(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("interfaces", "match_lists")
 
                     class Interfaces(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -59059,8 +55169,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     class MatchListsItem(AvdModel):
                         """Subclass of AvdModel."""
-
-                        __slots__ = ("address_family", "covered_prefix_list", "prefix")
 
                         _fields: ClassVar[dict] = {"address_family": {"type": str}, "covered_prefix_list": {"type": str}, "prefix": {"type": str}}
                         address_family: Literal["ipv4", "ipv6"]
@@ -59142,8 +55250,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class PoliciesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("field_from", "policy")
 
                     _fields: ClassVar[dict] = {"field_from": {"type": str}, "policy": {"type": str}}
                     _field_to_key_map: ClassVar[dict] = {"field_from": "from"}
@@ -59319,17 +55425,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterServiceInsertion(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("connections", "enabled")
-
         class ConnectionsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ethernet_interface", "monitor_connectivity_host", "name", "tunnel_interface")
-
             class EthernetInterface(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "next_hop")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "next_hop": {"type": str}}
                 name: str
@@ -59354,8 +55454,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class TunnelInterface(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("primary", "secondary")
 
                 _fields: ClassVar[dict] = {"primary": {"type": str}, "secondary": {"type": str}}
                 primary: str | None
@@ -59474,12 +55572,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class RouterTrafficEngineering(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("enabled", "router_id", "segment_routing")
-
         class RouterId(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ipv4", "ipv6")
 
             _fields: ClassVar[dict] = {"ipv4": {"type": str}, "ipv6": {"type": str}}
             ipv4: str | None
@@ -59503,27 +55597,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class SegmentRouting(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("colored_tunnel_rib", "policy_endpoints")
-
             class PolicyEndpointsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("address", "colors")
 
                 class ColorsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("binding_sid", "description", "name", "path_group", "sbfd_remote_discriminator", "value")
-
                     class PathGroupItem(AvdModel):
                         """Subclass of AvdModel."""
 
-                        __slots__ = ("explicit_null", "preference", "segment_list")
-
                         class SegmentListItem(AvdModel):
                             """Subclass of AvdModel."""
-
-                            __slots__ = ("index", "label_stack", "weight")
 
                             _fields: ClassVar[dict] = {"label_stack": {"type": str}, "weight": {"type": int}, "index": {"type": int}}
                             label_stack: str | None
@@ -59728,8 +55812,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class ServiceRoutingConfigurationBgp(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("no_equals_default",)
-
         _fields: ClassVar[dict] = {"no_equals_default": {"type": bool}}
         no_equals_default: bool | None
 
@@ -59749,8 +55831,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class ServiceUnsupportedTransceiver(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("license_key", "license_name")
 
         _fields: ClassVar[dict] = {"license_name": {"type": str}, "license_key": {"type": str}}
         license_name: str | None
@@ -59774,31 +55854,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Sflow(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "dangerous",
-            "destinations",
-            "extensions",
-            "hardware_acceleration",
-            "interface",
-            "polling_interval",
-            "run",
-            "sample",
-            "sample_input_subinterface",
-            "sample_output_subinterface",
-            "source",
-            "source_interface",
-            "vrfs",
-        )
-
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("destinations", "name", "source", "source_interface")
-
             class DestinationsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("destination", "port")
 
                 _fields: ClassVar[dict] = {"destination": {"type": str}, "port": {"type": int}}
                 destination: str
@@ -59883,8 +55943,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class DestinationsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("destination", "port")
-
             _fields: ClassVar[dict] = {"destination": {"type": str}, "port": {"type": int}}
             destination: str
             """Sflow Destination IP Address."""
@@ -59915,8 +55973,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class ExtensionsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("enabled", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "enabled": {"type": bool}}
             name: str
@@ -59949,12 +56005,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Interface(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("disable", "egress")
-
             class Disable(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("default",)
 
                 _fields: ClassVar[dict] = {"default": {"type": bool}}
                 default: bool | None
@@ -59975,8 +56027,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Egress(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enable_default", "unmodified")
 
                 _fields: ClassVar[dict] = {"enable_default": {"type": bool}, "unmodified": {"type": bool}}
                 enable_default: bool | None
@@ -60028,12 +56078,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class HardwareAcceleration(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enabled", "modules", "sample")
-
             class ModulesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "name")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "enabled": {"type": bool, "default": True}}
                 name: str
@@ -60179,32 +56225,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class SnmpServer(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "communities",
-            "contact",
-            "engine_ids",
-            "groups",
-            "hosts",
-            "ifmib_ifspeed_shape_rate",
-            "ipv4_acls",
-            "ipv6_acls",
-            "local_interfaces",
-            "location",
-            "traps",
-            "users",
-            "views",
-            "vrfs",
-        )
-
         class EngineIds(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("local", "remotes")
-
             class RemotesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("address", "id", "udp_port")
 
                 _fields: ClassVar[dict] = {"id": {"type": str}, "address": {"type": str}, "udp_port": {"type": int}}
                 id: str | None
@@ -60264,12 +56289,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class CommunitiesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("access", "access_list_ipv4", "access_list_ipv6", "name", "view")
-
             class AccessListIpv4(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name",)
 
                 _fields: ClassVar[dict] = {"name": {"type": str}}
                 name: str | None
@@ -60291,8 +56312,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class AccessListIpv6(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name",)
 
                 _fields: ClassVar[dict] = {"name": {"type": str}}
                 name: str | None
@@ -60364,8 +56383,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Ipv4AclsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "vrf")
-
             _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
             name: str | None
             """IPv4 access list name."""
@@ -60394,8 +56411,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Ipv6AclsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("name", "vrf")
-
             _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
             name: str | None
             """IPv6 access list name."""
@@ -60423,8 +56438,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class LocalInterfacesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("name", "vrf")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "vrf": {"type": str}}
             name: str
@@ -60455,8 +56468,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class ViewsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("included", "mib_family_name", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "mib_family_name": {"type": str}, "included": {"type": bool}}
             name: str | None
@@ -60493,8 +56504,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class GroupsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("authentication", "name", "notify", "read", "version", "write")
 
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
@@ -60550,8 +56559,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class UsersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("auth", "auth_passphrase", "group", "localized", "name", "priv", "priv_passphrase", "remote_address", "udp_port", "version")
 
             _fields: ClassVar[dict] = {
                 "name": {"type": str},
@@ -60634,12 +56641,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class HostsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("community", "host", "users", "version", "vrf")
-
             class UsersItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("authentication_level", "username")
 
                 _fields: ClassVar[dict] = {"username": {"type": str}, "authentication_level": {"type": str}}
                 username: str | None
@@ -60720,12 +56723,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Traps(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("enable", "snmp_traps")
-
             class SnmpTrapsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "name")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "enabled": {"type": bool, "default": True}}
                 name: str | None
@@ -60789,8 +56788,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class VrfsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("enable", "name")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "enable": {"type": bool}}
             name: str
@@ -60911,22 +56908,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class SpanningTree(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "bpduguard_rate_limit",
-            "edge_port",
-            "mode",
-            "mst",
-            "mst_instances",
-            "no_spanning_tree_vlan",
-            "rapid_pvst_instances",
-            "root_super",
-            "rstp_priority",
-        )
-
         class EdgePort(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("bpdufilter_default", "bpduguard_default")
 
             _fields: ClassVar[dict] = {"bpdufilter_default": {"type": bool}, "bpduguard_default": {"type": bool}}
             bpdufilter_default: bool | None
@@ -60952,8 +56935,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class BpduguardRateLimit(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("count", "default")
-
             _fields: ClassVar[dict] = {"default": {"type": bool}, "count": {"type": int}}
             default: bool | None
             count: int | None
@@ -60977,17 +56958,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Mst(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("configuration", "pvst_border")
-
             class Configuration(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("instances", "name", "revision")
-
                 class InstancesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("id", "vlans")
 
                     _fields: ClassVar[dict] = {"id": {"type": int}, "vlans": {"type": str}}
                     id: int
@@ -61074,8 +57049,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class MstInstancesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("id", "priority")
-
             _fields: ClassVar[dict] = {"id": {"type": str}, "priority": {"type": int}}
             id: str
             """Instance ID."""
@@ -61105,8 +57078,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class RapidPvstInstancesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("id", "priority")
 
             _fields: ClassVar[dict] = {"id": {"type": str}, "priority": {"type": int}}
             id: str
@@ -61209,12 +57180,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class StandardAccessListsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("counters_per_entry", "name", "sequence_numbers")
-
         class SequenceNumbersItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("action", "sequence")
 
             _fields: ClassVar[dict] = {"sequence": {"type": int}, "action": {"type": str}}
             sequence: int
@@ -61288,8 +57255,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class StaticRoutesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("destination_address_prefix", "distance", "gateway", "interface", "metric", "name", "tag", "track_bfd", "vrf")
-
         _fields: ClassVar[dict] = {
             "vrf": {"type": str},
             "destination_address_prefix": {"type": str},
@@ -61358,17 +57323,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Stun(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("client", "server")
-
         class Client(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("server_profiles",)
-
             class ServerProfilesItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ip_address", "name", "port", "ssl_profile")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "ip_address": {"type": str}, "ssl_profile": {"type": str}, "port": {"type": int}}
                 name: str
@@ -61439,8 +57398,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Server(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("bindings_timeout", "local_interfaces", "port", "ssl_connection_lifetime", "ssl_profile")
-
             class LocalInterfaces(AvdList[str]):
                 """Subclass of AvdList with `str` items."""
 
@@ -61448,8 +57405,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class SslConnectionLifetime(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("hours", "minutes")
 
                 _fields: ClassVar[dict] = {"minutes": {"type": int}, "hours": {"type": int}}
                 minutes: int | None
@@ -61565,12 +57520,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class SwitchportDefault(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("mode", "phone")
-
         class Phone(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("cos", "trunk", "vlan")
 
             _fields: ClassVar[dict] = {"cos": {"type": int}, "trunk": {"type": str}, "vlan": {"type": int}}
             cos: int | None
@@ -61623,12 +57574,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class SwitchportPortSecurity(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("mac_address", "persistence_disabled", "violation_protect_chip_based")
-
         class MacAddress(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("aging", "moveable")
 
             _fields: ClassVar[dict] = {"aging": {"type": bool}, "moveable": {"type": bool}}
             aging: bool | None
@@ -61680,8 +57627,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class SyncE(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("network_option",)
-
         _fields: ClassVar[dict] = {"network_option": {"type": int}}
         network_option: int
 
@@ -61702,17 +57647,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class System(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("control_plane", "l1")
-
         class ControlPlane(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4_access_group_ingress_default", "ipv4_access_groups", "ipv6_access_group_ingress_default", "ipv6_access_groups", "tcp_mss")
-
             class TcpMss(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ipv4", "ipv6")
 
                 _fields: ClassVar[dict] = {"ipv4": {"type": int}, "ipv6": {"type": int}}
                 ipv4: int | None
@@ -61737,8 +57676,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Ipv4AccessGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("acl_name", "vrf")
 
                 _fields: ClassVar[dict] = {"acl_name": {"type": str}, "vrf": {"type": str}}
                 acl_name: str
@@ -61766,8 +57703,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Ipv6AccessGroupsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("acl_name", "vrf")
 
                 _fields: ClassVar[dict] = {"acl_name": {"type": str}, "vrf": {"type": str}}
                 acl_name: str
@@ -61840,8 +57775,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class L1(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("unsupported_error_correction_action", "unsupported_speed_action")
-
             _fields: ClassVar[dict] = {"unsupported_speed_action": {"type": str}, "unsupported_error_correction_action": {"type": str}}
             unsupported_speed_action: Literal["error", "warn"] | None
             unsupported_error_correction_action: Literal["error", "warn"] | None
@@ -61890,12 +57823,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class TacacsServers(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("hosts", "policy_unknown_mandatory_attribute_ignore", "timeout")
-
         class HostsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("host", "key", "key_type", "single_connection", "timeout", "vrf")
 
             _fields: ClassVar[dict] = {
                 "host": {"type": str},
@@ -61981,17 +57910,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class TapAggregation(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("encapsulation_dot1br_strip", "encapsulation_vn_tag_strip", "mac", "mode", "protocol_lldp_trap", "truncation_size")
-
         class Mode(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("exclusive",)
-
             class Exclusive(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("enabled", "no_errdisable", "profile")
 
                 class NoErrdisable(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -62048,17 +57971,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Mac(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("fcs_append", "fcs_error", "timestamp")
-
             class Timestamp(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("header", "replace_source_mac")
-
                 class Header(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("eth_type", "format")
 
                     _fields: ClassVar[dict] = {"format": {"type": str}, "eth_type": {"type": int}}
                     format: Literal["48-bit", "64-bit"] | None
@@ -62196,12 +58113,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class TcamProfile(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("profiles", "system")
-
         class ProfilesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("config", "name", "source")
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "config": {"type": str}, "source": {"type": str}}
             name: str
@@ -62276,8 +58189,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class Terminal(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("length", "width")
-
         _fields: ClassVar[dict] = {"length": {"type": int}, "width": {"type": int}}
         length: int | None
         width: int | None
@@ -62299,8 +58210,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
     class TrackersItem(AvdModel):
         """Subclass of AvdModel."""
-
-        __slots__ = ("interface", "name", "tracked_property")
 
         _fields: ClassVar[dict] = {"name": {"type": str}, "interface": {"type": str}, "tracked_property": {"type": str, "default": "line-protocol"}}
         name: str
@@ -62342,12 +58251,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class TrafficPolicies(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("field_sets", "options", "policies")
-
         class Options(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("counter_per_interface",)
 
             _fields: ClassVar[dict] = {"counter_per_interface": {"type": bool}}
             counter_per_interface: bool | None
@@ -62369,12 +58274,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class FieldSets(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4", "ipv6", "ports")
-
             class Ipv4Item(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "prefixes")
 
                 class Prefixes(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
@@ -62412,8 +58313,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Ipv6Item(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("name", "prefixes")
-
                 class Prefixes(AvdList[str]):
                     """Subclass of AvdList with `str` items."""
 
@@ -62449,8 +58348,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class PortsItem(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("name", "port_range")
 
                 _fields: ClassVar[dict] = {"name": {"type": str}, "port_range": {"type": str}}
                 name: str
@@ -62509,17 +58406,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class PoliciesItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("default_actions", "matches", "name")
-
             class MatchesItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("actions", "destination", "fragment", "name", "protocols", "source", "ttl", "type")
-
                 class Source(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("prefix_lists", "prefixes")
 
                     class Prefixes(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -62562,8 +58453,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Destination(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("prefix_lists", "prefixes")
-
                     class Prefixes(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
 
@@ -62605,8 +58494,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Fragment(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("offset",)
-
                     _fields: ClassVar[dict] = {"offset": {"type": str}}
                     offset: str | None
                     """Fragment offset range."""
@@ -62627,8 +58514,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class ProtocolsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dst_field", "dst_port", "enforce_gtsm", "flags", "icmp_type", "protocol", "src_field", "src_port")
 
                     class Flags(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -62707,8 +58592,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Actions(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("count", "drop", "dscp", "log", "traffic_class")
 
                     _fields: ClassVar[dict] = {
                         "dscp": {"type": int},
@@ -62833,12 +58716,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class DefaultActions(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("ipv4", "ipv6")
-
                 class Ipv4(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("count", "drop", "dscp", "log", "traffic_class")
 
                     _fields: ClassVar[dict] = {
                         "dscp": {"type": int},
@@ -62884,8 +58763,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Ipv6(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("count", "drop", "dscp", "log", "traffic_class")
 
                     _fields: ClassVar[dict] = {
                         "dscp": {"type": int},
@@ -63020,34 +58897,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class TunnelInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "access_group_in",
-            "access_group_out",
-            "description",
-            "destination",
-            "eos_cli",
-            "ip_address",
-            "ipsec_profile",
-            "ipv6_access_group_in",
-            "ipv6_access_group_out",
-            "ipv6_address",
-            "ipv6_enable",
-            "mtu",
-            "name",
-            "nat_profile",
-            "path_mtu_discovery",
-            "shutdown",
-            "source_interface",
-            "tcp_mss_ceiling",
-            "tunnel_mode",
-            "underlay_vrf",
-            "vrf",
-        )
-
         class TcpMssCeiling(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("direction", "ipv4", "ipv6")
 
             _fields: ClassVar[dict] = {"ipv4": {"type": int}, "ipv6": {"type": int}, "direction": {"type": str}}
             ipv4: int | None
@@ -63228,8 +59079,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class VirtualSourceNatVrfsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("ip_address", "ipv6_address", "name")
-
         _fields: ClassVar[dict] = {"name": {"type": str}, "ip_address": {"type": str}, "ipv6_address": {"type": str}}
         name: str
         """VRF Name."""
@@ -63270,83 +59119,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class VlanInterfacesItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = (
-            "access_group_in",
-            "access_group_out",
-            "arp_aging_timeout",
-            "arp_cache_dynamic_capacity",
-            "arp_gratuitous_accept",
-            "arp_monitor_mac_address",
-            "bfd",
-            "description",
-            "eos_cli",
-            "ip_address",
-            "ip_address_secondaries",
-            "ip_address_virtual",
-            "ip_address_virtual_secondaries",
-            "ip_attached_host_route_export",
-            "ip_dhcp_relay_all_subnets",
-            "ip_directed_broadcast",
-            "ip_helpers",
-            "ip_igmp",
-            "ip_igmp_host_proxy",
-            "ip_igmp_version",
-            "ip_nat",
-            "ip_proxy_arp",
-            "ip_verify_unicast_source_reachable_via",
-            "ip_virtual_router_addresses",
-            "ipv6_access_group_in",
-            "ipv6_access_group_out",
-            "ipv6_address",
-            "ipv6_address_link_local",
-            "ipv6_address_virtuals",
-            "ipv6_attached_host_route_export",
-            "ipv6_dhcp_relay_all_subnets",
-            "ipv6_dhcp_relay_destinations",
-            "ipv6_enable",
-            "ipv6_nd_cache",
-            "ipv6_nd_managed_config_flag",
-            "ipv6_nd_other_config_flag",
-            "ipv6_nd_prefixes",
-            "ipv6_nd_ra_disabled",
-            "ipv6_virtual_router_addresses",
-            "isis_authentication",
-            "isis_bfd",
-            "isis_enable",
-            "isis_metric",
-            "isis_network_point_to_point",
-            "isis_passive",
-            "logging",
-            "mtu",
-            "multicast",
-            "name",
-            "no_autostate",
-            "ospf_area",
-            "ospf_authentication",
-            "ospf_authentication_key",
-            "ospf_cost",
-            "ospf_message_digest_keys",
-            "ospf_network_point_to_point",
-            "pim",
-            "pvlan_mapping",
-            "service_policy",
-            "shutdown",
-            "tags",
-            "tenant",
-            "type",
-            "vrf",
-            "vrrp_ids",
-        )
-
         class Logging(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("event",)
-
             class Event(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("link_status",)
 
                 _fields: ClassVar[dict] = {"link_status": {"type": bool}}
                 link_status: bool | None
@@ -63401,17 +59178,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IpIgmpHostProxy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("access_lists", "enabled", "groups", "report_interval", "version")
-
             class GroupsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("exclude", "group", "include")
-
                 class ExcludeItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("source",)
 
                     _fields: ClassVar[dict] = {"source": {"type": str}}
                     source: str
@@ -63439,8 +59210,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class IncludeItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("source",)
 
                     _fields: ClassVar[dict] = {"source": {"type": str}}
                     source: str
@@ -63524,8 +59293,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AccessListsItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("name",)
-
                 _fields: ClassVar[dict] = {"name": {"type": str}}
                 name: str
 
@@ -63605,8 +59372,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IpHelpersItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ip_helper", "source_interface", "vrf")
-
             _fields: ClassVar[dict] = {"ip_helper": {"type": str}, "source_interface": {"type": str}, "vrf": {"type": str}}
             ip_helper: str
             """IP address or hostname of DHCP server."""
@@ -63647,17 +59412,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IpNat(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("destination", "source")
-
             class Destination(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dynamic", "static")
-
                 class DynamicItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("access_list", "comment", "pool_name", "priority")
 
                     _fields: ClassVar[dict] = {"access_list": {"type": str}, "comment": {"type": str}, "pool_name": {"type": str}, "priority": {"type": int}}
                     access_list: str
@@ -63698,19 +59457,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class StaticItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = (
-                        "access_list",
-                        "comment",
-                        "direction",
-                        "group",
-                        "original_ip",
-                        "original_port",
-                        "priority",
-                        "protocol",
-                        "translated_ip",
-                        "translated_port",
-                    )
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -63816,12 +59562,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Source(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("dynamic", "static")
-
                 class DynamicItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("access_list", "comment", "nat_type", "pool_name", "priority")
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -63879,19 +59621,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class StaticItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = (
-                        "access_list",
-                        "comment",
-                        "direction",
-                        "group",
-                        "original_ip",
-                        "original_port",
-                        "priority",
-                        "protocol",
-                        "translated_ip",
-                        "translated_port",
-                    )
 
                     _fields: ClassVar[dict] = {
                         "access_list": {"type": str},
@@ -64028,8 +59757,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Ipv6NdCache(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("dynamic_capacity", "expire", "refresh_always")
-
             _fields: ClassVar[dict] = {"dynamic_capacity": {"type": int}, "expire": {"type": int}, "refresh_always": {"type": bool}}
             dynamic_capacity: int | None
             """Capacity of dynamic cache entries."""
@@ -64062,8 +59789,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Ipv6NdPrefixesItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("ipv6_prefix", "no_autoconfig_flag", "preferred_lifetime", "valid_lifetime")
 
             _fields: ClassVar[dict] = {
                 "ipv6_prefix": {"type": str},
@@ -64112,8 +59837,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Ipv6DhcpRelayDestinationsItem(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("address", "link_address", "local_interface", "source_address", "vrf")
 
             _fields: ClassVar[dict] = {
                 "address": {"type": str},
@@ -64171,17 +59894,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Multicast(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4", "ipv6")
-
             class Ipv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("boundaries", "source_route_export", "static")
-
                 class BoundariesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("boundary", "out")
 
                     _fields: ClassVar[dict] = {"boundary": {"type": str}, "out": {"type": bool}}
                     boundary: str
@@ -64212,8 +59929,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SourceRouteExport(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("administrative_distance", "enabled")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "administrative_distance": {"type": int}}
                     enabled: bool
@@ -64277,12 +59992,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Ipv6(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("boundaries", "source_route_export", "static")
-
                 class BoundariesItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("boundary",)
 
                     _fields: ClassVar[dict] = {"boundary": {"type": str}}
                     boundary: str
@@ -64311,8 +60022,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SourceRouteExport(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("administrative_distance", "enabled")
 
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}, "administrative_distance": {"type": int}}
                     enabled: bool
@@ -64397,8 +60106,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class OspfMessageDigestKeysItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("hash_algorithm", "id", "key")
-
             _fields: ClassVar[dict] = {"id": {"type": int}, "hash_algorithm": {"type": str}, "key": {"type": str}}
             id: int
             hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | None
@@ -64437,17 +60144,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Pim(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("ipv4",)
-
             class Ipv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("bfd", "bidirectional", "border_router", "dr_priority", "hello", "local_interface", "sparse_mode")
-
                 class Hello(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("count", "interval")
 
                     _fields: ClassVar[dict] = {"count": {"type": str}, "interval": {"type": int}}
                     count: str | None
@@ -64541,17 +60242,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IsisAuthentication(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("both", "level_1", "level_2")
-
             class Both(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -64606,8 +60301,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -64627,8 +60320,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -64725,12 +60416,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Level1(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -64785,8 +60472,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -64806,8 +60491,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -64904,12 +60587,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Level2(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("key", "key_ids", "key_type", "mode", "rx_disabled", "sha", "shared_secret")
-
                 class KeyIdsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "id", "key", "key_type", "rfc_5310")
 
                     _fields: ClassVar[dict] = {
                         "id": {"type": int},
@@ -64964,8 +60643,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class Sha(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("key_id",)
-
                     _fields: ClassVar[dict] = {"key_id": {"type": int}}
                     key_id: int
 
@@ -64985,8 +60662,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class SharedSecret(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("algorithm", "profile")
 
                     _fields: ClassVar[dict] = {"profile": {"type": str}, "algorithm": {"type": str}}
                     profile: str
@@ -65128,12 +60803,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class VrrpIdsItem(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("advertisement", "id", "ipv4", "ipv6", "preempt", "priority_level", "timers", "tracked_object")
-
             class Advertisement(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("interval",)
 
                 _fields: ClassVar[dict] = {"interval": {"type": int}}
                 interval: int | None
@@ -65156,12 +60827,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Preempt(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("delay", "enabled")
-
                 class Delay(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("minimum", "reload")
 
                     _fields: ClassVar[dict] = {"minimum": {"type": int}, "reload": {"type": int}}
                     minimum: int | None
@@ -65207,12 +60874,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Timers(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("delay",)
-
                 class Delay(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("reload",)
 
                     _fields: ClassVar[dict] = {"reload": {"type": int}}
                     reload: int | None
@@ -65253,8 +60916,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class TrackedObjectItem(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("decrement", "name", "shutdown")
-
                 _fields: ClassVar[dict] = {"name": {"type": str}, "decrement": {"type": int}, "shutdown": {"type": bool}}
                 name: str
                 """Tracked object name."""
@@ -65294,8 +60955,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class Ipv4(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = ("address", "version")
-
                 _fields: ClassVar[dict] = {"address": {"type": str}, "version": {"type": int}}
                 address: str
                 """Virtual IPv4 address."""
@@ -65318,8 +60977,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
             class Ipv6(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("address",)
 
                 _fields: ClassVar[dict] = {"address": {"type": str}}
                 address: str
@@ -65408,8 +61065,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class IpAttachedHostRouteExport(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("distance", "enabled")
-
             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "distance": {"type": int}}
             enabled: bool
             distance: int | None
@@ -65431,8 +61086,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Ipv6AttachedHostRouteExport(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("distance", "enabled", "prefix_length")
 
             _fields: ClassVar[dict] = {"enabled": {"type": bool}, "distance": {"type": int}, "prefix_length": {"type": int}}
             enabled: bool
@@ -65465,8 +61118,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class Bfd(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("echo", "interval", "min_rx", "multiplier")
 
             _fields: ClassVar[dict] = {"echo": {"type": bool}, "interval": {"type": int}, "min_rx": {"type": int}, "multiplier": {"type": int}}
             echo: bool | None
@@ -65503,12 +61154,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class ServicePolicy(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("pbr",)
-
             class Pbr(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("input",)
 
                 _fields: ClassVar[dict] = {"input": {"type": str}}
                 input: str | None
@@ -65947,12 +61594,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class VlanInternalOrder(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("allocation", "range")
-
         class Range(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("beginning", "ending")
 
             _fields: ClassVar[dict] = {"beginning": {"type": int}, "ending": {"type": int}}
             beginning: int
@@ -65998,17 +61641,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class VlansItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("address_locking", "id", "name", "private_vlan", "state", "tenant", "trunk_groups")
-
         class AddressLocking(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("address_family", "ipv4_enforcement_disabled")
-
             class AddressFamily(AvdModel):
                 """Subclass of AvdModel."""
-
-                __slots__ = ("ipv4", "ipv6")
 
                 _fields: ClassVar[dict] = {"ipv4": {"type": bool}, "ipv6": {"type": bool}}
                 ipv4: bool | None
@@ -66061,8 +61698,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
         class PrivateVlan(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("primary_vlan", "type")
 
             _fields: ClassVar[dict] = {"type": {"type": str}, "primary_vlan": {"type": int}}
             type: Literal["community", "isolated"] | None
@@ -66149,8 +61784,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class VmtracerSessionsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("autovlan_disable", "name", "password", "source_interface", "url", "username", "vrf")
-
         _fields: ClassVar[dict] = {
             "name": {"type": str},
             "url": {"type": str},
@@ -66210,8 +61843,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class VrfsItem(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("description", "ip_routing", "ip_routing_ipv6_interfaces", "ipv6_routing", "name", "tenant")
-
         _fields: ClassVar[dict] = {
             "name": {"type": str},
             "description": {"type": str},
@@ -66267,36 +61898,14 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     class VxlanInterface(AvdModel):
         """Subclass of AvdModel."""
 
-        __slots__ = ("field_Vxlan1", "vxlan1")
-
         class Vxlan1(AvdModel):
             """Subclass of AvdModel."""
-
-            __slots__ = ("description", "eos_cli", "vxlan")
 
             class Vxlan(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "bfd_vtep_evpn",
-                    "controller_client",
-                    "flood_vtep_learned_data_plane",
-                    "flood_vteps",
-                    "mlag_source_interface",
-                    "multicast",
-                    "qos",
-                    "source_interface",
-                    "udp_port",
-                    "virtual_router_encapsulation_mac_address",
-                    "vlans",
-                    "vrfs",
-                    "vtep_to_vtep_bridging",
-                )
-
                 class Multicast(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("headend_replication",)
 
                     _fields: ClassVar[dict] = {"headend_replication": {"type": bool}}
                     headend_replication: bool | None
@@ -66318,8 +61927,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class ControllerClient(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled",)
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}}
                     enabled: bool | None
 
@@ -66339,8 +61946,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class BfdVtepEvpn(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("interval", "min_rx", "multiplier", "prefix_list")
 
                     _fields: ClassVar[dict] = {"interval": {"type": int}, "min_rx": {"type": int}, "multiplier": {"type": int}, "prefix_list": {"type": str}}
                     interval: int | None
@@ -66374,8 +61979,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Qos(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dscp_propagation_encapsulation", "ecn_propagation", "map_dscp_to_traffic_class_decapsulation")
 
                     _fields: ClassVar[dict] = {
                         "dscp_propagation_encapsulation": {"type": bool},
@@ -66411,8 +62014,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class VlansItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("flood_vteps", "id", "multicast_group", "vni")
 
                     class FloodVteps(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -66461,8 +62062,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class VrfsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("multicast_group", "name", "vni")
 
                     _fields: ClassVar[dict] = {"name": {"type": str}, "vni": {"type": int}, "multicast_group": {"type": str}}
                     name: str
@@ -66645,31 +62244,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Vxlan1(AvdModel):
             """Subclass of AvdModel."""
 
-            __slots__ = ("description", "eos_cli", "vxlan")
-
             class Vxlan(AvdModel):
                 """Subclass of AvdModel."""
 
-                __slots__ = (
-                    "bfd_vtep_evpn",
-                    "controller_client",
-                    "flood_vtep_learned_data_plane",
-                    "flood_vteps",
-                    "mlag_source_interface",
-                    "multicast",
-                    "qos",
-                    "source_interface",
-                    "udp_port",
-                    "virtual_router_encapsulation_mac_address",
-                    "vlans",
-                    "vrfs",
-                    "vtep_to_vtep_bridging",
-                )
-
                 class Multicast(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("headend_replication",)
 
                     _fields: ClassVar[dict] = {"headend_replication": {"type": bool}}
                     headend_replication: bool | None
@@ -66691,8 +62270,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class ControllerClient(AvdModel):
                     """Subclass of AvdModel."""
 
-                    __slots__ = ("enabled",)
-
                     _fields: ClassVar[dict] = {"enabled": {"type": bool}}
                     enabled: bool | None
 
@@ -66712,8 +62289,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class BfdVtepEvpn(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("interval", "min_rx", "multiplier", "prefix_list")
 
                     _fields: ClassVar[dict] = {"interval": {"type": int}, "min_rx": {"type": int}, "multiplier": {"type": int}, "prefix_list": {"type": str}}
                     interval: int | None
@@ -66747,8 +62322,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class Qos(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("dscp_propagation_encapsulation", "ecn_propagation", "map_dscp_to_traffic_class_decapsulation")
 
                     _fields: ClassVar[dict] = {
                         "dscp_propagation_encapsulation": {"type": bool},
@@ -66784,8 +62357,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class VlansItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("flood_vteps", "id", "multicast_group", "vni")
 
                     class FloodVteps(AvdList[str]):
                         """Subclass of AvdList with `str` items."""
@@ -66834,8 +62405,6 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 class VrfsItem(AvdModel):
                     """Subclass of AvdModel."""
-
-                    __slots__ = ("multicast_group", "name", "vni")
 
                     _fields: ClassVar[dict] = {"name": {"type": str}, "vni": {"type": int}, "multicast_group": {"type": str}}
                     name: str
