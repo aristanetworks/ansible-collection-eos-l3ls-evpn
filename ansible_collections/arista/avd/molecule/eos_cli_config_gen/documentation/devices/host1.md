@@ -11605,13 +11605,13 @@ Errdisable recovery timer interval: 300 seconds
 
 |  Cause | Detection Enabled | Recovery Enabled |
 | ------ | ----------------- | ---------------- |
-| acl | True | False |
+| acl | True | - |
 | arp-inspection | True | True |
 | bpduguard | - | True |
 | dot1x | True | True |
 | hitless-reload-down | - | True |
 | lacp-rate-limit | - | True |
-| link-change | True | False |
+| link-change | True | - |
 | link-flap | - | True |
 | no-internal-vlan | - | True |
 | portchannelguard | - | True |

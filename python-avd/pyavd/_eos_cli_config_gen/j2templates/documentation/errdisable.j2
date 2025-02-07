@@ -24,7 +24,11 @@ Errdisable recovery timer interval: {{ errdisable.recovery.interval }} seconds
 {%             else %}
 {%                 set detect_status = "-" %}
 {%             endif %}
-{%             set recovery_status = cause in errdisable.recovery.causes | arista.avd.default([]) %}
+{%             if cause in errdisable.recovery.causes | arista.avd.default([]) %}
+{%                 set recovery_status = True %}
+{%             else %}
+{%                 set recovery_status = "-" %}
+{%             endif %}
 | {{ cause }} | {{ detect_status }} | {{ recovery_status }} |
 {%         endfor %}
 {%     endif %}
