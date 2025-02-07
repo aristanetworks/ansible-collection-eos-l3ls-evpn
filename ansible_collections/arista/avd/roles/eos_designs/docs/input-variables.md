@@ -598,6 +598,12 @@ ansible_collections/arista/avd/roles/eos_designs/docs/tables/node-type-loopback-
 ansible_collections/arista/avd/roles/eos_designs/docs/tables/node-type-l3-interfaces-configuration.md
 --8<--
 
+### Node type L3 port-channels configuration
+
+--8<--
+ansible_collections/arista/avd/roles/eos_designs/docs/tables/node-type-l3-port-channels-configuration.md
+--8<--
+
 ### Node type BGP configuration
 
 --8<--

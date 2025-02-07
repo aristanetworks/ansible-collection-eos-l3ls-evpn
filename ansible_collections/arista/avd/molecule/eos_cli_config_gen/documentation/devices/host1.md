@@ -9291,6 +9291,8 @@ router bfd
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 | ICMP Fragmentation-Needed Tunneling Enabled | True |
+| Tunnel Termination Model | TTL: uniform, DSCP: uniform |
+| Tunnel Termination PHP Model | TTL: pipe, DSCP: pipe |
 
 ### MPLS Interfaces
 
@@ -9356,6 +9358,8 @@ router bfd
 ```eos
 !
 mpls ip
+mpls tunnel termination model ttl uniform dscp uniform
+mpls tunnel termination php model ttl pipe dscp pipe
 !
 mpls ldp
    router-id 192.168.1.1
