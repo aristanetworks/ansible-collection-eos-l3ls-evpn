@@ -34,8 +34,6 @@ class RouterPimSparseModeMixin(Protocol):
             for vrf in tenant.vrfs:
                 if vrf_rps := getattr(vrf, "_pim_rp_addresses", None):
                     ipv4_config = EosCliConfigGen.RouterPimSparseMode.VrfsItem.Ipv4()
-                    rpaddresses = EosCliConfigGen.RouterPimSparseMode.VrfsItem.Ipv4.RpAddresses()
-
                     for rps in vrf_rps:
                         rpaddress = EosCliConfigGen.RouterPimSparseMode.VrfsItem.Ipv4.RpAddressesItem()
                         rpaddress.address = rps["address"]
@@ -43,6 +41,5 @@ class RouterPimSparseModeMixin(Protocol):
                             rpaddress.groups.append(group)
                         for access_list in get(rps, "access_lists", []):
                             rpaddress.access_lists.append(access_list)
-                        rpaddresses.append_unique(rpaddress)
-                    ipv4_config.rp_addresses = rpaddresses
+                        ipv4_config.rp_addresses.append_unique(rpaddress)
                     self.structured_config.router_pim_sparse_mode.vrfs.append_new(name=vrf.name, ipv4=ipv4_config)
