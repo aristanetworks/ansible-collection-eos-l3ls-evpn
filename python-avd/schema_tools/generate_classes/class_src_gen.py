@@ -193,6 +193,7 @@ class SrcGenList(SrcGenBase):
                 base_class=f"AvdList[{item_class_name}]",
                 item_type=item_class_name,
                 description=f"Subclass of AvdList with `{item_class_name}` items.",
+                imports=self.get_imports(),
             )
 
         # Indexed list (list with unique primary_key)
@@ -210,6 +211,7 @@ class SrcGenList(SrcGenBase):
                 f"Subclass of AvdIndexedList with `{item_class_name}` items. Primary key is `{self.get_primary_key_field_name()}` (`{primary_key_type}`)."
             ),
             class_vars=[ClassVarSrc("_primary_key", FieldTypeHintSrc("str"), f'"{self.get_primary_key_field_name()}"')],
+            imports=self.get_imports(),
         )
 
     def get_item_classes(self) -> list[ModelSrc | ListSrc] | None:
@@ -254,6 +256,14 @@ class SrcGenList(SrcGenBase):
         descriptions = [super().get_description(), self.get_class().description]
         return "\n\n".join(description for description in descriptions if description is not None)
 
+    def get_imports(self) -> set[str]:
+        """Return a set of strings with Python imports that are needed for this class."""
+        imports = set()
+        if self.schema.items is None:
+            imports.add("from typing import Any")
+
+        return imports
+
 
 class SrcGenDict(SrcGenBase):
     """Provides the method "generate_class_src" used to build source code for Python classes representing the schema."""
@@ -295,7 +305,6 @@ class SrcGenDict(SrcGenBase):
     def get_imports(self) -> set[str]:
         """Return a set of strings with Python imports that are needed for this class."""
         imports = set()
-        imports.add("from typing import Any")
         if self.schema.field_ref:
             schema_name = self.schema.field_ref.split("#", maxsplit=1)[0]
             imports.add(f"from pyavd._{schema_name}.schema import {generate_class_name(schema_name)}")
@@ -317,15 +326,6 @@ class SrcGenDict(SrcGenBase):
                     classes.extend(reversed(fieldsrc.item_classes))
                 if fieldsrc.cls:
                     classes.append(fieldsrc.cls)
-
-            fields.append(
-                FieldSrc(
-                    name="_custom_data",
-                    field_type="dict",
-                    optional=False,
-                    type_hints=[FieldTypeHintSrc(field_type="dict[str, Any]")],
-                )
-            )
 
         return classes, fields
 
