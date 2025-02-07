@@ -11601,8 +11601,10 @@ ip nat synchronization
 
 ### Errdisable Summary
 
-|  Detect Cause | Detection Enabled | Recovery Enabled |
-| ------------- | ----------------- | ---------------- |
+Errdisable recovery timer interval: 300 seconds
+
+|  Cause | Detection Enabled | Recovery Enabled |
+| ------ | ----------------- | ---------------- |
 | acl | True | False |
 | arp-inspection | True | True |
 | bpduguard | - | True |
@@ -11621,8 +11623,6 @@ ip nat synchronization
 | xcvr-overheat | True | True |
 | xcvr-power-unsupported | True | True |
 | xcvr-unsupported | - | True |
-
-Errdisable recovery timer interval: 300 seconds
 
 ```eos
 !

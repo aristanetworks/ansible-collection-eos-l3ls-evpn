@@ -1504,8 +1504,8 @@ ip nat synchronization
 
 ### Errdisable Summary
 
-|  Detect Cause | Detection Enabled | Recovery Enabled |
-| ------------- | ----------------- | ---------------- |
+|  Cause | Detection Enabled | Recovery Enabled |
+| ------ | ----------------- | ---------------- |
 | arp-inspection | - | True |
 | bpduguard | - | True |
 | hitless-reload-down | - | True |
