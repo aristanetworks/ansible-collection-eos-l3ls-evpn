@@ -4,17 +4,15 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import default
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class RouterOspfMixin(UtilsMixin):
+class RouterOspfMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouterOspfMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_ospf(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def router_ospf(self: AvdStructuredConfigUnderlayProtocol) -> dict | None:
         """Return structured config for router_ospf."""
         if self.shared_utils.underlay_ospf is not True:
             return None

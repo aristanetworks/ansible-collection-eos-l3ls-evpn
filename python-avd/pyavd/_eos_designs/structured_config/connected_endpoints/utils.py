@@ -6,7 +6,7 @@ from __future__ import annotations
 import re
 from functools import cached_property
 from hashlib import sha256
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
@@ -17,7 +17,7 @@ if TYPE_CHECKING:
 
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigConnectedEndpoints
+    from . import AvdStructuredConfigConnectedEndpointsProtocol
 
     T_Ptp = TypeVar("T_Ptp", EosCliConfigGen.EthernetInterfacesItem.Ptp, EosCliConfigGen.PortChannelInterfacesItem.Ptp)
     T_Link_Tracking_Groups = TypeVar(
@@ -35,7 +35,7 @@ if TYPE_CHECKING:
     T_Phone = TypeVar("T_Phone", EosCliConfigGen.EthernetInterfacesItem.Switchport.Phone, EosCliConfigGen.PortChannelInterfacesItem.Switchport.Phone)
 
 
-class UtilsMixin:
+class UtilsMixin(Protocol):
     """
     Mixin Class with internal functions.
 
@@ -44,7 +44,7 @@ class UtilsMixin:
 
     @cached_property
     def _filtered_connected_endpoints(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
     ) -> list[EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem]:
         """
         Return list of endpoints defined under one of the keys in "connected_endpoints_keys" which are connected to this switch.
@@ -56,7 +56,7 @@ class UtilsMixin:
             for connected_endpoint in connected_endpoints_key.value:
                 filtered_adapters = []
                 for adapter_index, adapter in enumerate(connected_endpoint.adapters):
-                    adapter._context = f"{connected_endpoints_key.key}[name={connected_endpoint.name}].adapters[{adapter_index}]"
+                    adapter._internal_data.context = f"{connected_endpoints_key.key}[name={connected_endpoint.name}].adapters[{adapter_index}]"
                     adapter_settings = self.shared_utils.get_merged_adapter_settings(adapter)
                     if not adapter_settings.switches or self.shared_utils.hostname not in adapter_settings.switches:
                         continue
@@ -78,17 +78,17 @@ class UtilsMixin:
                 if filtered_adapters:
                     # The object was deepcopied inside "get_merged_adapter_settings" so we can modify it here.
                     connected_endpoint.adapters = filtered_adapters
-                    connected_endpoint._type = self.inputs.connected_endpoints_keys[connected_endpoints_key.key].type
+                    connected_endpoint._internal_data.type = self.inputs.connected_endpoints_keys[connected_endpoints_key.key].type
                     filtered_connected_endpoints.append(connected_endpoint)
 
         return filtered_connected_endpoints
 
     @cached_property
-    def _filtered_network_ports(self: AvdStructuredConfigConnectedEndpoints) -> list[EosDesigns.NetworkPortsItem]:
+    def _filtered_network_ports(self: AvdStructuredConfigConnectedEndpointsProtocol) -> list[EosDesigns.NetworkPortsItem]:
         """Return list of endpoints defined under "network_ports" which are connected to this switch."""
         filtered_network_ports = []
         for index, network_port in enumerate(self.inputs.network_ports):
-            network_port._context = f"network_ports[{index}]"
+            network_port._internal_data.context = f"network_ports[{index}]"
             network_port_settings = self.shared_utils.get_merged_adapter_settings(network_port)
 
             if not network_port_settings.switches and not network_port_settings.platforms:
@@ -102,7 +102,7 @@ class UtilsMixin:
 
         return filtered_network_ports
 
-    def _match_regexes(self: AvdStructuredConfigConnectedEndpoints, regexes: list, value: str) -> bool:
+    def _match_regexes(self: AvdStructuredConfigConnectedEndpointsProtocol, regexes: list, value: str) -> bool:
         """
         Match a list of regexes with the supplied value.
 
@@ -111,7 +111,7 @@ class UtilsMixin:
         return any(re.fullmatch(regex, value) for regex in regexes)
 
     def _get_short_esi(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         channel_group_id: int,
         short_esi: str | None = None,
@@ -143,7 +143,7 @@ class UtilsMixin:
         return short_esi
 
     def _get_adapter_trunk_groups(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
         output_type: type[T_TrunkGroups],
@@ -159,18 +159,18 @@ class UtilsMixin:
         return output_type(adapter.trunk_groups)
 
     def _get_adapter_storm_control(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         output_type: type[T_StormControl],
     ) -> T_StormControl | UndefinedType:
         """Return storm_control for one adapter."""
-        if self.shared_utils.platform_settings.feature_support.interface_storm_control:
+        if self.shared_utils.platform_settings.feature_support.interface_storm_control and adapter.storm_control:
             return adapter.storm_control._cast_as(output_type)
 
         return Undefined
 
     def _get_adapter_evpn_ethernet_segment_cfg(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         short_esi: str | None,
         node_index: int,
@@ -219,7 +219,7 @@ class UtilsMixin:
         return evpn_ethernet_segment
 
     def _get_adapter_link_tracking_groups(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         output_type: type[T_Link_Tracking_Groups],
     ) -> T_Link_Tracking_Groups | UndefinedType:
@@ -232,7 +232,7 @@ class UtilsMixin:
         return output
 
     def _get_adapter_ptp(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         output_type: type[T_Ptp],
     ) -> T_Ptp | UndefinedType:
@@ -243,7 +243,7 @@ class UtilsMixin:
         # Apply PTP profile config
         if (ptp_profile_name := adapter.ptp.profile or self.shared_utils.ptp_profile_name) is not None:
             if ptp_profile_name not in self.inputs.ptp_profiles:
-                msg = f"PTP Profile '{ptp_profile_name}' referenced under {adapter._context} does not exist in `ptp_profiles`."
+                msg = f"PTP Profile '{ptp_profile_name}' referenced under {adapter._internal_data.context} does not exist in `ptp_profiles`."
                 raise AristaAvdInvalidInputsError(msg)
 
             # Create a copy and removes the .profile attribute since the target model has a .profile key with a different schema.
@@ -261,7 +261,7 @@ class UtilsMixin:
         return ptp_config
 
     def _get_adapter_poe(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
     ) -> EosCliConfigGen.EthernetInterfacesItem.Poe | UndefinedType:
         """Return poe settings for one adapter."""
@@ -271,7 +271,7 @@ class UtilsMixin:
         return Undefined
 
     def _get_adapter_phone(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
         output_type: type[T_Phone],
@@ -296,7 +296,7 @@ class UtilsMixin:
         return output_type(trunk=adapter.phone_trunk_mode, vlan=adapter.phone_vlan)
 
     def _get_adapter_sflow(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         output_type: type[T_Sflow],
     ) -> T_Sflow | UndefinedType:

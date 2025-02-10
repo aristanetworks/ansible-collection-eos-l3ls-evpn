@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class RouterIsisMixin(UtilsMixin):
+class RouterIsisMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -20,7 +18,7 @@ class RouterIsisMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_isis(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_isis(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Return structured config for router_isis.
 

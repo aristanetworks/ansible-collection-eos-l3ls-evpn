@@ -1,0 +1,24 @@
+---
+type: l3leaf
+l3leaf:
+  nodes:
+    - bgp_as: 65000
+      name: l3-port-channel-sub-interface-with-member-interfaces
+      id: 1
+      loopback_ipv4_pool: 192.168.0.0/24
+      vtep_loopback_ipv4_pool: 192.168.1.0/24
+      l3_port_channels:
+        - name: Port-Channel5
+          member_interfaces:
+            - name: Ethernet1/19
+              peer_interface: Ethernet1/19
+        # This is the offending sub interface
+        - name: Port-Channel5.108
+          encapsulation_dot1q_vlan: 108
+          member_interfaces:
+            - name: Ethernet1/19
+              peer_interface: Ethernet1/19
+          ip_address: 172.16.0.2/30
+
+expected_error_message: >-
+  L3 Port-Channel sub-interface 'Port-Channel5.108' has 'member_interfaces' set. This is not a valid setting.

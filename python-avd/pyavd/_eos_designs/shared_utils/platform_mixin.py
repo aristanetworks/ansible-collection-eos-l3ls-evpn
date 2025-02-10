@@ -5,16 +5,16 @@ from __future__ import annotations
 
 from functools import cached_property
 from re import search
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._utils import default
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class PlatformMixin:
+class PlatformMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -23,11 +23,11 @@ class PlatformMixin:
     """
 
     @cached_property
-    def platform(self: SharedUtils) -> str | None:
+    def platform(self: SharedUtilsProtocol) -> str | None:
         return default(self.node_config.platform, self.cv_topology_platform)
 
     @cached_property
-    def platform_settings(self: SharedUtils) -> EosDesigns.PlatformSettingsItem | EosDesigns.CustomPlatformSettingsItem:
+    def platform_settings(self: SharedUtilsProtocol) -> EosDesigns.PlatformSettingsItem | EosDesigns.CustomPlatformSettingsItem:
         # First look for a matching platform setting specifying our platform
         if self.platform is not None:
             for platform_setting in self.inputs.custom_platform_settings:
@@ -48,7 +48,7 @@ class PlatformMixin:
         return EosDesigns.PlatformSettingsItem()
 
     @cached_property
-    def default_interfaces(self: SharedUtils) -> EosDesigns.DefaultInterfacesItem:
+    def default_interfaces(self: SharedUtilsProtocol) -> EosDesigns.DefaultInterfacesItem:
         """default_interfaces set based on default_interfaces."""
         device_platform = self.platform or "default"
 

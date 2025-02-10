@@ -5,19 +5,17 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError
 from pyavd._utils import append_if_not_duplicate, get
 from pyavd.j2filters import natural_sort
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class EthernetInterfacesMixin(UtilsMixin):
+class EthernetInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -25,7 +23,7 @@ class EthernetInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def ethernet_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def ethernet_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for ethernet_interfaces.
 
@@ -134,7 +132,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                                         interface["ospf_message_digest_keys"] = ospf_keys
 
                             if l3_interface.pim.enabled:
-                                if not getattr(vrf, "_evpn_l3_multicast_enabled", False):
+                                if not getattr(vrf._internal_data, "evpn_l3_multicast_enabled", False):
                                     # Possibly the key was not set because `evpn_multicast` is not set to `true`.
                                     if not self.shared_utils.evpn_multicast:
                                         msg = (
@@ -148,7 +146,7 @@ class EthernetInterfacesMixin(UtilsMixin):
                                         )
                                     raise AristaAvdError(msg)
 
-                                if not getattr(vrf, "_pim_rp_addresses", None):
+                                if not getattr(vrf._internal_data, "pim_rp_addresses", None):
                                     msg = (
                                         f"'pim: enabled' set on l3_interface '{interface_name}' on '{self.shared_utils.hostname}' requires at least one RP"
                                         f" defined in pim_rp_addresses under VRF '{vrf.name}' or Tenant '{tenant.name}'"

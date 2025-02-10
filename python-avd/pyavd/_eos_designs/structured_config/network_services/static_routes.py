@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 import ipaddress
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class StaticRoutesMixin(UtilsMixin):
+class StaticRoutesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,9 +21,9 @@ class StaticRoutesMixin(UtilsMixin):
     """
 
     @structured_config_contributor
-    def static_routes(self: AvdStructuredConfigNetworkServices) -> None:
+    def static_routes(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Returns structured config for static_routes.
+        Set the structured config for static_routes.
 
         Consist of
         - static_routes defined under the vrfs
@@ -39,7 +37,7 @@ class StaticRoutesMixin(UtilsMixin):
                 for static_route in vrf.static_routes:
                     static_route_dict = static_route._cast_as(EosCliConfigGen.StaticRoutesItem, ignore_extra_keys=True)
                     static_route_dict.vrf = vrf.name
-                    self.structured_config.static_routes.append(static_route_dict)
+                    self.structured_config.static_routes.append_unique(static_route_dict)
 
                 for svi in vrf.svis:
                     if not svi.ip_virtual_router_addresses or not svi.ip_address:
@@ -58,7 +56,7 @@ class StaticRoutesMixin(UtilsMixin):
                             interface=f"Vlan{svi.id}",
                         )
 
-                        self.structured_config.static_routes.append(static_route_dict)
+                        self.structured_config.static_routes.append_unique(static_route_dict)
 
         for _internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
             for connection in connections:
@@ -68,4 +66,4 @@ class StaticRoutesMixin(UtilsMixin):
                         name=f"IE-ZSCALER-{connection['suffix']}",
                         gateway=connection["next_hop"],
                     )
-                    self.structured_config.static_routes.append(static_route)
+                    self.structured_config.static_routes.append_unique(static_route)

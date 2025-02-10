@@ -4,16 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdInvalidInputsError
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class NodeConfigMixin:
+class NodeConfigMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -22,7 +22,7 @@ class NodeConfigMixin:
     """
 
     @cached_property
-    def node_type_config(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes:
+    def node_type_config(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes:
         """
         The object representing the `<node_type_key like l3leaf, spine etc>:` containing the `defaults`, `nodes`, `node_groups` etc.
 
@@ -40,7 +40,7 @@ class NodeConfigMixin:
         raise AristaAvdInvalidInputsError(msg)
 
     @cached_property
-    def node_group_config(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodeGroupsItem | None:
+    def node_group_config(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodeGroupsItem | None:
         """
         The object representing the `<node_type_key like l3leaf, spine etc>.node_groups[]` where this node is found.
 
@@ -53,7 +53,7 @@ class NodeConfigMixin:
         return None
 
     @cached_property
-    def node_config(self: SharedUtils) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem:
+    def node_config(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem:
         """
         NodesItem object containing the fully inherited node config.
 
@@ -82,7 +82,7 @@ class NodeConfigMixin:
         return node_config
 
     @cached_property
-    def node_group_is_primary_and_peer_hostname(self: SharedUtils) -> tuple[bool, str] | None:
+    def node_group_is_primary_and_peer_hostname(self: SharedUtilsProtocol) -> tuple[bool, str] | None:
         """
         Node group position and peer used for MLAG and WAN HA.
 

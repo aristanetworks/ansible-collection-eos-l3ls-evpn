@@ -1121,6 +1121,16 @@ ASN Notation: asplain
 | Send community | all |
 | Maximum routes | 12000 |
 
+##### MLAG_VRFS_PEER
+
+| Settings | Value |
+| -------- | ----- |
+| Address Family | ipv4 |
+| Remote AS | 65103 |
+| Next-hop self | True |
+| Send community | all |
+| Maximum routes | 12000 |
+
 ##### UNDERLAY_PEERS
 
 | Settings | Value |
@@ -1147,15 +1157,15 @@ ASN Notation: asplain
 | Ethernet3 | default | UNDERLAY_PEERS | 65001 | - |
 | Ethernet4 | default | UNDERLAY_PEERS | 65001 | - |
 | Vlan4093 | default | MLAG_PEER | 65103 | - |
-| Vlan3011 | Tenant_A_APP_Zone | MLAG_PEER | 65103 | - |
-| Vlan3012 | Tenant_A_DB_Zone | MLAG_PEER | 65103 | - |
-| Vlan3009 | Tenant_A_OP_Zone | MLAG_PEER | 65103 | - |
-| Vlan3013 | Tenant_A_WAN_Zone | MLAG_PEER | 65103 | - |
-| Vlan3010 | Tenant_A_WEB_Zone | MLAG_PEER | 65103 | - |
-| Vlan3019 | Tenant_B_OP_Zone | MLAG_PEER | 65103 | - |
-| Vlan3020 | Tenant_B_WAN_Zone | MLAG_PEER | 65103 | - |
-| Vlan2 | Tenant_C_OP_Zone | MLAG_PEER | 65103 | - |
-| Vlan3030 | Tenant_C_WAN_Zone | MLAG_PEER | 65103 | - |
+| Vlan3011 | Tenant_A_APP_Zone | MLAG_VRFS_PEER | 65103 | - |
+| Vlan3012 | Tenant_A_DB_Zone | MLAG_VRFS_PEER | 65103 | - |
+| Vlan3009 | Tenant_A_OP_Zone | MLAG_VRFS_PEER | 65103 | - |
+| Vlan3013 | Tenant_A_WAN_Zone | MLAG_VRFS_PEER | 65103 | - |
+| Vlan3010 | Tenant_A_WEB_Zone | MLAG_VRFS_PEER | 65103 | - |
+| Vlan3019 | Tenant_B_OP_Zone | MLAG_VRFS_PEER | 65103 | - |
+| Vlan3020 | Tenant_B_WAN_Zone | MLAG_VRFS_PEER | 65103 | - |
+| Vlan2 | Tenant_C_OP_Zone | MLAG_VRFS_PEER | 65103 | - |
+| Vlan3030 | Tenant_C_WAN_Zone | MLAG_VRFS_PEER | 65103 | - |
 
 #### Router BGP EVPN Address Family
 
@@ -1226,6 +1236,13 @@ router bgp 65103
    neighbor MLAG_PEER password 7 <removed>
    neighbor MLAG_PEER send-community
    neighbor MLAG_PEER maximum-routes 12000
+   neighbor MLAG_VRFS_PEER peer group
+   neighbor MLAG_VRFS_PEER remote-as 65103
+   neighbor MLAG_VRFS_PEER next-hop-self
+   neighbor MLAG_VRFS_PEER description DC1-SVC3A
+   neighbor MLAG_VRFS_PEER route-map RM-MLAG-PEER-IN in
+   neighbor MLAG_VRFS_PEER send-community
+   neighbor MLAG_VRFS_PEER maximum-routes 12000
    neighbor UNDERLAY_PEERS peer group
    neighbor UNDERLAY_PEERS password 7 <removed>
    neighbor UNDERLAY_PEERS send-community
@@ -1323,6 +1340,8 @@ router bgp 65103
       no neighbor EVPN-OVERLAY-PEERS activate
       neighbor MLAG_PEER activate
       neighbor MLAG_PEER next-hop address-family ipv6 originate
+      neighbor MLAG_VRFS_PEER activate
+      neighbor MLAG_VRFS_PEER next-hop address-family ipv6 originate
       neighbor UNDERLAY_PEERS activate
       neighbor UNDERLAY_PEERS next-hop address-family ipv6 originate
    !
@@ -1332,7 +1351,7 @@ router bgp 65103
       route-target export evpn 12:12
       router-id 192.168.255.9
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3011 peer-group MLAG_PEER remote-as 65103
+      neighbor interface Vlan3011 peer-group MLAG_VRFS_PEER remote-as 65103
    !
    vrf Tenant_A_DB_Zone
       rd 192.168.255.9:13
@@ -1340,7 +1359,7 @@ router bgp 65103
       route-target export evpn 13:13
       router-id 192.168.255.9
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3012 peer-group MLAG_PEER remote-as 65103
+      neighbor interface Vlan3012 peer-group MLAG_VRFS_PEER remote-as 65103
    !
    vrf Tenant_A_OP_Zone
       rd 192.168.255.9:10
@@ -1348,7 +1367,7 @@ router bgp 65103
       route-target export evpn 10:10
       router-id 192.168.255.9
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3009 peer-group MLAG_PEER remote-as 65103
+      neighbor interface Vlan3009 peer-group MLAG_VRFS_PEER remote-as 65103
    !
    vrf Tenant_A_WAN_Zone
       rd 192.168.255.9:14
@@ -1356,7 +1375,7 @@ router bgp 65103
       route-target export evpn 14:14
       router-id 192.168.255.9
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3013 peer-group MLAG_PEER remote-as 65103
+      neighbor interface Vlan3013 peer-group MLAG_VRFS_PEER remote-as 65103
    !
    vrf Tenant_A_WEB_Zone
       rd 192.168.255.9:11
@@ -1364,7 +1383,7 @@ router bgp 65103
       route-target export evpn 11:11
       router-id 192.168.255.9
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3010 peer-group MLAG_PEER remote-as 65103
+      neighbor interface Vlan3010 peer-group MLAG_VRFS_PEER remote-as 65103
    !
    vrf Tenant_B_OP_Zone
       rd 192.168.255.9:20
@@ -1372,7 +1391,7 @@ router bgp 65103
       route-target export evpn 20:20
       router-id 192.168.255.9
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3019 peer-group MLAG_PEER remote-as 65103
+      neighbor interface Vlan3019 peer-group MLAG_VRFS_PEER remote-as 65103
    !
    vrf Tenant_B_WAN_Zone
       rd 192.168.255.9:21
@@ -1380,7 +1399,7 @@ router bgp 65103
       route-target export evpn 21:21
       router-id 192.168.255.9
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3020 peer-group MLAG_PEER remote-as 65103
+      neighbor interface Vlan3020 peer-group MLAG_VRFS_PEER remote-as 65103
    !
    vrf Tenant_C_OP_Zone
       rd 192.168.255.9:30
@@ -1388,7 +1407,7 @@ router bgp 65103
       route-target export evpn 30:30
       router-id 192.168.255.9
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan2 peer-group MLAG_PEER remote-as 65103
+      neighbor interface Vlan2 peer-group MLAG_VRFS_PEER remote-as 65103
    !
    vrf Tenant_C_WAN_Zone
       rd 192.168.255.9:31
@@ -1396,7 +1415,7 @@ router bgp 65103
       route-target export evpn 31:31
       router-id 192.168.255.9
       redistribute connected route-map RM-CONN-2-BGP-VRFS
-      neighbor interface Vlan3030 peer-group MLAG_PEER remote-as 65103
+      neighbor interface Vlan3030 peer-group MLAG_VRFS_PEER remote-as 65103
 ```
 
 ## BFD
