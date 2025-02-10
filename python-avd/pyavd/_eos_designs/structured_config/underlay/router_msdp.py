@@ -42,14 +42,14 @@ class RouterMsdpMixin(Protocol):
             # Anycast-RP using MSDP
             peers.update(node.name for node in rp_entry.nodes if node.name != self.shared_utils.hostname)
 
-        if peers:
-            self.structured_config.router_msdp.originator_id_local_interface = "Loopback0"
-            peers_list = EosCliConfigGen.RouterMsdp.Peers()
-            for peer in natural_sort(peers):
-                peers_list.append_new(
-                    ipv4_address=get(self.shared_utils.get_peer_facts(peer), "router_id", required=True),
-                    local_interface="Loopback0",
-                    description=peer,
-                    mesh_groups=EosCliConfigGen.RouterMsdp.PeersItem.MeshGroups([EosCliConfigGen.RouterMsdp.PeersItem.MeshGroupsItem(name="ANYCAST-RP")]),
-                )
-                self.structured_config.router_msdp.peers = peers_list
+        if not peers:
+            return
+
+        self.structured_config.router_msdp.originator_id_local_interface = "Loopback0"
+        for peer in natural_sort(peers):
+            self.structured_config.router_msdp.peers.append_new(
+                ipv4_address=get(self.shared_utils.get_peer_facts(peer), "router_id", required=True),
+                local_interface="Loopback0",
+                description=peer,
+                mesh_groups=EosCliConfigGen.RouterMsdp.PeersItem.MeshGroups([EosCliConfigGen.RouterMsdp.PeersItem.MeshGroupsItem(name="ANYCAST-RP")]),
+            )
