@@ -734,7 +734,7 @@ class UtilsWanMixin(Protocol):
                         "exit_group": f"{policy_name}_{suffix}",
                         "preference": preference,
                         "suffix": suffix,
-                        "endpoint": zscaler_endpoint._as_dict(),
+                        "endpoint": zscaler_endpoint,
                     },
                 )
         return connections

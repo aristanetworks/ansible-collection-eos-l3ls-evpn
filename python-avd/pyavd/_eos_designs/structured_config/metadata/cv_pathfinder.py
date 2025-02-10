@@ -31,7 +31,6 @@ class CvPathfinderMixin(Protocol):
         """
         region_name = self.shared_utils.wan_region.name if self.shared_utils.wan_region is not None else None
         site_name = self.shared_utils.wan_site.name if self.shared_utils.wan_site is not None else None
-
         # Pathfinder
         if self.shared_utils.is_cv_pathfinder_server:
             self.structured_config.metadata.cv_pathfinder._update(
@@ -46,21 +45,19 @@ class CvPathfinderMixin(Protocol):
             self._metadata_interfaces()
             self._metadata_pathgroups()
             self._metadata_regions()
-            self._metadata_vrfs()
             if self.structured_config.router_adaptive_virtual_topology.vrfs and self.structured_config.router_path_selection.load_balance_policies:
                 self._metadata_vrfs()
-
-        # Edge or transit
-        self.structured_config.metadata.cv_pathfinder._update(
-            role=self.shared_utils.cv_pathfinder_role,
-            ssl_profile=self.shared_utils.wan_stun_dtls_profile_name,
-            vtep_ip=self.shared_utils.vtep_ip,
-            region=region_name,
-            # TODO: zone=self.shared_utils.wan_zone["name"],
-            site=site_name,
-        )
-        self._metadata_interfaces()
-        self._metadata_pathfinder_vtep_ips()
+        else:
+            self.structured_config.metadata.cv_pathfinder._update(
+                role=self.shared_utils.cv_pathfinder_role,
+                ssl_profile=self.shared_utils.wan_stun_dtls_profile_name,
+                vtep_ip=self.shared_utils.vtep_ip,
+                region=region_name,
+                zone=self.shared_utils.wan_zone["name"] if region_name else None,
+                site=site_name,
+            )
+            self._metadata_interfaces()
+            self._metadata_pathfinder_vtep_ips()
 
     def _metadata_interfaces(self: AvdStructuredConfigMetadataProtocol) -> None:
         for carrier in self.shared_utils.wan_local_carriers:
@@ -105,7 +102,7 @@ class CvPathfinderMixin(Protocol):
     def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadataProtocol) -> None:
         for wan_route_server in self.shared_utils.filtered_wan_route_servers:
             vtep_ip = EosCliConfigGen.Metadata.CvPathfinder.PathfindersItem(vtep_ip=wan_route_server.vtep_ip)
-        self.structured_config.metadata.cv_pathfinder.pathfinders.append(vtep_ip)
+            self.structured_config.metadata.cv_pathfinder.pathfinders.append(vtep_ip)
 
     def _metadata_vrfs(self: AvdStructuredConfigMetadataProtocol) -> None:
         """Extracting metadata for VRFs by parsing the generated structured config and flatten it a bit (like hiding load-balance policies)."""
