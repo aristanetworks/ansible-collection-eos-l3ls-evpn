@@ -62179,24 +62179,19 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 """
                 vlan_range: VlanRange
                 """
-                Set VNI on range of vlans.
-                `vxlan_interface.vxlan1.vxlan.vlan_range` and
-                `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
-                `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
-                Number of VLANs must equal number of
-                VNIs.
-
+                Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+                If a VNI is set for a VLAN
+                using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
                 Subclass of AvdModel.
                 """
                 vlans: Vlans
                 """
                 Set VNI/multicast group/remote vtep on a vlan.
-                `vxlan_interface.vxlan1.vxlan.vlans` and
-                `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
-                `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+                If a VNI is set for a VLAN using `vlan_range`, VNI
+                setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
 
-                Subclass of AvdIndexedList with
-                `VlansItem` items. Primary key is `id` (`int`).
+                Subclass of
+                AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                 """
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
@@ -62251,22 +62246,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                                Subclass of AvdModel.
                             vlan_range:
-                               Set VNI on range of vlans.
-                               `vxlan_interface.vxlan1.vxlan.vlan_range` and
-                               `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
-                               `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
-                               Number of VLANs must equal number of
-                               VNIs.
-
+                               Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+                               If a VNI is set for a VLAN
+                               using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
                                Subclass of AvdModel.
                             vlans:
                                Set VNI/multicast group/remote vtep on a vlan.
-                               `vxlan_interface.vxlan1.vxlan.vlans` and
-                               `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
-                               `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+                               If a VNI is set for a VLAN using `vlan_range`, VNI
+                               setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
 
-                               Subclass of AvdIndexedList with
-                               `VlansItem` items. Primary key is `id` (`int`).
+                               Subclass of
+                               AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane
@@ -62588,24 +62578,19 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 """
                 vlan_range: VlanRange
                 """
-                Set VNI on range of vlans.
-                `vxlan_interface.vxlan1.vxlan.vlan_range` and
-                `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
-                `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
-                Number of VLANs must equal number of
-                VNIs.
-
+                Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+                If a VNI is set for a VLAN
+                using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
                 Subclass of AvdModel.
                 """
                 vlans: Vlans
                 """
                 Set VNI/multicast group/remote vtep on a vlan.
-                `vxlan_interface.vxlan1.vxlan.vlans` and
-                `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
-                `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+                If a VNI is set for a VLAN using `vlan_range`, VNI
+                setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
 
-                Subclass of AvdIndexedList with
-                `VlansItem` items. Primary key is `id` (`int`).
+                Subclass of
+                AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                 """
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
@@ -62660,22 +62645,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                                Subclass of AvdModel.
                             vlan_range:
-                               Set VNI on range of vlans.
-                               `vxlan_interface.vxlan1.vxlan.vlan_range` and
-                               `vxlan_interface.vxlan1.vxlan.vlans` are mutually exclusive.
-                               `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
-                               Number of VLANs must equal number of
-                               VNIs.
-
+                               Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+                               If a VNI is set for a VLAN
+                               using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
                                Subclass of AvdModel.
                             vlans:
                                Set VNI/multicast group/remote vtep on a vlan.
-                               `vxlan_interface.vxlan1.vxlan.vlans` and
-                               `vxlan_interface.vxlan1.vxlan.vlan_range` are mutually exclusive.
-                               `vxlan_interface.vxlan1.vxlan.vlan_range` takes precedence.
+                               If a VNI is set for a VLAN using `vlan_range`, VNI
+                               setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
 
-                               Subclass of AvdIndexedList with
-                               `VlansItem` items. Primary key is `id` (`int`).
+                               Subclass of
+                               AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane

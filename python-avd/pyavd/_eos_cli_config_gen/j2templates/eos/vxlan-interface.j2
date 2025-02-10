@@ -62,18 +62,14 @@ interface Vxlan1
 {%     if vxlan_config.vxlan.flood_vteps is arista.avd.defined %}
    vxlan flood vtep {{ vxlan_config.vxlan.flood_vteps | join(' ') }}
 {%     endif %}
-{%     if not vlan_range %}
-{%         for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
-{%             if vlan.flood_vteps is arista.avd.defined %}
+{%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
+{%         if vlan.flood_vteps is arista.avd.defined %}
    vxlan vlan {{ vlan.id }} flood vtep {{ vlan.flood_vteps | join(' ') }}
-{%             endif %}
-{%         endfor %}
-{%     endif %}
-{%     if not vlan_range %}
-{%         for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') if vlan.multicast_group is arista.avd.defined %}
+{%         endif %}
+{%     endfor %}
+{%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') if vlan.multicast_group is arista.avd.defined %}
    vxlan vlan {{ vlan.id }} multicast group {{ vlan.multicast_group }}
-{%         endfor %}
-{%     endif %}
+{%     endfor %}
 {%     for vrf in vxlan_config.vxlan.vrfs | arista.avd.natural_sort('name') if vrf.multicast_group is arista.avd.defined %}
    vxlan vrf {{ vrf.name }} multicast group {{ vrf.multicast_group }}
 {%     endfor %}
