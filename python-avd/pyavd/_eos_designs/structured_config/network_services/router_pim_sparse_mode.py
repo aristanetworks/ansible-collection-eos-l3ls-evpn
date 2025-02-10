@@ -3,52 +3,43 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import append_if_not_duplicate
-
-from .utils import UtilsMixin
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
+from pyavd._utils import get
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class RouterPimSparseModeMixin(UtilsMixin):
+class RouterPimSparseModeMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def router_pim_sparse_mode(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    @structured_config_contributor
+    def router_pim_sparse_mode(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Return structured config for router_pim.
+        Set structured config for router_pim.
 
         Used for to configure RPs on the VRF
         """
         if not self.shared_utils.network_services_l3:
-            return None
+            return
 
-        vrfs = []
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
-                if vrf_rps := getattr(vrf, "_pim_rp_addresses", None):
-                    vrf_config = {
-                        "name": vrf.name,
-                        "ipv4": {
-                            "rp_addresses": vrf_rps,
-                        },
-                    }
-                    append_if_not_duplicate(
-                        list_of_dicts=vrfs,
-                        primary_key="name",
-                        new_dict=vrf_config,
-                        context="Router PIM Sparse-Mode for VRFs",
-                        context_keys=["name"],
-                    )
-        if vrfs:
-            return {"vrfs": vrfs}
-
-        return None
+                if vrf_rps := getattr(vrf._internal_data, "pim_rp_addresses", None):
+                    ipv4_config = EosCliConfigGen.RouterPimSparseMode.VrfsItem.Ipv4()
+                    for rps in vrf_rps:
+                        rpaddress = EosCliConfigGen.RouterPimSparseMode.VrfsItem.Ipv4.RpAddressesItem()
+                        rpaddress.address = rps["address"]
+                        for group in get(rps, "groups", []):
+                            rpaddress.groups.append(group)
+                        for access_list in get(rps, "access_lists", []):
+                            rpaddress.access_lists.append(access_list)
+                        ipv4_config.rp_addresses.append_unique(rpaddress)
+                    self.structured_config.router_pim_sparse_mode.vrfs.append_new(name=vrf.name, ipv4=ipv4_config)

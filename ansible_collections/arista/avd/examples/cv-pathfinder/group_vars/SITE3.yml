@@ -23,10 +23,21 @@ wan_router:
       id: 11
       mgmt_ip: 192.168.17.20/24
       uplink_switches: [site3-leaf1]
-      l3_interfaces:
-        - name: Ethernet4
-          peer_interface: Ethernet8
+      l3_port_channels:
+        - name: Port-Channel4
+          mode: active
+          member_interfaces:
+            - name: Ethernet4
+              peer_interface: Ethernet8
+            - name: Ethernet5
+              peer_interface: Ethernet9
+          peer: inet-cloud
+          ip_address: dhcp
           dhcp_ip: 100.64.30.2
-          profile: INTERNET-WAN-INTERFACE
+          dhcp_accept_default_route: true
+          ipv4_acl_in: ACL-INTERNET-IN
+          peer_port_channel: Port-Channel8
           wan_carrier: REGION2-INTERNET-CORP
           wan_circuit_id: inet-site3-wan1
+          flow_tracking:
+            enabled: true

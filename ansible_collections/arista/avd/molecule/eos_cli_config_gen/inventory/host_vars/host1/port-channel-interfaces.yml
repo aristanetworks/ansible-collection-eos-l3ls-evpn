@@ -840,6 +840,7 @@ port_channel_interfaces:
         static:
           - original_ip: 3.0.0.1
             translated_ip: 4.0.0.1
+      service_profile: TEST-NAT-PROFILE
 
   - name: Port-Channel131
     description: dot1q-tunnel mode
@@ -1069,6 +1070,10 @@ port_channel_interfaces:
       enabled: true
       administrative_groups:
         - 7
+      min_delay_dynamic:
+        twamp_light_fallback:
+          number: 123
+          unit: microseconds
 
   - name: Port-Channel137
     description: Traffic Engineering Interface

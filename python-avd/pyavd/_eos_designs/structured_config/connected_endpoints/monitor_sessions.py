@@ -5,21 +5,19 @@ from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import append_if_not_duplicate, groupby_obj, strip_null_from_data
 from pyavd.j2filters import range_expand
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigConnectedEndpoints
+    from . import AvdStructuredConfigConnectedEndpointsProtocol
 
 
-class MonitorSessionsMixin(UtilsMixin):
+class MonitorSessionsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -27,7 +25,7 @@ class MonitorSessionsMixin(UtilsMixin):
     """
 
     @cached_property
-    def monitor_sessions(self: AvdStructuredConfigConnectedEndpoints) -> list | None:
+    def monitor_sessions(self: AvdStructuredConfigConnectedEndpointsProtocol) -> list | None:
         """Return structured_config for monitor_sessions."""
         if not self._monitor_session_configs:
             return None
@@ -46,19 +44,19 @@ class MonitorSessionsMixin(UtilsMixin):
                     if session.source_settings.access_group:
                         msg = (
                             f"Cannot set an ACL for both `session_settings` and `source_settings`"
-                            f" under the monitor session '{session.name}' for {session._context}."
+                            f" under the monitor session '{session.name}' for {session._internal_data.context}."
                         )
                         raise AristaAvdInvalidInputsError(msg)
 
             monitor_session = {
                 "name": session_name,
                 "sources": [],
-                "destinations": [session._interface for session in session_configs_list if session.role == "destination"],
+                "destinations": [session._internal_data.interface for session in session_configs_list if session.role == "destination"],
             }
             source_sessions = [session for session in session_configs_list if session.role == "source"]
             for session in source_sessions:
                 source = {
-                    "name": session._interface,
+                    "name": session._internal_data.interface,
                     "direction": session.source_settings.direction,
                 }
                 if session.source_settings.access_group.name is not None:
@@ -87,7 +85,7 @@ class MonitorSessionsMixin(UtilsMixin):
 
     @cached_property
     def _monitor_session_configs(
-        self: AvdStructuredConfigConnectedEndpoints,
+        self: AvdStructuredConfigConnectedEndpointsProtocol,
     ) -> list[EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.MonitorSessionsItem]:
         """Return list of monitor session configs extracted from every interface."""
         monitor_session_configs = []
@@ -104,8 +102,8 @@ class MonitorSessionsMixin(UtilsMixin):
                     port_channel_interface_name = f"Port-Channel{channel_group_id}"
                     for monitor_session in adapter.monitor_sessions:
                         per_interface_monitor_session = monitor_session._deepcopy()
-                        per_interface_monitor_session._interface = port_channel_interface_name
-                        per_interface_monitor_session._context = adapter._context
+                        per_interface_monitor_session._internal_data.interface = port_channel_interface_name
+                        per_interface_monitor_session._internal_data.context = adapter._internal_data.context
                         monitor_session_configs.append(per_interface_monitor_session)
                     continue
 
@@ -117,8 +115,8 @@ class MonitorSessionsMixin(UtilsMixin):
                     ethernet_interface_name = adapter.switch_ports[node_index]
                     for monitor_session in adapter.monitor_sessions:
                         per_interface_monitor_session = monitor_session._deepcopy()
-                        per_interface_monitor_session._interface = ethernet_interface_name
-                        per_interface_monitor_session._context = adapter._context
+                        per_interface_monitor_session._internal_data.interface = ethernet_interface_name
+                        per_interface_monitor_session._internal_data.context = adapter._internal_data.context
                         monitor_session_configs.append(per_interface_monitor_session)
 
         for network_port in self._filtered_network_ports:
@@ -134,16 +132,16 @@ class MonitorSessionsMixin(UtilsMixin):
                     port_channel_interface_name = f"Port-Channel{channel_group_id}"
                     for monitor_session in network_port.monitor_sessions:
                         per_interface_monitor_session = monitor_session._deepcopy()
-                        per_interface_monitor_session._interface = port_channel_interface_name
-                        per_interface_monitor_session._context = network_port._context
+                        per_interface_monitor_session._internal_data.interface = port_channel_interface_name
+                        per_interface_monitor_session._internal_data.context = network_port._internal_data.context
                         monitor_session_configs.append(per_interface_monitor_session)
                     continue
 
                 # Monitor session on Ethernet interface
                 for monitor_session in network_port.monitor_sessions:
                     per_interface_monitor_session = monitor_session._deepcopy()
-                    per_interface_monitor_session._interface = ethernet_interface_name
-                    per_interface_monitor_session._context = network_port._context
+                    per_interface_monitor_session._internal_data.interface = ethernet_interface_name
+                    per_interface_monitor_session._internal_data.context = network_port._internal_data.context
                     monitor_session_configs.append(per_interface_monitor_session)
 
         return monitor_session_configs

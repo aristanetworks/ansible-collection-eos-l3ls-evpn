@@ -5,16 +5,16 @@ from __future__ import annotations
 
 from functools import cached_property
 from re import search
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class NodeTypeMixin:
+class NodeTypeMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -23,7 +23,7 @@ class NodeTypeMixin:
     """
 
     @cached_property
-    def type(self: SharedUtils) -> str:
+    def type(self: SharedUtilsProtocol) -> str:
         """Type fact set based on type variable."""
         if (node_type := self.inputs.type) is not None:
             return node_type
@@ -34,7 +34,7 @@ class NodeTypeMixin:
         raise AristaAvdInvalidInputsError(msg)
 
     @cached_property
-    def default_node_type(self: SharedUtils) -> str | None:
+    def default_node_type(self: SharedUtilsProtocol) -> str | None:
         """default_node_type set based on hostname, returning first node type matching a regex in default_node_types."""
         for default_node_type in self.inputs.default_node_types:
             for hostname_regex in default_node_type.match_hostnames:
@@ -44,7 +44,7 @@ class NodeTypeMixin:
         return None
 
     @cached_property
-    def connected_endpoints(self: SharedUtils) -> bool:
+    def connected_endpoints(self: SharedUtilsProtocol) -> bool:
         """
         Should we configure connected endpoints?
 
@@ -54,7 +54,7 @@ class NodeTypeMixin:
         return self.node_type_key_data.connected_endpoints
 
     @cached_property
-    def underlay_router(self: SharedUtils) -> bool:
+    def underlay_router(self: SharedUtilsProtocol) -> bool:
         """
         Is this an underlay router?
 
@@ -64,7 +64,7 @@ class NodeTypeMixin:
         return self.node_type_key_data.underlay_router
 
     @cached_property
-    def uplink_type(self: SharedUtils) -> Literal["p2p", "port-channel", "p2p-vrfs", "lan"]:
+    def uplink_type(self: SharedUtilsProtocol) -> Literal["p2p", "port-channel", "p2p-vrfs", "lan"]:
         """
         Uplink type.
 
@@ -73,7 +73,7 @@ class NodeTypeMixin:
         return default(self.node_config.uplink_type, self.node_type_key_data.uplink_type)
 
     @cached_property
-    def network_services_l1(self: SharedUtils) -> bool:
+    def network_services_l1(self: SharedUtilsProtocol) -> bool:
         """
         Should we configure L1 network services?
 
@@ -82,7 +82,7 @@ class NodeTypeMixin:
         return self.node_type_key_data.network_services.l1
 
     @cached_property
-    def network_services_l2(self: SharedUtils) -> bool:
+    def network_services_l2(self: SharedUtilsProtocol) -> bool:
         """
         Should we configure L2 network services?
 
@@ -91,7 +91,7 @@ class NodeTypeMixin:
         return self.node_type_key_data.network_services.l2
 
     @cached_property
-    def network_services_l3(self: SharedUtils) -> bool:
+    def network_services_l3(self: SharedUtilsProtocol) -> bool:
         """
         Should we configure L3 network services?
 
@@ -104,7 +104,7 @@ class NodeTypeMixin:
         return self.node_type_key_data.network_services.l3
 
     @cached_property
-    def network_services_l2_as_subint(self: SharedUtils) -> bool:
+    def network_services_l2_as_subint(self: SharedUtilsProtocol) -> bool:
         """
         Should we deploy SVIs as subinterfaces?
 
@@ -114,12 +114,12 @@ class NodeTypeMixin:
         return self.network_services_l3 and self.uplink_type in ["lan", "lan-port-channel"]
 
     @cached_property
-    def any_network_services(self: SharedUtils) -> bool:
+    def any_network_services(self: SharedUtilsProtocol) -> bool:
         """Returns True if either L1, L2 or L3 network_services are enabled."""
         return self.network_services_l1 or self.network_services_l2 or self.network_services_l3
 
     @cached_property
-    def mpls_lsr(self: SharedUtils) -> bool:
+    def mpls_lsr(self: SharedUtilsProtocol) -> bool:
         """
         Is this an MPLS LSR?
 
@@ -129,7 +129,7 @@ class NodeTypeMixin:
         return self.node_type_key_data.mpls_lsr
 
     @cached_property
-    def vtep(self: SharedUtils) -> bool:
+    def vtep(self: SharedUtilsProtocol) -> bool:
         """
         Is this a VTEP?
 

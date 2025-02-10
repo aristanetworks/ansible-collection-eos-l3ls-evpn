@@ -4,18 +4,16 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get_ip_from_ip_prefix
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigCoreInterfacesAndL3Edge
+    from . import AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol
 
 
-class RouterBgpMixin(UtilsMixin):
+class RouterBgpMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class RouterBgpMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_bgp(self: AvdStructuredConfigCoreInterfacesAndL3Edge) -> dict | None:
+    def router_bgp(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> dict | None:
         """Return structured config for router_bgp."""
         if not self.shared_utils.underlay_bgp:
             return None

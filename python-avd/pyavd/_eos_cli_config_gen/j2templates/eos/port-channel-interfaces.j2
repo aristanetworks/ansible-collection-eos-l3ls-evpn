@@ -483,6 +483,9 @@ interface {{ port_channel_interface.name }}
 {%     if port_channel_interface.ip_nat is arista.avd.defined %}
 {%         set interface_ip_nat = port_channel_interface.ip_nat %}
 {%         include 'eos/interface-ip-nat.j2' %}
+{%         if port_channel_interface.ip_nat.service_profile is arista.avd.defined %}
+   ip nat service-profile {{ port_channel_interface.ip_nat.service_profile }}
+{%         endif %}
 {%     endif %}
 {%     if port_channel_interface.ospf_cost is arista.avd.defined %}
    ip ospf cost {{ port_channel_interface.ospf_cost }}
@@ -951,6 +954,8 @@ interface {{ port_channel_interface.name }}
 {%     endif %}
 {%     if port_channel_interface.traffic_engineering.min_delay_static is arista.avd.defined %}
    traffic-engineering min-delay static {{ port_channel_interface.traffic_engineering.min_delay_static.number }} {{ port_channel_interface.traffic_engineering.min_delay_static.unit }}
+{%     elif port_channel_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback is arista.avd.defined %}
+   traffic-engineering min-delay dynamic twamp-light fallback {{ port_channel_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback.number }} {{ port_channel_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback.unit }}
 {%     endif %}
 {%     for link_tracking_group in port_channel_interface.link_tracking_groups | arista.avd.natural_sort('name') %}
 {%         if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}

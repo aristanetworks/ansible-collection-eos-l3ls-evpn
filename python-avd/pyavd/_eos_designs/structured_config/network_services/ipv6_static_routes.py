@@ -4,15 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class Ipv6StaticRoutesMixin(UtilsMixin):
+class Ipv6StaticRoutesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -20,7 +18,7 @@ class Ipv6StaticRoutesMixin(UtilsMixin):
     """
 
     @cached_property
-    def ipv6_static_routes(self: AvdStructuredConfigNetworkServices) -> list[dict] | None:
+    def ipv6_static_routes(self: AvdStructuredConfigNetworkServicesProtocol) -> list[dict] | None:
         """
         Returns structured config for ipv6_static_routes.
 

@@ -4,19 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import AvdStringFormatter, append_if_not_duplicate, default, strip_empties_from_dict
-
-from .utils import UtilsMixin
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class LoopbackInterfacesMixin(UtilsMixin):
+class LoopbackInterfacesMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -24,7 +22,7 @@ class LoopbackInterfacesMixin(UtilsMixin):
     """
 
     @cached_property
-    def loopback_interfaces(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def loopback_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for loopback_interfaces.
 
@@ -37,7 +35,7 @@ class LoopbackInterfacesMixin(UtilsMixin):
         loopback_interfaces = []
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
-                if (loopback_interface := self._get_vtep_diagnostic_loopback_for_vrf(vrf)) is not None:
+                if (loopback_interface := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is not None:
                     append_if_not_duplicate(
                         list_of_dicts=loopback_interfaces,
                         primary_key="name",
@@ -80,7 +78,9 @@ class LoopbackInterfacesMixin(UtilsMixin):
         return None
 
     def _get_vtep_diagnostic_loopback_for_vrf(
-        self: AvdStructuredConfigNetworkServices, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> dict | None:
         if (loopback := vrf.vtep_diagnostic.loopback) is None:
             return None
@@ -101,7 +101,7 @@ class LoopbackInterfacesMixin(UtilsMixin):
         return strip_empties_from_dict(
             {
                 "name": interface_name,
-                "description": AvdStringFormatter().format(description_template, interface=interface_name, vrf=vrf.name, tenant=vrf._tenant),
+                "description": AvdStringFormatter().format(description_template, interface=interface_name, vrf=vrf.name, tenant=tenant.name),
                 "shutdown": False,
                 "vrf": vrf.name,
                 "ip_address": f"{self.shared_utils.ip_addressing.vrf_loopback_ip(loopback_ipv4_pool)}/32" if loopback_ipv4_pool else None,

@@ -922,9 +922,9 @@ management console
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | True |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | True | True |
 
 Management HTTPS is using the SSL profile SSL_PROFILE
 
@@ -944,6 +944,7 @@ HTTPS certificate and private key are configured.
 management api http-commands
    protocol https
    no protocol http
+   protocol unix-socket
    default-services
    protocol https ssl profile SSL_PROFILE
    no shutdown
@@ -3933,6 +3934,7 @@ interface Dps1
 | Interface | Enabled | Administrative Groups | Metric | Max Reservable Bandwidth | Min-delay | SRLG |
 | --------- | ------- | --------------------- | ------ | ------------------------ | --------- | ---- |
 | Ethernet81/3 | True | 3,15-29,testgrp | 4 | 10 percent | 5 microseconds | TEST-SRLG |
+| Ethernet81/4 | True | 4,7-100,testgrp | 2 | 100 mbps | twamp-light, fallback 2 milliseconds | 16 |
 
 #### Ethernet Interfaces Device Configuration
 
@@ -4939,11 +4941,12 @@ interface Ethernet81/4
    no shutdown
    no switchport
    ip address 100.64.127.0/31
+   traffic-engineering
    traffic-engineering bandwidth 100 mbps
    traffic-engineering administrative-group 4,7-100,testgrp
    traffic-engineering srlg 16
    traffic-engineering metric 2
-   traffic-engineering min-delay static 2 milliseconds
+   traffic-engineering min-delay dynamic twamp-light fallback 2 milliseconds
 !
 interface Ethernet81/10
    description isis_port_channel_member
@@ -5156,6 +5159,12 @@ interface Ethernet84
 | --------- | ----------- | --------- | -------- | ------- |
 | Port-Channel130 | ACL1 | POOL1 | 0 | - |
 
+##### IP NAT: Interfaces configured via profile
+
+| Interface | Profile |
+| --------- |-------- |
+| Port-Channel130 | TEST-NAT-PROFILE |
+
 ##### IPv6
 
 | Interface | Description | MLAG ID | IPv6 Address | VRF | MTU | Shutdown | ND RA Disabled | Managed Config Flag | IPv6 ACL In | IPv6 ACL Out |
@@ -5186,7 +5195,7 @@ interface Ethernet84
 
 | Interface | Enabled | Administrative Groups | Metric | Max Reservable Bandwidth | Min-delay | SRLG |
 | --------- | ------- | --------------------- | ------ | ------------------------ | --------- | ---- |
-| Port-Channel136 | True | 7 | - | - | - | - |
+| Port-Channel136 | True | 7 | - | - | twamp-light, fallback 123 microseconds | - |
 
 #### Port-Channel Interfaces Device Configuration
 
@@ -5688,6 +5697,7 @@ interface Port-Channel130
    ip nat source static 3.0.0.1 4.0.0.1
    ip nat destination dynamic access-list ACL1 pool POOL1
    ip nat source dynamic access-list ACL2 pool POOL2
+   ip nat service-profile TEST-NAT-PROFILE
 !
 interface Port-Channel131
    description dot1q-tunnel mode
@@ -5806,6 +5816,7 @@ interface Port-Channel136
    ip address 100.64.127.2/31
    traffic-engineering
    traffic-engineering administrative-group 7
+   traffic-engineering min-delay dynamic twamp-light fallback 123 microseconds
 !
 interface Port-Channel137
    description Traffic Engineering Interface
@@ -9280,6 +9291,8 @@ router bfd
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 | ICMP Fragmentation-Needed Tunneling Enabled | True |
+| Tunnel Termination Model | TTL: uniform, DSCP: uniform |
+| Tunnel Termination PHP Model | TTL: pipe, DSCP: pipe |
 
 ### MPLS Interfaces
 
@@ -9345,6 +9358,8 @@ router bfd
 ```eos
 !
 mpls ip
+mpls tunnel termination model ttl uniform dscp uniform
+mpls tunnel termination php model ttl pipe dscp pipe
 !
 mpls ldp
    router-id 192.168.1.1
@@ -11593,35 +11608,28 @@ ip nat synchronization
 
 ### Errdisable Summary
 
-|  Detect Cause | Enabled |
-| ------------- | ------- |
-| acl | True |
-| arp-inspection | True |
-| dot1x | True |
-| link-change | True |
-| tapagg | True |
-| xcvr-misconfigured | True |
-| xcvr-overheat | True |
-| xcvr-power-unsupported | True |
+Errdisable recovery timer interval: 300 seconds
 
-|  Detect Cause | Enabled | Interval |
-| ------------- | ------- | -------- |
-| arp-inspection | True | 300 |
-| bpduguard | True | 300 |
-| dot1x | True | 300 |
-| hitless-reload-down | True | 300 |
-| lacp-rate-limit | True | 300 |
-| link-flap | True | 300 |
-| no-internal-vlan | True | 300 |
-| portchannelguard | True | 300 |
-| portsec | True | 300 |
-| speed-misconfigured | True | 300 |
-| tapagg | True | 300 |
-| uplink-failure-detection | True | 300 |
-| xcvr-misconfigured | True | 300 |
-| xcvr-overheat | True | 300 |
-| xcvr-power-unsupported | True | 300 |
-| xcvr-unsupported | True | 300 |
+|  Cause | Detection Enabled | Recovery Enabled |
+| ------ | ----------------- | ---------------- |
+| acl | True | - |
+| arp-inspection | True | True |
+| bpduguard | - | True |
+| dot1x | True | True |
+| hitless-reload-down | - | True |
+| lacp-rate-limit | - | True |
+| link-change | True | - |
+| link-flap | - | True |
+| no-internal-vlan | - | True |
+| portchannelguard | - | True |
+| portsec | - | True |
+| speed-misconfigured | - | True |
+| tapagg | True | True |
+| uplink-failure-detection | - | True |
+| xcvr-misconfigured | True | True |
+| xcvr-overheat | True | True |
+| xcvr-power-unsupported | True | True |
+| xcvr-unsupported | - | True |
 
 ```eos
 !
@@ -12031,6 +12039,11 @@ qos random-detect ecn allow non-ect chip-based
 | cmap_tc5_v4 | acl | acl_qos_tc5_v4 |
 | cmap_tc5_v6 | - | - |
 | COS_RANGE | vlan | 1-3 |
+| DSCP_TEST_1 | dscp<br>ecn | af11<br>ect-ce |
+| DSCP_TEST_2 | dscp<br>ecn | 2-4,6<br>non-ect |
+| DSCP_TEST_3 | dscp | cs0 |
+| DSCP_TEST_4 | dscp<br>ecn | ef<br>ce |
+| DSCP_TEST_5 | ecn | ce |
 | VLAN_RANGE | vlan | 200-400 |
 
 #### Class-maps Device Configuration
@@ -12063,6 +12076,21 @@ class-map type qos match-any cmap_tc5_v6
 !
 class-map type qos match-any COS_RANGE
    match vlan 1-3
+!
+class-map type qos match-any DSCP_TEST_1
+   match dscp af11 ecn ect-ce
+!
+class-map type qos match-any DSCP_TEST_2
+   match dscp 2-4,6 ecn non-ect
+!
+class-map type qos match-any DSCP_TEST_3
+   match dscp cs0
+!
+class-map type qos match-any DSCP_TEST_4
+   match dscp ef ecn ce
+!
+class-map type qos match-any DSCP_TEST_5
+   match ecn ce
 !
 class-map type qos match-any VLAN_RANGE
    match vlan 200-400
