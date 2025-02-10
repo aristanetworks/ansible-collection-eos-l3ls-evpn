@@ -3,9 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._utils import get
 from pyavd.j2filters import natural_sort
 
@@ -20,18 +21,18 @@ class RouterMsdpMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def router_msdp(self: AvdStructuredConfigUnderlayProtocol) -> dict | None:
+    @structured_config_contributor
+    def router_msdp(self: AvdStructuredConfigUnderlayProtocol) -> None:
         """
-        Return structured config for router_msdp.
+        Set the structured config for router_msdp.
 
         Used for to configure multicast anycast RPs for the underlay
         """
         if not self.shared_utils.underlay_multicast or not self.inputs.underlay_multicast_rps:
-            return None
+            return
 
         if self.inputs.underlay_multicast_anycast_rp.mode != "msdp":
-            return None
+            return
 
         peers = set()
         for rp_entry in self.inputs.underlay_multicast_rps:
@@ -42,17 +43,13 @@ class RouterMsdpMixin(Protocol):
             peers.update(node.name for node in rp_entry.nodes if node.name != self.shared_utils.hostname)
 
         if not peers:
-            return None
+            return
 
-        return {
-            "originator_id_local_interface": "Loopback0",
-            "peers": [
-                {
-                    "ipv4_address": get(self.shared_utils.get_peer_facts(peer), "router_id", required=True),
-                    "local_interface": "Loopback0",
-                    "description": peer,
-                    "mesh_groups": [{"name": "ANYCAST-RP"}],
-                }
-                for peer in natural_sort(peers)
-            ],
-        }
+        self.structured_config.router_msdp.originator_id_local_interface = "Loopback0"
+        for peer in natural_sort(peers):
+            self.structured_config.router_msdp.peers.append_new(
+                ipv4_address=get(self.shared_utils.get_peer_facts(peer), "router_id", required=True),
+                local_interface="Loopback0",
+                description=peer,
+                mesh_groups=EosCliConfigGen.RouterMsdp.PeersItem.MeshGroups([EosCliConfigGen.RouterMsdp.PeersItem.MeshGroupsItem(name="ANYCAST-RP")]),
+            )
