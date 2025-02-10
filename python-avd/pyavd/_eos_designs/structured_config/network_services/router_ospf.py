@@ -47,7 +47,7 @@ class RouterOspfMixin(Protocol):
                     raise AristaAvdInvalidInputsError(msg)
                 process._update(id=process_id, passive_interface_default=True)
 
-                self._set_ospf_vrf(process, vrf, tenant.name)
+                self._set_ospf_vrf(process, vrf, tenant)
                 self._set_ospf_redistribute(process, vrf)
 
                 self.structured_config.router_ospf.process_ids.append(process)
@@ -111,7 +111,7 @@ class RouterOspfMixin(Protocol):
         self,
         process: EosCliConfigGen.RouterOspf.ProcessIdsItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
-        name: str,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> None:
         """
         Configures VRF-specific OSPF settings.
@@ -121,11 +121,11 @@ class RouterOspfMixin(Protocol):
         Args:
             process: The OSPF process configuration object.
             vrf: The VRF object containing OSPF settings.
-            name: The name of the tenant or associated network service.
+            tenant: The tenant or network service object associated with the VRF.
         """
         if vrf.name != "default":
             process.vrf = vrf.name
-        if vrf_router_id := self.get_vrf_router_id(vrf, vrf.ospf.router_id, name):
+        if vrf_router_id := self.get_vrf_router_id(vrf, tenant, vrf.ospf.router_id):
             process.router_id = vrf_router_id
         if vrf.ospf.bfd:
             process.bfd_enable = vrf.ospf.bfd
