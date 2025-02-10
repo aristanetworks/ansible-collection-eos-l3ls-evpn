@@ -39,7 +39,7 @@ class RouterOspfMixin(Protocol):
                 if not vrf.ospf.enabled or (vrf.ospf.nodes and self.shared_utils.hostname not in vrf.ospf.nodes):
                     continue
                 process = EosCliConfigGen.RouterOspf.ProcessIdsItem()
-                self._set_ospf_interface(process, vrf)
+                self._update_ospf_interface(process, vrf)
 
                 process_id = default(vrf.ospf.process_id, vrf.vrf_id)
                 if not process_id:
@@ -47,18 +47,22 @@ class RouterOspfMixin(Protocol):
                     raise AristaAvdInvalidInputsError(msg)
                 process._update(id=process_id, passive_interface_default=True)
 
-                self._set_ospf_vrf(process, vrf, tenant)
-                self._set_ospf_redistribute(process, vrf)
+                if vrf.name != "default":
+                    process.vrf = vrf.name
+                if vrf_router_id := self.get_vrf_router_id(vrf, tenant, vrf.ospf.router_id):
+                    process.router_id = vrf_router_id
+                if vrf.ospf.bfd:
+                    process.bfd_enable = vrf.ospf.bfd
+                process.max_lsa = vrf.ospf.max_lsa
+                self._update_ospf_redistribute(process, vrf)
 
                 self.structured_config.router_ospf.process_ids.append(process)
         # If we have static_routes in default VRF and not EPVN, and underlay is OSPF
         # Then add redistribute static to the underlay OSPF process.
         if self._vrf_default_ipv4_static_routes["redistribute_in_underlay"] and self.shared_utils.underlay_routing_protocol in ["ospf", "ospf-ldp"]:
-            process = EosCliConfigGen.RouterOspf.ProcessIdsItem(id=self.inputs.underlay_ospf_process_id)
-            process.redistribute.static.enabled = True
-            self.structured_config.router_ospf.process_ids.append(process)
+            self.structured_config.router_ospf.process_ids.obtain(self.inputs.underlay_ospf_process_id).redistribute.static.enabled = True
 
-    def _set_ospf_redistribute(
+    def _update_ospf_redistribute(
         self, process: EosCliConfigGen.RouterOspf.ProcessIdsItem, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
     ) -> None:
         """
@@ -81,7 +85,7 @@ class RouterOspfMixin(Protocol):
             if route_map := vrf.ospf.redistribute_connected.route_map:
                 process.redistribute.connected.route_map = route_map
 
-    def _set_ospf_interface(
+    def _update_ospf_interface(
         self,
         process: EosCliConfigGen.RouterOspf.ProcessIdsItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
@@ -106,27 +110,3 @@ class RouterOspfMixin(Protocol):
             if svi.ospf.enabled:
                 interface_name = f"Vlan{svi.id}"
                 process.no_passive_interfaces.append(interface_name)
-
-    def _set_ospf_vrf(
-        self,
-        process: EosCliConfigGen.RouterOspf.ProcessIdsItem,
-        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
-        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
-    ) -> None:
-        """
-        Configures VRF-specific OSPF settings.
-
-        This method sets the VRF name, router ID, BFD, and max LSA limit for the OSPF process.
-
-        Args:
-            process: The OSPF process configuration object.
-            vrf: The VRF object containing OSPF settings.
-            tenant: The tenant or network service object associated with the VRF.
-        """
-        if vrf.name != "default":
-            process.vrf = vrf.name
-        if vrf_router_id := self.get_vrf_router_id(vrf, tenant, vrf.ospf.router_id):
-            process.router_id = vrf_router_id
-        if vrf.ospf.bfd:
-            process.bfd_enable = vrf.ospf.bfd
-        process.max_lsa = vrf.ospf.max_lsa
