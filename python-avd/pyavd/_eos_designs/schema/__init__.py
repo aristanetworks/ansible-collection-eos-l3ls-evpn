@@ -20745,7 +20745,7 @@ class EosDesigns(EosDesignsRootModel):
                             "profile": {"type": str},
                             "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
-                            "domain": {"type": int, "default": 127},
+                            "domain": {"type": int},
                             "priority1": {"type": int},
                             "priority2": {"type": int},
                             "auto_clock_identity": {"type": bool},
@@ -20777,8 +20777,7 @@ class EosDesigns(EosDesignsRootModel):
 
                         Default value: `False`
                         """
-                        domain: int
-                        """Default value: `127`"""
+                        domain: int | None
                         priority1: int | None
                         """default -> automatically set based on node_type."""
                         priority2: int | None
@@ -20835,7 +20834,7 @@ class EosDesigns(EosDesignsRootModel):
                                 profile: str | None | UndefinedType = Undefined,
                                 uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
-                                domain: int | UndefinedType = Undefined,
+                                domain: int | None | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
                                 priority2: int | None | UndefinedType = Undefined,
                                 auto_clock_identity: bool | None | UndefinedType = Undefined,
@@ -24844,7 +24843,7 @@ class EosDesigns(EosDesignsRootModel):
                                 "profile": {"type": str},
                                 "uplinks": {"type": Uplinks},
                                 "mlag": {"type": bool, "default": False},
-                                "domain": {"type": int, "default": 127},
+                                "domain": {"type": int},
                                 "priority1": {"type": int},
                                 "priority2": {"type": int},
                                 "auto_clock_identity": {"type": bool},
@@ -24876,8 +24875,7 @@ class EosDesigns(EosDesignsRootModel):
 
                             Default value: `False`
                             """
-                            domain: int
-                            """Default value: `127`"""
+                            domain: int | None
                             priority1: int | None
                             """default -> automatically set based on node_type."""
                             priority2: int | None
@@ -24934,7 +24932,7 @@ class EosDesigns(EosDesignsRootModel):
                                     profile: str | None | UndefinedType = Undefined,
                                     uplinks: Uplinks | UndefinedType = Undefined,
                                     mlag: bool | UndefinedType = Undefined,
-                                    domain: int | UndefinedType = Undefined,
+                                    domain: int | None | UndefinedType = Undefined,
                                     priority1: int | None | UndefinedType = Undefined,
                                     priority2: int | None | UndefinedType = Undefined,
                                     auto_clock_identity: bool | None | UndefinedType = Undefined,
@@ -28897,7 +28895,7 @@ class EosDesigns(EosDesignsRootModel):
                             "profile": {"type": str},
                             "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
-                            "domain": {"type": int, "default": 127},
+                            "domain": {"type": int},
                             "priority1": {"type": int},
                             "priority2": {"type": int},
                             "auto_clock_identity": {"type": bool},
@@ -28929,8 +28927,7 @@ class EosDesigns(EosDesignsRootModel):
 
                         Default value: `False`
                         """
-                        domain: int
-                        """Default value: `127`"""
+                        domain: int | None
                         priority1: int | None
                         """default -> automatically set based on node_type."""
                         priority2: int | None
@@ -28987,7 +28984,7 @@ class EosDesigns(EosDesignsRootModel):
                                 profile: str | None | UndefinedType = Undefined,
                                 uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
-                                domain: int | UndefinedType = Undefined,
+                                domain: int | None | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
                                 priority2: int | None | UndefinedType = Undefined,
                                 auto_clock_identity: bool | None | UndefinedType = Undefined,
@@ -33024,7 +33021,7 @@ class EosDesigns(EosDesignsRootModel):
                             "profile": {"type": str},
                             "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
-                            "domain": {"type": int, "default": 127},
+                            "domain": {"type": int},
                             "priority1": {"type": int},
                             "priority2": {"type": int},
                             "auto_clock_identity": {"type": bool},
@@ -33056,8 +33053,7 @@ class EosDesigns(EosDesignsRootModel):
 
                         Default value: `False`
                         """
-                        domain: int
-                        """Default value: `127`"""
+                        domain: int | None
                         priority1: int | None
                         """default -> automatically set based on node_type."""
                         priority2: int | None
@@ -33114,7 +33110,7 @@ class EosDesigns(EosDesignsRootModel):
                                 profile: str | None | UndefinedType = Undefined,
                                 uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
-                                domain: int | UndefinedType = Undefined,
+                                domain: int | None | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
                                 priority2: int | None | UndefinedType = Undefined,
                                 auto_clock_identity: bool | None | UndefinedType = Undefined,
@@ -44006,7 +44002,7 @@ class EosDesigns(EosDesignsRootModel):
                             "profile": {"type": str},
                             "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
-                            "domain": {"type": int, "default": 127},
+                            "domain": {"type": int},
                             "priority1": {"type": int},
                             "priority2": {"type": int},
                             "auto_clock_identity": {"type": bool},
@@ -44038,8 +44034,7 @@ class EosDesigns(EosDesignsRootModel):
 
                         Default value: `False`
                         """
-                        domain: int
-                        """Default value: `127`"""
+                        domain: int | None
                         priority1: int | None
                         """default -> automatically set based on node_type."""
                         priority2: int | None
@@ -44096,7 +44091,7 @@ class EosDesigns(EosDesignsRootModel):
                                 profile: str | None | UndefinedType = Undefined,
                                 uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
-                                domain: int | UndefinedType = Undefined,
+                                domain: int | None | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
                                 priority2: int | None | UndefinedType = Undefined,
                                 auto_clock_identity: bool | None | UndefinedType = Undefined,
@@ -48105,7 +48100,7 @@ class EosDesigns(EosDesignsRootModel):
                                 "profile": {"type": str},
                                 "uplinks": {"type": Uplinks},
                                 "mlag": {"type": bool, "default": False},
-                                "domain": {"type": int, "default": 127},
+                                "domain": {"type": int},
                                 "priority1": {"type": int},
                                 "priority2": {"type": int},
                                 "auto_clock_identity": {"type": bool},
@@ -48137,8 +48132,7 @@ class EosDesigns(EosDesignsRootModel):
 
                             Default value: `False`
                             """
-                            domain: int
-                            """Default value: `127`"""
+                            domain: int | None
                             priority1: int | None
                             """default -> automatically set based on node_type."""
                             priority2: int | None
@@ -48195,7 +48189,7 @@ class EosDesigns(EosDesignsRootModel):
                                     profile: str | None | UndefinedType = Undefined,
                                     uplinks: Uplinks | UndefinedType = Undefined,
                                     mlag: bool | UndefinedType = Undefined,
-                                    domain: int | UndefinedType = Undefined,
+                                    domain: int | None | UndefinedType = Undefined,
                                     priority1: int | None | UndefinedType = Undefined,
                                     priority2: int | None | UndefinedType = Undefined,
                                     auto_clock_identity: bool | None | UndefinedType = Undefined,
@@ -52158,7 +52152,7 @@ class EosDesigns(EosDesignsRootModel):
                             "profile": {"type": str},
                             "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
-                            "domain": {"type": int, "default": 127},
+                            "domain": {"type": int},
                             "priority1": {"type": int},
                             "priority2": {"type": int},
                             "auto_clock_identity": {"type": bool},
@@ -52190,8 +52184,7 @@ class EosDesigns(EosDesignsRootModel):
 
                         Default value: `False`
                         """
-                        domain: int
-                        """Default value: `127`"""
+                        domain: int | None
                         priority1: int | None
                         """default -> automatically set based on node_type."""
                         priority2: int | None
@@ -52248,7 +52241,7 @@ class EosDesigns(EosDesignsRootModel):
                                 profile: str | None | UndefinedType = Undefined,
                                 uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
-                                domain: int | UndefinedType = Undefined,
+                                domain: int | None | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
                                 priority2: int | None | UndefinedType = Undefined,
                                 auto_clock_identity: bool | None | UndefinedType = Undefined,
@@ -56285,7 +56278,7 @@ class EosDesigns(EosDesignsRootModel):
                             "profile": {"type": str},
                             "uplinks": {"type": Uplinks},
                             "mlag": {"type": bool, "default": False},
-                            "domain": {"type": int, "default": 127},
+                            "domain": {"type": int},
                             "priority1": {"type": int},
                             "priority2": {"type": int},
                             "auto_clock_identity": {"type": bool},
@@ -56317,8 +56310,7 @@ class EosDesigns(EosDesignsRootModel):
 
                         Default value: `False`
                         """
-                        domain: int
-                        """Default value: `127`"""
+                        domain: int | None
                         priority1: int | None
                         """default -> automatically set based on node_type."""
                         priority2: int | None
@@ -56375,7 +56367,7 @@ class EosDesigns(EosDesignsRootModel):
                                 profile: str | None | UndefinedType = Undefined,
                                 uplinks: Uplinks | UndefinedType = Undefined,
                                 mlag: bool | UndefinedType = Undefined,
-                                domain: int | UndefinedType = Undefined,
+                                domain: int | None | UndefinedType = Undefined,
                                 priority1: int | None | UndefinedType = Undefined,
                                 priority2: int | None | UndefinedType = Undefined,
                                 auto_clock_identity: bool | None | UndefinedType = Undefined,
