@@ -9291,6 +9291,8 @@ router bfd
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 | ICMP Fragmentation-Needed Tunneling Enabled | True |
+| Tunnel Termination Model | TTL: uniform, DSCP: uniform |
+| Tunnel Termination PHP Model | TTL: pipe, DSCP: pipe |
 
 ### MPLS Interfaces
 
@@ -9356,6 +9358,8 @@ router bfd
 ```eos
 !
 mpls ip
+mpls tunnel termination model ttl uniform dscp uniform
+mpls tunnel termination php model ttl pipe dscp pipe
 !
 mpls ldp
    router-id 192.168.1.1
@@ -11604,35 +11608,28 @@ ip nat synchronization
 
 ### Errdisable Summary
 
-|  Detect Cause | Enabled |
-| ------------- | ------- |
-| acl | True |
-| arp-inspection | True |
-| dot1x | True |
-| link-change | True |
-| tapagg | True |
-| xcvr-misconfigured | True |
-| xcvr-overheat | True |
-| xcvr-power-unsupported | True |
+Errdisable recovery timer interval: 300 seconds
 
-|  Detect Cause | Enabled | Interval |
-| ------------- | ------- | -------- |
-| arp-inspection | True | 300 |
-| bpduguard | True | 300 |
-| dot1x | True | 300 |
-| hitless-reload-down | True | 300 |
-| lacp-rate-limit | True | 300 |
-| link-flap | True | 300 |
-| no-internal-vlan | True | 300 |
-| portchannelguard | True | 300 |
-| portsec | True | 300 |
-| speed-misconfigured | True | 300 |
-| tapagg | True | 300 |
-| uplink-failure-detection | True | 300 |
-| xcvr-misconfigured | True | 300 |
-| xcvr-overheat | True | 300 |
-| xcvr-power-unsupported | True | 300 |
-| xcvr-unsupported | True | 300 |
+|  Cause | Detection Enabled | Recovery Enabled |
+| ------ | ----------------- | ---------------- |
+| acl | True | - |
+| arp-inspection | True | True |
+| bpduguard | - | True |
+| dot1x | True | True |
+| hitless-reload-down | - | True |
+| lacp-rate-limit | - | True |
+| link-change | True | - |
+| link-flap | - | True |
+| no-internal-vlan | - | True |
+| portchannelguard | - | True |
+| portsec | - | True |
+| speed-misconfigured | - | True |
+| tapagg | True | True |
+| uplink-failure-detection | - | True |
+| xcvr-misconfigured | True | True |
+| xcvr-overheat | True | True |
+| xcvr-power-unsupported | True | True |
+| xcvr-unsupported | - | True |
 
 ```eos
 !

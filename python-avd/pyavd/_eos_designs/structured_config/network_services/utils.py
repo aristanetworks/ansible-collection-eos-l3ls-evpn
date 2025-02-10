@@ -174,31 +174,6 @@ class UtilsMixin(Protocol):
         return False
 
     @cached_property
-    def _configure_bgp_mlag_peer_group(self: AvdStructuredConfigNetworkServicesProtocol) -> bool:
-        """
-        Flag set during creating of BGP VRFs if an MLAG peering is needed.
-
-        Decides if MLAG BGP peer-group should be configured.
-        Catches cases where underlay is not BGP but we still need MLAG iBGP peering.
-        """
-        if self.shared_utils.underlay_bgp:
-            return False
-
-        # Checking neighbors directly under BGP to cover VRF default case.
-        for neighbor_settings in get(self._router_bgp_vrfs, "neighbors", default=[]):
-            if neighbor_settings.get("peer_group") == self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name:
-                return True
-
-        for bgp_vrf in get(self._router_bgp_vrfs, "vrfs", default=[]):
-            if "neighbors" not in bgp_vrf:
-                continue
-            for neighbor_settings in bgp_vrf["neighbors"]:
-                if neighbor_settings.get("peer_group") == self.inputs.bgp_peer_groups.mlag_ipv4_underlay_peer.name:
-                    return True
-
-        return False
-
-    @cached_property
     def _rt_admin_subfield(self: AvdStructuredConfigNetworkServicesProtocol) -> str | None:
         """
         Return a string with the route-target admin subfield unless set to "vrf_id" or "vrf_vni" or "id".
@@ -228,7 +203,7 @@ class UtilsMixin(Protocol):
         if mac_vrf_id_base is None:
             msg = (
                 "'rt_override' or 'vni_override' or 'mac_vrf_id_base' or 'mac_vrf_vni_base' must be set. "
-                f"Unable to set EVPN RD/RT for vlan {vlan.id} in Tenant '{vlan._tenant}'"
+                f"Unable to set EVPN RD/RT for vlan {vlan.id} in Tenant '{tenant.name}'"
             )
             raise AristaAvdInvalidInputsError(msg)
         return mac_vrf_id_base + vlan.id
@@ -243,7 +218,7 @@ class UtilsMixin(Protocol):
         if mac_vrf_vni_base is None:
             msg = (
                 "'rt_override' or 'vni_override' or 'mac_vrf_id_base' or 'mac_vrf_vni_base' must be set. "
-                f"Unable to set EVPN RD/RT for vlan {vlan.id} in Tenant '{vlan._tenant}'"
+                f"Unable to set EVPN RD/RT for vlan {vlan.id} in Tenant '{tenant.name}'"
             )
             raise AristaAvdInvalidInputsError(msg)
         return mac_vrf_vni_base + vlan.id
@@ -407,16 +382,16 @@ class UtilsMixin(Protocol):
     def get_vrf_router_id(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         router_id: str,
-        tenant_name: str,
     ) -> str | None:
         """
         Determine the router ID for a given VRF based on its configuration.
 
         Args:
             vrf: The VRF object containing OSPF/BGP and vtep_diagnostic details.
+            tenant: The Tenant to which the VRF belongs.
             router_id: The router ID type specified for the VRF (e.g., "vtep_diagnostic", "main_router_id", "none", or an IPv4 address).
-            tenant_name: The name of the tenant to which the VRF belongs.
 
         Returns:
             The resolved router ID as a string, or None if the router ID is not applicable.
@@ -427,9 +402,9 @@ class UtilsMixin(Protocol):
         # Handle "vtep_diagnostic" router ID case
         if router_id == "diagnostic_loopback":
             # Validate required configuration
-            if (interface_data := self._get_vtep_diagnostic_loopback_for_vrf(vrf)) is None:
+            if (interface_data := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is None:
                 msg = (
-                    f"Invalid configuration on VRF '{vrf.name}' in Tenant '{tenant_name}'. "
+                    f"Invalid configuration on VRF '{vrf.name}' in Tenant '{tenant.name}'. "
                     "'vtep_diagnostic.loopback' along with either 'vtep_diagnostic.loopback_ip_pools' or 'vtep_diagnostic.loopback_ip_range' must be defined "
                     "when 'router_id' is set to 'diagnostic_loopback' on the VRF."
                 )

@@ -92,9 +92,6 @@ class FilteredTenantsMixin(Protocol):
         filtered_l2vlans = tenant.l2vlans._filtered(
             lambda l2vlan: self.is_accepted_vlan(l2vlan) and bool("all" in self.filter_tags or set(l2vlan.tags).intersection(self.filter_tags))
         )
-        # Set tenant on all l2vlans TODO: avoid this.
-        for l2vlan in filtered_l2vlans:
-            l2vlan._tenant = tenant.name
 
         if tenant.evpn_vlan_bundle:
             for l2vlan in filtered_l2vlans:
@@ -199,9 +196,6 @@ class FilteredTenantsMixin(Protocol):
             if not self.is_accepted_vrf(vrf):
                 continue
 
-            # Copying original_vrf
-            vrf._tenant = tenant.name
-
             vrf.bgp_peers = vrf.bgp_peers._filtered(lambda bgp_peer: self.hostname in bgp_peer.nodes)._natural_sorted(sort_key="ip_address")
             vrf.static_routes = vrf.static_routes._filtered(lambda route: not route.nodes or self.hostname in route.nodes)
             vrf.ipv6_static_routes = vrf.ipv6_static_routes._filtered(lambda route: not route.nodes or self.hostname in route.nodes)
@@ -215,8 +209,8 @@ class FilteredTenantsMixin(Protocol):
                 evpn_l3_multicast_enabled = default(vrf.evpn_l3_multicast.enabled, tenant.evpn_l3_multicast.enabled)
                 # TODO: Consider if all this should be moved out of filtered_vrfs.
                 if self.evpn_multicast:
-                    vrf._evpn_l3_multicast_enabled = evpn_l3_multicast_enabled
-                    vrf._evpn_l3_multicast_group_ip = vrf.evpn_l3_multicast.evpn_underlay_l3_multicast_group
+                    vrf._internal_data.evpn_l3_multicast_enabled = evpn_l3_multicast_enabled
+                    vrf._internal_data.evpn_l3_multicast_group_ip = vrf.evpn_l3_multicast.evpn_underlay_l3_multicast_group
 
                     rps = []
                     for rp_entry in vrf.pim_rp_addresses or tenant.pim_rp_addresses:
@@ -236,11 +230,11 @@ class FilteredTenantsMixin(Protocol):
                                 rps.append(rp_address)
 
                     if rps:
-                        vrf._pim_rp_addresses = rps
+                        vrf._internal_data.pim_rp_addresses = rps
 
                         for evpn_peg in vrf.evpn_l3_multicast.evpn_peg or tenant.evpn_l3_multicast.evpn_peg:
                             if not evpn_peg.nodes or self.hostname in evpn_peg.nodes:
-                                vrf._evpn_l3_multicast_evpn_peg_transit = evpn_peg.transit
+                                vrf._internal_data.evpn_l3_multicast_evpn_peg_transit = evpn_peg.transit
                                 break
 
             vrf.additional_route_targets = vrf.additional_route_targets._filtered(
@@ -321,10 +315,6 @@ class FilteredTenantsMixin(Protocol):
 
         # Perform filtering on tags after merge of profiles, to support tags being set inside profiles.
         svis = svis._filtered(lambda svi: "all" in self.filter_tags or bool(set(svi.tags).intersection(self.filter_tags)))
-
-        # Set tenant key on all SVIs
-        for svi in svis:
-            svi._tenant = vrf._tenant
 
         return svis._natural_sorted(sort_key="id")
 

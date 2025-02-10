@@ -44,19 +44,19 @@ class MonitorSessionsMixin(Protocol):
                     if session.source_settings.access_group:
                         msg = (
                             f"Cannot set an ACL for both `session_settings` and `source_settings`"
-                            f" under the monitor session '{session.name}' for {session._context}."
+                            f" under the monitor session '{session.name}' for {session._internal_data.context}."
                         )
                         raise AristaAvdInvalidInputsError(msg)
 
             monitor_session = {
                 "name": session_name,
                 "sources": [],
-                "destinations": [session._interface for session in session_configs_list if session.role == "destination"],
+                "destinations": [session._internal_data.interface for session in session_configs_list if session.role == "destination"],
             }
             source_sessions = [session for session in session_configs_list if session.role == "source"]
             for session in source_sessions:
                 source = {
-                    "name": session._interface,
+                    "name": session._internal_data.interface,
                     "direction": session.source_settings.direction,
                 }
                 if session.source_settings.access_group.name is not None:
@@ -102,8 +102,8 @@ class MonitorSessionsMixin(Protocol):
                     port_channel_interface_name = f"Port-Channel{channel_group_id}"
                     for monitor_session in adapter.monitor_sessions:
                         per_interface_monitor_session = monitor_session._deepcopy()
-                        per_interface_monitor_session._interface = port_channel_interface_name
-                        per_interface_monitor_session._context = adapter._context
+                        per_interface_monitor_session._internal_data.interface = port_channel_interface_name
+                        per_interface_monitor_session._internal_data.context = adapter._internal_data.context
                         monitor_session_configs.append(per_interface_monitor_session)
                     continue
 
@@ -115,8 +115,8 @@ class MonitorSessionsMixin(Protocol):
                     ethernet_interface_name = adapter.switch_ports[node_index]
                     for monitor_session in adapter.monitor_sessions:
                         per_interface_monitor_session = monitor_session._deepcopy()
-                        per_interface_monitor_session._interface = ethernet_interface_name
-                        per_interface_monitor_session._context = adapter._context
+                        per_interface_monitor_session._internal_data.interface = ethernet_interface_name
+                        per_interface_monitor_session._internal_data.context = adapter._internal_data.context
                         monitor_session_configs.append(per_interface_monitor_session)
 
         for network_port in self._filtered_network_ports:
@@ -132,16 +132,16 @@ class MonitorSessionsMixin(Protocol):
                     port_channel_interface_name = f"Port-Channel{channel_group_id}"
                     for monitor_session in network_port.monitor_sessions:
                         per_interface_monitor_session = monitor_session._deepcopy()
-                        per_interface_monitor_session._interface = port_channel_interface_name
-                        per_interface_monitor_session._context = network_port._context
+                        per_interface_monitor_session._internal_data.interface = port_channel_interface_name
+                        per_interface_monitor_session._internal_data.context = network_port._internal_data.context
                         monitor_session_configs.append(per_interface_monitor_session)
                     continue
 
                 # Monitor session on Ethernet interface
                 for monitor_session in network_port.monitor_sessions:
                     per_interface_monitor_session = monitor_session._deepcopy()
-                    per_interface_monitor_session._interface = ethernet_interface_name
-                    per_interface_monitor_session._context = network_port._context
+                    per_interface_monitor_session._internal_data.interface = ethernet_interface_name
+                    per_interface_monitor_session._internal_data.context = network_port._internal_data.context
                     monitor_session_configs.append(per_interface_monitor_session)
 
         return monitor_session_configs

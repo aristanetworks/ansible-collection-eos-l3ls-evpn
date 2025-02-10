@@ -27,7 +27,9 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
     Other lists are *not* using this model.
     """
 
-    _item_type: ClassVar[type]
+    __slots__ = ("_items",)
+
+    _item_type: ClassVar[type]  # pylint: disable=declare-non-slot # pylint bug #9950
     """Type of items. This is used instead of inspecting the type-hints to improve performance significantly."""
     _items: list[T_ItemType]
     """
@@ -54,27 +56,22 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
         cls_items = [coerce_type(item, item_type) for item in data]
         return cls(cls_items)
 
-    def __init__(self, items: Iterable[T_ItemType] | UndefinedType = Undefined) -> None:
+    def __init__(self, items: Iterable[T_ItemType] = ()) -> None:
         """
         AvdList subclass.
 
         Args:
             items: Iterable holding items of the correct type to be loaded into the list.
         """
-        if isinstance(items, UndefinedType):
-            self._items = []
-        else:
-            self._items = list(items)
+        self._items = list(items)
+
+        super().__init__()
 
     def __repr__(self) -> str:
         """Returns a repr with all the items including any nested models."""
         cls_name = self.__class__.__name__
         items = [f"{item!r}" for item in (self._items)]
         return f"<{cls_name}([{', '.join(items)}])>"
-
-    def __bool__(self) -> bool:
-        """Boolean check on the class to quickly determine if any items are set."""
-        return bool(self._items)
 
     def __len__(self) -> int:
         return len(self._items)
@@ -90,6 +87,9 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
 
     def __setitem__(self, index: int, value: T_ItemType) -> None:
         self._items[index] = value
+
+    def __eq__(self, other: object) -> bool:
+        return self._compare(other)
 
     def get(self, index: int, default: T | UndefinedType = Undefined) -> T_ItemType | T | UndefinedType:
         return self._items[index] if index < len(self._items) else default
@@ -236,3 +236,17 @@ class AvdList(Sequence[T_ItemType], Generic[T_ItemType], AvdBase):
         new_instance._created_from_null = self._created_from_null
 
         return new_instance
+
+    def _compare(self, other: object) -> bool:
+        if not isinstance(other, type(self)):
+            return False
+
+        if len(self) != len(other):
+            return False
+
+        if self._created_from_null != other._created_from_null:
+            return False
+
+        items = cast(list[AvdBase], self._items)
+        other_items = cast(list[AvdBase], other._items)
+        return all(item == other_items[index] for index, item in enumerate(items))
