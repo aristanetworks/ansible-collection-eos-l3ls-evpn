@@ -51,7 +51,7 @@ class MonitorSessionsMixin(Protocol):
             monitor_session = EosCliConfigGen.MonitorSessionsItem(name=session_name)
             for session in session_configs_list:
                 if session.role == "destination":
-                    monitor_session.destinations.append_unique(session._internal_data.interface)
+                    monitor_session.destinations.append(session._internal_data.interface)
 
             source_sessions = [session for session in session_configs_list if session.role == "source"]
 
@@ -62,7 +62,7 @@ class MonitorSessionsMixin(Protocol):
                 )
                 if session.source_settings.access_group.name:
                     source.access_group = session.source_settings.access_group._cast_as(EosCliConfigGen.MonitorSessionsItem.SourcesItem.AccessGroup)
-                monitor_session.sources.append_unique(source)
+                monitor_session.sources.append(source)
 
             if session_settings := merged_settings.session_settings:
                 monitor_session._update(
