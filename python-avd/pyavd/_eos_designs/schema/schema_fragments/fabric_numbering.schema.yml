@@ -40,4 +40,4 @@ keys:
 
               By default the path is "<root_dir>/intended/data/<fabric_name>-ids.yml".
 
-              Note: Since the pool manager will remove stale entries after every run, each fabric should be using it's own file.
+              Note: Since the pool manager will remove stale entries after every run, each fabric should be using its own file.
