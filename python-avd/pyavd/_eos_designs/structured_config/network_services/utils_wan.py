@@ -415,7 +415,7 @@ class UtilsWanMixin(Protocol):
         return [
             path_group.name
             for path_group in self.shared_utils.wan_local_path_groups
-            if any(wan_interface["connected_to_pathfinder"] for wan_interface in path_group._interfaces)
+            if any(wan_interface["connected_to_pathfinder"] for wan_interface in path_group._internal_data.interfaces)
         ]
 
     @cached_property
