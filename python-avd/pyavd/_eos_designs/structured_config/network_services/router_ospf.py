@@ -38,15 +38,14 @@ class RouterOspfMixin(Protocol):
             for vrf in tenant.vrfs:
                 if not vrf.ospf.enabled or (vrf.ospf.nodes and self.shared_utils.hostname not in vrf.ospf.nodes):
                     continue
-
-                ospf_interfaces = EosCliConfigGen.RouterOspf.ProcessIdsItem.NoPassiveInterfaces()
-                self._set_ospf_interface(ospf_interfaces, vrf)
+                process = EosCliConfigGen.RouterOspf.ProcessIdsItem()
+                self._set_ospf_interface(process, vrf)
 
                 process_id = default(vrf.ospf.process_id, vrf.vrf_id)
                 if not process_id:
                     msg = f"Missing or invalid 'ospf.process_id' or 'vrf_id' under vrf '{vrf.name}"
                     raise AristaAvdInvalidInputsError(msg)
-                process = EosCliConfigGen.RouterOspf.ProcessIdsItem(id=process_id, passive_interface_default=True, no_passive_interfaces=ospf_interfaces)
+                process._update(id=process_id, passive_interface_default=True)
 
                 self._set_ospf_vrf(process, vrf, tenant.name)
                 self._set_ospf_redistribute(process, vrf)
@@ -84,7 +83,7 @@ class RouterOspfMixin(Protocol):
 
     def _set_ospf_interface(
         self,
-        ospf_interfaces: EosCliConfigGen.RouterOspf.ProcessIdsItem.NoPassiveInterfaces,
+        process: EosCliConfigGen.RouterOspf.ProcessIdsItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
     ) -> None:
         """
@@ -93,7 +92,7 @@ class RouterOspfMixin(Protocol):
         This method iterates through L3 interfaces and SVIs, adding those that have OSPF enabled.
 
         Args:
-            ospf_interfaces: The list to populate with OSPF-enabled interfaces.
+            process: The OSPF process configuration object.
             vrf: The VRF object containing interface OSPF settings.
         """
         for l3_interface in vrf.l3_interfaces:
@@ -101,12 +100,12 @@ class RouterOspfMixin(Protocol):
                 for node_index, node in enumerate(l3_interface.nodes):
                     if node != self.shared_utils.hostname:
                         continue
-                    ospf_interfaces.append(l3_interface.interfaces[node_index])
+                    process.no_passive_interfaces.append(l3_interface.interfaces[node_index])
 
         for svi in vrf.svis:
             if svi.ospf.enabled:
                 interface_name = f"Vlan{svi.id}"
-                ospf_interfaces.append(interface_name)
+                process.no_passive_interfaces.append(interface_name)
 
     def _set_ospf_vrf(
         self,
