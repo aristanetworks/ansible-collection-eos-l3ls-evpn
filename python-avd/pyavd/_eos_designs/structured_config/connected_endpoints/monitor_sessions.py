@@ -28,7 +28,7 @@ class MonitorSessionsMixin(Protocol):
 
     @structured_config_contributor
     def monitor_sessions(self: AvdStructuredConfigConnectedEndpointsProtocol) -> None:
-        """Return structured_config for monitor_sessions."""
+        """Set the structured_config for monitor_sessions."""
         if not self._monitor_session_configs:
             return
 
@@ -51,18 +51,18 @@ class MonitorSessionsMixin(Protocol):
             monitor_session = EosCliConfigGen.MonitorSessionsItem(name=session_name)
             for session in session_configs_list:
                 if session.role == "destination":
-                    monitor_session.destinations.append(session._interface)
+                    monitor_session.destinations.append_unique(session._internal_data.interface)
 
             source_sessions = [session for session in session_configs_list if session.role == "source"]
 
             for session in source_sessions:
                 source = EosCliConfigGen.MonitorSessionsItem.SourcesItem(
-                    name=session._interface,
+                    name=session._internal_data.interface,
                     direction=session.source_settings.direction,
                 )
                 if session.source_settings.access_group.name:
                     source.access_group = session.source_settings.access_group._cast_as(EosCliConfigGen.MonitorSessionsItem.SourcesItem.AccessGroup)
-                monitor_session.sources.append(source)
+                monitor_session.sources.append_unique(source)
 
             if session_settings := merged_settings.session_settings:
                 monitor_session._update(
