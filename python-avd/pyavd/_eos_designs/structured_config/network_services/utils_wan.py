@@ -6,7 +6,6 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING, Literal, Protocol
 
-from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import get, get_ip_from_ip_prefix
@@ -14,6 +13,8 @@ from pyavd._utils.password_utils.password import simple_7_encrypt
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
+    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+
     from . import AvdStructuredConfigNetworkServicesProtocol
 
 
