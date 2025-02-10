@@ -238,57 +238,57 @@ hostname: cv-pathfinder-edge1
 ip_access_lists:
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1_49.3
   entries:
-  - sequence: 15
+  - source: any
+    destination: 172.24.49.3
+    sequence: 15
     action: deny
     protocol: ip
-    source: any
+  - source: 172.24.49.2
     destination: 172.24.49.3
-  - action: permit
+    action: permit
     protocol: ip
-    source: 172.24.49.2
-    destination: 172.24.49.3
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Port-Channel540
   entries:
-  - sequence: 15
+  - source: any
+    destination: 172.15.6.9
+    sequence: 15
     action: deny
     protocol: ip
-    source: any
+  - source: 172.31.0.11
     destination: 172.15.6.9
-  - action: permit
+    action: permit
     protocol: ip
-    source: 172.31.0.11
-    destination: 172.15.6.9
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Port-Channel540
   entries:
   - remark: Some remark will not require source and destination fields.
-  - action: permit
-    protocol: ip
-    source: 172.15.6.9
+  - source: 172.15.6.9
     destination: any
+    action: permit
+    protocol: ip
 - name: ACL-NAT-IE-DIRECT
   entries:
-  - sequence: 10
+  - source: any
+    destination: 5.0.0.0/24
+    sequence: 10
     action: deny
     protocol: ip
-    source: any
-    destination: 5.0.0.0/24
-  - sequence: 20
+  - source: any
+    destination: any
+    sequence: 20
     action: permit
     protocol: ip
-    source: any
-    destination: any
 - name: ACL-NAT-IE-ZSCALER
   entries:
-  - sequence: 10
+  - source: any
+    destination: 10.0.0.0/24
+    sequence: 10
     action: permit
     protocol: ip
-    source: any
-    destination: 10.0.0.0/24
-  - sequence: 20
+  - source: any
+    destination: any
+    sequence: 20
     action: deny
     protocol: ip
-    source: any
-    destination: any
 ip_extcommunity_lists:
 - name: ECL-EVPN-SOO
   entries:

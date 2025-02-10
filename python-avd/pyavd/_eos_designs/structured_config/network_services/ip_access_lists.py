@@ -3,7 +3,6 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
@@ -23,7 +22,6 @@ class IpAccesslistsMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
     def _acl_internet_exit_zscaler(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         ip_access_list = EosCliConfigGen.IpAccessListsItem(name=self.get_internet_exit_nat_acl_name("zscaler"))
         ip_access_list.entries.append(
@@ -31,7 +29,6 @@ class IpAccesslistsMixin(Protocol):
         )
         self.structured_config.ip_access_lists.append(ip_access_list)
 
-    @cached_property
     def _acl_internet_exit_direct(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         interface_ips = set()
         for ie_policy, connections in self._filtered_internet_exit_policies_and_connections:
@@ -74,7 +71,7 @@ class IpAccesslistsMixin(Protocol):
         acl = self.shared_utils.get_ipv4_acl(acl_name, "random", interface_ip="random", peer_ip="random")
         if acl.name == acl_name:
             # ACL doesn't need replacement
-            return [acl]
+            return acl
 
         # TODO: We still have one nat for all interfaces, need to also add logic to make nat per interface
         # if acl needs substitution
@@ -84,12 +81,12 @@ class IpAccesslistsMixin(Protocol):
     def _acl_internet_exit(self: AvdStructuredConfigNetworkServicesProtocol, internet_exit_policy_type: Literal["zscaler", "direct"]) -> None:
         acls = self._acl_internet_exit_user_defined(internet_exit_policy_type)
         if acls:
-            self.structured_config.ip_access_lists.extend(acls)
+            self.structured_config.ip_access_lists.append(acls)
 
-        if internet_exit_policy_type == "zscaler":
-            self._acl_internet_exit_zscaler
-        if internet_exit_policy_type == "direct":
-            self._acl_internet_exit_direct
+        elif internet_exit_policy_type == "zscaler":
+            self._acl_internet_exit_zscaler()
+        elif internet_exit_policy_type == "direct":
+            self._acl_internet_exit_direct()
 
     @structured_config_contributor
     def ip_access_lists(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
@@ -106,4 +103,3 @@ class IpAccesslistsMixin(Protocol):
 
         for ie_policy_type in self._filtered_internet_exit_policy_types:
             self._acl_internet_exit(ie_policy_type)
-        natural_sort(self.structured_config.ip_access_lists, "name")

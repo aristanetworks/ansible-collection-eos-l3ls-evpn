@@ -80,12 +80,12 @@ class EthernetInterfacesMixin(Protocol):
                                 interface["sflow"] = {"enable": self.inputs.fabric_sflow.l3_interfaces}
 
                             if self._l3_interface_acls is not None:
-                                interface.update(
-                                    {
-                                        "access_group_in": get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_in..name", separator=".."),
-                                        "access_group_out": get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_out..name", separator=".."),
-                                    },
-                                )
+                                access_group_in = get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_in", separator="..")
+                                if access_group_in:
+                                    interface["access_group_in"] = access_group_in.name
+                                access_group_out = get(self._l3_interface_acls, f"{interface_name}..ipv4_acl_out", separator="..")
+                                if access_group_out:
+                                    interface["access_group_out"] = access_group_out.name
 
                             if "." in interface_name:
                                 # This is a subinterface so we need to ensure that the parent is created
