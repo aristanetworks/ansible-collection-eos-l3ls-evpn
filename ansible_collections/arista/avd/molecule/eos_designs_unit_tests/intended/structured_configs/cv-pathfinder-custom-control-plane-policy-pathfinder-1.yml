@@ -358,6 +358,8 @@ metadata:
         - name: CUSTOM-APPLICATION-1
         categories:
         - category: VIDEO1
+        transport_protocols:
+        - rtp
       - name: APP-PROFILE-CONTROL-PLANE
         user_defined_applications:
         - name: APP-CONTROL-PLANE

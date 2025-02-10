@@ -76,7 +76,9 @@ class MetadataMixin(Protocol):
         categories = get(self.application_traffic_recognition, "categories", default=[])
         for profile in get(self.application_traffic_recognition, "application_profiles", default=[]):
             application_profile = EosCliConfigGen.Metadata.CvPathfinder.Applications.ProfilesItem(name=profile["name"])
-            # TODO: Fix the issue with transport_protocols
+            protocols = get(profile, "application_transports")
+            if protocols:
+                application_profile.transport_protocols.extend(protocols)
             for application in get(profile, "applications", default=[]):
                 if application["name"] not in user_defined_app_names:
                     # TODO: Need to fix the support of services
