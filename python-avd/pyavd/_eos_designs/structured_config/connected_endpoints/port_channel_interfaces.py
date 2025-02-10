@@ -69,7 +69,7 @@ class PortChannelInterfacesMixin(Protocol):
                 continue
 
             connected_endpoint = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem(name=network_port.endpoint or Undefined)
-            connected_endpoint._type = "network_port"
+            connected_endpoint._internal_data.type = "network_port"
             network_port_as_adapter = network_port._cast_as(
                 EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem, ignore_extra_keys=True
             )
@@ -127,7 +127,7 @@ class PortChannelInterfacesMixin(Protocol):
                     interface=port_channel_interface_name,
                     peer=peer,
                     peer_interface=peer_interface,
-                    peer_type=connected_endpoint._type,
+                    peer_type=connected_endpoint._internal_data.type,
                     description=adapter_description,
                     port_channel_id=channel_group_id,
                     port_channel_description=port_channel_description,

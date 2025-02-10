@@ -4581,20 +4581,45 @@ keys:
                   - percent
             min_delay_static:
               type: dict
+              description: Mutually exclusive with min_delay_dynamic, if both are
+                defined min_delay_static takes precedence.
               keys:
                 number:
                   type: int
+                  description: Valid values are 1-16777215 microseconds. This is regardless
+                    of whether the specified unit is milliseconds or microseconds.
                   required: true
                   convert_types:
                   - str
-                  min: 1
-                  max: 16777215
                 unit:
                   type: str
                   required: true
                   valid_values:
                   - microseconds
                   - milliseconds
+            min_delay_dynamic:
+              type: dict
+              description: Mutually exclusive with min_delay_static, if both are defined
+                min_delay_static takes precedence.
+              keys:
+                twamp_light_fallback:
+                  type: dict
+                  keys:
+                    number:
+                      type: int
+                      description: 'Valid values are 1-16777215 microseconds.
+
+                        This is regardless of whether the specified unit is milliseconds
+                        or microseconds.'
+                      required: true
+                      convert_types:
+                      - str
+                    unit:
+                      type: str
+                      required: true
+                      valid_values:
+                      - microseconds
+                      - milliseconds
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface
@@ -9413,6 +9438,51 @@ keys:
           shutdown:
             type: bool
             description: Make `shutdown` key false for `no shutdown` cli.
+      tunnel:
+        description: Configure MPLS tunnel.
+        type: dict
+        keys:
+          termination:
+            description: Controls selection of the TTL/DSCP values by LER when decapsulating
+              MPLS packets.
+            type: dict
+            keys:
+              model:
+                type: dict
+                keys:
+                  ttl:
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+                  dscp:
+                    description: The DSCP model `uniform` is supported only on specific
+                      hardware platforms.
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+              php_model:
+                description: Used on PHP router in the absence of any VPN routes and
+                  explicit null VRF labels.
+                type: dict
+                keys:
+                  ttl:
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+                  dscp:
+                    description: The DSCP model `uniform` is supported only on specific
+                      hardware platforms.
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
   name_server:
     documentation_options:
       table: ip-name-servers
@@ -11561,20 +11631,47 @@ keys:
                   - percent
             min_delay_static:
               type: dict
+              description: Mutually exclusive with min_delay_dynamic, if both are
+                defined min_delay_static takes precedence.
               keys:
                 number:
                   type: int
+                  description: 'Valid values are 1-16777215 microseconds.
+
+                    This is regardless of whether the specified unit is milliseconds
+                    or microseconds.'
                   required: true
                   convert_types:
                   - str
-                  min: 1
-                  max: 16777215
                 unit:
                   type: str
                   required: true
                   valid_values:
                   - microseconds
                   - milliseconds
+            min_delay_dynamic:
+              description: Mutually exclusive with min_delay_static, if both are defined
+                min_delay_static takes precedence.
+              type: dict
+              keys:
+                twamp_light_fallback:
+                  type: dict
+                  keys:
+                    number:
+                      type: int
+                      description: 'Valid values are 1-16777215 microseconds.
+
+                        This is regardless of whether the specified unit is milliseconds
+                        or microseconds.'
+                      required: true
+                      convert_types:
+                      - str
+                    unit:
+                      type: str
+                      required: true
+                      valid_values:
+                      - microseconds
+                      - milliseconds
         validate_state:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation

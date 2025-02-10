@@ -9,73 +9,28 @@
 ## Errdisable
 
 ### Errdisable Summary
+{%     if errdisable.recovery.interval is arista.avd.defined %}
 
-{%     if errdisable.recovery is defined %}
-{%         if errdisable.detect.causes is defined %}
-|  Detect Cause | Enabled |
-| ------------- | ------- |
-{%             for cause in errdisable.detect.causes | arista.avd.natural_sort %}
-{%                 if cause == 'acl' %}
-| {{ cause }} | True |
-{%                 elif cause == 'arp-inspection' %}
-| {{ cause }} | True |
-{%                 elif cause == 'dot1x' %}
-| {{ cause }} | True |
-{%                 elif cause == 'link-change' %}
-| {{ cause }} | True |
-{%                 elif cause == 'tapagg' %}
-| {{ cause }} | True |
-{%                 elif cause == 'xcvr-misconfigured' %}
-| {{ cause }} | True |
-{%                 elif cause == 'xcvr-overheat' %}
-| {{ cause }} | True |
-{%                 elif cause == 'xcvr-power-unsupported' %}
-| {{ cause }} | True |
-{%                 endif %}
-{%             endfor %}
-{%         endif %}
+Errdisable recovery timer interval: {{ errdisable.recovery.interval }} seconds
+{%     endif %}
+{%     if errdisable.detect.causes is arista.avd.defined or errdisable.recovery.causes is arista.avd.defined %}
+{%         set combined_causes = ( errdisable.detect.causes | arista.avd.default([]) + errdisable.recovery.causes | arista.avd.default([]) ) | unique %}
 
-{%         if errdisable.recovery.interval is arista.avd.defined %}
-{%         endif %}
-{%         if errdisable.recovery.causes is defined %}
-|  Detect Cause | Enabled | Interval |
-| ------------- | ------- | -------- |
-{%             for cause in errdisable.recovery.causes | arista.avd.natural_sort %}
-{%                 if cause == 'arp-inspection' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'bpduguard' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'dot1x' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'hitless-reload-down' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'lacp-rate-limit' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'link-flap' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'no-internal-vlan' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'portchannelguard' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'portsec' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'speed-misconfigured' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'tapagg' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'uplink-failure-detection' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'xcvr-misconfigured' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'xcvr-overheat' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'xcvr-power-unsupported' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 elif cause == 'xcvr-unsupported' %}
-| {{ cause }} | True | {{ errdisable.recovery.interval }} |
-{%                 endif %}
-{%             endfor %}
-{%         endif %}
+|  Cause | Detection Enabled | Recovery Enabled |
+| ------ | ----------------- | ---------------- |
+{%         for cause in combined_causes | arista.avd.natural_sort %}
+{%             if cause in errdisable.detect.causes | arista.avd.default([]) %}
+{%                 set detect_status = True %}
+{%             else %}
+{%                 set detect_status = "-" %}
+{%             endif %}
+{%             if cause in errdisable.recovery.causes | arista.avd.default([]) %}
+{%                 set recovery_status = True %}
+{%             else %}
+{%                 set recovery_status = "-" %}
+{%             endif %}
+| {{ cause }} | {{ detect_status }} | {{ recovery_status }} |
+{%         endfor %}
 {%     endif %}
 
 ```eos

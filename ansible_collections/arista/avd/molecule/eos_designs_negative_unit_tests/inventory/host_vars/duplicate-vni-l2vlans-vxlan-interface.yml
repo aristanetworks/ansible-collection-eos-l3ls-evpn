@@ -29,9 +29,9 @@ tenants:
     mac_vrf_vni_base: 10000
     mac_vrf_id_base: 20000
     l2vlans:
-      - id: 1   # calculated vni would be 10001 (duplicate)
+      - id: 1 # calculated vni would be 10001 (duplicate)
         name: vlan
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs for L2VLANs.
-  {'id': 1, 'name': None, 'vni': 10001} conflicts with {'id': 111, 'name': None, 'vni': 10001}.
+  Found duplicate objects with conflicting data while generating configuration for VXLAN VNI 10001.
+  The following items are conflicting: L2VLAN 1 in tenant Tenant_B, SVI 111 in tenant Tenant_A.
