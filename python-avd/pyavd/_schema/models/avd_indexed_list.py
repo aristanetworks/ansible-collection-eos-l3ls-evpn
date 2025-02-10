@@ -32,9 +32,11 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     Other lists are *not* using this model.
     """
 
-    _item_type: ClassVar[type[AvdModel]]
+    __slots__ = ("_items",)
+
+    _item_type: ClassVar[type[AvdModel]]  # pylint: disable=declare-non-slot # pylint bug #9950
     """Type of items. This is used instead of inspecting the type-hints to improve performance significantly."""
-    _primary_key: ClassVar[str]
+    _primary_key: ClassVar[str]  # pylint: disable=declare-non-slot # pylint bug #9950
     """The name of the primary key to be used in the items."""
     _items: dict[T_PrimaryKey, T_AvdModel]
     """
@@ -57,27 +59,22 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         cls_items = cast(Iterable[T_AvdModel], (coerce_type(item, cls._item_type) for item in data))
         return cls(cls_items)
 
-    def __init__(self, items: Iterable[T_AvdModel] | UndefinedType = Undefined) -> None:
+    def __init__(self, items: Iterable[T_AvdModel] = ()) -> None:
         """
         AvdIndexedList subclass.
 
         Args:
             items: Iterable holding items of the correct type to be loaded into the indexed list.
         """
-        if isinstance(items, UndefinedType):
-            self._items = {}
-        else:
-            self._items = {getattr(item, self._primary_key): item for item in items}
+        self._items = {getattr(item, self._primary_key): item for item in items}
+
+        super().__init__()
 
     def __repr__(self) -> str:
         """Returns a repr with all the items including any nested models."""
         cls_name = self.__class__.__name__
         attrs = [f"{item!r}" for item in (self._items.values())]
         return f"<{cls_name}([{', '.join(attrs)}])>"
-
-    def __bool__(self) -> bool:
-        """Boolean check on the class to quickly determine if any items are set."""
-        return bool(self._items)
 
     def __len__(self) -> int:
         return len(self._items)
@@ -93,6 +90,9 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
 
     def __setitem__(self, key: T_PrimaryKey, value: T_AvdModel) -> None:
         self._items[key] = value
+
+    def __eq__(self, other: object) -> bool:
+        return self._compare(other)
 
     def get(self, key: T_PrimaryKey, default: T | UndefinedType = Undefined) -> T_AvdModel | T | UndefinedType:
         return self._items.get(key, default)
@@ -282,3 +282,15 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
         new_instance._block_inheritance = self._block_inheritance
 
         return new_instance
+
+    def _compare(self, other: object) -> bool:
+        if not isinstance(other, type(self)):
+            return False
+
+        if set(self.keys()) != set(other.keys()):
+            return False
+
+        if self._created_from_null != other._created_from_null:
+            return False
+
+        return all(item._compare(other[key]) for key, item in self.items())

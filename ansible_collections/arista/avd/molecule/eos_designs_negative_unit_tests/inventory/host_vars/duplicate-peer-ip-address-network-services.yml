@@ -34,5 +34,5 @@ tenants:
             nodes: [ duplicate-peer-ip-address-network-services ]
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for BGP peer defined under VRFs.
+  Found duplicate objects with conflicting data while generating configuration for Neighbors.
   {'ip_address': '2.2.2.2', 'peer_group': 'Tenant_C_BGP_PEER_GROUP2'} conflicts with {'ip_address': '2.2.2.2', 'peer_group': 'Tenant_C_BGP_PEER_GROUP'}.

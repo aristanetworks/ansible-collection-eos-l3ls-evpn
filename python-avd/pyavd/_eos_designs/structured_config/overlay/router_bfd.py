@@ -3,8 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
+
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigOverlayProtocol
@@ -17,10 +19,10 @@ class RouterBfdMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def router_bfd(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
-        """Return structured config for router_bfd."""
+    @structured_config_contributor
+    def router_bfd(self: AvdStructuredConfigOverlayProtocol) -> None:
+        """Set structured config for router_bfd."""
         if self.shared_utils.overlay_cvx:
-            return None
-
-        return {"multihop": self.inputs.bfd_multihop._as_dict()}
+            return
+        if self.inputs.bfd_multihop:
+            self.structured_config.router_bfd.multihop = self.inputs.bfd_multihop._cast_as(EosCliConfigGen.RouterBfd.Multihop)
