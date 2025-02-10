@@ -184,6 +184,7 @@ class EthernetInterfacesMixin(Protocol):
         """Set the structured_config ethernet_interfaces with the point-to-point interfaces defined under network_services."""
         for point_to_point_service in tenant.point_to_point_services._natural_sorted():
             for endpoint in point_to_point_service.endpoints:
+                # TODO: Filter port-to-point services in filtered_tenants
                 if self.shared_utils.hostname not in endpoint.nodes:
                     continue
 
