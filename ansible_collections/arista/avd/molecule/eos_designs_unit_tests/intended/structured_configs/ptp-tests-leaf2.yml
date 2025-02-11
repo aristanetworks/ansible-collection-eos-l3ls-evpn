@@ -246,7 +246,7 @@ ptp:
   priority1: 40
   priority2: 1
   ttl: 16
-  domain: 127
+  domain: 111
   message_type:
     general:
       dscp: 46
