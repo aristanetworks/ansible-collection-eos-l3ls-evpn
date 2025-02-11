@@ -139,15 +139,13 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
 
         if self.inputs.mgmt_destination_networks:
             for mgmt_destination_network in self.inputs.mgmt_destination_networks:
-                static_route = EosCliConfigGen.StaticRoutesItem(
+                self.structured_config.static_routes.append_new(
                     vrf=self.inputs.mgmt_interface_vrf, destination_address_prefix=mgmt_destination_network, gateway=self.shared_utils.mgmt_gateway
                 )
-                self.structured_config.static_routes.append(static_route)
         else:
-            static_route = EosCliConfigGen.StaticRoutesItem(
+            self.structured_config.static_routes.append_new(
                 vrf=self.inputs.mgmt_interface_vrf, destination_address_prefix="0.0.0.0/0", gateway=self.shared_utils.mgmt_gateway
             )
-            self.structured_config.static_routes.append(static_route)
 
     @cached_property
     def ipv6_static_routes(self) -> list | None:

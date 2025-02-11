@@ -63,10 +63,9 @@ class AvdStructuredConfigInbandManagement(StructuredConfigGenerator):
     def static_routes(self) -> None:
         if not self.shared_utils.configure_inband_mgmt or self.shared_utils.inband_mgmt_gateway is None:
             return
-        static_route = EosCliConfigGen.StaticRoutesItem(
+        self.structured_config.static_routes.append_new(
             destination_address_prefix="0.0.0.0/0", gateway=self.shared_utils.inband_mgmt_gateway, vrf=self.shared_utils.inband_mgmt_vrf
         )
-        self.structured_config.static_routes.append(static_route)
 
     @cached_property
     def ipv6_static_routes(self) -> list | None:
