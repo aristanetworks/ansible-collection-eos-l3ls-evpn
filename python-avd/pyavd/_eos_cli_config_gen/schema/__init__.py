@@ -288,7 +288,13 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 class MethodsItem(AvdModel):
                     """Subclass of AvdModel."""
 
-                    _fields: ClassVar[dict] = {"method": {"type": str}, "group": {"type": str}, "multicast": {"type": bool}}
+                    _fields: ClassVar[dict] = {"multicast": {"type": bool}, "method": {"type": str}, "group": {"type": str}}
+                    multicast: bool | None
+                    """
+                    Forward accounting packets to all servers within the specified group.
+                    This option is applicable only
+                    when the `method` key is explicitly set to `group`.
+                    """
                     method: Literal["logging", "group"]
                     group: str | None
                     """
@@ -296,21 +302,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     This option is applicable only when the `method` key is
                     explicitly set to `group`.
                     """
-                    multicast: bool | None
-                    """
-                    Forward accounting packets to all servers within the specified group.
-                    This option is applicable only
-                    when the `method` key is explicitly set to `group`.
-                    """
 
                     if TYPE_CHECKING:
 
                         def __init__(
                             self,
                             *,
+                            multicast: bool | None | UndefinedType = Undefined,
                             method: Literal["logging", "group"] | UndefinedType = Undefined,
                             group: str | None | UndefinedType = Undefined,
-                            multicast: bool | None | UndefinedType = Undefined,
                         ) -> None:
                             """
                             MethodsItem.
@@ -319,15 +319,15 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Subclass of AvdModel.
 
                             Args:
+                                multicast:
+                                   Forward accounting packets to all servers within the specified group.
+                                   This option is applicable only
+                                   when the `method` key is explicitly set to `group`.
                                 method: method
                                 group:
                                    Specify the server group to be used.
                                    This option is applicable only when the `method` key is
                                    explicitly set to `group`.
-                                multicast:
-                                   Forward accounting packets to all servers within the specified group.
-                                   This option is applicable only
-                                   when the `method` key is explicitly set to `group`.
 
                             """
 

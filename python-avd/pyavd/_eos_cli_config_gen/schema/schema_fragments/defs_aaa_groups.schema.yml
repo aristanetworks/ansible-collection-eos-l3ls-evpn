@@ -1,0 +1,18 @@
+---
+type: dict
+$defs:
+  methods:
+    type: list
+    min_length: 1
+    items:
+      type: dict
+      keys:
+        method:
+          type: str
+          required: true
+          valid_values: ["logging", "group"]
+        group:
+          type: str
+          description: |-
+            Specify the server group to be used.
+            This option is applicable only when the `method` key is explicitly set to `group`.
