@@ -26,8 +26,8 @@ title: Ansible Collection Role eos_designs - WAN
 
 Please familiarize yourself with the Arista WAN terminology before proceeding:
 
-- https://www.arista.com/en/solutions/enterprise-wan
-- https://tech-library.arista.com/wan/ (Tech Library access requires an Arista account)
+- <https://www.arista.com/en/solutions/enterprise-wan>
+- <https://tech-library.arista.com/wan/> (Tech Library access requires an Arista account)
 
 ### Design points
 
@@ -103,21 +103,21 @@ Please familiarize yourself with the Arista WAN terminology before proceeding:
 
 The following table list the `eos_designs` top level keys used for WAN and how they should be set:
 
-| Key                                    | Must be the same for all the WAN routers | Comment                                                                                                                                                                  |
-| -------------------------------------- | ---------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `wan_mode`                             | ✅                                       | Two possible modes, `autovpn` and `cv-pathfinder` (default).                                                                                                             |
-| `wan_encapsulation`                    | ✅                                       | Two possible encapsulations, `vxlan` and `path-selection` (default).                                                                                                     |
-| `wan_virtual_topologies`               | ✅                                       | to define the Policies and the VRF to policy mappings.                                                                                                                   |
-| `wan_path_groups`                      | ✅                                       | to define the list of path-groups in the network.                                                                                                                        |
-| `wan_carriers`                         | ✅                                       | to define the list of carriers in the network, each carrier is assigned to a path-group.                                                                                 |
-| `wan_ipsec_profiles`                   | ✅                                       | to define the shared key for the Control Plane and Data Plane IPSec profiles.                                                                                            |
-| `cv_pathfinder_regions`                | ✅                                       | to define the Region/Zone/Site hierarchy, not required for AutoVPN.                                                                                                      |
-| `tenants`                              | ✅                                       | the default tenant key from `network_services` or any other key for tenant that would hold some WAN VRF information.                                                     |
-| `wan_stun_dtls_disable`                | ✅                                       | disable dTLS for STUN for instance for lab. (**NOT** recommended in production).                                                                                         |
-| `application_classification`           | ✅                                       | to define the specific traffic classification required for the WAN if any.                                                                                               |
-| `cv_pathfinder_internet_exit_policies` | ✅                                       | to define the internet-exit policies.                                                                                                                                    |
-| `wan_route_servers`                    | ✘                                        | Indicate to which WAN route servers the WAN router should connect to. This key is also used to tell every WAN Route Reflectors with which other RRs it should peer with. |
-| `ipv4_acls`                            | ✘                                        | List of IPv4 access-lists to be assigned to WAN interfaces.                                                                                                              |
+| Key | Must be the same for all the WAN routers | Comment |
+| --- | ---------------------------------------- | ------- |
+| `wan_mode` | ✅ | Two possible modes, `autovpn` and `cv-pathfinder` (default). |
+| `wan_encapsulation` | ✅ | Two possible encapsulations, `vxlan` and `path-selection` (default). |
+| `wan_virtual_topologies` | ✅ | to define the Policies and the VRF to policy mappings. |
+| `wan_path_groups` | ✅ | to define the list of path-groups in the network. |
+| `wan_carriers` | ✅ | to define the list of carriers in the network, each carrier is assigned to a path-group. |
+| `wan_ipsec_profiles` | ✅ | to define the shared key for the Control Plane and Data Plane IPSec profiles. |
+| `cv_pathfinder_regions` | ✅ | to define the Region/Zone/Site hierarchy, not required for AutoVPN. |
+| `tenants` | ✅ | the default tenant key from `network_services` or any other key for tenant that would hold some WAN VRF information. |
+| `wan_stun_dtls_disable` | ✅ | disable dTLS for STUN for instance for lab. (**NOT** recommended in production). |
+| `application_classification` | ✅ | to define the specific traffic classification required for the WAN if any. |
+| `cv_pathfinder_internet_exit_policies` | ✅ | to define the internet-exit policies. |
+| `wan_route_servers` | ✘ | Indicate to which WAN route servers the WAN router should connect to. This key is also used to tell every WAN Route Reflectors with which other RRs it should peer with. |
+| `ipv4_acls` | ✘ | List of IPv4 access-lists to be assigned to WAN interfaces. |
 
 Additionally, following keys must be set for the WAN route servers for the connectivity to work:
 
@@ -183,7 +183,7 @@ wan_route_servers: # (1)!
 ```
 
 1. A `wan_router` with this configuration will establish BGP peering to all the `wan_route_servers` in the list if it has a common path-group.
-   A `wan_rr` with this configuration will establish BGP peerings to every other `wan_route_servers` in the list if they have a common path-group.
+    A `wan_rr` with this configuration will establish BGP peerings to every other `wan_route_servers` in the list if they have a common path-group.
 
 !!! note
 
@@ -253,7 +253,8 @@ cv_pathfinder_regions:
 ```
 
 !!! Note
-Site IDs and names must be unique per region.
+
+    Site IDs and names must be unique per region.
 
 And then for each `wan_router`:
 
@@ -427,8 +428,7 @@ ipv4_prefix_list_catalog:
 
 1. `peer` and `peer_interface` are optionals and used for description.
 2. `wan_circuit_id` is optional and used for description.
-3. Configure IPv4 ACLs in and out for the L3 interface. The access lists must
-   be defined under `ipv4_acls` top level key.
+3. Configure IPv4 ACLs in and out for the L3 interface. The access lists must be defined under `ipv4_acls` top level key.
 4. For BGP peering for WAN interfaces, the `ipv4_prefix_list_in` is mandatory for security reaasons. It is defined in the `ipv4_prefix_list_catalog`.
 
 ### WAN policies
@@ -493,8 +493,7 @@ wan_virtual_topologies:
 1. Assign the `PROD-AVT-POLICY` to the `PROD` VRF, multiple VRFs can use the same policy.
 2. VRF `default` will use the AVD auto-generated `DEFAULT-POLICY` as no policy is set.
 3. Define the `PROD-AVT-POLICY`
-4. `default_virtual_topology` is used to configure the default match in the policy.
-   In this case, default traffic will use INET path-group first and MPLS as backup.
+4. `default_virtual_topology` is used to configure the default match in the policy. In this case, default traffic will use INET path-group first and MPLS as backup.
 5. This list element configures the policy to apply to traffic the `VOICE` application profile.
    This block of configuration will configure the Load Balance policy, the match statement in the policy (in `router path-selection` for AutoVPN or `router adaptive-virtual-topology` for CV-Pathfinder) and for CV-Pathfinder, the AVT profile.
    The application profile must be defined under `application_classification.application_profiles`.
@@ -550,7 +549,8 @@ An Application Virtual Topology policy is composed of multiple profiles. An AVT 
 
 ```yaml
 wan_virtual_topologies:
-  vrfs: [...]
+  vrfs:
+    [...]
   policies:
     - name: PROD-AVT-POLICY
       default_virtual_topology:
@@ -697,24 +697,20 @@ The following LAN scenarios are supported:
 Some design points:
 
 - The Site of Origin (SOO) extended community is configured as `<router_id>:<site_id>`
-  note: site id is unique per zone (only a default zone supported today).
-  for HA site, the SOO is set as `<router1_id>:<site_id>` where `router1` is
-  the first router defined in the group.
+  - site id is unique per zone (only a default zone supported today).
+  - for HA site, the SOO is set as `<router1_id>:<site_id>` where `router1` is the first router defined in the group.
 - HA is not supported for more than two routers for CV Pathfinders.
 - The routes to be advertised towards the WAN must be marked with the site SOO.
   - The connected routes and static routes are marked with the SOO when
     redistributed in BGP
     - the routes redistributed into BGP via the route-map `RM-CONN-2-BGP` are tagged with the SOO.
     - the routes redistributed into BGP via the route-map `RM-STATIC-2-BGP` are tagged with the SOO.
-  - the routes received from LAN are marked with the SOO when received from
-    the LAN over BGP or when redistributed into BGP from the LAN protocol.
-    note: For other connection (e.g. L3 interface with a BGP peering, the
-    user must mark them with the SOO)
+  - the routes received from LAN are marked with the SOO when received from the LAN over BGP or when redistributed into BGP from the LAN protocol.
+    - For other connection (e.g. L3 interface with a BGP peering, the user must mark them with the SOO).
 - For VRF default, there is a requirement to explicitly redistribute the routes for EVPN. The `RM-EVPN-EXPORT-VRF-DEFAULT` is configured to export the routes tagged with the SOO.
 - Routes received from the WAN with the local SOO are dropped.
 - Routes received from the WAN are redistributed / advertised towards the LAN.
-- For HA, an iBGP session using EVPN Gateway is used to share the routes from
-  one peer to the other.
+- For HA, an iBGP session using EVPN Gateway is used to share the routes from one peer to the other.
   - WAN, LAN and local static routes are sent to the HA peer to cater for various failure scenarii.
   - The routes received from the HA peer are made less preferred than routes received from the LAN or from the WAN.
 
@@ -809,7 +805,10 @@ The following diagram represents this scenario:
   - one inbound route-map `RM-BGP-UNDERLAY-PEERS-IN`:
     - accept routes coming from the LAN and set the SoO extended community on them.
 
-!!! warning - the Underlay peer group (towards the LAN) is not configured with any outbound route-map. - For VRF default, there is a requirement to explicitly redistribute the routes for EVPN. The `RM-EVPN-EXPORT-VRF-DEFAULT` is configured to export the routes tagged with the SoO.
+!!! warning
+
+    - the Underlay peer group (towards the LAN) is not configured with any outbound route-map.
+    - For VRF default, there is a requirement to explicitly redistribute the routes for EVPN. The `RM-EVPN-EXPORT-VRF-DEFAULT` is configured to export the routes tagged with the SoO.
 
 The following diagram shows the additional route-maps configured to support eBGP on LAN:
 
@@ -1056,16 +1055,17 @@ wan_virtual_topologies:
 
 `eos_validate_state` is being enriched to support new tests for WAN designs. The tests listed below are validating WAN designs.
 
-| AVD Test Class         | ANTA Test Class         | Description                                                                                                                                                                                               |
-| ---------------------- | ----------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| AvdTestInterfacesState | VerifyInterfacesStatus  | Validate the DPS interface status.                                                                                                                                                                        |
-| AvdTestBGP             | VerifyBGPSpecificPeers  | Validate the state of BGP Address Family sessions, including `Path-Selection` for AutoVPN, `Link-State` and `IPv4/IPv6 SR-TE` for CV Pathfinder.                                                          |
-| AvdTestIPSecurity      | VerifySpecificIPSecConn | Validate the establishment of IP security connections for each static peer under the `router path-selection` section of the configuration.                                                                |
-| AvdTestStun            | VerifyStunClient        | Validate the presence of a STUN client translation for a given source IPv4 address and port. The list of expected translations for each device is built by searching local interfaces in each path-group. |
-| AvdTestDpsReachability | VerifyReachability      | Validate DPS reachability between devices.                                                                                                                                                                |
-| AvdTestAvtPath         | VerifyAVTSpecificPath   | Validate that the status is active and the type is direct for an Adaptive Virtual Topology (AVT) path in a specified VRF for the static peers.                                                            |
-| AvdTestAvtRole         | VerifyAVTRole           | Validate the Adaptive Virtual Topology (AVT) role of a device.                                                                                                                                            |
+| AVD Test Class | ANTA Test Class | Description |
+| -------------- | --------------- | ----------- |
+| AvdTestInterfacesState | VerifyInterfacesStatus | Validate the DPS interface status. |
+| AvdTestBGP | VerifyBGPSpecificPeers | Validate the state of BGP Address Family sessions, including `Path-Selection` for AutoVPN, `Link-State` and `IPv4/IPv6 SR-TE` for CV Pathfinder. |
+| AvdTestIPSecurity | VerifySpecificIPSecConn | Validate the establishment of IP security connections for each static peer under the `router path-selection` section of the configuration. |
+| AvdTestStun | VerifyStunClient | Validate the presence of a STUN client translation for a given source IPv4 address and port. The list of expected translations for each device is built by searching local interfaces in each path-group. |
+| AvdTestDpsReachability | VerifyReachability | Validate DPS reachability between devices. |
+| AvdTestAvtPath | VerifyAVTSpecificPath | Validate that the status is active and the type is direct for an Adaptive Virtual Topology (AVT) path in a specified VRF for the static peers. |
+| AvdTestAvtRole | VerifyAVTRole | Validate the Adaptive Virtual Topology (AVT) role of a device. |
 
 !!! note
-More WAN-related tests are available directly in ANTA and can be added using custom catalogs.
-They will be progressively added to `eos_validate_state`.
+
+    More WAN-related tests are available directly in ANTA and can be added using custom catalogs.
+    They will be progressively added to `eos_validate_state`.
