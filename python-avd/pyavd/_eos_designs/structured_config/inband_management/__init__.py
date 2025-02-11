@@ -6,7 +6,6 @@ from __future__ import annotations
 from functools import cached_property
 from ipaddress import ip_network
 
-from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import strip_empties_from_dict
