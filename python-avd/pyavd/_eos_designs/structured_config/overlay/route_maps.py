@@ -31,65 +31,51 @@ class RouteMapsMixin(Protocol):
                 remote_asns = natural_sort({rs_dict.get("bgp_as") for rs_dict in self._evpn_route_servers.values()})
                 for remote_asn in remote_asns:
                     route_maps_item = EosCliConfigGen.RouteMapsItem(name=f"RM-EVPN-FILTER-AS{remote_asn}")
-                    route_maps_item.sequence_numbers.extend(
-                        [
-                            EosCliConfigGen.RouteMapsItem.SequenceNumbersItem(
-                                sequence=10, type="deny", match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match([f"as {remote_asn}"])
-                            ),
-                            EosCliConfigGen.RouteMapsItem.SequenceNumbersItem(sequence=20, type="permit"),
-                        ]
+                    route_maps_item.sequence_numbers.append_new(
+                        sequence=10, type="deny", match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match([f"as {remote_asn}"])
                     )
+                    route_maps_item.sequence_numbers.append_new(sequence=20, type="permit")
                     self.structured_config.route_maps.append(route_maps_item)
 
         elif self.shared_utils.overlay_routing_protocol == "ibgp" and self.shared_utils.overlay_vtep and self.shared_utils.evpn_role != "server":
             # Route-map IN and OUT for SOO
+
             route_maps_item = EosCliConfigGen.RouteMapsItem(name="RM-EVPN-SOO-IN")
-            route_maps_item.sequence_numbers.extend(
-                [
-                    EosCliConfigGen.RouteMapsItem.SequenceNumbersItem(
-                        sequence=10, type="deny", match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["extcommunity ECL-EVPN-SOO"])
-                    ),
-                    EosCliConfigGen.RouteMapsItem.SequenceNumbersItem(sequence=20, type="permit"),
-                ]
+            route_maps_item.sequence_numbers.append_new(
+                sequence=10, type="deny", match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["extcommunity ECL-EVPN-SOO"])
             )
+            route_maps_item.sequence_numbers.append_new(sequence=20, type="permit")
             self.structured_config.route_maps.append(route_maps_item)
+
             route_maps_item = EosCliConfigGen.RouteMapsItem(name="RM-EVPN-SOO-OUT")
-            route_maps_item.sequence_numbers.append(
-                EosCliConfigGen.RouteMapsItem.SequenceNumbersItem(
-                    sequence=10,
-                    type="permit",
-                    set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set([f"extcommunity soo {self.shared_utils.evpn_soo} additive"]),
-                ),
+            route_maps_item.sequence_numbers.append_new(
+                sequence=10,
+                type="permit",
+                set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set([f"extcommunity soo {self.shared_utils.evpn_soo} additive"]),
             )
             self.structured_config.route_maps.append(route_maps_item)
 
             if self.shared_utils.wan_ha:
                 route_maps_item = EosCliConfigGen.RouteMapsItem(name="RM-WAN-HA-PEER-IN")
-                route_maps_item.sequence_numbers.append(
-                    EosCliConfigGen.RouteMapsItem.SequenceNumbersItem(
-                        sequence=10,
-                        type="permit",
-                        description="Set tag 50 on routes received from HA peer over EVPN",
-                        set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set(["tag 50"]),
-                    )
+                route_maps_item.sequence_numbers.append_new(
+                    sequence=10,
+                    type="permit",
+                    description="Set tag 50 on routes received from HA peer over EVPN",
+                    set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set(["tag 50"]),
                 )
                 self.structured_config.route_maps.append(route_maps_item)
                 route_maps_item = EosCliConfigGen.RouteMapsItem(name="RM-WAN-HA-PEER-OUT")
-                route_maps_item.sequence_numbers.extend(
-                    [
-                        EosCliConfigGen.RouteMapsItem.SequenceNumbersItem(
-                            sequence=10,
-                            type="permit",
-                            match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["route-type internal"]),
-                            set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set(["local-preference 50"]),
-                            description="Make EVPN routes learned from WAN less preferred on HA peer",
-                        ),
-                        EosCliConfigGen.RouteMapsItem.SequenceNumbersItem(
-                            sequence=20,
-                            type="permit",
-                            description="Make locally injected routes less preferred on HA peer",
-                            set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set(["local-preference 75"]),
-                        ),
-                    ]
+                route_maps_item.sequence_numbers.append_new(
+                    sequence=10,
+                    type="permit",
+                    match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["route-type internal"]),
+                    set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set(["local-preference 50"]),
+                    description="Make EVPN routes learned from WAN less preferred on HA peer",
+                )
+                route_maps_item.sequence_numbers.append_new(
+                    sequence=20,
+                    type="permit",
+                    description="Make locally injected routes less preferred on HA peer",
+                    set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set(["local-preference 75"]),
                 )
                 self.structured_config.route_maps.append(route_maps_item)
