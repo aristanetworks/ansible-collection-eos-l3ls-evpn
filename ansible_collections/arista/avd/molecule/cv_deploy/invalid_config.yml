@@ -4,8 +4,8 @@
   connection: local
   gather_facts: false
   vars:
-    cv_server: www.cv-staging.corp.arista.io
-    cv_token: "{{ lookup('env', 'CVAAS_AAWG_CI') }}"
+    cv_server: "{{ lookup('env', 'CV_SERVER') }}"
+    cv_token: "{{ lookup('env', 'CV_ACCESS_TOKEN') }}"
     cv_verify_certs: true
     cv_skip_missing_devices: true
     eos_config_dir: "{{ playbook_dir }}/intended/configs/test_invalid_configs"
@@ -145,7 +145,10 @@
           retries: 3
           delay: 3
           ignore_errors: true
-          when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
 
     - name: "{{ test_id | upper }} Build Workspace with portfast warning suppressed by knob"
       tags: ["{{ test_id }}"]
@@ -253,7 +256,10 @@
           retries: 3
           delay: 3
           ignore_errors: true
-          when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
 
     - name: "{{ test_id | upper }} Build Workspace with manually suppressed warning"
       tags: ["{{ test_id }}"]
@@ -364,7 +370,10 @@
           retries: 3
           delay: 3
           ignore_errors: true
-          when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
 
     - name: "{{ test_id | upper }} Build Workspace with two manually suppressed warnings"
       tags: ["{{ test_id }}"]
@@ -469,7 +478,10 @@
           retries: 3
           delay: 3
           ignore_errors: true
-          when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
 
     - name: "{{ test_id | upper }} Build Workspace with mix of manual and knob-based suppressed warnings"
       tags: ["{{ test_id }}"]
@@ -572,7 +584,10 @@
           retries: 3
           delay: 3
           ignore_errors: true
-          when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
 
     - name: "{{ test_id | upper }} Build Workspace with invalid regex suppression pattern"
       tags: ["{{ test_id }}"]
@@ -690,7 +705,10 @@
           retries: 3
           delay: 3
           ignore_errors: true
-          when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
 
     - name: "{{ test_id | upper }} Build Workspace with portfast warning suppressed by both knob and regex pattern"
       tags: ["{{ test_id }}"]
@@ -800,7 +818,10 @@
           retries: 3
           delay: 3
           ignore_errors: true
-          when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
 
     - name: "{{ test_id | upper }} Build Workspace with suppressed warnings"
       tags: ["{{ test_id }}"]
@@ -901,7 +922,10 @@
           retries: 3
           delay: 3
           ignore_errors: true
-          when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
 
     - name: "{{ test_id | upper }}  Cleanup"
       tags: ["{{ test_id }}"]

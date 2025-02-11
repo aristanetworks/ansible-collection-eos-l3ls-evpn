@@ -104,7 +104,10 @@
       retries: 3
       delay: 3
       ignore_errors: true
-      when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+      when: |
+        cv_deploy_results.workspace.id is not none and
+        cv_deploy_results.workspace.id | length > 0 and
+        cv_deploy_results.workspace.state | default('') != "abandoned"
 
     - name: "{{ test_id | upper }}  Cleanup"
       tags: ["{{ test_id }}"]

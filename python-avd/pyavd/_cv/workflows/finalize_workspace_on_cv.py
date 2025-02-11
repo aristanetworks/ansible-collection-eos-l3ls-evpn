@@ -59,6 +59,8 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient, 
     if build_result.status != ResponseStatus.SUCCESS:
         workspace.state = "build failed"
         LOGGER.info("finalize_workspace_on_cv: %s", workspace)
+        await cv_client.abandon_workspace(workspace_id=workspace.id)
+        workspace.state = "abandoned"
         msg = (
             f"Failed to build workspace {workspace.id}: {build_result}. "
             f"See details: https://{cv_client._servers[0]}/cv/provisioning/workspaces?ws={workspace.id}"
@@ -148,9 +150,9 @@ async def produce_cvworkspace_build_result(
     workspace_build_details: list[WorkspaceBuildDetails],
     compiled_workspace_build_warning_suppress_list: list[Pattern],
     devices: list[CVDevice],
-) -> CVWorkspaceBuildResult:
+) -> list[CVWorkspaceBuildResult]:
     """
-    Process list of WorkspaceBuildDetails to generate CVWorkspaceBuildResult suppressing undesired warnings.
+    Process list of WorkspaceBuildDetails to generate list of CVWorkspaceBuildResult suppressing undesired warnings.
 
     Parameters:
         workspace: Active Workspace.
@@ -159,7 +161,7 @@ async def produce_cvworkspace_build_result(
         devices: List of CVDevice objects representing existing CV devices.
 
     Returns:
-        CVWorkspaceBuildResult object defining details of the Workspace build.
+        List of CVWorkspaceBuildResult objects defining details of the Workspace build.
     """
     return [
         CVWorkspaceBuildResult(
