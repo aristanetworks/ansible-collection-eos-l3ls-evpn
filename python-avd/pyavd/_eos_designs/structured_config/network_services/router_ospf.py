@@ -61,7 +61,9 @@ class RouterOspfMixin(Protocol):
             self.structured_config.router_ospf.process_ids.obtain(self.inputs.underlay_ospf_process_id).redistribute.static.enabled = True
 
     def _update_ospf_redistribute(
-        self, process: EosCliConfigGen.RouterOspf.ProcessIdsItem, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        process: EosCliConfigGen.RouterOspf.ProcessIdsItem,
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
     ) -> None:
         """
         Configures OSPF route redistribution settings for the given VRF.
@@ -84,7 +86,7 @@ class RouterOspfMixin(Protocol):
                 process.redistribute.connected.route_map = route_map
 
     def _update_ospf_interface(
-        self,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         process: EosCliConfigGen.RouterOspf.ProcessIdsItem,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
     ) -> None:
