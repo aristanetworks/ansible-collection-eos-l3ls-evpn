@@ -34,6 +34,6 @@ class Ipv6StaticRoutesMixin(Protocol):
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 for static_route in vrf.ipv6_static_routes:
-                    static_route_items = static_route._cast_as(EosCliConfigGen.Ipv6StaticRoutesItem, ignore_extra_keys=True)
-                    static_route_items.vrf = vrf.name
-                    self.structured_config.ipv6_static_routes.append_unique(static_route_items)
+                    static_route_item = static_route._cast_as(EosCliConfigGen.Ipv6StaticRoutesItem, ignore_extra_keys=True)
+                    static_route_item.vrf = vrf.name
+                    self.structured_config.ipv6_static_routes.append_unique(static_route_item)
