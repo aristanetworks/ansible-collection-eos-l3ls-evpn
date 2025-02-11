@@ -29,3 +29,4 @@ router_multicast:
     - name: MCAST_VRF2
       ipv4:
         routing: true
+    - name: MCAST_VRF3

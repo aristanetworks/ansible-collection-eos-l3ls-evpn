@@ -113,8 +113,10 @@ tenants:
           loopback: 101
           loopback_ip_pools:
             - pod: DC1_POD1
-              ipv4_pool: 10.101.101.0/24
-              ipv6_pool: 2001:db8:1::/48
+              # Testing using multiple prefixes and ranges to represent 10.101.101.0/24
+              ipv4_pool: 10.101.101.0-10.101.101.15, 10.101.101.16/28, 10.101.101.32-10.101.101.255
+              # Testing using multiple prefixes and ranges to represent 2001:db8:1::/48
+              ipv6_pool: 2001:db8:1::-2001:db8:1:7fff::, 2001:db8:1:8000::/49
             - pod: DC1_POD2
               ipv4_pool: 10.101.102.0/24
             - pod: DC2_POD1

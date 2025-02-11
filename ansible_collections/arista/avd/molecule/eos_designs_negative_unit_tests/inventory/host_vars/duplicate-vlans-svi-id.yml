@@ -23,5 +23,5 @@ tenants:
             name: vlan2
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for SVIs in VRF 'Tenant_B_OP_Zone'.
+  Found duplicate objects with conflicting data while generating configuration for Vlans.
   {'id': 2, 'name': 'vlan2', 'tenant': 'TenantB'} conflicts with {'id': 2, 'name': 'vlan1', 'tenant': 'TenantA'}.

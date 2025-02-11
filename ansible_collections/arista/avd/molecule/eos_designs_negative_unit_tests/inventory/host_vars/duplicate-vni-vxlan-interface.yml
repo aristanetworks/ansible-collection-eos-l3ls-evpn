@@ -22,7 +22,7 @@ tenants:
         vrf_id: 9
         svis:
           # SVI as string
-          - id: '110'
+          - id: "110"
             name: Tenant_A_OP_Zone_1
           # SVI as integer
           - id: 111
@@ -30,5 +30,5 @@ tenants:
             name: Tenant_A_OP_Zone_2
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for VXLAN VNIs for SVIs.
-  {'id': 111, 'name': None, 'vni': 10110} conflicts with {'id': 110, 'name': None, 'vni': 10110}.
+  Found duplicate objects with conflicting data while generating configuration for VXLAN VNI 10110.
+  The following items are conflicting: SVI 110 in tenant Tenant_A, SVI 111 in tenant Tenant_A.

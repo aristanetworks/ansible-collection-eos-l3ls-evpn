@@ -23,6 +23,8 @@ class AvdStructuredConfigFlows(StructuredConfigGenerator):
     The only exception is of course custom_structured_configuration which always comes last.
     """
 
+    ignore_avd_eos_designs_enforce_duplication_checks_across_all_models = True
+
     @cached_property
     def sflow(self) -> dict | None:
         """

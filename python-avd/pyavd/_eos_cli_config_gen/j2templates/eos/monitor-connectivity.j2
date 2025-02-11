@@ -57,6 +57,9 @@ monitor connectivity
 {%             endfor %}
 {%         endif %}
 {%     endfor %}
+{%     if monitor_connectivity.name_server_group is arista.avd.defined %}
+   name-server group {{ monitor_connectivity.name_server_group }}
+{%     endif %}
 {%     if monitor_connectivity.interval is arista.avd.defined %}
    interval {{ monitor_connectivity.interval }}
 {%     endif %}

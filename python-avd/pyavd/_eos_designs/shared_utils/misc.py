@@ -4,20 +4,21 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol
 
+from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get
+from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.eos_designs_facts import EosDesignsFacts
-    from pyavd._eos_designs.schema import EosDesigns
 
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class MiscMixin:
+class MiscMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -26,21 +27,21 @@ class MiscMixin:
     """
 
     @cached_property
-    def all_fabric_devices(self: SharedUtils) -> list[str]:
+    def all_fabric_devices(self: SharedUtilsProtocol) -> list[str]:
         avd_switch_facts: dict = get(self.hostvars, "avd_switch_facts", required=True)
         return list(avd_switch_facts.keys())
 
     @cached_property
-    def hostname(self: SharedUtils) -> str:
+    def hostname(self: SharedUtilsProtocol) -> str:
         """Hostname set based on inventory_hostname variable. TODO: Get a proper attribute on the class instead of gleaning from the regular inputs."""
         return get(self.hostvars, "inventory_hostname", required=True)
 
     @cached_property
-    def id(self: SharedUtils) -> int | None:
+    def id(self: SharedUtilsProtocol) -> int | None:
         return self.node_config.id
 
     @cached_property
-    def filter_tags(self: SharedUtils) -> list:
+    def filter_tags(self: SharedUtilsProtocol) -> list:
         """Return filter.tags + group if defined."""
         filter_tags = self.node_config.filter.tags
         if self.group is not None:
@@ -48,15 +49,15 @@ class MiscMixin:
         return filter_tags
 
     @cached_property
-    def igmp_snooping_enabled(self: SharedUtils) -> bool:
+    def igmp_snooping_enabled(self: SharedUtilsProtocol) -> bool:
         return default(self.node_config.igmp_snooping_enabled, self.inputs.default_igmp_snooping_enabled)
 
     @cached_property
-    def only_local_vlan_trunk_groups(self: SharedUtils) -> bool:
+    def only_local_vlan_trunk_groups(self: SharedUtilsProtocol) -> bool:
         return self.inputs.enable_trunk_groups and self.inputs.only_local_vlan_trunk_groups
 
     @cached_property
-    def system_mac_address(self: SharedUtils) -> str | None:
+    def system_mac_address(self: SharedUtilsProtocol) -> str | None:
         """
         system_mac_address.
 
@@ -67,17 +68,17 @@ class MiscMixin:
         return default(self.node_config.system_mac_address, self.inputs.system_mac_address)
 
     @cached_property
-    def uplink_switches(self: SharedUtils) -> list[str]:
+    def uplink_switches(self: SharedUtilsProtocol) -> list[str]:
         return self.node_config.uplink_switches._as_list() or get(self.cv_topology_config, "uplink_switches") or []
 
     @cached_property
-    def uplink_interfaces(self: SharedUtils) -> list[str]:
+    def uplink_interfaces(self: SharedUtilsProtocol) -> list[str]:
         return range_expand(
             self.node_config.uplink_interfaces or get(self.cv_topology_config, "uplink_interfaces") or self.default_interfaces.uplink_interfaces,
         )
 
     @cached_property
-    def uplink_switch_interfaces(self: SharedUtils) -> list[str]:
+    def uplink_switch_interfaces(self: SharedUtilsProtocol) -> list[str]:
         uplink_switch_interfaces = self.node_config.uplink_switch_interfaces or get(self.cv_topology_config, "uplink_switch_interfaces") or []
         if uplink_switch_interfaces:
             return range_expand(uplink_switch_interfaces)
@@ -114,7 +115,7 @@ class MiscMixin:
         return uplink_switch_interfaces
 
     @cached_property
-    def serial_number(self: SharedUtils) -> str | None:
+    def serial_number(self: SharedUtilsProtocol) -> str | None:
         """
         serial_number.
 
@@ -125,19 +126,19 @@ class MiscMixin:
         return default(self.node_config.serial_number, self.inputs.serial_number)
 
     @cached_property
-    def max_uplink_switches(self: SharedUtils) -> int:
+    def max_uplink_switches(self: SharedUtilsProtocol) -> int:
         """max_uplink_switches will default to the length of uplink_switches."""
         return default(self.node_config.max_uplink_switches, len(self.uplink_switches))
 
     @cached_property
-    def p2p_uplinks_mtu(self: SharedUtils) -> int | None:
+    def p2p_uplinks_mtu(self: SharedUtilsProtocol) -> int | None:
         if not self.platform_settings.feature_support.per_interface_mtu:
             return None
         p2p_uplinks_mtu = default(self.platform_settings.p2p_uplinks_mtu, self.inputs.p2p_uplinks_mtu)
         return default(self.node_config.uplink_mtu, p2p_uplinks_mtu)
 
     @cached_property
-    def fabric_name(self: SharedUtils) -> str:
+    def fabric_name(self: SharedUtilsProtocol) -> str:
         if not self.inputs.fabric_name:
             msg = "fabric_name"
             raise AristaAvdMissingVariableError(msg)
@@ -145,19 +146,19 @@ class MiscMixin:
         return self.inputs.fabric_name
 
     @cached_property
-    def uplink_interface_speed(self: SharedUtils) -> str | None:
+    def uplink_interface_speed(self: SharedUtilsProtocol) -> str | None:
         return default(self.node_config.uplink_interface_speed, self.default_interfaces.uplink_interface_speed)
 
     @cached_property
-    def uplink_switch_interface_speed(self: SharedUtils) -> str | None:
+    def uplink_switch_interface_speed(self: SharedUtilsProtocol) -> str | None:
         # Keeping since we will need it when adding speed support under default interfaces.
         return self.node_config.uplink_switch_interface_speed
 
     @cached_property
-    def default_interface_mtu(self: SharedUtils) -> int | None:
+    def default_interface_mtu(self: SharedUtilsProtocol) -> int | None:
         return default(self.platform_settings.default_interface_mtu, self.inputs.default_interface_mtu)
 
-    def get_switch_fact(self: SharedUtils, key: str, required: bool = True) -> Any:
+    def get_switch_fact(self: SharedUtilsProtocol, key: str, required: bool = True) -> Any:
         """
         Return facts from EosDesignsFacts.
 
@@ -166,11 +167,11 @@ class MiscMixin:
         return get(self.hostvars, f"avd_switch_facts..{self.hostname}..switch..{key}", required=required, org_key=f"switch.{key}", separator="..")
 
     @cached_property
-    def evpn_multicast(self: SharedUtils) -> bool:
+    def evpn_multicast(self: SharedUtilsProtocol) -> bool:
         return self.get_switch_fact("evpn_multicast", required=False) is True
 
     def get_ipv4_acl(
-        self: SharedUtils, name: str, interface_name: str, *, interface_ip: str | None = None, peer_ip: str | None = None
+        self: SharedUtilsProtocol, name: str, interface_name: str, *, interface_ip: str | None = None, peer_ip: str | None = None
     ) -> EosDesigns.Ipv4AclsItem:
         """
         Get one IPv4 ACL from "ipv4_acls" where fields have been substituted.
@@ -232,3 +233,92 @@ class MiscMixin:
             raise AristaAvdError(msg)
 
         return replacement_value
+
+    def get_l3_generic_interface_bgp_neighbors(
+        self: SharedUtilsProtocol,
+        l3_generic_interfaces: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
+        ),
+    ) -> list:
+        """
+        Fetches bgp neighbors for given L3 interface placeholder.
+
+        Fetches bgp neighbors (list of dict) for all interfaces under given interface type.
+        'l3_generic_interfaces' is expected to be set to either property - self.l3_interfaces or self.l3_port_channels.
+        """
+        neighbors = []
+        is_l3_interface = False
+        if isinstance(l3_generic_interfaces, EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces):
+            is_l3_interface = True
+            schema_key = "l3_interfaces"
+        else:
+            # implies we intend to query all L3 Port-Channels
+            schema_key = "l3_port_channels"
+
+        for interface in l3_generic_interfaces:
+            if not (interface.peer_ip and interface.bgp):
+                continue
+
+            if interface.bgp.peer_as is None:
+                msg = f"'{schema_key}[{interface.name}].bgp.peer_as' needs to be set to enable BGP."
+                raise AristaAvdInvalidInputsError(msg)
+
+            is_intf_wan = bool(interface.wan_carrier)
+
+            if not interface.bgp.ipv4_prefix_list_in and is_intf_wan:
+                msg = f"BGP is enabled but 'bgp.ipv4_prefix_list_in' is not configured for {schema_key}[{interface.name}]"
+                raise AristaAvdInvalidInputsError(msg)
+
+            description = interface.description
+            if not description:
+                if is_l3_interface:
+                    description = self.interface_descriptions.underlay_ethernet_interface(
+                        InterfaceDescriptionData(
+                            shared_utils=self,
+                            interface=interface.name,
+                            peer=interface.peer,
+                            peer_interface=interface.peer_interface,
+                            wan_carrier=interface.wan_carrier,
+                            wan_circuit_id=interface.wan_circuit_id,
+                        ),
+                    )
+                else:
+                    # build description for L3 Port-Channel interface
+                    description = self.interface_descriptions.underlay_port_channel_interface(
+                        InterfaceDescriptionData(
+                            shared_utils=self,
+                            interface=interface.name,
+                            peer=interface.peer,
+                            peer_interface=interface.peer_port_channel,
+                            wan_carrier=interface.wan_carrier,
+                            wan_circuit_id=interface.wan_circuit_id,
+                        ),
+                    )
+
+            neighbor = {
+                "ip_address": interface.peer_ip,
+                "remote_as": interface.bgp.peer_as,
+                "description": description,
+            }
+
+            neighbor["ipv4_prefix_list_in"] = interface.bgp.ipv4_prefix_list_in
+            neighbor["ipv4_prefix_list_out"] = interface.bgp.ipv4_prefix_list_out
+            if is_intf_wan:
+                neighbor["set_no_advertise"] = True
+
+            # The inbound route-map is only used if there is a prefix list or no-advertise
+            if neighbor["ipv4_prefix_list_in"] or neighbor.get("set_no_advertise") is True:
+                neighbor["route_map_in"] = f"RM-BGP-{neighbor['ip_address']}-IN"
+            neighbor["route_map_out"] = f"RM-BGP-{neighbor['ip_address']}-OUT"
+
+            neighbors.append(neighbor)
+
+        return neighbors
+
+    @cached_property
+    def l3_bgp_neighbors(self: SharedUtilsProtocol) -> list:
+        """Returns the consolidated list of L3 bgp neighbors referenced by L3 Interfaces and L3 Port-Channels."""
+        l3_bgp_neighbors = self.get_l3_generic_interface_bgp_neighbors(self.l3_interfaces)
+        l3_bgp_neighbors.extend(self.get_l3_generic_interface_bgp_neighbors(self.node_config.l3_port_channels))
+        return l3_bgp_neighbors

@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd.j2filters import range_expand
@@ -12,10 +12,10 @@ from pyavd.j2filters import range_expand
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class CvTopology:
+class CvTopology(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -24,7 +24,7 @@ class CvTopology:
     """
 
     @cached_property
-    def cv_topology(self: SharedUtils) -> EosDesigns.CvTopologyItem | None:
+    def cv_topology(self: SharedUtilsProtocol) -> EosDesigns.CvTopologyItem | None:
         """
         Returns the cv_topology for this device.
 
@@ -54,13 +54,13 @@ class CvTopology:
         return self.inputs.cv_topology[self.hostname]
 
     @cached_property
-    def cv_topology_platform(self: SharedUtils) -> str | None:
+    def cv_topology_platform(self: SharedUtilsProtocol) -> str | None:
         if self.cv_topology is not None:
             return self.cv_topology.platform
         return None
 
     @cached_property
-    def cv_topology_config(self: SharedUtils) -> dict:
+    def cv_topology_config(self: SharedUtilsProtocol) -> dict:
         """
         Returns dict with keys derived from cv topology (or empty dict).
 

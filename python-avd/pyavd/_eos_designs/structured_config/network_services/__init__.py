@@ -1,7 +1,9 @@
 # Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from typing import Protocol
+
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, StructuredConfigGeneratorProtocol
 
 from .application_traffic_recognition import ApplicationTrafficRecognitionMixin
 from .dps_interfaces import DpsInterfacesMixin
@@ -34,6 +36,9 @@ from .standard_access_lists import StandardAccessListsMixin
 from .static_routes import StaticRoutesMixin
 from .struct_cfgs import StructCfgsMixin
 from .tunnel_interfaces import TunnelInterfacesMixin
+from .utils import UtilsMixin
+from .utils_wan import UtilsWanMixin
+from .utils_zscaler import UtilsZscalerMixin
 from .virtual_source_nat_vrfs import VirtualSourceNatVrfsMixin
 from .vlan_interfaces import VlanInterfacesMixin
 from .vlans import VlansMixin
@@ -41,8 +46,7 @@ from .vrfs import VrfsMixin
 from .vxlan_interface import VxlanInterfaceMixin
 
 
-class AvdStructuredConfigNetworkServices(
-    StructuredConfigGenerator,
+class AvdStructuredConfigNetworkServicesProtocol(
     ApplicationTrafficRecognitionMixin,
     SpanningTreeMixin,
     PatchPanelMixin,
@@ -79,9 +83,14 @@ class AvdStructuredConfigNetworkServices(
     TunnelInterfacesMixin,
     MonitorConnectivityMixin,
     MetadataMixin,
+    UtilsMixin,
+    UtilsWanMixin,
+    UtilsZscalerMixin,
+    StructuredConfigGeneratorProtocol,
+    Protocol,
 ):
     """
-    The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
+    Protocol for the AvdStructuredConfig Class which is imported by "get_structured_config" to render parts of the structured config.
 
     "get_structured_config" imports, instantiates and run the .render() method on the class.
     .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
@@ -104,3 +113,18 @@ class AvdStructuredConfigNetworkServices(
         if self.shared_utils.any_network_services:
             return super().render()
         return None
+
+
+class AvdStructuredConfigNetworkServices(StructuredConfigGenerator, AvdStructuredConfigNetworkServicesProtocol):
+    """
+    The AvdStructuredConfig Class is imported by "get_structured_config" to render parts of the structured config.
+
+    "get_structured_config" imports, instantiates and run the .render() method on the class.
+    .render() runs all class methods not starting with _ and of type @cached property and inserts the returned data into
+    a dict with the name of the method as key. This means that each key in the final dict corresponds to a method.
+
+    The Class uses StructuredConfigGenerator, as the base class, to inherit the _hostvars, keys and other attributes.
+    All other methods are included as "Mixins" to make the files more manageable.
+
+    The order of the @cached_properties methods imported from Mixins will also control the order in the output.
+    """

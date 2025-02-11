@@ -4,13 +4,13 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class UnderlayMixin:
+class UnderlayMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -19,11 +19,11 @@ class UnderlayMixin:
     """
 
     @cached_property
-    def underlay_bgp(self: SharedUtils) -> bool:
+    def underlay_bgp(self: SharedUtilsProtocol) -> bool:
         return self.bgp and self.underlay_routing_protocol == "ebgp" and self.underlay_router and self.uplink_type in ["p2p", "p2p-vrfs"]
 
     @cached_property
-    def underlay_mpls(self: SharedUtils) -> bool:
+    def underlay_mpls(self: SharedUtilsProtocol) -> bool:
         return (
             self.underlay_routing_protocol in ["isis-sr", "isis-ldp", "isis-sr-ldp", "ospf-ldp"]
             and self.mpls_lsr
@@ -32,19 +32,19 @@ class UnderlayMixin:
         )
 
     @cached_property
-    def underlay_ldp(self: SharedUtils) -> bool:
+    def underlay_ldp(self: SharedUtilsProtocol) -> bool:
         return self.underlay_routing_protocol in ["isis-ldp", "isis-sr-ldp", "ospf-ldp"] and self.underlay_mpls
 
     @cached_property
-    def underlay_sr(self: SharedUtils) -> bool:
+    def underlay_sr(self: SharedUtilsProtocol) -> bool:
         return self.underlay_routing_protocol in ["isis-sr", "isis-sr-ldp"] and self.underlay_mpls
 
     @cached_property
-    def underlay_ospf(self: SharedUtils) -> bool:
+    def underlay_ospf(self: SharedUtilsProtocol) -> bool:
         return self.underlay_routing_protocol in ["ospf", "ospf-ldp"] and self.underlay_router and self.uplink_type in ["p2p", "p2p-vrfs"]
 
     @cached_property
-    def underlay_isis(self: SharedUtils) -> bool:
+    def underlay_isis(self: SharedUtilsProtocol) -> bool:
         return (
             self.underlay_routing_protocol in ["isis", "isis-sr", "isis-ldp", "isis-sr-ldp"]
             and self.underlay_router
@@ -52,15 +52,15 @@ class UnderlayMixin:
         )
 
     @cached_property
-    def underlay_ipv6(self: SharedUtils) -> bool:
+    def underlay_ipv6(self: SharedUtilsProtocol) -> bool:
         return self.inputs.underlay_ipv6 and self.underlay_router
 
     @cached_property
-    def underlay_multicast(self: SharedUtils) -> bool:
+    def underlay_multicast(self: SharedUtilsProtocol) -> bool:
         return self.inputs.underlay_multicast and self.underlay_router
 
     @cached_property
-    def underlay_multicast_rp_interfaces(self: SharedUtils) -> list[dict] | None:
+    def underlay_multicast_rp_interfaces(self: SharedUtilsProtocol) -> list[dict] | None:
         if not self.underlay_multicast or not self.inputs.underlay_multicast_rps:
             return None
 

@@ -3,29 +3,28 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import AvdStringFormatter, append_if_not_duplicate
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
+from pyavd._utils import AvdStringFormatter
 from pyavd.j2filters import natural_sort
-
-from .utils import UtilsMixin
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class VlansMixin(UtilsMixin):
+class VlansMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def vlans(self: AvdStructuredConfigNetworkServices) -> list | None:
+    @structured_config_contributor
+    def vlans(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
         Return structured config for vlans.
 
@@ -35,76 +34,46 @@ class VlansMixin(UtilsMixin):
         SVIs in all VRFs and L2VLANs deployed on this device.
         """
         if not self.shared_utils.network_services_l2:
-            return None
+            return
 
-        vlans = []
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 for svi in vrf.svis:
-                    vlan = self._get_vlan_config(svi)
-                    append_if_not_duplicate(
-                        list_of_dicts=vlans,
-                        primary_key="id",
-                        new_dict=vlan,
-                        context=f"SVIs in VRF '{vrf.name}'",
-                        context_keys=["id", "name", "tenant"],
-                        ignore_keys={"tenant"},
-                    )
+                    self.structured_config.vlans.append(self._get_vlan_config(svi, tenant), ignore_fields=("tenant",))
 
                 # MLAG IBGP Peering VLANs per VRF
                 # Continue to next VRF if mlag vlan_id is not set
                 if (vlan_id := self._mlag_ibgp_peering_vlan_vrf(vrf, tenant)) is None:
                     continue
 
-                vlan = {
-                    "id": vlan_id,
-                    "name": AvdStringFormatter().format(
-                        self.inputs.mlag_peer_l3_vrf_vlan_name, mlag_peer=self.shared_utils.mlag_peer, vlan=vlan_id, vrf=vrf.name
-                    ),
-                    "trunk_groups": [self.inputs.trunk_groups.mlag_l3.name],
-                    "tenant": tenant.name,
-                }
-                append_if_not_duplicate(
-                    list_of_dicts=vlans,
-                    primary_key="id",
-                    new_dict=vlan,
-                    context=f"MLAG Peering VLAN in VRF '{vrf.name}' (check for duplicate VRF VNI/ID)",
-                    context_keys=["id", "name", "tenant"],
-                    ignore_keys={"tenant"},
+                vlan = EosCliConfigGen.VlansItem(
+                    id=vlan_id,
+                    name=AvdStringFormatter().format(self.inputs.mlag_peer_l3_vrf_vlan_name, mlag_peer=self.shared_utils.mlag_peer, vlan=vlan_id, vrf=vrf.name),
+                    trunk_groups=EosCliConfigGen.VlansItem.TrunkGroups([self.inputs.trunk_groups.mlag_l3.name]),
+                    tenant=tenant.name,
                 )
+                self.structured_config.vlans.append(vlan, ignore_fields=("tenant",))
 
             # L2 Vlans per Tenant
             for l2vlan in tenant.l2vlans:
-                vlan = self._get_vlan_config(l2vlan)
-                append_if_not_duplicate(
-                    list_of_dicts=vlans,
-                    primary_key="id",
-                    new_dict=vlan,
-                    context="L2VLANs",
-                    context_keys=["id", "name", "tenant"],
-                    ignore_keys={"tenant"},
-                )
-
-        if vlans:
-            return vlans
-
-        return None
+                self.structured_config.vlans.append(self._get_vlan_config(l2vlan, tenant), ignore_fields=("tenant",))
 
     def _get_vlan_config(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
-    ) -> dict:
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+    ) -> EosCliConfigGen.VlansItem:
         """
         Return structured config for one given vlan.
 
         Can be used for svis and l2vlans
         """
-        vlans_vlan = {
-            "id": vlan.id,
-            "name": vlan.name,
-            "tenant": vlan._tenant,
-        }
+        vlans_vlan = EosCliConfigGen.VlansItem(
+            id=vlan.id,
+            name=vlan.name,
+            tenant=tenant.name,
+        )
         if self.inputs.enable_trunk_groups:
             trunk_groups = vlan.trunk_groups
             if self.shared_utils.only_local_vlan_trunk_groups:
@@ -113,6 +82,6 @@ class VlansMixin(UtilsMixin):
                 trunk_groups.append(self.inputs.trunk_groups.mlag.name)
             if self.shared_utils.uplink_type == "port-channel":
                 trunk_groups.append(self.inputs.trunk_groups.uplink.name)
-            vlans_vlan["trunk_groups"] = natural_sort(trunk_groups)
+            vlans_vlan.trunk_groups.extend(natural_sort(trunk_groups))
 
         return vlans_vlan

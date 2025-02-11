@@ -72,7 +72,7 @@ jobs:
               - 'ansible_collections/arista/avd/requirements.txt'
               - 'ansible_collections/arista/avd/requirements-dev.txt'
               - 'ansible_collections/arista/avd/meta/runtime.yml'
-              - '.github/requirements-ci.txt'
+              - '.github/requirements-ci-dev.txt'
               - '.github/workflows/pull-request-management.yml'
             docs:
               - '.github/workflows/pull-request-management.yml'
@@ -92,7 +92,7 @@ jobs:
   python_requirements:
     name: Test Python requirements installation
     runs-on: ubuntu-latest
-    needs: [ file-changes ]
+    needs: [file-changes]
     if: needs.file-changes.outputs.requirements == 'true'
     strategy:
       fail-fast: true
@@ -108,9 +108,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python_version }}
-      - name: 'Install Python requirements'
+      - name: "Install Python requirements"
         run: |
-          pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
+          pip install -r .github/requirements-ci-dev.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
 
   # ----------------------------------- #
   # EOS CLI CONFIG GEN MOLECULE
@@ -122,26 +122,26 @@ jobs:
       fail-fast: true
       matrix:
         avd_scenario:
-          - 'eos_cli_config_gen'
-          - 'eos_cli_config_gen_deprecated_vars'
-          - 'eos_cli_config_gen_negative_unit_tests'
+          - "eos_cli_config_gen"
+          - "eos_cli_config_gen_deprecated_vars"
+          - "eos_cli_config_gen_negative_unit_tests"
         ansible_version:
-          - 'ansible-core<2.19.0 --upgrade'
+          - "ansible-core<2.19.0 --upgrade"
         # Also test minimum ansible version for one scenario.
         include:
-          - avd_scenario: 'eos_cli_config_gen'
-            ansible_version: 'ansible-core==2.16.0'
-    needs: [ file-changes ]
+          - avd_scenario: "eos_cli_config_gen"
+            ansible_version: "ansible-core==2.16.0"
+    needs: [file-changes]
     if: needs.file-changes.outputs.config_gen == 'true'
     steps:
       - uses: actions/checkout@v4
       - name: Run molecule action
         uses: arista-netdevops-community/action-molecule-avd@v1.8.1
         with:
-          molecule_parentdir: 'ansible_collections/arista/avd'
-          molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
-          pip_file: .github/requirements-ci.txt
+          molecule_parentdir: "ansible_collections/arista/avd"
+          molecule_command: "test"
+          molecule_args: "--scenario-name ${{ matrix.avd_scenario }}"
+          pip_file: .github/requirements-ci-dev.txt
           galaxy_file: "ansible_collections/arista/avd/collections.yml"
           ansible: ${{ matrix.ansible_version }}
           check_git: true
@@ -160,19 +160,19 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        avd_scenario: ['dhcp_configuration', 'dhcp_provisioning']
-        ansible_version: ['ansible-core<2.19.0 --upgrade']
-    needs: [ file-changes ]
+        avd_scenario: ["dhcp_configuration", "dhcp_provisioning"]
+        ansible_version: ["ansible-core<2.19.0 --upgrade"]
+    needs: [file-changes]
     if: needs.file-changes.outputs.dhcp == 'true'
     steps:
       - uses: actions/checkout@v4
       - name: Run molecule action
         uses: arista-netdevops-community/action-molecule-avd@v1.8.1
         with:
-          molecule_parentdir: 'ansible_collections/arista/avd'
-          molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
-          pip_file: .github/requirements-ci.txt
+          molecule_parentdir: "ansible_collections/arista/avd"
+          molecule_command: "test"
+          molecule_args: "--scenario-name ${{ matrix.avd_scenario }}"
+          pip_file: .github/requirements-ci-dev.txt
           galaxy_file: "ansible_collections/arista/avd/collections.yml"
           ansible: ${{ matrix.ansible_version }}
           check_git: true
@@ -192,54 +192,54 @@ jobs:
       fail-fast: true
       matrix:
         avd_scenario:
-          - 'eos_designs_deprecated_vars'
-          - 'eos_designs-l2ls'
-          - 'eos_designs-mpls-isis-sr-ldp'
-          - 'eos_designs_negative_unit_tests'
-          - 'eos_designs-twodc-5stage-clos'
-          - 'eos_designs_unit_tests'
-          - 'evpn_underlay_ebgp_overlay_ebgp'
-          - 'evpn_underlay_isis_overlay_ibgp'
-          - 'evpn_underlay_ospf_overlay_ebgp'
-          - 'evpn_underlay_rfc5549_overlay_ebgp'
-          - 'example-campus-fabric'
-          - 'example-dual-dc-l3ls'
-          - 'example-isis-ldp-ipvpn'
-          - 'example-l2ls-fabric'
-          - 'example-single-dc-l3ls'
-          - 'example-cv-pathfinder'
+          - "eos_designs_deprecated_vars"
+          - "eos_designs-l2ls"
+          - "eos_designs-mpls-isis-sr-ldp"
+          - "eos_designs_negative_unit_tests"
+          - "eos_designs-twodc-5stage-clos"
+          - "eos_designs_unit_tests"
+          - "evpn_underlay_ebgp_overlay_ebgp"
+          - "evpn_underlay_isis_overlay_ibgp"
+          - "evpn_underlay_ospf_overlay_ebgp"
+          - "evpn_underlay_rfc5549_overlay_ebgp"
+          - "example-campus-fabric"
+          - "example-dual-dc-l3ls"
+          - "example-isis-ldp-ipvpn"
+          - "example-l2ls-fabric"
+          - "example-single-dc-l3ls"
+          - "example-cv-pathfinder"
         ansible_version:
           # Testing all scenario with 2.16.x, due to bug with in 2.17.0 with and the way we test eos_designs_negative_unit_tests https://github.com/ansible/ansible/issues/83292
-          - 'ansible-core>=2.16.0,<2.17.0 --upgrade'
+          - "ansible-core>=2.16.0,<2.17.0 --upgrade"
         pip_requirements:
-          - '.github/requirements-ci.txt'
+          - ".github/requirements-ci-dev.txt"
         # Also test minimum ansible version for one scenario.
         include:
-          - avd_scenario: 'eos_designs_unit_tests'
-            ansible_version: 'ansible-core==2.16.0 --upgrade'
-            pip_requirements: '.github/requirements-ci.txt'
-          - avd_scenario: 'eos_designs_unit_tests'
-            ansible_version: 'ansible-core<2.18.0 --upgrade'
-            pip_requirements: '.github/requirements-ci.txt'
-          - avd_scenario: 'eos_designs_unit_tests'
-            ansible_version: 'ansible-core<2.19.0 --upgrade'
-            pip_requirements: '.github/requirements-ci.txt'
-    needs: [ file-changes ]
+          - avd_scenario: "eos_designs_unit_tests"
+            ansible_version: "ansible-core==2.16.0 --upgrade"
+            pip_requirements: ".github/requirements-ci-dev.txt"
+          - avd_scenario: "eos_designs_unit_tests"
+            ansible_version: "ansible-core<2.18.0 --upgrade"
+            pip_requirements: ".github/requirements-ci-dev.txt"
+          - avd_scenario: "eos_designs_unit_tests"
+            ansible_version: "ansible-core<2.19.0 --upgrade"
+            pip_requirements: ".github/requirements-ci-dev.txt"
+    needs: [file-changes]
     if: needs.file-changes.outputs.eos_design == 'true' || needs.file-changes.outputs.config_gen == 'true'
     steps:
       - uses: actions/checkout@v4
       - name: Build minimum requirements
         run: |
           pip install uv
-          uv pip compile .github/requirements-ci.txt --resolution=lowest-direct > ${{ matrix.pip_requirements }}
+          uv pip compile .github/requirements-ci-dev.txt --resolution=lowest-direct > ${{ matrix.pip_requirements }}
           cat ${{ matrix.pip_requirements }}
         if: matrix.pip_requirements == 'tmp-requirements-minimum.txt'
       - name: Run molecule action
         uses: arista-netdevops-community/action-molecule-avd@v1.8.1
         with:
-          molecule_parentdir: 'ansible_collections/arista/avd'
-          molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
+          molecule_parentdir: "ansible_collections/arista/avd"
+          molecule_command: "test"
+          molecule_args: "--scenario-name ${{ matrix.avd_scenario }}"
           pip_file: ${{ matrix.pip_requirements }}
           galaxy_file: "ansible_collections/arista/avd/collections.yml"
           ansible: ${{ matrix.ansible_version }}
@@ -259,13 +259,13 @@ jobs:
       fail-fast: true
       matrix:
         avd_scenario:
-          - 'eos_config_deploy_cvp'
+          - "eos_config_deploy_cvp"
         ansible_version:
-          - 'ansible-core<2.19.0 --upgrade'
+          - "ansible-core<2.19.0 --upgrade"
         include:
-          - avd_scenario: 'eos_config_deploy_cvp'
-            ansible_version: 'ansible-core==2.16.0'
-    needs: [ file-changes ]
+          - avd_scenario: "eos_config_deploy_cvp"
+            ansible_version: "ansible-core==2.16.0"
+    needs: [file-changes]
     if: needs.file-changes.outputs.cloudvision == 'true' || needs.file-changes.outputs.eos_design == 'true' || needs.file-changes.outputs.config_gen == 'true'
 
     steps:
@@ -273,10 +273,10 @@ jobs:
       - name: Run molecule action
         uses: arista-netdevops-community/action-molecule-avd@v1.8.1
         with:
-          molecule_parentdir: 'ansible_collections/arista/avd'
-          molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
-          pip_file: .github/requirements-ci.txt
+          molecule_parentdir: "ansible_collections/arista/avd"
+          molecule_command: "test"
+          molecule_args: "--scenario-name ${{ matrix.avd_scenario }}"
+          pip_file: .github/requirements-ci-dev.txt
           galaxy_file: "ansible_collections/arista/avd/collections.yml"
           ansible: ${{ matrix.ansible_version }}
           check_git: true
@@ -296,23 +296,23 @@ jobs:
       fail-fast: true
       matrix:
         avd_scenario:
-          - 'eos_validate_state'
+          - "eos_validate_state"
         ansible_version:
-          - 'ansible-core<2.19.0 --upgrade'
+          - "ansible-core<2.19.0 --upgrade"
         include:
-          - avd_scenario: 'eos_validate_state'
-            ansible_version: 'ansible-core==2.16.0'
-    needs: [ file-changes ]
+          - avd_scenario: "eos_validate_state"
+            ansible_version: "ansible-core==2.16.0"
+    needs: [file-changes]
     if: needs.file-changes.outputs.eos_design == 'true' || needs.file-changes.outputs.validate_state == 'true'
     steps:
       - uses: actions/checkout@v4
       - name: Run molecule action
         uses: arista-netdevops-community/action-molecule-avd@v1.8.1
         with:
-          molecule_parentdir: 'ansible_collections/arista/avd'
-          molecule_command: 'test'
-          molecule_args: '--scenario-name ${{ matrix.avd_scenario }}'
-          pip_file: .github/requirements-ci.txt
+          molecule_parentdir: "ansible_collections/arista/avd"
+          molecule_command: "test"
+          molecule_args: "--scenario-name ${{ matrix.avd_scenario }}"
+          pip_file: .github/requirements-ci-dev.txt
           galaxy_file: "ansible_collections/arista/avd/collections.yml"
           ansible: ${{ matrix.ansible_version }}
           check_git: true
@@ -324,7 +324,7 @@ jobs:
   ansible_test_sanity:
     name: Run ansible-test sanity validation
     runs-on: ubuntu-latest
-    needs: [ file-changes ]
+    needs: [file-changes]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3
@@ -335,10 +335,10 @@ jobs:
             3.11
             3.12
             3.13
-      - name: 'Install Python requirements'
+      - name: "Install Python requirements"
         run: |
-          pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
-      - name: 'Run ansible-test sanity'
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+      - name: "Run ansible-test sanity"
         run: |
           cd ansible_collections/arista/avd/
           ansible-test sanity --color yes -v
@@ -346,7 +346,7 @@ jobs:
   ansible_test_units:
     name: Run ansible-test units test cases
     runs-on: ubuntu-latest
-    needs: [ file-changes ]
+    needs: [file-changes]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3
@@ -354,10 +354,10 @@ jobs:
         with:
           python-version: |
             3.12
-      - name: 'Install Python requirements'
+      - name: "Install Python requirements"
         run: |
-          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
-      - name: 'Run ansible-test units test cases'
+          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+      - name: "Run ansible-test units test cases"
         run: |
           cd ansible_collections/arista/avd/
           ansible-test units -vv
@@ -365,7 +365,7 @@ jobs:
   ansible_test_integration:
     name: Run ansible-test integration test cases
     runs-on: ubuntu-latest
-    needs: [ file-changes ]
+    needs: [file-changes]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3
@@ -374,10 +374,10 @@ jobs:
           python-version: |
             3.12
             3.13
-      - name: 'Install Python requirements'
+      - name: "Install Python requirements"
         run: |
-          pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
-      - name: 'Run ansible-test integration test cases'
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+      - name: "Run ansible-test integration test cases"
         run: |
           cd ansible_collections/arista/avd/
           ansible-test integration -vv
@@ -385,7 +385,7 @@ jobs:
   ansible_lint:
     name: Run ansible-lint test case
     runs-on: ubuntu-latest
-    needs: [ file-changes ]
+    needs: [file-changes]
     steps:
       - uses: actions/checkout@v4
       - name: Set up Python 3
@@ -396,11 +396,11 @@ jobs:
             3.11
             3.12
             3.13
-      - name: 'Install Python & Ansible requirements'
+      - name: "Install Python & Ansible requirements"
         run: |
-          pip install -r .github/requirements-ci.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
+          pip install -r .github/requirements-ci-dev.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
           ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
-      - name: 'Run ansible-test integration test cases'
+      - name: "Run ansible-test integration test cases"
         run: |
           cd ansible_collections/arista/avd/
           ansible-lint --force-color --strict -v
@@ -418,9 +418,9 @@ jobs:
           python-version: |
             3.10
       - uses: actions/checkout@v4
-      - name: 'Install Python & Ansible requirements'
+      - name: "Install Python & Ansible requirements"
         run: |
-          pip install "ansible-core<2.19.0" -r .github/requirements-ci.txt --upgrade
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
           ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
       - name: Install galaxy-importer
         # Install the specific version of galaxy-importer used on galaxy.ansible.com
@@ -428,9 +428,9 @@ jobs:
         # so we let the galaxy-importer version resolve remaining requirements.
         run: |
           pip install "galaxy-importer==0.4.26"
-      - name: 'Build ansible package'
+      - name: "Build ansible package"
         run: make collection-build
-      - name: 'Run galaxy-importer checks'
+      - name: "Run galaxy-importer checks"
         run: python -m galaxy_importer.main *.tar.gz
       - uses: actions/upload-artifact@v4
         with:
@@ -457,7 +457,7 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - name: 'Install tox'
+      - name: "Install tox"
         run: |
           pip install tox tox-gh-actions --upgrade
       - name: "Run pytest via tox for ${{ matrix.python }}"

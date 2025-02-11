@@ -341,7 +341,8 @@ port_channel_interfaces:
         link_status: true
     description: IFL for TENANT01
     mtu: 1500
-    ip_address: 10.1.1.3/31
+    ipv6_address: "cafe::b4"
+    ipv6_nd_managed_config_flag: true
     encapsulation_dot1q:
       vlan: 101
 
@@ -380,7 +381,7 @@ port_channel_interfaces:
 
   - name: Port-Channel8.101
     description: to Dev02 Port-Channel8.101 - VRF-C1
-    ip_address: 10.1.2.3/31
+    ipv6_address: "cafe::b4"
     encapsulation_dot1q:
       vlan: 101
 
@@ -657,6 +658,7 @@ port_channel_interfaces:
     description: Flexencap Port-Channel
     switchport:
       enabled: false
+    isis_passive: true
 
   - name: Port-Channel111.1
     description: TENANT_A pseudowire 1 interface
@@ -838,6 +840,7 @@ port_channel_interfaces:
         static:
           - original_ip: 3.0.0.1
             translated_ip: 4.0.0.1
+      service_profile: TEST-NAT-PROFILE
 
   - name: Port-Channel131
     description: dot1q-tunnel mode
@@ -1067,6 +1070,10 @@ port_channel_interfaces:
       enabled: true
       administrative_groups:
         - 7
+      min_delay_dynamic:
+        twamp_light_fallback:
+          number: 123
+          unit: microseconds
 
   - name: Port-Channel137
     description: Traffic Engineering Interface

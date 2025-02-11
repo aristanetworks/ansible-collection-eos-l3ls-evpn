@@ -64,7 +64,7 @@ body:
     id: terms
     attributes:
       label: Contributing Guide
-      description: By submitting this issue, you agree to follow our [Contributing Guide](https://avd.sh/en/latest/docs/contribution/overview.html)
+      description: By submitting this issue, you agree to follow our [Contributing Guide](https://avd.arista.com/devel/docs/contribution/overview.html)
       options:
         - label: I agree to follow this project's Code of Conduct
           required: true

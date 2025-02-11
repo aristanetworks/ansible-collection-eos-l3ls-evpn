@@ -45,7 +45,8 @@ evpn_vlan_bundles:
     id: 1
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for BGP VLAN-Aware Bundles
-  defined under network services. A common reason is that an 'l2vlan' name overlaps with an 'evpn_vlan_bundle' name.
-  {'name': 'bundle1', 'rd': '10.10.0.3:10010', 'route_targets': {'both': ['10010:10010']}, 'tenant': 'StorageProd', 'vlan': '10'}
-  conflicts with {'name': 'bundle1', 'rd': '10.10.0.3:1', 'route_targets': {'both': ['1:1']}, 'tenant': None, 'vlan': '50,60'}.
+  Found duplicate objects with conflicting data while generating configuration for VlanAwareBundles.
+  {'name': 'bundle1', 'tenant': 'StorageProd', 'rd': '10.10.0.3:10010', 'route_targets': {'both': ['10010:10010']},
+  'redistribute_routes': ['learned'], 'vlan': '10'}
+  conflicts with
+  {'name': 'bundle1', 'rd': '10.10.0.3:1', 'route_targets': {'both': ['1:1']}, 'redistribute_routes': ['learned'], 'vlan': '50,60'}.

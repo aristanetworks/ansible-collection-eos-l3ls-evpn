@@ -24,8 +24,8 @@ The **eos_cli_config_gen** role:
 
 Figure 1 below provides a visualization of the roles inputs, and outputs and tasks in order executed by the role.
 
-![Figure 1: Ansible Role eos_cli_config_gen](../../docs/_media/eos_cli_config_gen_dark.svg#only-dark)
-![Figure 1: Ansible Role eos_cli_config_gen](../../docs/_media/eos_cli_config_gen_light.svg#only-light)
+![Figure 1: Ansible Role eos_cli_config_gen](../../../../../docs/_media/eos_cli_config_gen_dark.svg#only-dark)
+![Figure 1: Ansible Role eos_cli_config_gen](../../../../../docs/_media/eos_cli_config_gen_light.svg#only-light)
 
 **Inputs:**
 
@@ -44,7 +44,7 @@ Figure 1 below provides a visualization of the roles inputs, and outputs and tas
 
 ## Requirements
 
-Requirements are located in the [collection installation guide](../../docs/installation/collection-installation.md)
+Requirements are located in the [collection installation guide](../../../../../docs/installation/collection-installation.md)
 
 ## Input Variables
 
@@ -58,4 +58,4 @@ Role configuration settings can be set either as regular inventory variables or 
 
 ## License
 
-Project is published under [Apache 2.0 License](../../LICENSE)
+Project is published under [Apache 2.0 License](https://github.com/aristanetworks/avd/blob/devel/LICENSE)

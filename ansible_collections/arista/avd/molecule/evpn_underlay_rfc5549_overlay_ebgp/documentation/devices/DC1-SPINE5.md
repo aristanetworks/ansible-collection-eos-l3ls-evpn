@@ -110,9 +110,9 @@ ntp server vrf MGMT 192.168.200.5 prefer
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | - |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | - | - |
 
 #### Management API VRF Access
 
@@ -402,9 +402,9 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
-| ---------- | -------- | ------------ | ------------- | ------------- |
-| EVPN-OVERLAY-PEERS | True |  - | - | default |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| ---------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| EVPN-OVERLAY-PEERS | True |  - | - | default | - |
 
 #### Router BGP Device Configuration
 
@@ -498,14 +498,16 @@ ip prefix-list PL-LOOPBACKS-EVPN-OVERLAY
 
 | Sequence | Action |
 | -------- | ------ |
-| 10 | permit 2001:1::/64 eq 128 |
+| 10 | permit 2001:1::/116 eq 128 |
+| 20 | permit 2001:1::1000/128 eq 128 |
 
 #### IPv6 Prefix-lists Device Configuration
 
 ```eos
 !
 ipv6 prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6
-   seq 10 permit 2001:1::/64 eq 128
+   seq 10 permit 2001:1::/116 eq 128
+   seq 20 permit 2001:1::1000/128 eq 128
 ```
 
 ### Route-maps

@@ -1,0 +1,14 @@
+---
+errdisable:
+  recovery:
+    causes:
+      - bpduguard
+      - arp-inspection
+      - portsec
+      - hitless-reload-down
+      - lacp-rate-limit
+      - link-flap
+      - no-internal-vlan
+      - portchannelguard
+      - tapagg
+      - uplink-failure-detection
