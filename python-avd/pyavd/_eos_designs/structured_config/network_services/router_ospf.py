@@ -38,22 +38,20 @@ class RouterOspfMixin(Protocol):
             for vrf in tenant.vrfs:
                 if not vrf.ospf.enabled or (vrf.ospf.nodes and self.shared_utils.hostname not in vrf.ospf.nodes):
                     continue
-                process = EosCliConfigGen.RouterOspf.ProcessIdsItem()
-                self._update_ospf_interface(process, vrf)
 
                 process_id = default(vrf.ospf.process_id, vrf.vrf_id)
                 if not process_id:
                     msg = f"Missing or invalid 'ospf.process_id' or 'vrf_id' under vrf '{vrf.name}"
                     raise AristaAvdInvalidInputsError(msg)
-                process._update(id=process_id, passive_interface_default=True)
+                process = EosCliConfigGen.RouterOspf.ProcessIdsItem(
+                    id=process_id, passive_interface_default=True, max_lsa=vrf.ospf.max_lsa, router_id=self.get_vrf_router_id(vrf, tenant, vrf.ospf.router_id)
+                )
+                self._update_ospf_interface(process, vrf)
 
                 if vrf.name != "default":
                     process.vrf = vrf.name
-                if vrf_router_id := self.get_vrf_router_id(vrf, tenant, vrf.ospf.router_id):
-                    process.router_id = vrf_router_id
                 if vrf.ospf.bfd:
                     process.bfd_enable = vrf.ospf.bfd
-                process.max_lsa = vrf.ospf.max_lsa
                 self._update_ospf_redistribute(process, vrf)
 
                 self.structured_config.router_ospf.process_ids.append(process)
