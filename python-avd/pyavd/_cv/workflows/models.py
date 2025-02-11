@@ -136,7 +136,7 @@ class CVWorkspaceBuildStageState:
 @dataclass
 class CVWorkspaceBuildResult:
     device: CVDevice | None = None
-    stages_states: List[CVWorkspaceBuildStageState] = field(default_factory=list)
+    stages_states: list[CVWorkspaceBuildStageState] = field(default_factory=list)
     """Stages of the Workspace build process and their final states."""
     config_validation: CVWorkspaceBuildConfigValidationResult | None = None
     """Configuration validation results."""

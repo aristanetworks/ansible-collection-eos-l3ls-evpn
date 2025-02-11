@@ -261,7 +261,7 @@ class WorkspaceMixin(Protocol):
             raise get_cv_client_exception(e, f"Workspace ID '{workspace_id}', Request ID '{request_id}") or e
 
     async def get_workspace_build_details(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         build_id: str,
         time: datetime | None = None,

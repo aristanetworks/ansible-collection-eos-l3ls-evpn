@@ -18,6 +18,7 @@ from .finalize_workspace_on_cv import finalize_workspace_on_cv
 from .models import (
     CloudVision,
     CVChangeControl,
+    CVDevice,
     CVDeviceTag,
     CVEosConfig,
     CVInterfaceTag,
