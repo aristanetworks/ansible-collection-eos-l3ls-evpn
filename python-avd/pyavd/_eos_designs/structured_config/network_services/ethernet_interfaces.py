@@ -64,7 +64,7 @@ class EthernetInterfacesMixin(Protocol):
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         subif_parent_interface_names: set[str],
     ) -> None:
-        """Set the structured_config ethernet_interfaces with the l3interfaces."""
+        """Set the structured_config for ethernet_interfaces with the l3interfaces."""
         for l3_interface in vrf.l3_interfaces:
             nodes_length = len(l3_interface.nodes)
             if (
@@ -181,7 +181,7 @@ class EthernetInterfacesMixin(Protocol):
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         subif_parent_interface_names: set[str],
     ) -> None:
-        """Set the structured_config ethernet_interfaces with the point-to-point interfaces defined under network_services."""
+        """Set the structured_config for ethernet_interfaces with the point-to-point interfaces defined under network_services."""
         for point_to_point_service in tenant.point_to_point_services._natural_sorted():
             for endpoint in point_to_point_service.endpoints:
                 # TODO: Filter port-to-point services in filtered_tenants
