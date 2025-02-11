@@ -3,7 +3,6 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
@@ -43,7 +42,6 @@ class IpIgmpSnoopingMixin(Protocol):
 
         self.structured_config.ip_igmp_snooping.globally_enabled = igmp_snooping_enabled
 
-
     def _ip_igmp_snooping_vlan(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
@@ -76,10 +74,10 @@ class IpIgmpSnoopingMixin(Protocol):
             querier=EosCliConfigGen.IpIgmpSnooping.VlansItem.Querier(
                 enabled=igmp_snooping_querier_enabled,
                 address=default(vlan.igmp_snooping_querier.source_address, tenant.igmp_snooping_querier.source_address, self.shared_utils.router_id)
-                        if igmp_snooping_querier_enabled
-                        else None,
-                version=default(vlan.igmp_snooping_querier.version, tenant.igmp_snooping_querier.version) if igmp_snooping_querier_enabled else None,  
-            )
+                if igmp_snooping_querier_enabled
+                else None,
+                version=default(vlan.igmp_snooping_querier.version, tenant.igmp_snooping_querier.version) if igmp_snooping_querier_enabled else None,
+            ),
         )
         if evpn_l2_multicast_enabled:
             vlan_item.fast_leave = default(vlan.igmp_snooping_querier.fast_leave, tenant.evpn_l2_multicast.fast_leave)
