@@ -185,19 +185,19 @@ ip_access_lists:
     sequence: 15
     action: deny
     protocol: ip
-- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet12
-  entries:
-  - remark: Some remark will not require source and destination fields.
-  - source: 10.10.40.10
-    destination: any
-    action: permit
-    protocol: ip
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet13.10
   entries:
   - source: any
     destination: 10.10.40.20
     sequence: 15
     action: deny
+    protocol: ip
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet12
+  entries:
+  - remark: Some remark will not require source and destination fields.
+  - source: 10.10.40.10
+    destination: any
+    action: permit
     protocol: ip
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet13.10
   entries:

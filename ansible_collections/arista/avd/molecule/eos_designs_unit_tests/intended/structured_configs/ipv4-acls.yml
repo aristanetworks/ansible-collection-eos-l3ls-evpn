@@ -70,13 +70,6 @@ ip_access_lists:
     destination: 172.16.0.2
     action: permit
     protocol: ip
-- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet1
-  entries:
-  - remark: Some remark will not require source and destination fields.
-  - source: 172.16.0.2
-    destination: any
-    action: permit
-    protocol: ip
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet2
   entries:
   - source: any
@@ -86,25 +79,6 @@ ip_access_lists:
     protocol: ip
   - source: 172.17.17.1
     destination: 172.17.17.17
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet2
-  entries:
-  - remark: Some remark will not require source and destination fields.
-  - source: 172.17.17.17
-    destination: any
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
-  entries:
-  - source: 172.18.18.18
-    destination: any
-    action: permit
-    protocol: ip
-- name: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
-  entries:
-  - source: 172.18.18.18
-    destination: any
     action: permit
     protocol: ip
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet5_1
@@ -118,10 +92,36 @@ ip_access_lists:
     destination: 172.20.20.0
     action: permit
     protocol: ip
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet1
+  entries:
+  - remark: Some remark will not require source and destination fields.
+  - source: 172.16.0.2
+    destination: any
+    action: permit
+    protocol: ip
+- name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet2
+  entries:
+  - remark: Some remark will not require source and destination fields.
+  - source: 172.17.17.17
+    destination: any
+    action: permit
+    protocol: ip
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet6_6.6
   entries:
   - remark: Some remark will not require source and destination fields.
   - source: 172.21.21.0
+    destination: any
+    action: permit
+    protocol: ip
+- name: TEST-IPV4-ACL-WITH-NO-FIELDS-IN
+  entries:
+  - source: 172.18.18.18
+    destination: any
+    action: permit
+    protocol: ip
+- name: TEST-IPV4-ACL-WITH-NO-FIELDS-OUT
+  entries:
+  - source: 172.18.18.18
     destination: any
     action: permit
     protocol: ip

@@ -6,7 +6,9 @@ from __future__ import annotations
 from itertools import chain
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
+from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigUnderlayProtocol
@@ -32,3 +34,4 @@ class IpAccesslistsMixin(Protocol):
         for interface_acls in chain(self._l3_interface_acls.values(), self._l3_port_channel_acls.values()):
             for acl in interface_acls.values():
                 self.structured_config.ip_access_lists.append(acl)
+        self.structured_config.ip_access_lists = EosCliConfigGen.IpAccessLists(natural_sort(self.structured_config.ip_access_lists, sort_key="name"))

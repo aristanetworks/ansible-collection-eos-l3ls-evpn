@@ -9,6 +9,7 @@ from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdError
 from pyavd._utils import get_ip_from_ip_prefix
+from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
@@ -102,3 +103,4 @@ class IpAccesslistsMixin(Protocol):
 
         for ie_policy_type in self._filtered_internet_exit_policy_types:
             self._acl_internet_exit(ie_policy_type)
+        self.structured_config.ip_access_lists = EosCliConfigGen.IpAccessLists(natural_sort(self.structured_config.ip_access_lists, sort_key="name"))
