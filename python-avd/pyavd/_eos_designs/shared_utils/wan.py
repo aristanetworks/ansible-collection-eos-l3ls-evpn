@@ -646,7 +646,7 @@ class WanMixin(Protocol):
         # Old behavior where we rely on address_families.
         if not self.inputs.wan_use_evpn_node_settings_for_lan and "evpn" in vrf.address_families and not configured_as_wan_vrf:
             msg = (
-                f"The VRF '{vrf.name}' does not have a `wan_vni` defined under 'wan_virtual_topologies'. "
+                f"The VRF '{vrf.name}' does not have a 'wan_vni' defined under 'wan_virtual_topologies'. "
                 "If this VRF was not intended to be extended over the WAN, but still required to be configured on the WAN router, "
                 "set 'address_families: []' under the VRF definition. If this VRF was not intended to be configured on the WAN router, "
                 "use the VRF filter 'deny_vrfs' under the node settings."
