@@ -4953,7 +4953,8 @@ keys:
     documentation_options:
       table: wan-settings
     default: false
-    description: 'PREVIEW: This key is currently not supported
+    description: 'PREVIEW: This key is currently not supported and may produce invalid
+      configuration.
 
       When true, `eos_designs` will use `overlay_routing_protocol`, `evpn_role` and
       `vtep`
