@@ -1640,7 +1640,7 @@ keys:
 
 
               Note: Since the pool manager will remove stale entries after every run,
-              each fabric should be using it''s own file.'
+              each fabric should be using its own file.'
   fabric_sflow:
     documentation_options:
       table: management-sflow-settings

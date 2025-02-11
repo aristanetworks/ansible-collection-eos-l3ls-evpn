@@ -3584,7 +3584,7 @@ class EosDesigns(EosDesignsRootModel):
             "<root_dir>/intended/data/<fabric_name>-ids.yml".
 
             Note: Since the pool manager will remove stale
-            entries after every run, each fabric should be using it's own file.
+            entries after every run, each fabric should be using its own file.
             """
 
             if TYPE_CHECKING:
@@ -3616,7 +3616,7 @@ class EosDesigns(EosDesignsRootModel):
                            "<root_dir>/intended/data/<fabric_name>-ids.yml".
 
                            Note: Since the pool manager will remove stale
-                           entries after every run, each fabric should be using it's own file.
+                           entries after every run, each fabric should be using its own file.
 
                     """
 
