@@ -3,7 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from typing import TYPE_CHECKING, Protocol
+from typing import TYPE_CHECKING, Any, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._errors import AristaAvdError
@@ -60,31 +60,26 @@ class CvTagsMixin(Protocol):
         if self.inputs.generate_cv_tags.interface_tags or self.shared_utils.is_cv_pathfinder_router:
             self._get_interface_tags()
 
+    @staticmethod
+    def _tag_dict(name: str, value: Any) -> dict | None:
+        if value is None:
+            return None
+        return {"name": name, "value": str(value)}
+
     def _get_topology_hints(self: AvdStructuredConfigMetadataProtocol) -> None:
         """Return list of topology_hint tags."""
         default_type_hint = self.shared_utils.node_type_key_data.cv_tags_topology_type
-        if self.inputs.dc_name:
-            self.structured_config.metadata.cv_tags.device_tags.append(
-                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_datacenter", value=self.inputs.dc_name)
-            )
-        if self.shared_utils.fabric_name:
-            self.structured_config.metadata.cv_tags.device_tags.append(
-                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_fabric", value=self.shared_utils.fabric_name)
-            )
-        if self.inputs.pod_name:
-            self.structured_config.metadata.cv_tags.device_tags.append(
-                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_pod", value=self.inputs.pod_name)
-            )
-        if default(self.inputs.cv_tags_topology_type, default_type_hint):
-            self.structured_config.metadata.cv_tags.device_tags.append(
-                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="topology_hint_type", value=default(self.inputs.cv_tags_topology_type, default_type_hint))
-            )
-        if default(self.shared_utils.node_config.rack, self.shared_utils.group):
-            self.structured_config.metadata.cv_tags.device_tags.append(
-                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(
-                    name="topology_hint_rack", value=default(self.shared_utils.node_config.rack, self.shared_utils.group)
-                )
-            )
+
+        for name, value in [
+            ("topology_hint_datacenter", self.inputs.dc_name),
+            ("topology_hint_fabric", self.shared_utils.fabric_name),
+            ("topology_hint_pod", self.inputs.pod_name),
+            ("topology_hint_type", default(self.inputs.cv_tags_topology_type, default_type_hint)),
+            ("topology_hint_rack", default(self.shared_utils.node_config.rack, self.shared_utils.group)),
+        ]:
+            tag = self._tag_dict(name, value)
+            if tag:
+                self.structured_config.metadata.cv_tags.device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name=name, value=tag["value"]))
 
     def _get_cv_pathfinder_device_tags(self: AvdStructuredConfigMetadataProtocol) -> None:
         """
@@ -98,24 +93,19 @@ class CvTagsMixin(Protocol):
             {"name": "Role", "value": <'pathfinder', 'edge', 'transit region' or 'transit zone'>}
         ].
         """
-        region_name = self.shared_utils.wan_region.name if self.shared_utils.wan_region is not None else None
-        site_name = self.shared_utils.wan_site.name if self.shared_utils.wan_site is not None else None
-        if self.shared_utils.cv_pathfinder_role:
-            self.structured_config.metadata.cv_tags.device_tags.append(
-                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="Role", value=self.shared_utils.cv_pathfinder_role)
-            )
-        if region_name:
-            self.structured_config.metadata.cv_tags.device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="Region", value=region_name))
+        region_name = self.shared_utils.wan_region.name if self.shared_utils.wan_region else None
+        site_name = self.shared_utils.wan_site.name if self.shared_utils.wan_site else None
 
-        if self.shared_utils.is_cv_pathfinder_server:
-            self.structured_config.metadata.cv_tags.device_tags.append(
-                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="PathfinderSet", value=self.shared_utils.group or "PATHFINDERS")
-            )
-        else:
-            self.structured_config.metadata.cv_tags.device_tags.append(
-                EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="Zone", value=self.shared_utils.wan_zone["name"])
-            )
-            self.structured_config.metadata.cv_tags.device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name="Site", value=site_name))
+        for name, value in [
+            ("Role", self.shared_utils.cv_pathfinder_role),
+            ("Region", region_name),
+            ("PathfinderSet", self.shared_utils.group or "PATHFINDERS" if self.shared_utils.is_cv_pathfinder_server else None),
+            ("Zone", self.shared_utils.wan_zone["name"] if not self.shared_utils.is_cv_pathfinder_server else None),
+            ("Site", site_name if not self.shared_utils.is_cv_pathfinder_server else None),
+        ]:
+            tag = self._tag_dict(name, value)
+            if tag:
+                self.structured_config.metadata.cv_tags.device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name=name, value=tag["value"]))
 
     def _get_device_tags(self: AvdStructuredConfigMetadataProtocol) -> None:
         """Return list of device_tags."""
@@ -145,7 +135,9 @@ class CvTagsMixin(Protocol):
 
             # Silently ignoring empty values since structured config may vary between devices.
             if value:
-                self.structured_config.metadata.cv_tags.device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name=generate_tag.name, value=value))
+                self.structured_config.metadata.cv_tags.device_tags.append(
+                    EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name=generate_tag.name, value=str(value))
+                )
 
     def _get_interface_tags(self: AvdStructuredConfigMetadataProtocol) -> None:
         """Return list of interface_tags."""
@@ -171,7 +163,7 @@ class CvTagsMixin(Protocol):
 
                 # Silently ignoring empty values since structured config may vary between devices.
                 if value:
-                    tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name=generate_tag.name, value=value))
+                    tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name=generate_tag.name, value=str(value)))
 
             if self.shared_utils.is_cv_pathfinder_router:
                 tags.extend(self._get_cv_pathfinder_interface_tags(ethernet_interface))
@@ -233,7 +225,7 @@ class CvTagsMixin(Protocol):
         tags = EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.Tags()
         tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Type", value="wan"))
         if wan_interface.wan_carrier:
-            tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Carrier", value=wan_interface.wan_carrier))
+            tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Carrier", value=str(wan_interface.wan_carrier)))
         if wan_interface.wan_circuit_id:
-            tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Circuit", value=wan_interface.wan_circuit_id))
+            tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Circuit", value=str(wan_interface.wan_circuit_id)))
         return tags

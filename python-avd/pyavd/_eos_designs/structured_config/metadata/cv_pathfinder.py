@@ -39,9 +39,8 @@ class CvPathfinderMixin(Protocol):
                 vtep_ip=self.shared_utils.vtep_ip,
                 region=region_name,
                 site=site_name,
+                address=self.shared_utils.wan_site.location if self.shared_utils.wan_site is not None else None,
             )
-            if self.shared_utils.wan_site is not None:
-                self.structured_config.metadata.cv_pathfinder.address = self.shared_utils.wan_site.location
             self._metadata_interfaces()
             self._metadata_pathgroups()
             self._metadata_regions()
@@ -63,10 +62,13 @@ class CvPathfinderMixin(Protocol):
         for carrier in self.shared_utils.wan_local_carriers:
             for interface in carrier["interfaces"]:
                 pathfinder_interface = EosCliConfigGen.Metadata.CvPathfinder.InterfacesItem(
-                    name=interface["name"], carrier=carrier["name"], circuit_id=interface.get("wan_circuit_id"), pathgroup=carrier["path_group"]
+                    name=interface["name"],
+                    carrier=carrier["name"],
+                    circuit_id=interface.get("wan_circuit_id"),
+                    pathgroup=carrier["path_group"],
+                    public_ip=str(interface["public_ip"]) if self.shared_utils.is_cv_pathfinder_server else None,
                 )
-                if self.shared_utils.is_cv_pathfinder_server:
-                    pathfinder_interface.public_ip = str(interface["public_ip"])
+
                 self.structured_config.metadata.cv_pathfinder.interfaces.append(pathfinder_interface)
 
     def _metadata_pathgroups(self: AvdStructuredConfigMetadataProtocol) -> None:
