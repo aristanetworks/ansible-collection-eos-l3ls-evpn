@@ -872,16 +872,16 @@ interface Dps1
 
 | VLAN | VNI | Flood List | Multicast Group |
 | ---- | --- | ---------- | --------------- |
-| 113,115-118 | 10113,10115-10118 | - | - |
+| 111,113,115-118 | 10111,10113,10115-10118 | - | - |
 | 110 | 10110 | - | 239.9.1.4 |
-| 111 | 10111 | 10.1.1.10<br/>10.1.1.11 | - |
+| 111 | - | 10.1.1.10<br/>10.1.1.11 | - |
 
 #### VXLAN Interface Device Configuration
 
 ```eos
 !
 interface Vxlan1
-   vxlan vlan 113,115-118 vni 10113,10115-10118
+   vxlan vlan 111,113,115-118 vni 10111,10113,10115-10118
    vxlan vlan 111 flood vtep 10.1.1.10 10.1.1.11
    vxlan vlan 110 multicast group 239.9.1.4
    no vxlan qos ecn propagation

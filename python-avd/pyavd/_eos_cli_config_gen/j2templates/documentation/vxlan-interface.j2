@@ -80,7 +80,7 @@
 {%         endif %}
 {%         for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
 {%             set range_vlans = vxlan_config.vxlan.vlan_range.vlans | arista.avd.default([]) | arista.avd.range_expand %}
-{%             if vlan not in range_vlans %}
+{%             if vlan.id | string not in range_vlans %}
 {%                 set vlan_vni = vlan.vni | arista.avd.default('-') %}
 {%             endif %}
 {%             set multicast_group = vlan.multicast_group | arista.avd.default('-') %}
