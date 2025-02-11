@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from abc import ABC, abstractmethod
 from dataclasses import asdict, dataclass, field
+from itertools import filterfalse
 from typing import TYPE_CHECKING, Generic, TypeVar, cast
 
 from yaml import CSafeDumper, CSafeLoader, dump, load
@@ -16,7 +17,7 @@ if TYPE_CHECKING:
 
     from typing_extensions import Self
 
-    from pyavd._eos_designs.shared_utils import SharedUtils
+    from pyavd._eos_designs.shared_utils import SharedUtilsProtocol
 
 T_ValueType = TypeVar("T_ValueType", int, str)
 T_PoolKeyType = TypeVar("T_PoolKeyType", bound="PoolKey")
@@ -30,6 +31,8 @@ FILE_HEADER = """\
 
 @dataclass(frozen=True)
 class PoolKey:
+    """Base class for Pool Key classes. Kept separate from AssignmentKey base class to provide stronger type checking with the TypeVar T_PoolKeyType."""
+
     @classmethod
     def from_dict(cls, data: dict) -> Self:
         return cls(**data)
@@ -37,6 +40,8 @@ class PoolKey:
 
 @dataclass(frozen=True)
 class AssignmentKey:
+    """Base class for Assignment Key classes. Kept separate from PoolKey base class to provide stronger type checking with the TypeVar T_AssignmentKeyType."""
+
     @classmethod
     def from_dict(cls, data: dict) -> Self:
         return cls(**data)
@@ -54,7 +59,7 @@ class PoolAssignment(Generic[T_AssignmentKeyType, T_ValueType]):
 
 @dataclass
 class Pool(Generic[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]):
-    """One Pool of resources. Currently only supporting a pool of Integers."""
+    """One Pool of resources indexed by T_PoolKeyType. Currently only supporting a pool of Integers."""
 
     collection: PoolCollection[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]
     pool_key: T_PoolKeyType
@@ -62,10 +67,10 @@ class Pool(Generic[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]):
 
     def _is_value_available(self, value: T_ValueType) -> bool:
         if self.collection.value_type is int and isinstance(value, int):
-            collection = cast(PoolCollection[T_PoolKeyType, T_AssignmentKeyType, int], self.collection)
-            assignments = cast(dict[T_AssignmentKeyType, PoolAssignment[T_AssignmentKeyType, int]], self.assignments)
-            existing_ids = {assignment.value for assignment in assignments.values()}
-            return not (value in existing_ids or value < collection.min_value or (collection.max_value is not None and value > collection.max_value))
+            existing_ids = {assignment.value for assignment in self.assignments.values()}
+            return not (
+                value in existing_ids or value < self.collection.min_value or (self.collection.max_value is not None and value > self.collection.max_value)
+            )
 
         # currently we only support int pools
         return False
@@ -75,7 +80,9 @@ class Pool(Generic[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]):
             collection = cast(PoolCollection[T_PoolKeyType, T_AssignmentKeyType, int], self.collection)
             assignments = cast(dict[T_AssignmentKeyType, PoolAssignment[T_AssignmentKeyType, int]], self.assignments)
             existing_ids = {assignment.value for assignment in assignments.values()}
-            available_ids = set(range(collection.min_value, len(existing_ids) + 2)) - existing_ids
+            # Create a filterfalse generator from a range starting from the min_value, excluding the values that are already assigned.
+            # Nothing will be iterated at this point, but the next(iter()) below will ask the generator for the first item.
+            available_ids = filterfalse(existing_ids.__contains__, range(collection.min_value))
             next_available = next(iter(available_ids))
             if collection.max_value is not None and next_available > collection.max_value:
                 msg = (
@@ -177,20 +184,21 @@ class Pool(Generic[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]):
 @dataclass
 class PoolCollection(ABC, Generic[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]):
     """
-    Collection of similar Pool instances indexed by a tuple.
+    Collection of similar Pool instances indexed by a T_PoolKeyType.
 
     We will maintain a collection of pools per file.
     """
 
     pools_file: Path
-    pools_key: str
+    # Using field(init=False) on fields that are expected to have a default value set on the subclass.
+    pools_key: str = field(init=False)
     _pools: dict[T_PoolKeyType, Pool[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]] = field(init=False)
-    pool_cls: type[Pool[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]]
-    pool_key_cls: type[T_PoolKeyType]
-    assignment_cls: type[PoolAssignment[T_AssignmentKeyType, T_ValueType]]
-    assignment_key_cls: type[T_AssignmentKeyType]
-    value_type: type[T_ValueType]
-    min_value: T_ValueType
+    pool_cls: type[Pool[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]] = field(init=False)
+    pool_key_cls: type[T_PoolKeyType] = field(init=False)
+    assignment_cls: type[PoolAssignment[T_AssignmentKeyType, T_ValueType]] = field(init=False)
+    assignment_key_cls: type[T_AssignmentKeyType] = field(init=False)
+    value_type: type[T_ValueType] = field(init=False)
+    min_value: T_ValueType = field(init=False)
     max_value: T_ValueType | None = None
     changed: bool = False
 
@@ -262,21 +270,26 @@ class PoolCollection(ABC, Generic[T_PoolKeyType, T_AssignmentKeyType, T_ValueTyp
             self.pools_file.parent.mkdir(mode=0o775, parents=True, exist_ok=True)
             self.pools_file.touch(mode=0o664)
 
-        self.pools_file.write_text(FILE_HEADER + dump({self.pools_key: self.as_list()}, Dumper=dumper_cls))
+        try:
+            self.pools_file.write_text(FILE_HEADER + dump({self.pools_key: self.as_list()}, Dumper=dumper_cls))
+        except (PermissionError, OSError) as e:
+            msg = f"An error occurred during writing of the AVD Pool Manager file '{self.pools_file}': {e}"
+            raise type(e)(msg) from e
+
         self.changed = False
         return True
 
     @staticmethod
     @abstractmethod
-    def _pool_key_from_shared_utils(shared_utils: SharedUtils) -> T_PoolKeyType:
+    def _pool_key_from_shared_utils(shared_utils: SharedUtilsProtocol) -> T_PoolKeyType:
         """Returns the pool key to use for tthis device."""
 
     @staticmethod
     @abstractmethod
-    def _pool_file_from_shared_utils(output_dir: Path, shared_utils: SharedUtils) -> Path:
+    def _pools_file_from_shared_utils(output_dir: Path, shared_utils: SharedUtilsProtocol) -> Path:
         """Returns the file to use for this device."""
 
     @staticmethod
     @abstractmethod
-    def _assignment_key_from_shared_utils(shared_utils: SharedUtils) -> T_AssignmentKeyType:
+    def _assignment_key_from_shared_utils(shared_utils: SharedUtilsProtocol) -> T_AssignmentKeyType:
         """Returns the assignment key to use for this device."""

@@ -27,11 +27,9 @@ class PoolManager:
     and given to shared_utils for each device.
     """
 
-    _pool_collection_types: ClassVar = {"node_id_pools": NodeIdPoolCollection}
-
+    _pool_collection_types: ClassVar[dict[str, type[PoolCollection]]] = {"node_id_pools": NodeIdPoolCollection}
     _output_dir: Path
     _pool_collections: dict[PoolType, dict[Path, PoolCollection]]
-
     """PoolCollection collections keys by file path."""
 
     def __init__(self, output_dir: Path) -> None:
@@ -59,7 +57,7 @@ class PoolManager:
 
         pools_files_map = self._pool_collections.setdefault(pool_type, {})
         pools_cls = self._pool_collection_types[pool_type]
-        pools_file = pools_cls._pool_file_from_shared_utils(self._output_dir, shared_utils)
+        pools_file = pools_cls._pools_file_from_shared_utils(self._output_dir, shared_utils)
 
         if pools_file not in pools_files_map:
             # Not using setdefault since initializing the pool will read from file.
@@ -74,7 +72,7 @@ class PoolManager:
         Returns the assignment value for this device for the given pool type. Assignment and pool will be autocreated if missing.
 
         Args:
-            pool_type: Currently only supports "node_id_poools".
+            pool_type: Currently only supports "node_id_pools".
             shared_utils: Instance of SharedUtils for the device.
             requested_value: A requested value to assign to the device if available. Existing assignment will be changed if possible.
                 There are no guarantees that this value will be assigned, so the caller should check and handle accordingly.
