@@ -3354,10 +3354,22 @@ keys:
                 Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.
 
                 '
-            build_rss_profile:
-              type: bool
-              default: false
-              description: Build RSS interface profile for supported platforms.
+            platform_sfe_interface_profile:
+              type: dict
+              description: Support for Platform SFE Interface Profiles used for Receive
+                Side Scaling (RSS).
+              keys:
+                supported:
+                  type: bool
+                  default: false
+                  description: Capability flag for generation of RSS profiles.
+                max_rx_queues:
+                  type: int
+                  required: true
+                  default: 6
+                  convert_types:
+                  - str
+                  description: Maximum rx_queue count supported on any interface.
         management_interface:
           type: str
           default: Management1
@@ -3531,15 +3543,28 @@ keys:
         non_mlag: 330
     - platforms:
       - AWE-5310
-      - AWE-5510
-      - AWE-7250R
       - AWE-7230R
       feature_support:
         bgp_update_wait_for_convergence: true
         bgp_update_wait_install: false
         interface_storm_control: false
         queue_monitor_length_notify: false
-        build_rss_profile: false
+        platform_sfe_interface_profile:
+          supported: true
+          max_rx_queues: 6
+      management_interface: Management1/1
+      p2p_uplinks_mtu: 9194
+    - platforms:
+      - AWE-5510
+      - AWE-7250R
+      feature_support:
+        bgp_update_wait_for_convergence: true
+        bgp_update_wait_install: false
+        interface_storm_control: false
+        queue_monitor_length_notify: false
+        platform_sfe_interface_profile:
+          supported: true
+          max_rx_queues: 16
       management_interface: Management1/1
       p2p_uplinks_mtu: 9194
     - platforms:
@@ -9745,8 +9770,12 @@ $defs:
                       Examples: ''1-3'' or ''100,200,300'''
         rx_queue:
           type: dict
-          description: Receive queue parameters for Receive Side Scaling (RSS) profile
+          description: 'Receive queue parameters for Receive Side Scaling (RSS) profile
             for this interface.
+
+            This setting is ignored unless the `platform_sfe_interface_profile.supported`
+            is set as `true` under `platform_settings.feature_support` for the `platform`
+            set on this device.'
           keys:
             count:
               type: int
@@ -9755,16 +9784,25 @@ $defs:
               - str
               description: 'Number of receive queues.
 
-                The maximum value is platform dependent.'
+                The maximum value is determined by `platform_sfe_interface_profile.max_rx_queues`
+                under `platform_settings.feature_support` for the `platform` set on
+                this device.'
             worker:
-              type: str
-              description: 'Worker ids specified as combination of range and/or comma
-                separated values
+              type: list
+              items:
+                type: str
+                convert_types:
+                - int
+                description: 'Worker ids specified as values or range of values such
+                  as 0-4 or 7.
 
-                such as 0-4,7.'
+                  Valid values are between 0 and one less than maximum value determined
+                  by `platform_sfe_interface_profile.max_rx_queues` under `platform_settings.feature_support`
+                  for the `platform` set on this device.'
             mode:
               type: str
-              description: Mode applicable to the workers. Default mode is 'shared'.
+              description: Mode applicable to the workers.
+              default: shared
               valid_values:
               - shared
               - exclusive
@@ -9850,8 +9888,12 @@ $defs:
                   or `forced <interface_speed>` or `auto <interface_speed>`.
               rx_queue:
                 type: dict
-                description: Receive queue parameters for Receive Side Scaling (RSS)
+                description: 'Receive queue parameters for Receive Side Scaling (RSS)
                   profile for this interface.
+
+                  This setting is ignored unless the `platform_sfe_interface_profile.supported`
+                  is set as `true` under `platform_settings.feature_support` for the
+                  `platform` set on this device.'
                 keys:
                   count:
                     type: int
@@ -9860,16 +9902,25 @@ $defs:
                     - str
                     description: 'Number of receive queues.
 
-                      The maximum value is platform dependent.'
+                      The maximum value is determined by `platform_sfe_interface_profile.max_rx_queues`
+                      under `platform_settings.feature_support` for the `platform`
+                      set on this device.'
                   worker:
-                    type: str
-                    description: 'Worker ids specified as combination of range and/or
-                      comma separated values
+                    type: list
+                    items:
+                      type: str
+                      convert_types:
+                      - int
+                      description: 'Worker ids specified as values or range of values
+                        such as 0-4 or 7.
 
-                      such as 0-4,7.'
+                        Values are between 0 and one less than maximum value determined
+                        by `platform_sfe_interface_profile.max_rx_queues` under `platform_settings.feature_support`
+                        for the `platform` set on this device.'
                   mode:
                     type: str
-                    description: Mode applicable to the workers. Default mode is 'shared'.
+                    description: Mode applicable to the workers.
+                    default: shared
                     valid_values:
                     - shared
                     - exclusive

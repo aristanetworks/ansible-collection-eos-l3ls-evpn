@@ -1,0 +1,23 @@
+---
+type: l3leaf
+l3leaf:
+  defaults:
+    platform: AWE-5510
+  nodes:
+    - bgp_as: 65000
+      name: rss-profile-worker-id-exceed-max
+      id: 1
+      loopback_ipv4_pool: 192.168.0.0/24
+      vtep_loopback_ipv4_pool: 192.168.1.0/24
+      l3_port_channels:
+        - name: Port-Channel5
+          ip_address: 172.16.0.2/30
+          member_interfaces:
+            - name: Ethernet1/19
+              rx_queue:
+                worker:
+                  - 2
+                  - 14-17
+
+expected_error_message: >-
+  One or more worker ids within '14-17' under 'rx_queue' for interface 'Ethernet1/19' equal or exceed maximum supported '16' for this platform.
