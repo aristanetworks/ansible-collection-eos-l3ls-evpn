@@ -78,9 +78,8 @@ class IpIgmpSnoopingMixin(Protocol):
                 else None,
                 version=default(vlan.igmp_snooping_querier.version, tenant.igmp_snooping_querier.version) if igmp_snooping_querier_enabled else None,
             ),
+            fast_leave=default(vlan.igmp_snooping_querier.fast_leave, tenant.evpn_l2_multicast.fast_leave) if evpn_l2_multicast_enabled else None,
         )
-        if evpn_l2_multicast_enabled:
-            vlan_item.fast_leave = default(vlan.igmp_snooping_querier.fast_leave, tenant.evpn_l2_multicast.fast_leave)
 
         if strip_empties_from_dict(vlan_item._as_dict()):
             vlan_item._update(id=vlan.id)
