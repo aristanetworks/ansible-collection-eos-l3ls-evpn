@@ -82,7 +82,7 @@ class Pool(Generic[T_PoolKeyType, T_AssignmentKeyType, T_ValueType]):
             existing_ids = {assignment.value for assignment in assignments.values()}
             # Create a filterfalse generator from a range starting from the min_value, excluding the values that are already assigned.
             # Nothing will be iterated at this point, but the next(iter()) below will ask the generator for the first item.
-            available_ids = filterfalse(existing_ids.__contains__, range(collection.min_value))
+            available_ids = filterfalse(existing_ids.__contains__, range(collection.min_value, collection.min_value + len(existing_ids) + 2))
             next_available = next(iter(available_ids))
             if collection.max_value is not None and next_available > collection.max_value:
                 msg = (
