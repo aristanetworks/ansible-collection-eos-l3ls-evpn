@@ -73,20 +73,14 @@ class AvdStructuredConfigInbandManagement(StructuredConfigGenerator):
             ),
         ]
 
-    @cached_property
-    def ipv6_static_routes(self) -> list | None:
+    @structured_config_contributor
+    def ipv6_static_routes(self) -> None:
         if not self.shared_utils.configure_inband_mgmt_ipv6 or self.shared_utils.inband_mgmt_ipv6_gateway is None:
-            return None
+            return
 
-        return [
-            strip_empties_from_dict(
-                {
-                    "destination_address_prefix": "::/0",
-                    "gateway": self.shared_utils.inband_mgmt_ipv6_gateway,
-                    "vrf": self.shared_utils.inband_mgmt_vrf,
-                },
-            ),
-        ]
+        self.structured_config.ipv6_static_routes.append_new(
+            destination_address_prefix="::/0", gateway=self.shared_utils.inband_mgmt_ipv6_gateway, vrf=self.shared_utils.inband_mgmt_vrf
+        )
 
     @structured_config_contributor
     def vrfs(self) -> None:
