@@ -1,5 +1,5 @@
 ---
-- name: Cleanup - Configuration deployment with CVP
+- name: "{{ test_id | upper }} Cleanup - Configuration deployment with CVP"
   hosts: SITE1_FABRIC
   connection: local
   gather_facts: false
@@ -10,21 +10,14 @@
     cv_skip_missing_devices: true
     eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
     structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
+    test_id: "global-scenario-cleanup"
+    cv_common_pattern: "avd-cv-deploy_{{ test_id }}"
 
   tasks:
-    - name: Generate random string
+    - name: "{{ test_id | upper }} Generate random string"
+      run_once: true
       ansible.builtin.set_fact:
         r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
-      run_once: true
-
-    - name: Set facts
-      ansible.builtin.set_fact:
-        cv_workspace_name: avd-cv-deploy-cleanup-{{ r }}
-        cv_workspace_description: sample description
-        cv_change_control_name: cc_cv_deploy-cleanup-{{ r }}
-        cv_change_control_description: sample description
-        cv_register_detailed_results: true
-      run_once: true
 
     - name: Cleanup
       run_once: true
@@ -32,6 +25,11 @@
       ansible.builtin.import_role:
         name: arista.avd.cv_deploy
       vars:
+        cv_workspace_name: "{{ cv_common_pattern }}_{{ r }}_cleanup"
+        cv_workspace_description: "{{ cv_common_pattern + '_' + r + '_cleanup' | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}_{{ r }}_cleanup"
+        cv_change_control_description: "{{ cv_common_pattern + '_' + r + '_cleanup' | upper }}"
+        cv_register_detailed_results: true
         cv_submit_workspace: true
         cv_submit_workspace_force: true
         cv_run_change_control: true
