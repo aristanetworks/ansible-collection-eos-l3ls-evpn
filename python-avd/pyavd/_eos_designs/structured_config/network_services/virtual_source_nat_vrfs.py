@@ -31,11 +31,12 @@ class VirtualSourceNatVrfsMixin(Protocol):
         if not (self.shared_utils.overlay_vtep and self.shared_utils.network_services_l2 and self.shared_utils.network_services_l3):
             return
 
-        if (loopback_interfaces := self.loopback_interfaces) is None:
+        self.loopback_interfaces()
+        if (loopback_interfaces := self.structured_config.loopback_interfaces) is None:
             return
 
         for loopback_interface in loopback_interfaces:
-            if (vrf := loopback_interface.get("vrf", "default")) is None:
+            if (vrf := loopback_interface.vrf) is None:
                 continue
 
             # Using append with ignore_fields.
@@ -44,8 +45,8 @@ class VirtualSourceNatVrfsMixin(Protocol):
             self.structured_config.virtual_source_nat_vrfs.append(
                 EosCliConfigGen.VirtualSourceNatVrfsItem(
                     name=vrf,
-                    ip_address=get_ip_from_ip_prefix(loopback_interface["ip_address"]) if "ip_address" in loopback_interface else None,
-                    ipv6_address=get_ip_from_ip_prefix(loopback_interface["ipv6_address"]) if "ipv6_address" in loopback_interface else None,
+                    ip_address=get_ip_from_ip_prefix(loopback_interface.ip_address) if loopback_interface.ip_address else None,
+                    ipv6_address=get_ip_from_ip_prefix(loopback_interface.ipv6_address) if loopback_interface.ipv6_address else None,
                 ),
                 ignore_fields=("ip_address", "ipv6_address"),
             )

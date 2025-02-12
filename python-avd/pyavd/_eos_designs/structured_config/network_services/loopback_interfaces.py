@@ -3,10 +3,11 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import AvdStringFormatter, append_if_not_duplicate, default, strip_empties_from_dict
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
+from pyavd._utils import AvdStringFormatter, default, strip_empties_from_dict
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
@@ -21,61 +22,45 @@ class LoopbackInterfacesMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def loopback_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
+    @structured_config_contributor
+    def loopback_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Return structured config for loopback_interfaces.
+        Set structured config for loopback_interfaces.
 
         Used for Tenant vrf loopback interfaces
         This function is also called from virtual_source_nat_vrfs to avoid duplicate logic
         """
         if not self.shared_utils.network_services_l3:
-            return None
+            return
 
-        loopback_interfaces = []
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 if (loopback_interface := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is not None:
-                    append_if_not_duplicate(
-                        list_of_dicts=loopback_interfaces,
-                        primary_key="name",
-                        new_dict=loopback_interface,
-                        context="VTEP Diagnostic Loopback Interfaces",
-                        context_keys=["name", "vrf", "tenant"],
-                        ignore_keys={"tenant"},
+                    self.structured_config.loopback_interfaces.append_new(
+                        name=loopback_interface["name"],
+                        description=loopback_interface["description"],
+                        shutdown=loopback_interface["shutdown"],
+                        vrf=loopback_interface["vrf"],
+                        ip_address=loopback_interface["ip_address"],
+                        ipv6_address=loopback_interface.get("ipv6_address", None),
                     )
 
                 # The loopbacks have already been filtered in _filtered_tenants
                 # to only contain entries with our hostname
                 for loopback in vrf.loopbacks:
-                    loopback_interface = {
-                        "name": f"Loopback{loopback.loopback}",
-                        "ip_address": loopback.ip_address,
-                        "shutdown": not loopback.enabled,
-                        "description": loopback.description,
-                        "eos_cli": loopback.raw_eos_cli,
-                    }
-
-                    if vrf.name != "default":
-                        loopback_interface["vrf"] = vrf.name
-
-                    if loopback.ospf.enabled and vrf.ospf.enabled:
-                        loopback_interface["ospf_area"] = loopback.ospf.area
-
-                    # Strip None values from interface before adding to list
-                    loopback_interface = {key: value for key, value in loopback_interface.items() if value is not None}
-                    append_if_not_duplicate(
-                        list_of_dicts=loopback_interfaces,
-                        primary_key="name",
-                        new_dict=loopback_interface,
-                        context="Loopback Interfaces defined under network_services, vrfs, loopbacks",
-                        context_keys=["name", "vrf"],
+                    loopback_interface_item = EosCliConfigGen.LoopbackInterfacesItem(
+                        name=f"Loopback{loopback.loopback}",
+                        ip_address=loopback.ip_address,
+                        shutdown=not loopback.enabled,
+                        description=loopback.description,
+                        eos_cli=loopback.raw_eos_cli,
                     )
+                    if vrf.name != "default":
+                        loopback_interface_item.vrf = vrf.name
+                    if loopback.ospf.enabled and vrf.ospf.enabled:
+                        loopback_interface_item.ospf_area = loopback.ospf.area
 
-        if loopback_interfaces:
-            return loopback_interfaces
-
-        return None
+                    self.structured_config.loopback_interfaces.append(loopback_interface_item)
 
     def _get_vtep_diagnostic_loopback_for_vrf(
         self: AvdStructuredConfigNetworkServicesProtocol,
