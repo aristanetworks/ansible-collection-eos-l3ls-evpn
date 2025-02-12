@@ -176,7 +176,7 @@ network_ports:
   - switches:
       - network-ports-tests.1
     switch_ports:
-      - Ethernet20-24
+      - Ethernet20-21
     description: Range
     structured_config:
       switchport:
@@ -189,6 +189,29 @@ network_ports:
     structured_config:
       switchport:
         access_vlan: 42
+  # Test overwrite network ports structured_config with port-channel
+  - switches:
+      - network-ports-tests.1
+    switch_ports:
+      - Ethernet22-23
+    description: Range
+    port_channel:
+      channel_id: 222
+      mode: "active"
+      structured_config:
+        description: Range
+        switchport:
+          access_vlan: 666
+  - switches:
+      - network-ports-tests.1
+    switch_ports:
+      - Ethernet22
+    description: Single overwrite
+    port_channel:
+      channel_id: 222
+      mode: "active"
+      structured_config:
+        description: This should be the only one render and no vlan 666
 
 servers:
   - name: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
@@ -238,5 +261,6 @@ custom_platform_settings:
     reload_delay:
       mlag: 300
       non_mlag: 330
-    trident_forwarding_table_partition: flexible exact-match 16000 l2-shared 18000 l3-shared
+    trident_forwarding_table_partition:
+      flexible exact-match 16000 l2-shared 18000 l3-shared
       22000

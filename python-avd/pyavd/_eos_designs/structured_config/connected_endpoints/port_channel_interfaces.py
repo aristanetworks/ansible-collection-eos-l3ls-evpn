@@ -84,6 +84,8 @@ class PortChannelInterfacesMixin(Protocol):
                 network_port_as_adapter.switches = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.Switches(
                     [self.shared_utils.hostname, ""]
                 )
+                # TODO: this is not enough cf the current test with structured_config from both ranges
+                network_port_as_adapter.port_channel.structured_config = network_port.port_channel.structured_config._deepcopy()
 
                 default_channel_group_id = int("".join(re.findall(r"\d", ethernet_interface_name)))
                 channel_group_id = network_port_as_adapter.port_channel.channel_id or default_channel_group_id

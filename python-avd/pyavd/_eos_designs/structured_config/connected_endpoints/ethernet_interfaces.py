@@ -65,6 +65,11 @@ class EthernetInterfacesMixin(Protocol):
                 network_port_as_adapter.switches = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.Switches(
                     [self.shared_utils.hostname]
                 )
+                # TODO: this fix is not enough as it only prevent the same objects to be reused in all the
+                # structured_config for network_port and it solves the initial issue
+                # but this does not prevent an aggregation of all the structured_configs which is not
+                # the correct behavior.
+                # Need to keep track of the "network_port" structured configs
                 network_port_as_adapter.structured_config = network_port.structured_config._deepcopy()
                 ethernet_interface = self._get_ethernet_interface_cfg(network_port_as_adapter, 0, connected_endpoint)
 
