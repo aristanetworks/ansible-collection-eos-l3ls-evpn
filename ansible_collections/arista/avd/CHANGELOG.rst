@@ -4,6 +4,21 @@ Arista.Avd Release Notes
 
 .. contents:: Topics
 
+v5.2.1
+======
+
+Release Summary
+---------------
+
+Release 5.2.1 - See documentation on avd.arista.com for details.
+
+Bugfixes
+--------
+
+- Fix(eos_designs): Avoid returning objects in facts (#5016) by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/5027
+- Fix(eos_designs): Wrong duplicate detection between SVIs and L2VLANs (#5025) by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/5029
+- Fix(eos_designs): ptp_settings.domain (#5007) by @ClausHolbechArista in https://github.com/aristanetworks/avd/pull/5026
+
 v5.2.0
 ======
 

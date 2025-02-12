@@ -16,9 +16,9 @@ from .validation_result import ValidationResult
 PYAVD_PRERELEASE = ""  # Set this to aN or bN for alpha and beta releases of pyavd itself. Empty string when pyavd is released.
 
 __author__ = "Arista Networks"
-__copyright__ = "Copyright 2023-2024 Arista Networks"
+__copyright__ = "Copyright 2023-2025 Arista Networks"
 __license__ = "Apache 2.0"
-__version__ = "5.2.0"
+__version__ = "5.2.1"
 
 __all__ = [
     "ValidationResult",
