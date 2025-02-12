@@ -32,7 +32,7 @@
 {%             set profile_samples = profile.measurement_samples | arista.avd.default("-") %}
 {%             set profile_sig_value = profile.significance.value | arista.avd.default("-") %}
 {%             set profile_sig_offset = profile.significance.offset | arista.avd.default("-") %}
-| {{ profile.name }} | {{ profile_interval }} | {{ profile_samples }} | {{  profile_sig_value  }} | {{ profile_sig_offset }} |
+| {{ profile.name }} | {{ profile_interval }} | {{ profile_samples }} | {{ profile_sig_value }} | {{ profile_sig_offset }} |
 {%         endfor %}
 {%     endif %}
 
