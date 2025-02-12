@@ -31,13 +31,14 @@ class StaticRoutesMixin(Protocol):
         """
         if not self.shared_utils.network_services_l3:
             return
+
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 # Static routes are already filtered inside filtered_tenants
                 for static_route in vrf.static_routes:
-                    static_route_dict = static_route._cast_as(EosCliConfigGen.StaticRoutesItem, ignore_extra_keys=True)
-                    static_route_dict.vrf = vrf.name
-                    self.structured_config.static_routes.append_unique(static_route_dict)
+                    static_route_item = static_route._cast_as(EosCliConfigGen.StaticRoutesItem, ignore_extra_keys=True)
+                    static_route_item.vrf = vrf.name
+                    self.structured_config.static_routes.append_unique(static_route_item)
 
                 for svi in vrf.svis:
                     if not svi.ip_virtual_router_addresses or not svi.ip_address:
@@ -49,14 +50,14 @@ class StaticRoutesMixin(Protocol):
                             # Only create static routes for VARP entries with masks
                             continue
 
-                        static_route_dict = EosCliConfigGen.StaticRoutesItem(
+                        static_route_item = EosCliConfigGen.StaticRoutesItem(
                             destination_address_prefix=str(ipaddress.ip_network(virtual_router_address, strict=False)),
                             vrf=vrf.name,
                             name="VARP",
                             interface=f"Vlan{svi.id}",
                         )
 
-                        self.structured_config.static_routes.append_unique(static_route_dict)
+                        self.structured_config.static_routes.append_unique(static_route_item)
 
         for _internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
             for connection in connections:
