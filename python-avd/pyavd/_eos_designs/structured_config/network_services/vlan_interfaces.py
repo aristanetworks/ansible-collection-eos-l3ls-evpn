@@ -75,7 +75,7 @@ class VlanInterfacesMixin(Protocol):
         )
 
         for direction in ["in", "out"]:
-            if access_group := get(self._svi_acls, f"{interface_name}.ipv4_acl_{direction}"):
+            if access_group := get(self._svi_acls, f"{interface_name}..ipv4_acl_{direction}", separator=".."):
                 setattr(vlan_interface_config, f"access_group_{direction}", access_group.name)
 
         if svi.structured_config:
