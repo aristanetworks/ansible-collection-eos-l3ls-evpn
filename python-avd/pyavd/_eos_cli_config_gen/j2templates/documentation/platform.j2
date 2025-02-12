@@ -85,18 +85,15 @@
 {%             endif %}
 {## Platform Sfe Interface #}
 {%             if platform.sfe.interface is arista.avd.defined %}
-
-##### Platform Software Forwarding Engine Interface Summary
 {%                 if platform.sfe.interface.interface_profile is arista.avd.defined %}
-
-Applied profile: {{ platform.sfe.interface.interface_profile }}
+| Interface profile | {{ platform.sfe.interface.interface_profile }} |
 {%                 endif %}
 {%                 if platform.sfe.interface.profiles is arista.avd.defined %}
 
-###### RSS Profiles
+#### Platform Software Forwarding Engine Interface Profiles
 {%                     for profile_data in platform.sfe.interface.profiles | arista.avd.natural_sort('name') %}
 
-####### {{ profile_data.name }}
+##### {{ profile_data.name }}
 {%                         if profile_data.interfaces is arista.avd.defined %}
 
 | Interface | Rx-Queue Count | Rx-Queue Worker | Rx-Queue Mode |
@@ -105,18 +102,11 @@ Applied profile: {{ platform.sfe.interface.interface_profile }}
 {%                                 set rx_queue_count = interface_data.rx_queue.count | arista.avd.default('-') %}
 {%                                 set rx_queue_worker = interface_data.rx_queue.worker | arista.avd.default('-') %}
 {%                                 set rx_queue_mode = interface_data.rx_queue.mode | arista.avd.default('-') %}
-{%                                     endif %}
 | {{ interface_data.name }} | {{ rx_queue_count }} | {{ rx_queue_worker }} | {{ rx_queue_mode }} |
 {%                             endfor %}
 {%                         endif %}
 {%                     endfor %}
 {%                 endif %}
-
-##### Platform Software Forwarding Engine Interface Device Configuration
-
-```eos
-{%                 include 'eos/platform-sfe-interface.j2' %}
-```
 {%             endif %}
 {%         endif %}
 {%     endif %}
@@ -125,5 +115,6 @@ Applied profile: {{ platform.sfe.interface.interface_profile }}
 
 ```eos
 {%     include 'eos/platform.j2' %}
+{%     include 'eos/platform-sfe-interface.j2' %}
 ```
 {% endif %}

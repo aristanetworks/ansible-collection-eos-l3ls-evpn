@@ -10700,14 +10700,11 @@ ipv6 address virtual source-nat vrf TEST_04 address 2001:db8:85a3::8a2e:370:7335
 | Settings | Value |
 | -------- | ----- |
 | Maximum CPU Allocation | 42 |
+| Interface profile | TestProfile1 |
 
-##### Platform Software Forwarding Engine Interface Summary
+#### Platform Software Forwarding Engine Interface Profiles
 
-Applied profile: TestProfile1
-
-###### RSS Profiles
-
-####### TestProfile1
+##### TestProfile1
 
 | Interface | Rx-Queue Count | Rx-Queue Worker | Rx-Queue Mode |
 | --------- | -------------- | --------------- | ------------- |
@@ -10716,18 +10713,30 @@ Applied profile: TestProfile1
 | Ethernet1/4 | 1 | - | - |
 | Ethernet1/5 | 2 | 3,4 | exclusive |
 
-####### TestProfile2
+##### TestProfile2
 
 | Interface | Rx-Queue Count | Rx-Queue Worker | Rx-Queue Mode |
 | --------- | -------------- | --------------- | ------------- |
 | Ethernet1 | 3 | 2 | - |
 | Ethernet9 | - | - | - |
 
-####### TestProfile3
+##### TestProfile3
 
-##### Platform Software Forwarding Engine Interface Device Configuration
+### Platform Device Configuration
 
 ```eos
+!
+platform trident l3 routing mac-address per-vlan
+platform trident forwarding-table partition 2
+platform sand forwarding mode arad
+platform sand lag mode 512x32
+platform sand lag hardware-only
+platform sand qos map traffic-class 0 to network-qos 0
+platform sand qos map traffic-class 1 to network-qos 7
+platform sand qos map traffic-class 2 to network-qos 15
+platform sand multicast replication default ingress
+platform sand mdb profile l3-xxl
+platform sfe data-plane cpu allocation maximum 42
 !
 platform sfe interface
    interface profile TestProfile1
@@ -10757,23 +10766,6 @@ platform sfe interface
       interface Ethernet9
    !
    profile TestProfile3
-```
-
-### Platform Device Configuration
-
-```eos
-!
-platform trident l3 routing mac-address per-vlan
-platform trident forwarding-table partition 2
-platform sand forwarding mode arad
-platform sand lag mode 512x32
-platform sand lag hardware-only
-platform sand qos map traffic-class 0 to network-qos 0
-platform sand qos map traffic-class 1 to network-qos 7
-platform sand qos map traffic-class 2 to network-qos 15
-platform sand multicast replication default ingress
-platform sand mdb profile l3-xxl
-platform sfe data-plane cpu allocation maximum 42
 ```
 
 ## System L1
