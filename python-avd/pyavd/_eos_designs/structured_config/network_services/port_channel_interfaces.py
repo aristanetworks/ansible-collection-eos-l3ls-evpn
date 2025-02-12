@@ -40,13 +40,13 @@ class PortChannelInterfacesMixin(Protocol):
             if not tenant.point_to_point_services:
                 continue
 
-            self._set_point_to_point_interfaces(tenant, subif_parent_interfaces)
+            self._set_point_to_point_po_interfaces(tenant, subif_parent_interfaces)
 
             for subif_parent_interface in subif_parent_interfaces:
                 if subif_parent_interface.name not in self.structured_config.port_channel_interfaces:
                     self.structured_config.port_channel_interfaces.append(subif_parent_interface)
 
-    def _set_point_to_point_interfaces(
+    def _set_point_to_point_po_interfaces(
         self: AvdStructuredConfigNetworkServicesProtocol,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         subif_parent_interfaces: list[EosCliConfigGen.PortChannelInterfacesItem],
