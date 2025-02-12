@@ -27,7 +27,7 @@ class PoolManager:
     and given to shared_utils for each device.
     """
 
-    _pool_collection_types: ClassVar[dict[str, type[PoolCollection]]] = {"node_id_pools": NodeIdPoolCollection}
+    _pool_collection_types: ClassVar = {"node_id_pools": NodeIdPoolCollection}
     _output_dir: Path
     _pool_collections: dict[PoolType, dict[Path, PoolCollection]]
     """PoolCollection collections keys by file path."""

@@ -47,7 +47,7 @@ class NodeIdPoolCollection(PoolCollection[NodeIdPoolKey, NodeIdAssignmentKey, in
         )
 
     @staticmethod
-    def _pool_file_from_shared_utils(output_dir: Path, shared_utils: SharedUtilsProtocol) -> Path:
+    def _pools_file_from_shared_utils(output_dir: Path, shared_utils: SharedUtilsProtocol) -> Path:
         """Returns the file to use for this device."""
         fabric_name = shared_utils.fabric_name
         default_id_file = output_dir.joinpath(f"data/{fabric_name}-ids.yml")
