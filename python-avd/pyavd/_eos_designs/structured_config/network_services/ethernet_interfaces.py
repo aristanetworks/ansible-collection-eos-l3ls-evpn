@@ -246,9 +246,11 @@ class EthernetInterfacesMixin(Protocol):
 
     def _set_internet_exit_policy_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """Set the ethernet_interfaces with the interfaces defined for internet exit policies."""
+        # TODO: This should be moved to the place where we configure the same interface in underlay.
+        # Need to get free of _filtered_internet_policies_and_connections.
         for internet_exit_policy, connections in self._filtered_internet_exit_policies_and_connections:
             for connection in connections:
                 if connection["type"] == "ethernet":
-                    interface = EosCliConfigGen.EthernetInterfacesItem(name=connection["source_interface"])
-                    interface.ip_nat.service_profile = self.get_internet_exit_nat_profile_name(internet_exit_policy.type)
-                    self.structured_config.ethernet_interfaces.append(interface)
+                    self.structured_config.ethernet_interfaces.obtain(
+                        connection["source_interface"]
+                    ).ip_nat.service_profile = self.get_internet_exit_nat_profile_name(internet_exit_policy.type)
