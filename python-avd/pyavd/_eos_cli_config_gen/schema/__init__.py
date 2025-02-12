@@ -22300,7 +22300,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         """
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "direction": {"type": str}, "access_group": {"type": AccessGroup}}
-            name: str | None
+            name: str
             """Interface name, range or comma separated list."""
             direction: Literal["rx", "tx", "both"] | None
             access_group: AccessGroup
@@ -22311,7 +22311,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 def __init__(
                     self,
                     *,
-                    name: str | None | UndefinedType = Undefined,
+                    name: str | UndefinedType = Undefined,
                     direction: Literal["rx", "tx", "both"] | None | UndefinedType = Undefined,
                     access_group: AccessGroup | UndefinedType = Undefined,
                 ) -> None:
@@ -22328,8 +22328,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        class Sources(AvdList[SourcesItem]):
-            """Subclass of AvdList with `SourcesItem` items."""
+        class Sources(AvdIndexedList[str, SourcesItem]):
+            """Subclass of AvdIndexedList with `SourcesItem` items. Primary key is `name` (`str`)."""
+
+            _primary_key: ClassVar[str] = "name"
 
         Sources._item_type = SourcesItem
 
@@ -22401,7 +22403,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         name: str
         """Session Name."""
         sources: Sources
-        """Subclass of AvdList with `SourcesItem` items."""
+        """Subclass of AvdIndexedList with `SourcesItem` items. Primary key is `name` (`str`)."""
         destinations: Destinations
         """Subclass of AvdList with `str` items."""
         encapsulation_gre_metadata_tx: bool | None
@@ -22453,7 +22455,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Args:
                     name: Session Name.
-                    sources: Subclass of AvdList with `SourcesItem` items.
+                    sources: Subclass of AvdIndexedList with `SourcesItem` items. Primary key is `name` (`str`).
                     destinations: Subclass of AvdList with `str` items.
                     encapsulation_gre_metadata_tx: encapsulation_gre_metadata_tx
                     header_remove_size: Number of bytes to remove from header.
@@ -22475,8 +22477,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 """
 
-    class MonitorSessions(AvdList[MonitorSessionsItem]):
-        """Subclass of AvdList with `MonitorSessionsItem` items."""
+    class MonitorSessions(AvdIndexedList[str, MonitorSessionsItem]):
+        """Subclass of AvdIndexedList with `MonitorSessionsItem` items. Primary key is `name` (`str`)."""
+
+        _primary_key: ClassVar[str] = "name"
 
     MonitorSessions._item_type = MonitorSessionsItem
 
@@ -63168,7 +63172,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     monitor_session_default_encapsulation_gre: MonitorSessionDefaultEncapsulationGre
     """Subclass of AvdModel."""
     monitor_sessions: MonitorSessions
-    """Subclass of AvdList with `MonitorSessionsItem` items."""
+    """Subclass of AvdIndexedList with `MonitorSessionsItem` items. Primary key is `name` (`str`)."""
     monitor_telemetry_influx: MonitorTelemetryInflux
     """Subclass of AvdModel."""
     monitor_telemetry_postcard_policy: MonitorTelemetryPostcardPolicy
@@ -63772,7 +63776,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                    Subclass of AvdModel.
                 monitor_session_default_encapsulation_gre: Subclass of AvdModel.
-                monitor_sessions: Subclass of AvdList with `MonitorSessionsItem` items.
+                monitor_sessions: Subclass of AvdIndexedList with `MonitorSessionsItem` items. Primary key is `name` (`str`).
                 monitor_telemetry_influx: Subclass of AvdModel.
                 monitor_telemetry_postcard_policy: Subclass of AvdModel.
                 mpls: Subclass of AvdModel.
