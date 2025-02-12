@@ -34,7 +34,7 @@ keys:
                   remove_in_version: 6.0.0
               methods:
                 type: list
-                $ref: "eos_cli_config_gen#/$defs/methods" 
+                $ref: "eos_cli_config_gen#/$defs/methods"
           default:
             type: dict
             keys:
@@ -100,7 +100,7 @@ keys:
                 items:
                   type: dict
                   $ref: "eos_cli_config_gen#/$defs/methods/items"
-                  keys:                              
+                  keys:
                     multicast:
                       type: bool
                       description: |-
