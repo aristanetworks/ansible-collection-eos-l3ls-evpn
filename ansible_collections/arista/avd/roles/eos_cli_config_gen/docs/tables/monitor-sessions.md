@@ -10,9 +10,9 @@
     | [<samp>monitor_session_default_encapsulation_gre</samp>](## "monitor_session_default_encapsulation_gre") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;payload</samp>](## "monitor_session_default_encapsulation_gre.payload") | String |  |  | Valid Values:<br>- <code>full-packet</code><br>- <code>inner-packet</code> | Mirroring GRE payload type configuration commands. |
     | [<samp>monitor_sessions</samp>](## "monitor_sessions") | List, items: Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;-&nbsp;name</samp>](## "monitor_sessions.[].name") | String | Required |  |  | Session Name. |
+    | [<samp>&nbsp;&nbsp;-&nbsp;name</samp>](## "monitor_sessions.[].name") | String | Required, Unique |  |  | Session Name. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;sources</samp>](## "monitor_sessions.[].sources") | List, items: Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "monitor_sessions.[].sources.[].name") | String |  |  |  | Interface name, range or comma separated list. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "monitor_sessions.[].sources.[].name") | String | Required, Unique |  |  | Interface name, range or comma separated list. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;direction</samp>](## "monitor_sessions.[].sources.[].direction") | String |  |  | Valid Values:<br>- <code>rx</code><br>- <code>tx</code><br>- <code>both</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;access_group</samp>](## "monitor_sessions.[].sources.[].access_group") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;type</samp>](## "monitor_sessions.[].sources.[].access_group.type") | String |  |  | Valid Values:<br>- <code>ip</code><br>- <code>ipv6</code><br>- <code>mac</code> |  |
@@ -42,11 +42,11 @@
     monitor_sessions:
 
         # Session Name.
-      - name: <str; required>
+      - name: <str; required; unique>
         sources:
 
             # Interface name, range or comma separated list.
-          - name: <str>
+          - name: <str; required; unique>
             direction: <str; "rx" | "tx" | "both">
             access_group:
               type: <str; "ip" | "ipv6" | "mac">
