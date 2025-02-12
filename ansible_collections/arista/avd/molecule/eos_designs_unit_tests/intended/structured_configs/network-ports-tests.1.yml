@@ -716,28 +716,28 @@ ethernet_interfaces:
   peer_type: network_port
   switchport:
     enabled: true
-    access_vlan: 42
+    access_vlan: 666
 - name: Ethernet22
   description: Range
   shutdown: false
   peer_type: network_port
   switchport:
     enabled: true
-    access_vlan: 42
+    access_vlan: 666
 - name: Ethernet23
   description: Range
   shutdown: false
   peer_type: network_port
   switchport:
     enabled: true
-    access_vlan: 42
+    access_vlan: 666
 - name: Ethernet24
   description: Range
   shutdown: false
   peer_type: network_port
   switchport:
     enabled: true
-    access_vlan: 42
+    access_vlan: 666
 hostname: network-ports-tests.1
 ip_igmp_snooping:
   globally_enabled: true

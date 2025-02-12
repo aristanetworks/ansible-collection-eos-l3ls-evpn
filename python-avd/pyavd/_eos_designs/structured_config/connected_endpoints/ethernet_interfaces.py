@@ -65,6 +65,7 @@ class EthernetInterfacesMixin(Protocol):
                 network_port_as_adapter.switches = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.Switches(
                     [self.shared_utils.hostname]
                 )
+                network_port_as_adapter.structured_config = network_port.structured_config._deepcopy()
                 ethernet_interface = self._get_ethernet_interface_cfg(network_port_as_adapter, 0, connected_endpoint)
 
                 # Using __setitem__ to replace any previous network_port.
