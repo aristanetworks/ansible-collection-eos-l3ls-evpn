@@ -7,8 +7,10 @@ import re
 from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
-from pyavd._utils import append_if_not_duplicate, groupby_obj, strip_null_from_data
+from pyavd._utils import groupby_obj
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
@@ -24,13 +26,11 @@ class MonitorSessionsMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def monitor_sessions(self: AvdStructuredConfigConnectedEndpointsProtocol) -> list | None:
-        """Return structured_config for monitor_sessions."""
+    @structured_config_contributor
+    def monitor_sessions(self: AvdStructuredConfigConnectedEndpointsProtocol) -> None:
+        """Set the structured_config for monitor_sessions."""
         if not self._monitor_session_configs:
-            return None
-
-        monitor_sessions = []
+            return
 
         for session_name, session_configs in groupby_obj(self._monitor_session_configs, "name"):
             # Convert iterator to list since we can only access it once.
@@ -48,40 +48,34 @@ class MonitorSessionsMixin(Protocol):
                         )
                         raise AristaAvdInvalidInputsError(msg)
 
-            monitor_session = {
-                "name": session_name,
-                "sources": [],
-                "destinations": [session._internal_data.interface for session in session_configs_list if session.role == "destination"],
-            }
+            monitor_session = EosCliConfigGen.MonitorSessionsItem(name=session_name)
+            for session in session_configs_list:
+                if session.role == "destination":
+                    monitor_session.destinations.append(session._internal_data.interface)
+
             source_sessions = [session for session in session_configs_list if session.role == "source"]
+
             for session in source_sessions:
-                source = {
-                    "name": session._internal_data.interface,
-                    "direction": session.source_settings.direction,
-                }
-                if session.source_settings.access_group.name is not None:
-                    source["access_group"] = {
-                        "type": session.source_settings.access_group.type,
-                        "name": session.source_settings.access_group.name,
-                        "priority": session.source_settings.access_group.priority,
-                    }
-                append_if_not_duplicate(
-                    list_of_dicts=monitor_session["sources"],
-                    primary_key="name",
-                    new_dict=source,
-                    context="Monitor session defined under connected_endpoints",
-                    context_keys=["name"],
+                source = EosCliConfigGen.MonitorSessionsItem.SourcesItem(
+                    name=session._internal_data.interface,
+                    direction=session.source_settings.direction,
                 )
+                if session.source_settings.access_group.name:
+                    source.access_group = session.source_settings.access_group._cast_as(EosCliConfigGen.MonitorSessionsItem.SourcesItem.AccessGroup)
+                monitor_session.sources.append(source)
 
             if session_settings := merged_settings.session_settings:
-                monitor_session.update(session_settings._as_dict())
+                monitor_session._update(
+                    encapsulation_gre_metadata_tx=session_settings.encapsulation_gre_metadata_tx,
+                    header_remove_size=session_settings.header_remove_size,
+                    access_group=session_settings.access_group,
+                    rate_limit_per_ingress_chip=session_settings.rate_limit_per_ingress_chip,
+                    rate_limit_per_egress_chip=session_settings.rate_limit_per_egress_chip,
+                    sample=session_settings.sample,
+                    truncate=session_settings.truncate,
+                )
 
-            monitor_sessions.append(monitor_session)
-
-        if monitor_sessions:
-            return strip_null_from_data(monitor_sessions, ([], {}, None))
-
-        return None
+            self.structured_config.monitor_sessions.append(monitor_session)
 
     @cached_property
     def _monitor_session_configs(
