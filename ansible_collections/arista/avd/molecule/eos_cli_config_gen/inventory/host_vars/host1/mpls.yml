@@ -6,6 +6,14 @@ mpls:
     router_id: 192.168.1.1
     shutdown: false
     transport_address_interface: Loopback0
+  tunnel:
+    termination:
+      model:
+        ttl: uniform
+        dscp: uniform
+      php_model:
+        ttl: pipe
+        dscp: pipe
   icmp:
     fragmentation_needed_tunneling: true
   rsvp:

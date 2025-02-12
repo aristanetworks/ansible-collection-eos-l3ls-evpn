@@ -2250,20 +2250,41 @@ keys:
                     - percent
             min_delay_static:
               type: dict
+              description: Mutually exclusive with min_delay_dynamic, if both are defined min_delay_static takes precedence.
               keys:
                 number:
                   type: int
+                  description: Valid values are 1-16777215 microseconds. This is regardless of whether the specified unit is milliseconds or microseconds.
                   required: true
                   convert_types:
                     - str
-                  min: 1
-                  max: 16777215
                 unit:
                   type: str
                   required: true
                   valid_values:
                     - microseconds
                     - milliseconds
+            min_delay_dynamic:
+              type: dict
+              description: Mutually exclusive with min_delay_static, if both are defined min_delay_static takes precedence.
+              keys:
+                twamp_light_fallback:
+                  type: dict
+                  keys:
+                    number:
+                      type: int
+                      description: |-
+                        Valid values are 1-16777215 microseconds.
+                        This is regardless of whether the specified unit is milliseconds or microseconds.
+                      required: true
+                      convert_types:
+                        - str
+                    unit:
+                      type: str
+                      required: true
+                      valid_values:
+                        - microseconds
+                        - milliseconds
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.

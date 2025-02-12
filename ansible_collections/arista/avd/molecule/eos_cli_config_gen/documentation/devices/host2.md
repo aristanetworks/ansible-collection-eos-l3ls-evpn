@@ -111,6 +111,8 @@
   - [IP DHCP Snooping Device Configuration](#ip-dhcp-snooping-device-configuration)
 - [IP NAT](#ip-nat)
   - [IP NAT Device Configuration](#ip-nat-device-configuration)
+- [Errdisable](#errdisable)
+  - [Errdisable Summary](#errdisable-summary)
 - [MACsec](#macsec)
   - [MACsec Summary](#macsec-summary)
   - [MACsec Device Configuration](#macsec-device-configuration)
@@ -1496,6 +1498,37 @@ ip dhcp snooping
 !
 !
 ip nat synchronization
+```
+
+## Errdisable
+
+### Errdisable Summary
+
+|  Cause | Detection Enabled | Recovery Enabled |
+| ------ | ----------------- | ---------------- |
+| arp-inspection | - | True |
+| bpduguard | - | True |
+| hitless-reload-down | - | True |
+| lacp-rate-limit | - | True |
+| link-flap | - | True |
+| no-internal-vlan | - | True |
+| portchannelguard | - | True |
+| portsec | - | True |
+| tapagg | - | True |
+| uplink-failure-detection | - | True |
+
+```eos
+!
+errdisable recovery cause arp-inspection
+errdisable recovery cause bpduguard
+errdisable recovery cause hitless-reload-down
+errdisable recovery cause lacp-rate-limit
+errdisable recovery cause link-flap
+errdisable recovery cause no-internal-vlan
+errdisable recovery cause portchannelguard
+errdisable recovery cause portsec
+errdisable recovery cause tapagg
+errdisable recovery cause uplink-failure-detection
 ```
 
 ## MACsec
