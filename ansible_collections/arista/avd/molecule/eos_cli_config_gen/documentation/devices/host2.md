@@ -881,6 +881,7 @@ interface Dps1
 ```eos
 !
 interface Vxlan1
+   vxlan vlan 110 vni 10110
    vxlan vlan 111,113,115-118 vni 10111,10113,10115-10118
    vxlan vlan 111 flood vtep 10.1.1.10 10.1.1.11
    vxlan vlan 110 multicast group 239.9.1.4
