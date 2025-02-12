@@ -55,6 +55,10 @@ router traffic-engineering
 {%             endfor %}
 {%         endif %}
 {%     endif %}
+{%     if router_traffic_engineering.twamp_light_sender_profile is arista.avd.defined %}
+   !
+   twamp-light sender profile {{ router_traffic_engineering.twamp_light_sender_profile }}
+{%     endif %}
 {%     if router_traffic_engineering.router_id.ipv4 is arista.avd.defined %}
    router-id ipv4 {{ router_traffic_engineering.router_id.ipv4 }}
 {%     endif %}

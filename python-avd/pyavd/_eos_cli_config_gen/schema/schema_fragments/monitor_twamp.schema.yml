@@ -1,0 +1,81 @@
+# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Use of this source code is governed by the Apache License 2.0
+# that can be found in the LICENSE file.
+# yaml-language-server: $schema=../../../_schema/avd_meta_schema.json
+# Line above is used by RedHat's YAML Schema vscode extension
+# Use Ctrl + Space to get suggestions for every field. Autocomplete will pop up after typing 2 letters.
+type: dict
+keys:
+  monitor_twamp:
+    documentation_options:
+      table: monitor-twamp
+    type: dict
+    keys:
+      twamp_light:
+        type: dict
+        keys:
+          reflector_defaults:
+            type: dict
+            keys:
+              listen_port:
+                type: int
+                min: 1
+                max: 65535
+                convert_types:
+                  - str
+          sender_defaults:
+            type: dict
+            keys:
+              destination_port:
+                type: int
+                min: 1
+                max: 65535
+                convert_types:
+                  - str
+              source_port:
+                type: int
+                min: 1
+                max: 65535
+                convert_types:
+                  - str
+          sender_profiles:
+            type: list
+            items:
+              type: dict
+              keys:
+                name:
+                  type: str
+                  required: true
+                measurement_interval:
+                  type: int
+                  min: 1
+                  max: 255
+                  convert_types:
+                    - str
+                  description: Measuremnt interval in seconds.
+                measurement_samples:
+                  type: int
+                  min: 1
+                  max: 65535
+                  convert_types:
+                    - str
+                  description: Number of samples used to calculate TWAMP light metrics.
+                significance:
+                  type: dict
+                  keys:
+                    value:
+                      type: int
+                      required: true
+                      min: 1
+                      max: 1000000
+                      convert_types:
+                        - str
+                      description: Significance value in microseconds.
+                    offset:
+                      type: int
+                      required: true
+                      min: 1
+                      max: 1000000
+                      convert_types:
+                        - str
+                      description: Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be smaller than significance value.

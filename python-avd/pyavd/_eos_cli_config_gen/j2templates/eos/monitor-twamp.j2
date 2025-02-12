@@ -1,0 +1,37 @@
+{% if monitor_twamp is arista.avd.defined %}
+!
+monitor twamp
+{%     if monitor_twamp.twamp_light is arista.avd.defined %}
+   twamp-light
+{%         if monitor_twamp.twamp_light.reflector_defaults is arista.avd.defined %}
+      reflector defaults
+{%             if monitor_twamp.twamp_light.reflector_defaults.listen_port is arista.avd.defined %}
+         listen port {{ monitor_twamp.twamp_light.reflector_defaults.listen_port }}
+{%             endif %}
+      !
+{%         endif %}
+{%         if monitor_twamp.twamp_light.sender_defaults is arista.avd.defined %}
+      sender defaults
+{%             if monitor_twamp.twamp_light.sender_defaults.destination_port is arista.avd.defined %}
+         destination port {{ monitor_twamp.twamp_light.sender_defaults.destination_port }}
+{%             endif %}
+{%             if monitor_twamp.twamp_light.sender_defaults.source_port is arista.avd.defined %}
+         source port {{ monitor_twamp.twamp_light.sender_defaults.source_port }}
+{%             endif %}
+      !
+{%         endif %}
+{%         for sender_profile in monitor_twamp.twamp_light.sender_profiles | arista.avd.natural_sort('name') %}
+      sender profile {{ sender_profile.name }}
+{%             if sender_profile.measurement_interval is arista.avd.defined %}
+         measurement interval {{ sender_profile.measurement_interval }} seconds
+{%             endif %}
+{%             if sender_profile.measurement_samples is arista.avd.defined %}
+         measurement samples {{ sender_profile.measurement_samples }}
+{%             endif %}
+{%             if sender_profile.significance is arista.avd.defined %}
+         significance {{ sender_profile.significance.value }} microseconds offset {{ sender_profile.significance.offset }} microseconds
+{%             endif %}
+      !
+{%         endfor %}
+{%     endif%}
+{% endif %}

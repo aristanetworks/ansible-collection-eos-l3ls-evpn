@@ -23101,6 +23101,183 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 """
 
+    class MonitorTwamp(AvdModel):
+        """Subclass of AvdModel."""
+
+        class TwampLight(AvdModel):
+            """Subclass of AvdModel."""
+
+            class ReflectorDefaults(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"listen_port": {"type": int}}
+                listen_port: int | None
+
+                if TYPE_CHECKING:
+
+                    def __init__(self, *, listen_port: int | None | UndefinedType = Undefined) -> None:
+                        """
+                        ReflectorDefaults.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            listen_port: listen_port
+
+                        """
+
+            class SenderDefaults(AvdModel):
+                """Subclass of AvdModel."""
+
+                _fields: ClassVar[dict] = {"destination_port": {"type": int}, "source_port": {"type": int}}
+                destination_port: int | None
+                source_port: int | None
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self, *, destination_port: int | None | UndefinedType = Undefined, source_port: int | None | UndefinedType = Undefined
+                    ) -> None:
+                        """
+                        SenderDefaults.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            destination_port: destination_port
+                            source_port: source_port
+
+                        """
+
+            class SenderProfilesItem(AvdModel):
+                """Subclass of AvdModel."""
+
+                class Significance(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"value": {"type": int}, "offset": {"type": int}}
+                    value: int
+                    """Significance value in microseconds."""
+                    offset: int
+                    """
+                    Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be smaller
+                    than significance value.
+                    """
+
+                    if TYPE_CHECKING:
+
+                        def __init__(self, *, value: int | UndefinedType = Undefined, offset: int | UndefinedType = Undefined) -> None:
+                            """
+                            Significance.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                value: Significance value in microseconds.
+                                offset:
+                                   Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be smaller
+                                   than significance value.
+
+                            """
+
+                _fields: ClassVar[dict] = {
+                    "name": {"type": str},
+                    "measurement_interval": {"type": int},
+                    "measurement_samples": {"type": int},
+                    "significance": {"type": Significance},
+                }
+                name: str
+                measurement_interval: int | None
+                """Measuremnt interval in seconds."""
+                measurement_samples: int | None
+                """Number of samples used to calculate TWAMP light metrics."""
+                significance: Significance
+                """Subclass of AvdModel."""
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        name: str | UndefinedType = Undefined,
+                        measurement_interval: int | None | UndefinedType = Undefined,
+                        measurement_samples: int | None | UndefinedType = Undefined,
+                        significance: Significance | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        SenderProfilesItem.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            name: name
+                            measurement_interval: Measuremnt interval in seconds.
+                            measurement_samples: Number of samples used to calculate TWAMP light metrics.
+                            significance: Subclass of AvdModel.
+
+                        """
+
+            class SenderProfiles(AvdList[SenderProfilesItem]):
+                """Subclass of AvdList with `SenderProfilesItem` items."""
+
+            SenderProfiles._item_type = SenderProfilesItem
+
+            _fields: ClassVar[dict] = {
+                "reflector_defaults": {"type": ReflectorDefaults},
+                "sender_defaults": {"type": SenderDefaults},
+                "sender_profiles": {"type": SenderProfiles},
+            }
+            reflector_defaults: ReflectorDefaults
+            """Subclass of AvdModel."""
+            sender_defaults: SenderDefaults
+            """Subclass of AvdModel."""
+            sender_profiles: SenderProfiles
+            """Subclass of AvdList with `SenderProfilesItem` items."""
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    reflector_defaults: ReflectorDefaults | UndefinedType = Undefined,
+                    sender_defaults: SenderDefaults | UndefinedType = Undefined,
+                    sender_profiles: SenderProfiles | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    TwampLight.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        reflector_defaults: Subclass of AvdModel.
+                        sender_defaults: Subclass of AvdModel.
+                        sender_profiles: Subclass of AvdList with `SenderProfilesItem` items.
+
+                    """
+
+        _fields: ClassVar[dict] = {"twamp_light": {"type": TwampLight}}
+        twamp_light: TwampLight
+        """Subclass of AvdModel."""
+
+        if TYPE_CHECKING:
+
+            def __init__(self, *, twamp_light: TwampLight | UndefinedType = Undefined) -> None:
+                """
+                MonitorTwamp.
+
+
+                Subclass of AvdModel.
+
+                Args:
+                    twamp_light: Subclass of AvdModel.
+
+                """
+
     class Mpls(AvdModel):
         """Subclass of AvdModel."""
 
@@ -55784,12 +55961,19 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        _fields: ClassVar[dict] = {"enabled": {"type": bool}, "router_id": {"type": RouterId}, "segment_routing": {"type": SegmentRouting}}
+        _fields: ClassVar[dict] = {
+            "enabled": {"type": bool},
+            "router_id": {"type": RouterId},
+            "segment_routing": {"type": SegmentRouting},
+            "twamp_light_sender_profile": {"type": str},
+        }
         enabled: bool
         router_id: RouterId
         """Subclass of AvdModel."""
         segment_routing: SegmentRouting
         """Subclass of AvdModel."""
+        twamp_light_sender_profile: str | None
+        """Apply a twamp-light sender profile, defined under monitor_twamp_light.sender_profiles."""
 
         if TYPE_CHECKING:
 
@@ -55799,6 +55983,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 enabled: bool | UndefinedType = Undefined,
                 router_id: RouterId | UndefinedType = Undefined,
                 segment_routing: SegmentRouting | UndefinedType = Undefined,
+                twamp_light_sender_profile: str | None | UndefinedType = Undefined,
             ) -> None:
                 """
                 RouterTrafficEngineering.
@@ -55810,6 +55995,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     enabled: enabled
                     router_id: Subclass of AvdModel.
                     segment_routing: Subclass of AvdModel.
+                    twamp_light_sender_profile: Apply a twamp-light sender profile, defined under monitor_twamp_light.sender_profiles.
 
                 """
 
@@ -62731,6 +62917,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         "monitor_sessions": {"type": MonitorSessions},
         "monitor_telemetry_influx": {"type": MonitorTelemetryInflux},
         "monitor_telemetry_postcard_policy": {"type": MonitorTelemetryPostcardPolicy},
+        "monitor_twamp": {"type": MonitorTwamp},
         "mpls": {"type": Mpls},
         "ntp": {"type": Ntp},
         "patch_panel": {"type": PatchPanel},
@@ -63177,6 +63364,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     """Subclass of AvdModel."""
     monitor_telemetry_postcard_policy: MonitorTelemetryPostcardPolicy
     """Subclass of AvdModel."""
+    monitor_twamp: MonitorTwamp
+    """Subclass of AvdModel."""
     mpls: Mpls
     """Subclass of AvdModel."""
     ntp: Ntp
@@ -63470,6 +63659,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             monitor_sessions: MonitorSessions | UndefinedType = Undefined,
             monitor_telemetry_influx: MonitorTelemetryInflux | UndefinedType = Undefined,
             monitor_telemetry_postcard_policy: MonitorTelemetryPostcardPolicy | UndefinedType = Undefined,
+            monitor_twamp: MonitorTwamp | UndefinedType = Undefined,
             mpls: Mpls | UndefinedType = Undefined,
             ntp: Ntp | UndefinedType = Undefined,
             patch_panel: PatchPanel | UndefinedType = Undefined,
@@ -63779,6 +63969,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 monitor_sessions: Subclass of AvdIndexedList with `MonitorSessionsItem` items. Primary key is `name` (`str`).
                 monitor_telemetry_influx: Subclass of AvdModel.
                 monitor_telemetry_postcard_policy: Subclass of AvdModel.
+                monitor_twamp: Subclass of AvdModel.
                 mpls: Subclass of AvdModel.
                 ntp: Subclass of AvdModel.
                 patch_panel: Subclass of AvdModel.

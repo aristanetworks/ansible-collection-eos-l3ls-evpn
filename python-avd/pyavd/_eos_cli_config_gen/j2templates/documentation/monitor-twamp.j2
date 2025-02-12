@@ -1,0 +1,45 @@
+{#
+ Copyright (c) 2023-2025 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# doc - monitor twamp #}
+{% if monitor_twamp.twamp_light is arista.avd.defined %}
+
+## Monitor TWAMP
+
+### TWAMP-light Summary
+{%     if monitor_twamp.twamp_light.reflector_defaults.listen_port is arista.avd.defined %}
+
+- Reflector Default Listen Port is {{ monitor_twamp.twamp_light.reflector_defaults.listen_port }} |
+{%     endif %}
+{%     if monitor_twamp.twamp_light.sender_defaults.destination_port is arista.avd.defined %}
+
+- Sender Default Destination Port is {{ monitor_twamp.twamp_light.sender_defaults.destination_port }} |
+{%     endif %}
+{%     if monitor_twamp.twamp_light.sender_defaults.source_port is arista.avd.defined %}
+
+- Sender Default Source Port is {{ monitor_twamp.twamp_light.sender_defaults.source_port }} |
+{%     endif %}
+{%     if monitor_twamp.twamp_light.sender_profiles is arista.avd.defined %}
+
+#### TWAMP-light Sender Profiles
+
+| Profile Name | Measurement Interval | Measurement Samples | Significance Value | Significance Offset |
+| ------------ | -------------------- | ------------------- | ------------------ | ------------------- |
+{%         for profile in monitor_twamp.twamp_light.sender_profiles | arista.avd.natural_sort('name') %}
+{%             set profile_interval = profile.measurement_interval | arista.avd.default("-") %}
+{%             set profile_samples = profile.measurement_samples | arista.avd.default("-") %}
+{%             set profile_sig_value = profile.significance.value | arista.avd.default("-") %}
+{%             set profile_sig_offset = profile.significance.offset | arista.avd.default("-") %}
+| {{ profile.name }} | {{ profile_interval }} | {{ profile_samples }} | {{  profile_sig_value  }} | {{ profile_sig_offset }} |
+{%         endfor %}
+{%     endif %}
+
+### Monitor TWAMP configuration
+
+```eos
+{%     include 'eos/monitor-twamp.j2' %}
+```
+
+{% endif %}
