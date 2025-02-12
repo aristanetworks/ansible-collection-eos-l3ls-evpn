@@ -352,8 +352,6 @@ tenant_a:
         name: L2VLAN_AND_SVI
         # ID defined both in L2VLAN and SVI, making sure this does not raise a conflict.
 
-
-
 ipv4_acls:
   - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN
     entries:
