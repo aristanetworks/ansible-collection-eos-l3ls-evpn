@@ -93,9 +93,9 @@ class LoopbackInterfacesMixin(Protocol):
         if self.shared_utils.underlay_multicast_rp_interfaces is not None:
             for underlay_multicast_rp_interface in self.shared_utils.underlay_multicast_rp_interfaces:
                 self.structured_config.loopback_interfaces.append_new(
-                    name=underlay_multicast_rp_interface["name"] or None,
-                    description=underlay_multicast_rp_interface["description"] or None,
-                    ip_address=underlay_multicast_rp_interface["ip_address"] or None,
+                    name=underlay_multicast_rp_interface["name"],
+                    description=underlay_multicast_rp_interface["description"],
+                    ip_address=underlay_multicast_rp_interface["ip_address"],
                 )
 
     @cached_property
