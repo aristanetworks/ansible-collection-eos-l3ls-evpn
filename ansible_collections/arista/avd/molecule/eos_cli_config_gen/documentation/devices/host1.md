@@ -10703,9 +10703,7 @@ ipv6 address virtual source-nat vrf TEST_04 address 2001:db8:85a3::8a2e:370:7335
 
 ##### Platform Software Forwarding Engine Interface Summary
 
-###### RSS Profile to apply
-
-####### TestProfile1
+Applied profile: TestProfile1
 
 ###### RSS Profiles
 
