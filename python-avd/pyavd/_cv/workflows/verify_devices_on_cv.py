@@ -7,15 +7,13 @@ from logging import getLogger
 from typing import TYPE_CHECKING
 
 from pyavd._cv.api.arista.inventory.v1 import StreamingStatus
-from pyavd._cv.client.exceptions import CVInactiveDevices, CVResourceNotFound, CVWorkspaceSubmitInactiveDevices
+from pyavd._cv.client.exceptions import CVResourceNotFound
 
 from .models import CVDevice
 
 if TYPE_CHECKING:
-    from pyavd._cv.api.arista.inventory.v1 import Device
     from pyavd._cv.client import CVClient
 
-    from .models import CVWorkspace
 
 LOGGER = getLogger(__name__)
 
@@ -23,7 +21,7 @@ LOGGER = getLogger(__name__)
 async def verify_devices_on_cv(
     *,
     devices: list[CVDevice],
-    workspace: CVWorkspace,
+    workspace_id: str,
     skip_missing_devices: bool,
     warnings: list[Exception],
     cv_client: CVClient,
@@ -40,11 +38,8 @@ async def verify_devices_on_cv(
         skip_missing_devices=skip_missing_devices,
         warnings=warnings,
         cv_client=cv_client,
-        verify_streaming=True,
-        raise_if_inactive=((not workspace.force) and workspace.requested_state == "submitted"),
-        inactive_exception_class=CVWorkspaceSubmitInactiveDevices,
     )
-    await verify_devices_in_topology_studio(existing_devices, workspace.id, cv_client)
+    await verify_devices_in_topology_studio(existing_devices, workspace_id, cv_client)
     return
 
 
@@ -54,9 +49,6 @@ async def verify_devices_in_cloudvision_inventory(
     skip_missing_devices: bool,
     warnings: list[Exception],
     cv_client: CVClient,
-    verify_streaming: bool = False,
-    raise_if_inactive: bool = False,
-    inactive_exception_class: type = CVInactiveDevices,
 ) -> list[CVDevice]:
     """
     Verify that the given Devices are already present in the CloudVision Inventory.
@@ -69,8 +61,7 @@ async def verify_devices_in_cloudvision_inventory(
 
     Skip checks for devices where _exists_on_cv is already filled out on the device.
 
-    Verify devices' streaming status if verify_streaming is True.
-    If inactive devices are found - raise an exception if raise_if_inactive is True.
+    Populate current streaming status for all existing devices.
 
     Returns a list of CVDevice objects found to exist on CloudVision.
     """
@@ -101,6 +92,8 @@ async def verify_devices_in_cloudvision_inventory(
                 continue
             device._exists_on_cv = True
             device.system_mac_address = found_device_dict_by_serial[device.serial_number].system_mac_address
+            # Update streaming status
+            device._streaming = found_device_dict_by_serial[device.serial_number].streaming_status == StreamingStatus.ACTIVE
             continue
 
         # Use system_mac_address as unique ID if set.
@@ -110,6 +103,8 @@ async def verify_devices_in_cloudvision_inventory(
                 continue
             device._exists_on_cv = True
             device.serial_number = found_device_dict_by_system_mac[device.system_mac_address].key.device_id
+            # Update streaming status
+            device._streaming = found_device_dict_by_system_mac[device.system_mac_address].streaming_status == StreamingStatus.ACTIVE
             continue
 
         # Finally use hostname as unique ID.
@@ -119,23 +114,8 @@ async def verify_devices_in_cloudvision_inventory(
         device._exists_on_cv = True
         device.serial_number = found_device_dict_by_hostname[device.hostname].key.device_id
         device.system_mac_address = found_device_dict_by_hostname[device.hostname].system_mac_address
-
-    if verify_streaming:
-        serial_numbers_of_appended_devices: list[str] = []
-        present_devices: list[CVDevice] = []
-        for device in devices:
-            if device._exists_on_cv and device.serial_number not in serial_numbers_of_appended_devices:
-                present_devices.append(device)
-                serial_numbers_of_appended_devices.append(device.serial_number)
-
-        if present_devices and found_device_dict_by_serial:
-            verify_devices_streaming_status(
-                present_devices=present_devices,
-                found_device_dict_by_serial=found_device_dict_by_serial,
-                warnings=warnings,
-                raise_if_inactive=raise_if_inactive,
-                inactive_exception_class=inactive_exception_class,
-            )
+        # Update streaming status
+        device._streaming = found_device_dict_by_hostname[device.hostname].streaming_status == StreamingStatus.ACTIVE
 
     # Now we know which devices are on CV, so we can dig deeper and check for them in I&T Studio
     # If a device is found, we will ensure hostname is correct and if not, update the hostname.
@@ -214,70 +194,5 @@ def missing_devices_handler(*, missing_devices: list[CVDevice], skip_missing_dev
     exception = CVResourceNotFound("Missing devices on CloudVision", *unique_missing_devices)
     if not skip_missing_devices:
         raise exception
-
-    return exception
-
-
-def verify_devices_streaming_status(
-    *,
-    present_devices: list[CVDevice],
-    found_device_dict_by_serial: dict[str, Device],
-    warnings: list[Exception],
-    raise_if_inactive: bool,
-    inactive_exception_class: type,
-) -> None:
-    """
-    Verify streaming status of devices.
-
-    Raise an exception if there is at least one inactive device and raise_if_inactive is set to True.
-    Else - append exception to warnings.
-    """
-    inactive_devices: list[tuple[CVDevice, dict[str, str]]] = [
-        (present_device, {"current_streaming_status": str(found_device_dict_by_serial[present_device.serial_number].streaming_status)})
-        for present_device in present_devices
-        if found_device_dict_by_serial[present_device.serial_number].streaming_status != StreamingStatus.ACTIVE
-    ]
-
-    if inactive_devices:
-        if raise_if_inactive:
-            warnings.append(
-                inactive_devices_handler(
-                    inactive_devices=inactive_devices,
-                    raise_if_inactive=raise_if_inactive,
-                    inactive_exception_class=inactive_exception_class,
-                )
-            )
-        else:
-            warnings.append(
-                inactive_devices_handler(
-                    inactive_devices=inactive_devices,
-                    raise_if_inactive=raise_if_inactive,
-                    inactive_exception_class=CVInactiveDevices,
-                )
-            )
-
-
-def inactive_devices_handler(
-    *,
-    inactive_devices: list[tuple[CVDevice, dict[str, str]]],
-    raise_if_inactive: bool,
-    inactive_exception_class: type,
-) -> Exception:
-    """
-    Handle usecase when one or more devices present in CV are inactive.
-
-    Generate an exception when raise_if_inactive is True.
-    Otherwise - append exception to warnings.
-    """
-    if raise_if_inactive:
-        exception = inactive_exception_class(inactive_exception_class.__doc__, inactive_devices)
-        raise exception
-    exception = inactive_exception_class(inactive_exception_class.__doc__, inactive_devices)
-
-    LOGGER.warning(
-        "verify_devices_streaming_status: %s %s",
-        inactive_exception_class.__doc__,
-        inactive_devices,
-    )
 
     return exception

@@ -87,7 +87,7 @@ class CVMessageSizeExceeded(CVClientException):
 
 
 class CVWorkspaceSubmitInactiveDevices(CVClientException):
-    """Can not submit unforced Workspace due to the presence of inactive devices."""
+    """Unable to submit Workspace due to the presence of inactive devices. Use force to override."""
 
 
 class CVInactiveDevices(CVClientException):

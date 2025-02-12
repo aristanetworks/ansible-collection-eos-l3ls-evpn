@@ -142,7 +142,7 @@ async def deploy_to_cv(
                         + [tag.device for tag in interface_tags if tag.device is not None]
                         + [config.device for config in configs if config.device is not None]
                     ),
-                    workspace=result.workspace,
+                    workspace_id=result.workspace.id,
                     skip_missing_devices=skip_missing_devices,
                     warnings=result.warnings,
                     cv_client=cv_client,
@@ -201,7 +201,7 @@ async def deploy_to_cv(
                 result.workspace.state = "abandoned"
                 return result
 
-            await finalize_workspace_on_cv(workspace=result.workspace, cv_client=cv_client)
+            await finalize_workspace_on_cv(workspace=result.workspace, cv_client=cv_client, deployed_configs=result.deployed_configs, warnings=result.warnings)
 
             # Create/update CVChangeControl object with ID created by workspace.
             if result.workspace.change_control_id is not None:

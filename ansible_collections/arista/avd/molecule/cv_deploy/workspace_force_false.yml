@@ -56,7 +56,7 @@
           ansible.builtin.assert:
             that:
               # errors and warnings
-              - "'Can not submit unforced Workspace due to the presence of inactive devices' in cv_deploy_results.errors[0]"
+              - "'Unable to submit Workspace due to the presence of inactive devices. Use force to override' in cv_deploy_results.errors[0]"
 
     - name: Cleanup orphan workspace
       run_once: true

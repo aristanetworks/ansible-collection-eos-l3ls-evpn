@@ -9,10 +9,12 @@ from typing import TYPE_CHECKING
 from pyavd._cv.api.arista.workspace.v1 import ResponseStatus, WorkspaceState
 from pyavd._cv.client.exceptions import CVWorkspaceBuildFailed, CVWorkspaceSubmitFailed
 
+from .verify_devices_streaming import verify_devices_streaming
+
 if TYPE_CHECKING:
     from pyavd._cv.client import CVClient
 
-    from .models import CVWorkspace
+    from .models import CVEosConfig, CVWorkspace
 
 LOGGER = getLogger(__name__)
 
@@ -26,7 +28,7 @@ WORKSPACE_STATE_TO_FINAL_STATE_MAP = {
 }
 
 
-async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) -> None:
+async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient, deployed_configs: list[CVEosConfig], warnings: list) -> None:
     """
     Finalize a Workspace from the given result.CVWorkspace object.
 
@@ -56,6 +58,8 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) 
 
     # We can only submit if the build was successful
     if workspace.requested_state == "submitted" and workspace.state == "built":
+        # Verify streaming status of devices targeted by configuration update
+        verify_devices_streaming(deployed_configs=deployed_configs, warnings=warnings, force=workspace.force)
         workspace_config = await cv_client.submit_workspace(workspace_id=workspace.id, force=workspace.force)
         submit_result, cv_workspace = await cv_client.wait_for_workspace_response(
             workspace_id=workspace.id,
