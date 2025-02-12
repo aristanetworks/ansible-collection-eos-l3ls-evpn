@@ -103,4 +103,5 @@ class IpAccesslistsMixin(Protocol):
 
         for ie_policy_type in self._filtered_internet_exit_policy_types:
             self._acl_internet_exit(ie_policy_type)
+
         self.structured_config.ip_access_lists = EosCliConfigGen.IpAccessLists(natural_sort(self.structured_config.ip_access_lists, sort_key="name"))

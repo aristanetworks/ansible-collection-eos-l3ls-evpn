@@ -24,7 +24,7 @@ class IpAccesslistsMixin(Protocol):
     @structured_config_contributor
     def ip_access_lists(self: AvdStructuredConfigUnderlayProtocol) -> None:
         """
-        Return structured config for ip_access_lists.
+        Set the structured config for ip_access_lists.
 
         Covers ipv4_acl_in/out defined under node l3_interfaces or l3_port_channels.
         """
@@ -34,4 +34,5 @@ class IpAccesslistsMixin(Protocol):
         for interface_acls in chain(self._l3_interface_acls.values(), self._l3_port_channel_acls.values()):
             for acl in interface_acls.values():
                 self.structured_config.ip_access_lists.append(acl)
+
         self.structured_config.ip_access_lists = EosCliConfigGen.IpAccessLists(natural_sort(self.structured_config.ip_access_lists, sort_key="name"))

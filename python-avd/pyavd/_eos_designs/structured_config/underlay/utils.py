@@ -176,12 +176,10 @@ class UtilsMixin(Protocol):
             )
         if self.inputs.fabric_sflow.l3_interfaces is not None:
             interface["sflow"] = {"enable": self.inputs.fabric_sflow.l3_interfaces}
-        ipv4_acl_in = get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_in", separator="..")
-        if ipv4_acl_in:
-            interface["access_group_in"] = ipv4_acl_in.name
-        ipv4_acl_out = get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_out", separator="..")
-        if ipv4_acl_out:
-            interface["access_group_out"] = ipv4_acl_out.name
+
+        for direction in ["in", "out"]:
+            if acl := get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_{direction}", separator=".."):
+                interface[f"access_group_{direction}"] = acl.name
 
         if (
             self.shared_utils.is_wan_router
@@ -224,12 +222,11 @@ class UtilsMixin(Protocol):
             self.custom_structured_configs.nested.port_channel_interfaces.obtain(l3_port_channel.name)._deepmerge(
                 l3_port_channel.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
             )
-        ipv4_acl_in = get(self._l3_port_channel_acls, f"{l3_port_channel.name}..ipv4_acl_in", separator="..")
-        if ipv4_acl_in:
-            interface["access_group_in"] = ipv4_acl_in.name
-        ipv4_acl_out = get(self._l3_port_channel_acls, f"{l3_port_channel.name}..ipv4_acl_out", separator="..")
-        if ipv4_acl_out:
-            interface["access_group_out"] = ipv4_acl_out.name
+
+        for direction in ["in", "out"]:
+            if acl := get(self._l3_port_channel_acls, f"{l3_port_channel.name}..ipv4_acl_{direction}", separator=".."):
+                interface[f"access_group_{direction}"] = acl.name
+
         if (
             self.shared_utils.is_wan_router
             and (wan_carrier_name := l3_port_channel.wan_carrier) is not None
