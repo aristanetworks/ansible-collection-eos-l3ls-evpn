@@ -101,7 +101,7 @@ router_bgp:
     rd: auto
     route_targets:
       both:
-      - auto
+      - 406:666
     redistribute_routes:
     - learned
     vlan: 110,1016

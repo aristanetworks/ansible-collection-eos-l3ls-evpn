@@ -79,8 +79,6 @@ tenant_a:
             profile: GENERIC_FULL
       - name: Tenant_A_ERP_Zone
         vrf_vni: 17
-        rd_override: auto
-        rt_override: auto
         redistribute_connected: false
         mlag_ibgp_peering_ipv4_pool: 172.31.12.0/24
         svis:
