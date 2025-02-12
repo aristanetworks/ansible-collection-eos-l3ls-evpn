@@ -1,6 +1,7 @@
 # Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
+import json
 from copy import deepcopy
 
 import pytest
@@ -40,3 +41,5 @@ def test_get_device_structured_config(molecule_host: MoleculeHost) -> None:
     assert isinstance(structured_config, dict)
     assert molecule_host.name == structured_config["hostname"]
     assert expected_structured_config == structured_config
+    # Test that we can dump the returned data as json.
+    assert json.dumps(structured_config)

@@ -38,8 +38,8 @@ class OverlayMixin(Protocol):
         """
         if self.shared_utils.underlay_router is True:
             if self.evpn_role == "client":
-                return self.shared_utils.node_config.evpn_route_servers or self.shared_utils.uplink_switches
-            return self.shared_utils.node_config.evpn_route_servers
+                return self.shared_utils.node_config.evpn_route_servers._as_list() or self.shared_utils.uplink_switches
+            return self.shared_utils.node_config.evpn_route_servers._as_list()
         return []
 
     @cached_property
@@ -48,7 +48,7 @@ class OverlayMixin(Protocol):
         if self.shared_utils.underlay_router is True and (
             self.mpls_overlay_role in ["client", "server"] or (self.evpn_role in ["client", "server"] and self.overlay["evpn_mpls"])
         ):
-            return self.shared_utils.node_config.mpls_route_reflectors
+            return self.shared_utils.node_config.mpls_route_reflectors._as_list()
         return None
 
     @cached_property
