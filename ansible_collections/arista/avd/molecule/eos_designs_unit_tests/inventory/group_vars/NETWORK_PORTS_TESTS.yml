@@ -172,6 +172,24 @@ network_ports:
       - Ethernet25
     description: No criteria, no config
 
+  # Test overwrite network ports structured_config
+  - switches:
+      - network-ports-tests.1
+    switch_ports:
+      - Ethernet20-24
+    description: Range
+    structured_config:
+      switchport:
+        access_vlan: 666
+  - switches:
+      - network-ports-tests.1
+    switch_ports:
+      - Ethernet20
+    description: Single overwrite
+    structured_config:
+      switchport:
+        access_vlan: 42
+
 servers:
   - name: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
     adapters:
