@@ -155,29 +155,22 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
             }
         ]
 
-    @cached_property
-    def ipv6_static_routes(self) -> list | None:
+    @structured_config_contributor
+    def ipv6_static_routes(self) -> None:
         """ipv6_static_routes set based on ipv6_mgmt_gateway, ipv6_mgmt_destination_networks and mgmt_interface_vrf."""
         if self.shared_utils.ipv6_mgmt_gateway is None or self.shared_utils.node_config.ipv6_mgmt_ip is None:
-            return None
+            return
 
         if self.inputs.ipv6_mgmt_destination_networks:
-            return [
-                {
-                    "vrf": self.inputs.mgmt_interface_vrf,
-                    "destination_address_prefix": mgmt_destination_network,
-                    "gateway": self.shared_utils.ipv6_mgmt_gateway,
-                }
-                for mgmt_destination_network in self.inputs.ipv6_mgmt_destination_networks
-            ]
+            for mgmt_destination_network in self.inputs.ipv6_mgmt_destination_networks:
+                self.structured_config.ipv6_static_routes.append_new(
+                    vrf=self.inputs.mgmt_interface_vrf, destination_address_prefix=mgmt_destination_network, gateway=self.shared_utils.ipv6_mgmt_gateway
+                )
+            return
 
-        return [
-            {
-                "vrf": self.inputs.mgmt_interface_vrf,
-                "destination_address_prefix": "::/0",
-                "gateway": self.shared_utils.ipv6_mgmt_gateway,
-            },
-        ]
+        self.structured_config.ipv6_static_routes.append_new(
+            vrf=self.inputs.mgmt_interface_vrf, destination_address_prefix="::/0", gateway=self.shared_utils.ipv6_mgmt_gateway
+        )
 
     @cached_property
     def service_routing_protocols_model(self) -> str:

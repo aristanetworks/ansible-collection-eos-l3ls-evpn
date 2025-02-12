@@ -1111,7 +1111,6 @@ $defs:
                   - str
                 min: 0
                 max: 255
-                default: 127
               priority1:
                 type: int
                 convert_types:
