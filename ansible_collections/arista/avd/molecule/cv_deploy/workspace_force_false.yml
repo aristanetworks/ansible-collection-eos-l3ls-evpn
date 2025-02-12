@@ -118,9 +118,9 @@
         name: arista.avd.cv_deploy
       vars:
         cv_workspace_name: "{{ cv_common_pattern }}_{{ r }}_cleanup"
-        cv_workspace_description: "{{ cv_common_pattern + '_' + r + '_cleanup' | upper }}"
+        cv_workspace_description: "{{ (cv_common_pattern + '_' + r + '_cleanup') | upper }}"
         cv_change_control_name: "{{ cv_common_pattern }}_{{ r }}_cleanup"
-        cv_change_control_description: "{{ cv_common_pattern + '_' + r + '_cleanup' | upper }}"
+        cv_change_control_description: "{{ (cv_common_pattern + '_' + r + '_cleanup') | upper }}"
         cv_register_detailed_results: true
         cv_devices: "{{ ansible_play_hosts_all }}"
         eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
