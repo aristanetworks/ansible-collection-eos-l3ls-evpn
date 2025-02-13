@@ -469,13 +469,11 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
 
         return None
 
-    @cached_property
-    def management_security(self) -> dict | None:
-        """Return structured config for management_security."""
+    @structured_config_contributor
+    def management_security(self) -> None:
+        """Set the structured config for management_security."""
         if entropy_sources := self.shared_utils.platform_settings.security_entropy_sources:
-            return {"entropy_sources": entropy_sources._as_dict(include_default_values=True)}
-
-        return None
+            self.structured_config.management_security.entropy_sources = entropy_sources
 
     @cached_property
     def tcam_profile(self) -> dict | None:
