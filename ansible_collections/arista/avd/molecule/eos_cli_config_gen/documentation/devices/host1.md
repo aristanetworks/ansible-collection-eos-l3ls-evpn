@@ -1433,21 +1433,21 @@ aaa authorization commands 10,15 default group tacacs+ local
 
 #### AAA Accounting Summary
 
-| Type | Commands | Record type | Groups | Logging |
-| ---- | -------- | ----------- | ------ | ------- |
-| Exec - Console | - | start-stop | TACACS | True |
-| Commands - Console | all | start-stop | TACACS | True |
-| Commands - Console | 0 | start-stop | - | True |
-| Commands - Console | 1 | start-stop | TACACS1 | False |
-| Commands - Console | 2 | none | - | - |
-| Exec - Default | - | start-stop | TACACS | True |
-| System - Default | - | start-stop | TACACS | True |
-| Dot1x - Default | - | start-stop | RADIUS | True |
-| Commands - Default | all | start-stop | TACACS | True |
-| Commands - Default | 0 | start-stop | - | True |
-| Commands - Default | 1 | start-stop | TACACS | False |
-| Commands - Default | 2 | none | - | - |
-| Commands - Default | 3 | start-stop | - | True |
+| Type | Commands | Record type | Groups | Logging | Multicast |
+| ---- | -------- | ----------- | ------ | ------- | --------- |
+| Exec - Console | - | start-stop | TACACS | True | - |
+| Commands - Console | all | start-stop | TACACS | True | - |
+| Commands - Console | 0 | start-stop | - | True | - |
+| Commands - Console | 1 | start-stop | TACACS1 | False | - |
+| Commands - Console | 2 | none | - | - | - |
+| Exec - Default | - | start-stop | TACACS | True | - |
+| System - Default | - | start-stop | TACACS | True | - |
+| Dot1x - Default | - | start-stop | RADIUS | True | True |
+| Commands - Default | all | start-stop | TACACS | True | - |
+| Commands - Default | 0 | start-stop | - | True | - |
+| Commands - Default | 1 | start-stop | TACACS | False | - |
+| Commands - Default | 2 | none | - | - | - |
+| Commands - Default | 3 | start-stop | - | True | - |
 
 #### AAA Accounting Device Configuration
 

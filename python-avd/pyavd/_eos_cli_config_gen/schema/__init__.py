@@ -137,7 +137,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Methods._item_type = MethodsItem
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "logging": {"type": bool}, "methods": {"type": Methods}}
-                type: Literal["none", "start-stop", "stop-only"]
+                type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 logging: bool | None
@@ -149,7 +149,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     def __init__(
                         self,
                         *,
-                        type: Literal["none", "start-stop", "stop-only"] | UndefinedType = Undefined,
+                        type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         logging: bool | None | UndefinedType = Undefined,
                         methods: Methods | UndefinedType = Undefined,
@@ -233,7 +233,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Methods._item_type = MethodsItem
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "methods": {"type": Methods}}
-                type: Literal["none", "start-stop", "stop-only"]
+                type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 methods: Methods
@@ -244,7 +244,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     def __init__(
                         self,
                         *,
-                        type: Literal["none", "start-stop", "stop-only"] | UndefinedType = Undefined,
+                        type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         methods: Methods | UndefinedType = Undefined,
                     ) -> None:
@@ -337,7 +337,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 Methods._item_type = MethodsItem
 
                 _fields: ClassVar[dict] = {"type": {"type": str}, "group": {"type": str}, "methods": {"type": Methods}}
-                type: Literal["start-stop", "stop-only"]
+                type: Literal["start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 methods: Methods
@@ -348,7 +348,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     def __init__(
                         self,
                         *,
-                        type: Literal["start-stop", "stop-only"] | UndefinedType = Undefined,
+                        type: Literal["start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         methods: Methods | UndefinedType = Undefined,
                     ) -> None:
@@ -435,7 +435,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 }
                 commands: str | None
                 """Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another."""
-                type: Literal["none", "start-stop", "stop-only"]
+                type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 logging: bool | None
@@ -448,7 +448,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         self,
                         *,
                         commands: str | None | UndefinedType = Undefined,
-                        type: Literal["none", "start-stop", "stop-only"] | UndefinedType = Undefined,
+                        type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         logging: bool | None | UndefinedType = Undefined,
                         methods: Methods | UndefinedType = Undefined,
@@ -522,7 +522,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 }
                 commands: str | None
                 """Privilege level 'all' or 0-15. Ensure that if ranges are used, they do not overlap with one another."""
-                type: Literal["none", "start-stop", "stop-only"]
+                type: Literal["none", "start-stop", "stop-only"] | None
                 group: str | None
                 """Group Name."""
                 logging: bool | None
@@ -535,7 +535,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         self,
                         *,
                         commands: str | None | UndefinedType = Undefined,
-                        type: Literal["none", "start-stop", "stop-only"] | UndefinedType = Undefined,
+                        type: Literal["none", "start-stop", "stop-only"] | None | UndefinedType = Undefined,
                         group: str | None | UndefinedType = Undefined,
                         logging: bool | None | UndefinedType = Undefined,
                         methods: Methods | UndefinedType = Undefined,

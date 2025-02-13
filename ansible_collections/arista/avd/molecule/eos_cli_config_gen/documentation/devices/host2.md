@@ -410,15 +410,15 @@ no aaa authorization config-commands
 
 #### AAA Accounting Summary
 
-| Type | Commands | Record type | Groups | Logging |
-| ---- | -------- | ----------- | ------ | ------- |
+| Type | Commands | Record type | Groups | Logging | Multicast |
+| ---- | -------- | ----------- | ------ | ------- | --------- |
 | Exec - Console | - | none | - | - |
-| Commands - Console | all | none | - | - |
-| Commands - Console | 0 | none | - | - |
-| Exec - Default | - | none | - | - |
-| System - Default | - | none | - | - |
-| Commands - Default | all | none | - | - |
-| Commands - Default | 0 | none | - | - |
+| Commands - Console | all | none | - | - | - |
+| Commands - Console | 0 | none | - | - | - |
+| Exec - Default | - | none | - | - | - |
+| System - Default | - | none | - | - | - |
+| Commands - Default | all | none | - | - | - |
+| Commands - Default | 0 | none | - | - | - |
 
 #### AAA Accounting Device Configuration
 
