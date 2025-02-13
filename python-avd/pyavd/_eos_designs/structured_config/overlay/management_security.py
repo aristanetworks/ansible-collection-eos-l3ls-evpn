@@ -31,10 +31,8 @@ class ManagementSecurityMixin(Protocol):
 
         ssl_profile = EosCliConfigGen.ManagementSecurity.SslProfilesItem(
             name=profile_name,
-            certificate=EosCliConfigGen.ManagementSecurity.SslProfilesItem.Certificate(
-                file=f"{profile_name}.crt",
-                key=f"{profile_name}.key"
-            ),
-            tls_versions="1.2")
-        ssl_profile.trust_certificate.certificates.append( "aristaDeviceCertProvisionerDefaultRootCA.crt")
+            certificate=EosCliConfigGen.ManagementSecurity.SslProfilesItem.Certificate(file=f"{profile_name}.crt", key=f"{profile_name}.key"),
+            tls_versions="1.2",
+        )
+        ssl_profile.trust_certificate.certificates.append("aristaDeviceCertProvisionerDefaultRootCA.crt")
         self.structured_config.management_security.ssl_profiles.append(ssl_profile)
