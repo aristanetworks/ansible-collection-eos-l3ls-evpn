@@ -20871,7 +20871,7 @@ keys:
                                     - str
       twamp_light_sender_profile:
         type: str
-        description: Apply a twamp-light sender profile, defined under monitor_twamp_light.sender_profiles.
+        description: Apply a twamp-light sender profile, defined under monitor_twamp.twamp_light.sender_profiles.
   service_routing_configuration_bgp:
     type: dict
     keys:

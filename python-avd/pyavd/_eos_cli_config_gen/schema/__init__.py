@@ -55973,7 +55973,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         segment_routing: SegmentRouting
         """Subclass of AvdModel."""
         twamp_light_sender_profile: str | None
-        """Apply a twamp-light sender profile, defined under monitor_twamp_light.sender_profiles."""
+        """Apply a twamp-light sender profile, defined under monitor_twamp.twamp_light.sender_profiles."""
 
         if TYPE_CHECKING:
 
@@ -55995,7 +55995,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     enabled: enabled
                     router_id: Subclass of AvdModel.
                     segment_routing: Subclass of AvdModel.
-                    twamp_light_sender_profile: Apply a twamp-light sender profile, defined under monitor_twamp_light.sender_profiles.
+                    twamp_light_sender_profile: Apply a twamp-light sender profile, defined under monitor_twamp.twamp_light.sender_profiles.
 
                 """
 
