@@ -159,6 +159,8 @@ class SrcGenList(SrcGenBase):
     schema: AvdSchemaList
 
     def get_type(self) -> str:
+        if self.schema.field_ref:
+            return generate_class_name_from_ref(self.schema.field_ref)
         return self.get_class_name()
 
     def generate_class_src(self, schema: AvdSchemaList, class_name: str | None = None) -> SrcData:
@@ -176,14 +178,11 @@ class SrcGenList(SrcGenBase):
         return SrcData(field=self.field_src, cls=self.class_src, item_classes=self.get_item_classes())
 
     @cached_property
-    def class_src(self) -> ListSrc:
+    def class_src(self) -> ListSrc | None:
         """Returns ListSrc for the given schema to be used for the class definition in the parent object."""
         if self.schema.field_ref:
             # TODO: Currently we only skip resolving ref for indexedlists. Improve this.
-            return ListSrc(
-                name=self.get_class_name(),
-                base_class=generate_class_name_from_ref(self.schema.field_ref),
-            )
+            return None
 
         class_name = self.get_class_name()
         if self.schema.items is None:
@@ -237,7 +236,9 @@ class SrcGenList(SrcGenBase):
     @cached_property
     def type_hints_src(self) -> list[FieldTypeHintSrc]:
         """Returns a list of FieldTypeHintSrc representing the type hints for this schema."""
-        return [FieldTypeHintSrc(field_type=self.class_src.name)]
+        if self.schema.field_ref:
+            return [FieldTypeHintSrc(field_type=generate_class_name_from_ref(self.schema.field_ref))]
+        return super().type_hints_src
 
     def get_default(self) -> str | None:
         """Returns the default value from the schema as a source code string."""
@@ -261,11 +262,11 @@ class SrcGenList(SrcGenBase):
         return primary_key
 
     def get_description(self) -> str:
-        descriptions = [super().get_description(), self.class_src.description]
+        descriptions = [super().get_description(), cls_src.description if (cls_src := self.class_src) is not None else None]
         return "\n\n".join(description for description in descriptions if description is not None)
 
     def get_imports(self) -> set[str]:
-        """Return a set of strings with Python imports that are needed for this class."""
+        """Return a set of strings with Python imports that are needed for this class or field."""
         imports = set()
         if self.schema.items is None:
             imports.add("from typing import Any")
@@ -279,21 +280,26 @@ class SrcGenDict(SrcGenBase):
     schema: AvdSchemaDict
 
     def get_type(self) -> str:
+        if self.schema.field_ref:
+            return generate_class_name_from_ref(self.schema.field_ref)
         if self.class_src is not None:
             return self.get_class_name()
         return "dict"
 
     @cached_property
+    def type_hints_src(self) -> list[FieldTypeHintSrc]:
+        """Returns a list of FieldTypeHintSrc representing the type hints for this schema."""
+        if self.schema.field_ref:
+            return [FieldTypeHintSrc(field_type=generate_class_name_from_ref(self.schema.field_ref))]
+        return super().type_hints_src
+
+    @cached_property
     def class_src(self) -> ModelSrc | None:
         """Returns ModelSrc for the given schema to be used for the class definition in the parent object."""
-        if not self.schema.keys:
-            if not self.schema.field_ref:
-                return None
+        if self.schema.field_ref or not self.schema.keys:
+            return None
 
-            classes, fields = [], []
-
-        else:
-            classes, fields = self.get_children_classes_and_fields()
+        classes, fields = self.get_children_classes_and_fields()
         return ModelSrc(
             name=self.get_class_name(),
             base_classes=self.get_base_classes(),
@@ -305,20 +311,12 @@ class SrcGenDict(SrcGenBase):
         )
 
     def get_base_classes(self) -> list[str]:
-        """Return a list of base classes. Only used if there is an unresolved $ref in the schema."""
-        if not self.schema.field_ref:
-            return []
-
-        return [generate_class_name_from_ref(self.schema.field_ref)]
+        """Return a list of base classes. Only used by the root dict class."""
+        return []
 
     def get_imports(self) -> set[str]:
-        """Return a set of strings with Python imports that are needed for this class."""
-        imports = set()
-        if self.schema.field_ref:
-            schema_name = self.schema.field_ref.split("#", maxsplit=1)[0]
-            imports.add(f"from pyavd._{schema_name}.schema import {generate_class_name(schema_name)}")
-
-        return imports
+        """Return a set of strings with Python imports that are needed for this class or field. Only used for rootdict."""
+        return set()
 
     def get_children_classes_and_fields(self) -> tuple[list[ModelSrc | ListSrc], list[FieldSrc]]:
         """Return lists of ModelSrc and FieldSrc for any nested fields."""
