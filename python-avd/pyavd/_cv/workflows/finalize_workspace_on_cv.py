@@ -46,6 +46,7 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) 
         if workspace.requested_state == "abandoned":
             await cv_client.abandon_workspace(workspace_id=workspace.id)
             workspace.state = "abandoned"
+        LOGGER.info("finalize_workspace_on_cv: Workspace %s has been successfully abandoned.", workspace.id)
         msg = (
             f"Failed to build workspace {workspace.id}: {build_result}. "
             f"See details: https://{cv_client._servers[0]}/cv/provisioning/workspaces?ws={workspace.id}"
