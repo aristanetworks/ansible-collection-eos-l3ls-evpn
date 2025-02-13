@@ -98,7 +98,7 @@ router_bgp:
     - learned
     vlan: 120,1017
   - name: bundle6
-    rd: 1.1.1.1:666
+    rd: auto
     route_targets:
       both:
       - 406:666

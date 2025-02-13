@@ -112,6 +112,14 @@ router_bgp:
       - 3333:3333
     redistribute_routes:
     - learned
+  - id: 5
+    tenant: Tenant_A
+    rd: auto
+    route_targets:
+      both:
+      - '80005:5'
+    redistribute_routes:
+    - learned
   address_family_evpn:
     peer_groups:
     - name: EVPN-OVERLAY-PEERS
@@ -177,6 +185,14 @@ vlan_interfaces:
   tenant: Tenant_A
   tags:
   - test_l3
+- name: Vlan5
+  description: VLAN_5
+  shutdown: false
+  vrf: TEST1
+  ip_address_virtual: 10.0.5.1/24
+  tenant: Tenant_A
+  tags:
+  - test_l3
 vlan_internal_order:
   allocation: ascending
   range:
@@ -194,6 +210,9 @@ vlans:
   tenant: Tenant_A
 - id: 4
   name: VLAN_4
+  tenant: Tenant_A
+- id: 5
+  name: VLAN_5
   tenant: Tenant_A
 vrfs:
 - name: MGMT
@@ -217,6 +236,8 @@ vxlan_interface:
         vni: 80003
       - id: 4
         vni: 80004
+      - id: 5
+        vni: 80005
       vrfs:
       - name: TEST1
         vni: 22
