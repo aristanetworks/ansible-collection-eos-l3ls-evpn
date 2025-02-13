@@ -153,6 +153,7 @@ jobs:
         uses: docker/setup-qemu-action@v3
         with:
           platforms: ${{ inputs.platform }}
+          image: tonistiigi/binfmt:qemu-v7.0.0-28
 
       - name: Setup Docker buildX for multi-arch builds 🏗️
         # if: ${{ steps.check-image-presence.outputs.not_present == '1' }}
