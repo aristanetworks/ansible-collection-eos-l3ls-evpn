@@ -36,13 +36,8 @@ class LoopbackInterfacesMixin(Protocol):
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 if (loopback_interface := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is not None:
-                    self.structured_config.loopback_interfaces.append_new(
-                        name=loopback_interface["name"],
-                        description=loopback_interface["description"],
-                        shutdown=loopback_interface["shutdown"],
-                        vrf=loopback_interface["vrf"],
-                        ip_address=loopback_interface["ip_address"],
-                        ipv6_address=loopback_interface.get("ipv6_address", None),
+                    loopback_item = EosCliConfigGen.LoopbackInterfacesItem(**loopback_interface)
+                    self.structured_config.loopback_interfaces.append(loopback_item)
                     )
 
                 # The loopbacks have already been filtered in _filtered_tenants
