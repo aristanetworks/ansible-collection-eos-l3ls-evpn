@@ -24,7 +24,7 @@ class RouteMapsMixin(Protocol):
     @structured_config_contributor
     def route_maps(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Return structured config for route_maps.
+        Set structured config for route_maps.
 
         Contains two parts.
         - Route-maps for tenant bgp peers set_ipv4_next_hop parameter
