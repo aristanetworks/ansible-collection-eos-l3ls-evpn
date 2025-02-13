@@ -3,6 +3,7 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
+from functools import cached_property
 from keyword import iskeyword
 from typing import TYPE_CHECKING
 
@@ -31,9 +32,10 @@ class SrcGenBase:
         if schema.deprecation and schema.deprecation.removed:
             return SrcData()
 
-        return SrcData(field=self.get_field(), cls=self.get_class())
+        return SrcData(field=self.field_src, cls=self.class_src)
 
-    def get_field(self) -> FieldSrc | None:
+    @cached_property
+    def field_src(self) -> FieldSrc | None:
         """Returns FieldSrc for the given schema to be used for the field definition in the parent object."""
         if not self.schema._key:
             return None
@@ -42,7 +44,7 @@ class SrcGenBase:
             name=self.get_field_name(),
             key=self.get_key(),
             field_type=self.get_type(),
-            type_hints=self.get_type_hints(),
+            type_hints=self.type_hints_src,
             optional=not (bool(self.schema.required) or self.schema._is_primary_key),
             default_value=self.get_default(),
             description=self.get_description(),
@@ -54,9 +56,10 @@ class SrcGenBase:
     def get_description(self) -> str | None:
         return self.schema.description
 
-    def get_type_hints(self) -> list[FieldTypeHintSrc]:
+    @cached_property
+    def type_hints_src(self) -> list[FieldTypeHintSrc]:
         """Returns a list of FieldTypeHintSrc representing the type hints for this schema."""
-        field_type = cls.name if (cls := self.get_class()) else self.schema.type
+        field_type = cls.name if (cls := self.class_src) else self.schema.type
 
         return [
             FieldTypeHintSrc(
@@ -72,7 +75,8 @@ class SrcGenBase:
 
         return generate_class_name(self.get_key())
 
-    def get_class(self) -> ModelSrc | None:
+    @cached_property
+    def class_src(self) -> ModelSrc | ListSrc | None:
         """Returns ModelSrc for the given schema to be used for the class definition in the parent object."""
         return None
 
@@ -107,9 +111,10 @@ class SrcGenInt(SrcGenBase):
 
     schema: AvdSchemaInt
 
-    def get_type_hints(self) -> list[FieldTypeHintSrc]:
+    @cached_property
+    def type_hints_src(self) -> list[FieldTypeHintSrc]:
         """Returns a list of FieldTypeHintSrc representing the type hints for this schema."""
-        field_type = cls.name if (cls := self.get_class()) else self.schema.type
+        field_type = cls.name if (cls := self.class_src) else self.schema.type
 
         if self.schema.valid_values is None:
             return [FieldTypeHintSrc(field_type=field_type)]
@@ -134,9 +139,10 @@ class SrcGenStr(SrcGenBase):
             return f'"{self.schema.default}"'
         return None
 
-    def get_type_hints(self) -> list[FieldTypeHintSrc]:
+    @cached_property
+    def type_hints_src(self) -> list[FieldTypeHintSrc]:
         """Returns a list of FieldTypeHintSrc representing the type hints for this schema."""
-        field_type = cls.name if (cls := self.get_class()) else self.schema.type
+        field_type = cls.name if (cls := self.class_src) else self.schema.type
 
         if self.schema.valid_values is None:
             return [FieldTypeHintSrc(field_type=field_type)]
@@ -167,9 +173,10 @@ class SrcGenList(SrcGenBase):
         if schema.deprecation and schema.deprecation.removed:
             return SrcData(field=None, cls=None)
 
-        return SrcData(field=self.get_field(), cls=self.get_class(), item_classes=self.get_item_classes())
+        return SrcData(field=self.field_src, cls=self.class_src, item_classes=self.get_item_classes())
 
-    def get_class(self) -> ListSrc:
+    @cached_property
+    def class_src(self) -> ListSrc:
         """Returns ListSrc for the given schema to be used for the class definition in the parent object."""
         if self.schema.field_ref:
             # TODO: Currently we only skip resolving ref for indexedlists. Improve this.
@@ -227,9 +234,10 @@ class SrcGenList(SrcGenBase):
 
         return item_classes
 
-    def get_type_hints(self) -> list[FieldTypeHintSrc]:
+    @cached_property
+    def type_hints_src(self) -> list[FieldTypeHintSrc]:
         """Returns a list of FieldTypeHintSrc representing the type hints for this schema."""
-        return [FieldTypeHintSrc(field_type=self.get_class().name)]
+        return [FieldTypeHintSrc(field_type=self.class_src.name)]
 
     def get_default(self) -> str | None:
         """Returns the default value from the schema as a source code string."""
@@ -253,7 +261,7 @@ class SrcGenList(SrcGenBase):
         return primary_key
 
     def get_description(self) -> str:
-        descriptions = [super().get_description(), self.get_class().description]
+        descriptions = [super().get_description(), self.class_src.description]
         return "\n\n".join(description for description in descriptions if description is not None)
 
     def get_imports(self) -> set[str]:
@@ -271,11 +279,12 @@ class SrcGenDict(SrcGenBase):
     schema: AvdSchemaDict
 
     def get_type(self) -> str:
-        if self.get_class() is not None:
+        if self.class_src is not None:
             return self.get_class_name()
         return "dict"
 
-    def get_class(self) -> ModelSrc | None:
+    @cached_property
+    def class_src(self) -> ModelSrc | None:
         """Returns ModelSrc for the given schema to be used for the class definition in the parent object."""
         if not self.schema.keys:
             if not self.schema.field_ref:
@@ -335,21 +344,22 @@ class SrcGenDict(SrcGenBase):
         if self.schema.default is None:
             return None
         default_value_as_str = str(self.schema.default).replace("'", '"')
-        target_type = self.get_type_hints()[0].field_type
+        target_type = self.type_hints_src[0].field_type
         if target_type[0].isupper():
             return f"lambda cls: coerce_type({default_value_as_str}, target_type=cls)"
 
         return default_value_as_str
 
     def get_description(self) -> str:
-        descriptions = [super().get_description(), cls_src.description if (cls_src := self.get_class()) is not None else None]
+        descriptions = [super().get_description(), cls_src.description if (cls_src := self.class_src) is not None else None]
         return "\n\n".join(description for description in descriptions if description is not None)
 
 
 class SrcGenRootDict(SrcGenDict):
     """Provides the method "generate_class_src" used to build source code for Python classes representing the schema."""
 
-    def get_field(self) -> None:
+    @cached_property
+    def field_src(self) -> None:
         """
         Returns FieldSrc for the given schema to be used for the field definition in the parent object.
 
