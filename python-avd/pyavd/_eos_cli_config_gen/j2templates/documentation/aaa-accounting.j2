@@ -10,8 +10,8 @@
 
 #### AAA Accounting Summary
 
-| Type | Commands | Record type | Group | Logging |
-| ---- | -------- | ----------- | ----- | ------- |
+| Type | Commands | Record type | Groups | Logging |
+| ---- | -------- | ----------- | ------ | ------- |
 {%     if aaa_accounting.exec.console is arista.avd.defined %}
 {%         if aaa_accounting.exec.console.type == "none" %}
 | Exec - Console | - | none | - | - |
@@ -115,7 +115,7 @@
 | Dot1x - Default | - | none | - | - |
 {%         elif aaa_accounting.dot1x.default.methods is arista.avd.defined %}
 {%             set methods_list = [] %}
-{%             set logging_namespace = namespace(method_logging = false) %}
+{%             set logging_namespace = namespace(method_logging = false, multicast = "-") %}
 {%             for method in aaa_accounting.dot1x.default.methods %}
 {%                 if method.group is arista.avd.defined and method.method == "group" %}
 {%                     do methods_list.append(method.group) %}

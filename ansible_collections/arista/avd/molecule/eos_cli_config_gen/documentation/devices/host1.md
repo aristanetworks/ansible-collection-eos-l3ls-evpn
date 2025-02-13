@@ -1433,8 +1433,8 @@ aaa authorization commands 10,15 default group tacacs+ local
 
 #### AAA Accounting Summary
 
-| Type | Commands | Record type | Group | Logging |
-| ---- | -------- | ----------- | ----- | ------- |
+| Type | Commands | Record type | Groups | Logging |
+| ---- | -------- | ----------- | ------ | ------- |
 | Exec - Console | - | start-stop | TACACS | True |
 | Commands - Console | all | start-stop | TACACS | True |
 | Commands - Console | 0 | start-stop | - | True |

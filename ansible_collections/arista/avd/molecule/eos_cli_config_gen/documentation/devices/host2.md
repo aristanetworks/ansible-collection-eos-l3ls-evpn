@@ -410,8 +410,8 @@ no aaa authorization config-commands
 
 #### AAA Accounting Summary
 
-| Type | Commands | Record type | Group | Logging |
-| ---- | -------- | ----------- | ----- | ------- |
+| Type | Commands | Record type | Groups | Logging |
+| ---- | -------- | ----------- | ------ | ------- |
 | Exec - Console | - | none | - | - |
 | Commands - Console | all | none | - | - |
 | Commands - Console | 0 | none | - | - |
