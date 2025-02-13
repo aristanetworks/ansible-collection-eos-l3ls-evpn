@@ -15,21 +15,21 @@
 
 #### AAA Accounting Summary
 
-| Type | Commands | Record type | Groups | Logging |
-| ---- | -------- | ----------- | ------ | ------- |
-| Exec - Console | - | start-stop | TACACS | True |
-| Commands - Console | all | start-stop | TACACS | True |
-| Commands - Console | 0 | start-stop |  -  | True |
-| Commands - Console | 1 | start-stop | TACACS1 | False |
-| Commands - Console | 2 | none | - | - |
-| Commands - Console | 3 | start-stop |  -  | False |
-| Exec - Default | - | start-stop | TACACS | True |
-| System - Default | - | start-stop | TACACS | - |
-| Dot1x - Default | - | start-stop | group1 | - |
-| Commands - Default | all | start-stop | TACACS | True |
-| Commands - Default | 0 | start-stop | - | True |
-| Commands - Default | 1 | start-stop | TACACS | False |
-| Commands - Default | 3 | start-stop | - | False |
+| Type | Commands | Record type | Groups | Logging | Multicast |
+| ---- | -------- | ----------- | ------ | ------- | --------- |
+| Exec - Console | - | start-stop | TACACS | True | - |
+| Commands - Console | all | start-stop | TACACS | True | - |
+| Commands - Console | 0 | start-stop |  -  | True | - |
+| Commands - Console | 1 | start-stop | TACACS1 | False | - |
+| Commands - Console | 2 | none | - | - | - |
+| Commands - Console | 3 | start-stop |  -  | False | - |
+| Exec - Default | - | start-stop | TACACS | True | - |
+| System - Default | - | start-stop | TACACS | - | - |
+| Dot1x - Default | - | start-stop | group1 | - | - |
+| Commands - Default | all | start-stop | TACACS | True | - |
+| Commands - Default | 0 | start-stop | - | True | - |
+| Commands - Default | 1 | start-stop | TACACS | False | - |
+| Commands - Default | 3 | start-stop | - | False | - |
 
 #### AAA Accounting Device Configuration
 

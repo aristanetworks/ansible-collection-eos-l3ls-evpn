@@ -14,7 +14,7 @@
 | ---- | -------- | ----------- | ------ | ------- | --------- |
 {%     if aaa_accounting.exec.console.type is arista.avd.defined %}
 {%         if aaa_accounting.exec.console.type == "none" %}
-| Exec - Console | - | none | - | - |
+| Exec - Console | - | none | - | - | - |
 {%         elif aaa_accounting.exec.console.methods is arista.avd.defined %}
 {%             set methods_list = [] %}
 {%             set logging_namespace = namespace(method_logging = false) %}

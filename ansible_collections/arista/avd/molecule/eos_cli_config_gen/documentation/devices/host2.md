@@ -412,7 +412,7 @@ no aaa authorization config-commands
 
 | Type | Commands | Record type | Groups | Logging | Multicast |
 | ---- | -------- | ----------- | ------ | ------- | --------- |
-| Exec - Console | - | none | - | - |
+| Exec - Console | - | none | - | - | - |
 | Commands - Console | all | none | - | - | - |
 | Commands - Console | 0 | none | - | - | - |
 | Exec - Default | - | none | - | - | - |
