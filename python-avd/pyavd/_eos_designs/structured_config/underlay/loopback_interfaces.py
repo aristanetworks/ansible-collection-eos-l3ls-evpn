@@ -92,11 +92,8 @@ class LoopbackInterfacesMixin(Protocol):
         # Underlay Multicast RP Loopbacks
         if self.shared_utils.underlay_multicast_rp_interfaces is not None:
             for underlay_multicast_rp_interface in self.shared_utils.underlay_multicast_rp_interfaces:
-                self.structured_config.loopback_interfaces.append_new(
-                    name=underlay_multicast_rp_interface["name"],
-                    description=underlay_multicast_rp_interface["description"],
-                    ip_address=underlay_multicast_rp_interface["ip_address"],
-                )
+                loopback_item = EosCliConfigGen.LoopbackInterfacesItem(**underlay_multicast_rp_interface)
+                self.structured_config.loopback_interfaces.append(loopback_item)
 
     @cached_property
     def _node_sid(self: AvdStructuredConfigUnderlayProtocol) -> int:
