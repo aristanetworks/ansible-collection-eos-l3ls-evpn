@@ -41,11 +41,18 @@ class EthernetInterfacesMixin(Protocol):
                     if node_name != self.shared_utils.hostname:
                         continue
 
-                    self.structured_config.ethernet_interfaces.append(self._get_ethernet_interface_cfg(adapter, node_index, connected_endpoint))
+                    ethernet_interface, structured_config = self._get_ethernet_interface_cfg(adapter, node_index, connected_endpoint)
+                    self.structured_config.ethernet_interfaces.append(ethernet_interface)
+                    if structured_config:
+                        self.custom_structured_configs.nested.ethernet_interfaces.obtain(ethernet_interface.name)._deepmerge(
+                            structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                        )
 
-        # Temporary list of ethernet interfaces to be added by network ports.
+        # Temporary dict of ethernet interfaces to be added by network ports.
         # We need this since network ports can override each other, so the last one "wins"
-        network_ports_ethernet_interfaces = EosCliConfigGen.EthernetInterfaces()
+        # Dict keyed by interface name. Value is a tuple of the interface config and any structured config for this interface.
+        network_ports_ethernet_interfaces: dict[str, tuple[EosCliConfigGen.EthernetInterfacesItem, EosCliConfigGen.EthernetInterfacesItem | None]] = {}
+
         for network_port in self._filtered_network_ports:
             connected_endpoint = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem(name=network_port.endpoint or Undefined)
             connected_endpoint._internal_data.type = "network_port"
@@ -65,19 +72,17 @@ class EthernetInterfacesMixin(Protocol):
                 network_port_as_adapter.switches = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.Switches(
                     [self.shared_utils.hostname]
                 )
-                # TODO: this fix is not enough as it only prevent the same objects to be reused in all the
-                # structured_config for network_port and it solves the initial issue
-                # but this does not prevent an aggregation of all the structured_configs which is not
-                # the correct behavior.
-                # Need to keep track of the "network_port" structured configs
-                network_port_as_adapter.structured_config = network_port.structured_config._deepcopy()
-                ethernet_interface = self._get_ethernet_interface_cfg(network_port_as_adapter, 0, connected_endpoint)
 
                 # Using __setitem__ to replace any previous network_port.
-                network_ports_ethernet_interfaces[ethernet_interface_name] = ethernet_interface
+                network_ports_ethernet_interfaces[ethernet_interface_name] = self._get_ethernet_interface_cfg(network_port_as_adapter, 0, connected_endpoint)
 
-        if network_ports_ethernet_interfaces:
-            self.structured_config.ethernet_interfaces.extend(network_ports_ethernet_interfaces)
+        # Now insert into the actual structured config and custom structured config
+        for ethernet_interface, structured_config in network_ports_ethernet_interfaces.values():
+            self.structured_config.ethernet_interfaces.append(ethernet_interface)
+            if structured_config:
+                self.custom_structured_configs.nested.ethernet_interfaces.obtain(ethernet_interface.name)._deepmerge(
+                    structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                )
 
     def _update_ethernet_interface_cfg(
         self: AvdStructuredConfigConnectedEndpointsProtocol,
@@ -128,7 +133,7 @@ class EthernetInterfacesMixin(Protocol):
         adapter: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem,
         node_index: int,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
-    ) -> EosCliConfigGen.EthernetInterfacesItem:
+    ) -> tuple[EosCliConfigGen.EthernetInterfacesItem, EosCliConfigGen.EthernetInterfacesItem | None]:
         """
         Return structured configuration for one ethernet interface.
 
@@ -138,7 +143,8 @@ class EthernetInterfacesMixin(Protocol):
             connected_endpoint: The connected endpoint configuration item.
 
         Returns:
-            The structured configuration for the ethernet interface.
+            The structured configuration for the ethernet interface
+            Any structured config
 
         Raises:
             AristaAvdError: If the lengths of the lists 'switches', 'switch_ports', and 'descriptions' (if used) do not match.
@@ -192,11 +198,6 @@ class EthernetInterfacesMixin(Protocol):
             eos_cli=adapter.raw_eos_cli,
         )
 
-        if adapter.structured_config:
-            self.custom_structured_configs.nested.ethernet_interfaces.obtain(adapter.switch_ports[node_index])._deepmerge(
-                adapter.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
-            )
-
         # Port-channel member
         if adapter.port_channel.mode:
             ethernet_interface.channel_group.id = channel_group_id
@@ -240,4 +241,4 @@ class EthernetInterfacesMixin(Protocol):
         if adapter.flowcontrol:
             ethernet_interface.flowcontrol = adapter.flowcontrol
 
-        return ethernet_interface
+        return ethernet_interface, adapter.structured_config or None

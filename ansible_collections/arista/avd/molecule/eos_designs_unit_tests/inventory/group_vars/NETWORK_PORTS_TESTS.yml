@@ -213,6 +213,13 @@ network_ports:
       structured_config:
         description: This should be the only one render and no vlan 666
 
+# Overwriting one interface from a range to ensure that we don't reuse objects in memory across multiple interfaces.
+# We should only see updates for this interface.
+custom_structured_configuration_ethernet_interfaces:
+  - name: Ethernet51
+    switchport:
+      access_vlan: 123
+
 servers:
   - name: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
     adapters:
@@ -261,6 +268,5 @@ custom_platform_settings:
     reload_delay:
       mlag: 300
       non_mlag: 330
-    trident_forwarding_table_partition:
-      flexible exact-match 16000 l2-shared 18000 l3-shared
+    trident_forwarding_table_partition: flexible exact-match 16000 l2-shared 18000 l3-shared
       22000

@@ -682,6 +682,7 @@ ethernet_interfaces:
   peer_type: network_port
   switchport:
     enabled: true
+    access_vlan: 123
 - name: Ethernet52
   shutdown: true
   peer_type: network_port
@@ -765,7 +766,6 @@ port_channel_interfaces:
   mlag: 222
   switchport:
     enabled: true
-    access_vlan: 666
 service_routing_protocols_model: multi-agent
 spanning_tree:
   no_spanning_tree_vlan: '4094'
