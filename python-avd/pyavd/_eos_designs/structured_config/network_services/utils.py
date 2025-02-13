@@ -232,7 +232,7 @@ class UtilsMixin(Protocol):
         """Return a string with the route-destinguisher for one VLAN."""
         rd_override = default(vlan.rd_override, vlan.rt_override, vlan.vni_override)
 
-        if isinstance(rd_override, str) and ":" in rd_override:
+        if isinstance(rd_override, str) and (":" in rd_override or rd_override == "auto"):
             return rd_override
 
         if rd_override is not None:
@@ -344,7 +344,7 @@ class UtilsMixin(Protocol):
         admin_subfield = self.shared_utils.overlay_rd_type_vrf_admin_subfield if is_vrf else self.shared_utils.overlay_rd_type_admin_subfield
 
         if rd_override is not None:
-            if ":" in str(rd_override):
+            if ":" in rd_override or rd_override == "auto":
                 return rd_override
 
             return f"{admin_subfield}:{rd_override}"
