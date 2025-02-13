@@ -41,6 +41,7 @@ keys:
               type:
                 type: str
                 valid_values: ["none", "start-stop", "stop-only"]
+              # TODO: AVD 6.0 Add required:true for all 'type' keys
               group:
                 description: Group Name.
                 type: str
