@@ -56,16 +56,12 @@ class MetadataMixin(Protocol):
                 ips_control=internet_exit_policy.zscaler.firewall.ips,
                 acceptable_use_policy=internet_exit_policy.zscaler.acceptable_use_policy,
             )
-            exit_policy.vpn_credentials.append(
-                EosCliConfigGen.Metadata.CvPathfinder.InternetExitPoliciesItem.VpnCredentialsItem(fqdn=ufqdn, vpn_type="UFQDN", pre_shared_key=ipsec_key)
-            )
+            exit_policy.vpn_credentials.append_new(fqdn=ufqdn, vpn_type="UFQDN", pre_shared_key=ipsec_key)
             for connection in connections:
-                exit_policy.tunnels.append(
-                    EosCliConfigGen.Metadata.CvPathfinder.InternetExitPoliciesItem.TunnelsItem(
-                        name=f"Tunnel{connection['tunnel_id']}",
-                        preference="Preferred" if connection["preference"] == "primary" else "Alternate",
-                        endpoint=connection["endpoint"],
-                    )
+                exit_policy.tunnels.append_new(
+                    name=f"Tunnel{connection['tunnel_id']}",
+                    preference="Preferred" if connection["preference"] == "primary" else "Alternate",
+                    endpoint=connection["endpoint"],
                 )
             self.structured_config.metadata.cv_pathfinder.internet_exit_policies.append(exit_policy)
 
@@ -81,30 +77,32 @@ class MetadataMixin(Protocol):
                 application_profile.transport_protocols.extend(protocols)
             for application in get(profile, "applications", default=[]):
                 if application["name"] not in user_defined_app_names:
-                    # TODO: Need to fix the support of services
-                    application_profile.builtin_applications.append(
-                        EosCliConfigGen.Metadata.CvPathfinder.Applications.ProfilesItem.BuiltinApplicationsItem(name=application["name"])
-                    )
+                    services = get_all(application, "service")
+                    services_item = EosCliConfigGen.Metadata.CvPathfinder.Applications.ProfilesItem.BuiltinApplicationsItem.Services()
+                    for service in services:
+                        services_item.append(service)
+                    application_profile.builtin_applications.append_new(name=application["name"], services=services_item)
                 if application["name"] in user_defined_app_names:
-                    application_profile.user_defined_applications.append(
-                        EosCliConfigGen.Metadata.CvPathfinder.Applications.ProfilesItem.UserDefinedApplicationsItem(name=application["name"])
-                    )
+                    application_profile.user_defined_applications.append_new(name=application["name"])
             for category in get(profile, "categories", default=[]):
-                # TODO: Need to fix the support of services
-                application_profile.categories.append(EosCliConfigGen.Metadata.CvPathfinder.Applications.ProfilesItem.CategoriesItem(category=category["name"]))
+                services = get_all(category, "service")
+                services_item = EosCliConfigGen.Metadata.CvPathfinder.Applications.ProfilesItem.CategoriesItem.Services()
+                for service in services:
+                    services_item.append(service)
+                application_profile.categories.append_new(category=category["name"], services=services_item)
             self.structured_config.metadata.cv_pathfinder.applications.profiles.append(application_profile)
         for category in categories:
             for application in get(category, "applications", default=[]):
                 if application["name"] not in user_defined_app_names:
-                    self.structured_config.metadata.cv_pathfinder.applications.categories.builtin_applications.append(
-                        EosCliConfigGen.Metadata.CvPathfinder.Applications.Categories.BuiltinApplicationsItem(
-                            name=application["name"], category=category["name"]
-                        )
+                    services_item = EosCliConfigGen.Metadata.CvPathfinder.Applications.Categories.BuiltinApplicationsItem.Services()
+                    services = get(category, "service", default=[])
+                    for service in services:
+                        services_item.append(service)
+                    self.structured_config.metadata.cv_pathfinder.applications.categories.builtin_applications.append_new(
+                        name=application["name"], category=category["name"], services=services_item
                     )
-                    # TODO: Need to fix the support of services
+
                 if application["name"] in user_defined_app_names:
-                    self.structured_config.metadata.cv_pathfinder.applications.categories.user_defined_applications.append(
-                        EosCliConfigGen.Metadata.CvPathfinder.Applications.Categories.UserDefinedApplicationsItem(
-                            name=application["name"], category=category["name"]
-                        )
+                    self.structured_config.metadata.cv_pathfinder.applications.categories.user_defined_applications.append_new(
+                        name=application["name"], category=category["name"]
                     )

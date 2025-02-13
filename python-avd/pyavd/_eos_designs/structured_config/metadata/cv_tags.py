@@ -79,7 +79,7 @@ class CvTagsMixin(Protocol):
         ]:
             tag = self._tag_dict(name, value)
             if tag:
-                self.structured_config.metadata.cv_tags.device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name=name, value=tag["value"]))
+                self.structured_config.metadata.cv_tags.device_tags.append_new(name=name, value=tag["value"])
 
     def _get_cv_pathfinder_device_tags(self: AvdStructuredConfigMetadataProtocol) -> None:
         """
@@ -105,7 +105,7 @@ class CvTagsMixin(Protocol):
         ]:
             tag = self._tag_dict(name, value)
             if tag:
-                self.structured_config.metadata.cv_tags.device_tags.append(EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name=name, value=tag["value"]))
+                self.structured_config.metadata.cv_tags.device_tags.append_new(name=name, value=tag["value"])
 
     def _get_device_tags(self: AvdStructuredConfigMetadataProtocol) -> None:
         """Return list of device_tags."""
@@ -135,9 +135,7 @@ class CvTagsMixin(Protocol):
 
             # Silently ignoring empty values since structured config may vary between devices.
             if value:
-                self.structured_config.metadata.cv_tags.device_tags.append(
-                    EosCliConfigGen.Metadata.CvTags.DeviceTagsItem(name=generate_tag.name, value=str(value))
-                )
+                self.structured_config.metadata.cv_tags.device_tags.append_new(name=generate_tag.name, value=str(value))
 
     def _get_interface_tags(self: AvdStructuredConfigMetadataProtocol) -> None:
         """Return list of interface_tags."""
@@ -169,9 +167,7 @@ class CvTagsMixin(Protocol):
                 tags.extend(self._get_cv_pathfinder_interface_tags(ethernet_interface))
 
             if tags:
-                self.structured_config.metadata.cv_tags.interface_tags.append(
-                    EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem(interface=ethernet_interface.name, tags=tags)
-                )
+                self.structured_config.metadata.cv_tags.interface_tags.append_new(interface=ethernet_interface.name, tags=tags)
 
         # handle tags for L3 port-channel interfaces (cv_pathfinder use case)
         for port_channel_intf in self.structured_config.port_channel_interfaces:
@@ -179,9 +175,7 @@ class CvTagsMixin(Protocol):
             if self.shared_utils.is_cv_pathfinder_router:
                 tags.extend(self._get_cv_pathfinder_interface_tags(port_channel_intf))
             if tags:
-                self.structured_config.metadata.cv_tags.interface_tags.append(
-                    EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem(interface=port_channel_intf.name, tags=tags)
-                )
+                self.structured_config.metadata.cv_tags.interface_tags.append_new(interface=port_channel_intf.name, tags=tags)
 
     def _get_cv_pathfinder_interface_tags(
         self: AvdStructuredConfigMetadataProtocol, generic_interface: EosCliConfigGen.EthernetInterfacesItem | EosCliConfigGen.PortChannelInterfacesItem
@@ -210,7 +204,7 @@ class CvTagsMixin(Protocol):
         if generic_interface.name in self.shared_utils._wan_port_channel_member_interfaces:
             return EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.Tags()
         tags = EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.Tags()
-        tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Type", value="lan"))
+        tags.append_new(name="Type", value="lan")
         return tags
 
     # Generate wan interface tags while accounting for wan interface to be either L3 interface or L3 Port-Channel type
@@ -223,9 +217,9 @@ class CvTagsMixin(Protocol):
     ) -> EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.Tags:
         """Return list of wan interface tags for cv_pathfinder solution for a given wan interface."""
         tags = EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.Tags()
-        tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Type", value="wan"))
+        tags.append_new(name="Type", value="wan")
         if wan_interface.wan_carrier:
-            tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Carrier", value=str(wan_interface.wan_carrier)))
+            tags.append_new(name="Carrier", value=str(wan_interface.wan_carrier))
         if wan_interface.wan_circuit_id:
-            tags.append(EosCliConfigGen.Metadata.CvTags.InterfaceTagsItem.TagsItem(name="Circuit", value=str(wan_interface.wan_circuit_id)))
+            tags.append_new(name="Circuit", value=str(wan_interface.wan_circuit_id))
         return tags

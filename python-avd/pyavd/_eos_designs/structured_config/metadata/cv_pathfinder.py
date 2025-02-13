@@ -61,7 +61,7 @@ class CvPathfinderMixin(Protocol):
     def _metadata_interfaces(self: AvdStructuredConfigMetadataProtocol) -> None:
         for carrier in self.shared_utils.wan_local_carriers:
             for interface in carrier["interfaces"]:
-                pathfinder_interface = EosCliConfigGen.Metadata.CvPathfinder.InterfacesItem(
+                self.structured_config.metadata.cv_pathfinder.interfaces.append_new(
                     name=interface["name"],
                     carrier=carrier["name"],
                     circuit_id=interface.get("wan_circuit_id"),
@@ -69,22 +69,14 @@ class CvPathfinderMixin(Protocol):
                     public_ip=str(interface["public_ip"]) if self.shared_utils.is_cv_pathfinder_server else None,
                 )
 
-                self.structured_config.metadata.cv_pathfinder.interfaces.append(pathfinder_interface)
-
     def _metadata_pathgroups(self: AvdStructuredConfigMetadataProtocol) -> None:
         for pathgroup in self.inputs.wan_path_groups:
             path_group = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem(name=pathgroup.name)
-            carriers_data = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem.Carriers()
-            imported_carriers_data = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem.ImportedCarriers()
             for carrier in self.inputs.wan_carriers:
                 if carrier.path_group == pathgroup.name:
-                    carrier_data = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem.CarriersItem(name=carrier.name)
-                    carriers_data.append(carrier_data)
+                    path_group.carriers.append_new(name=carrier.name)
                 if carrier.path_group in [imported_pathgroup.remote for imported_pathgroup in pathgroup.import_path_groups]:
-                    imported_carrier_data = EosCliConfigGen.Metadata.CvPathfinder.PathgroupsItem.ImportedCarriersItem(name=carrier.name)
-                    imported_carriers_data.append(imported_carrier_data)
-            path_group.carriers = carriers_data
-            path_group.imported_carriers = imported_carriers_data
+                    path_group.imported_carriers.append_new(name=carrier.name)
             self.structured_config.metadata.cv_pathfinder.pathgroups.append(path_group)
 
     def _metadata_regions(self: AvdStructuredConfigMetadataProtocol) -> None:
@@ -93,18 +85,17 @@ class CvPathfinderMixin(Protocol):
             raise AristaAvdInvalidInputsError(msg)
         regions = self.inputs.cv_pathfinder_regions
         for region in regions:
-            region_obj = EosCliConfigGen.Metadata.CvPathfinder.RegionsItem(name=region.name, id=region.id)
-            region_obj.zones.append(region_obj.ZonesItem(name=f"{region.name}-ZONE", id=1))
+            region_item = EosCliConfigGen.Metadata.CvPathfinder.RegionsItem(name=region.name, id=region.id)
+            region_item.zones.append_new(name=f"{region.name}-ZONE", id=1)
             for site in region.sites:
-                site_obj = region_obj.zones[0].SitesItem(name=site.name, id=site.id)
-                site_obj.location.address = site.location
-                region_obj.zones[0].sites.append(site_obj)
-            self.structured_config.metadata.cv_pathfinder.regions.append(region_obj)
+                site_item = region_item.zones[0].SitesItem(name=site.name, id=site.id)
+                site_item.location.address = site.location
+                region_item.zones[0].sites.append(site_item)
+            self.structured_config.metadata.cv_pathfinder.regions.append(region_item)
 
     def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadataProtocol) -> None:
         for wan_route_server in self.shared_utils.filtered_wan_route_servers:
-            vtep_ip = EosCliConfigGen.Metadata.CvPathfinder.PathfindersItem(vtep_ip=wan_route_server.vtep_ip)
-            self.structured_config.metadata.cv_pathfinder.pathfinders.append(vtep_ip)
+            self.structured_config.metadata.cv_pathfinder.pathfinders.append_new(vtep_ip=wan_route_server.vtep_ip)
 
     def _metadata_vrfs(self: AvdStructuredConfigMetadataProtocol) -> None:
         """Extracting metadata for VRFs by parsing the generated structured config and flatten it a bit (like hiding load-balance policies)."""
@@ -137,11 +128,10 @@ class CvPathfinderMixin(Protocol):
                 if not profile.name:
                     continue
                 lb_policy = load_balance_policies[self.shared_utils.generate_lb_policy_name(profile.name)]
-                application_profiles = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem.ApplicationProfiles()
+                avt = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem(id=profile.id, name=profile.name)
                 for match in avt_policy.matches:
                     if match.avt_profile == profile.name and match.application_profile and match.application_profile != "default":
-                        application_profiles.append(match.application_profile)
-                avt = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem(id=profile.id, name=profile.name, application_profiles=application_profiles)
+                        avt.application_profiles.append(match.application_profile)
 
                 avt.constraints._update(
                     jitter=lb_policy.jitter,
@@ -150,14 +140,8 @@ class CvPathfinderMixin(Protocol):
                 )
                 if lb_policy.loss_rate:
                     avt.constraints.lossrate = str(float(lb_policy.loss_rate))
-                avt_path_groups = EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem.Pathgroups()
                 for pathgroup in lb_policy.path_groups:
-                    avt_path_groups.append(
-                        EosCliConfigGen.Metadata.CvPathfinder.VrfsItem.AvtsItem.PathgroupsItem(
-                            name=pathgroup.name, preference="alternate" if default(pathgroup.priority, 1) > 1 else "preferred"
-                        )
-                    )
-                avt.pathgroups = avt_path_groups
+                    avt.pathgroups.append_new(name=pathgroup.name, preference="alternate" if default(pathgroup.priority, 1) > 1 else "preferred")
                 metadata_vrf.avts.append(avt)
 
             self.structured_config.metadata.cv_pathfinder.vrfs.append(metadata_vrf)
