@@ -38,7 +38,6 @@ class LoopbackInterfacesMixin(Protocol):
                 if (loopback_interface := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is not None:
                     loopback_item = EosCliConfigGen.LoopbackInterfacesItem(**loopback_interface)
                     self.structured_config.loopback_interfaces.append(loopback_item)
-                    )
 
                 # The loopbacks have already been filtered in _filtered_tenants
                 # to only contain entries with our hostname
