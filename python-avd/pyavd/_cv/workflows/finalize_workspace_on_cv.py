@@ -96,7 +96,7 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient, 
         # If successful Workspace submission with inactive devices was forced - append information to warnings.
         if inactive_devices and workspace.force:
             msg = f"Inactive devices present: {inactive_devices}"
-            LOGGER.info(msg)
+            LOGGER.warning(msg)
             warnings.append(CVInactiveDevices(msg))
 
         workspace.state = "submitted"
