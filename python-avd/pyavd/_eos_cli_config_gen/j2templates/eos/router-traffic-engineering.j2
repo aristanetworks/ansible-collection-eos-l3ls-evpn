@@ -79,7 +79,7 @@ router traffic-engineering
 {%             if flex_algo.metric is arista.avd.defined %}
          metric {{ flex_algo.metric }}
 {%             endif %}
-{%             if flex_algo.srlg_excludes is arista.avd.defined %}
+{%             if flex_algo.srlg_exclude is arista.avd.defined %}
          srlg exclude {{ flex_algo.srlg_exclude }}
 {%             endif %}
 {%             if flex_algo.color is arista.avd.defined %}
