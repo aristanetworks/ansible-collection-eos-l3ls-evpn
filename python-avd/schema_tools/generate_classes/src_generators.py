@@ -434,6 +434,9 @@ class FieldTypeHintSrc(AnnotationSrc):
         if "Literal[" in self.field_type:
             imports.add("from typing import Literal")
 
+        if self.field_type.startswith("EosCliConfigGen."):
+            imports.add("from pyavd._eos_cli_config_gen.schema import EosCliConfigGen")
+
         if not self.annotations:
             return imports
 
