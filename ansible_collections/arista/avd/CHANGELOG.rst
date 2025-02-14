@@ -4,6 +4,21 @@ Arista.Avd Release Notes
 
 .. contents:: Topics
 
+v5.2.2
+======
+
+Release Summary
+---------------
+
+Release 5.2.2 - See documentation on avd.arista.com for details.
+
+Bugfixes
+--------
+
+- Fix(containers): fix docker/setup-qemu-action@v3 by setting image to tonistiigi/binfmt:qemu-v7.0.0-28 (#5032) by @carlbuchmann in https://github.com/aristanetworks/avd/pull/5040
+- Fix(eos_designs): Invalid class returned from snmp_settings.vrfs (#5035) by @carlbuchmann in https://github.com/aristanetworks/avd/pull/5042
+- Fix(eos_designs): Wrong structured config for overlapping network ports (#5033) by @carlbuchmann in https://github.com/aristanetworks/avd/pull/5050
+
 v5.2.1
 ======
 
