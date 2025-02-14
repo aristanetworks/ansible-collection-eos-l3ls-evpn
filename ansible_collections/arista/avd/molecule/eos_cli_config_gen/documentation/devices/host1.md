@@ -7068,7 +7068,7 @@ router service-insertion
 
 - Traffic Engineering is enabled.
 
-- Twamp-light sender profile is test-profile
+- TWAMP-light sender profile is test-profile
 
 #### Segment Routing Summary
 
@@ -7126,10 +7126,10 @@ router traffic-engineering
             explicit-null ipv6
             segment-list label-stack 900002 900008 900009 900006
             segment-list label-stack 900002 900010 900011 900012
-   !
-   twamp-light sender profile test-profile
    router-id ipv4 10.0.0.1
    router-id ipv6 2001:beef:cafe::1
+   twamp-light sender profile test-profile
+   !
 ```
 
 ### Router OSPF
