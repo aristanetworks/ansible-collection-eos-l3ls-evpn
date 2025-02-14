@@ -23,5 +23,4 @@ wan_path_groups:
     name: INTERNET
 
 expected_error_message: >-
-  'ipv4_acl_in' must be set on WAN interfaces where 'wan_carrier' is set,
-  unless the carrier is configured as 'trusted' under 'wan_carriers'. 'ipv4_acl_in' is missing on L3 Port-Channel 'Port-Channel5'.
+  A node variable 'cv_pathfinder_site' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'.
