@@ -1,0 +1,32 @@
+loopback_ipv4_pool: 192.168.0.0/24
+
+type: l2leaf
+l2leaf:
+  defaults:
+  nodes:
+    - name: duplicate-interfaces-network-ports-with-port-channel
+
+network_ports:
+  # port-channel provide physical and individual port-channel descriptions
+  - switches:
+      - duplicate-interfaces-network-ports-with-port-channel
+    switch_ports:
+      - Ethernet9
+    port_channel:
+      channel_id: 9
+      mode: "active"
+      description: "PORT_CHANNEL_DESCRIPTION"
+  - switches:
+      - duplicate-interfaces-network-ports-with-port-channel
+    switch_ports:
+      - Ethernet10
+    port_channel:
+      channel_id: 9
+      mode: "active"
+      description: "DIFFERENT_PORT_CHANNEL_DESCRIPTION"
+
+expected_error_message: >-
+  Found duplicate objects with conflicting data while generating configuration for PortChannelInterfaces.
+  {'name': 'Port-Channel9', 'description': 'DIFFERENT_PORT_CHANNEL_DESCRIPTION', 'shutdown': False, 'switchport': {'enabled': True}}
+  conflicts with
+  {'name': 'Port-Channel9', 'description': 'PORT_CHANNEL_DESCRIPTION', 'shutdown': False, 'switchport': {'enabled': True}}.
