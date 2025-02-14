@@ -20852,6 +20852,74 @@ keys:
                                     type: int
                                     convert_types:
                                     - str
+      flex_algos:
+        type: list
+        items:
+          type: dict
+          keys:
+            number:
+              type: int
+              required: true
+              min: 128
+              max: 255
+              convert_types:
+              - str
+            name:
+              type: str
+              required: true
+            administrative_group:
+              type: dict
+              keys:
+                include_all:
+                  type: list
+                  items:
+                    type: str
+                    convert_types:
+                    - int
+                include_any:
+                  type: list
+                  items:
+                    type: str
+                    convert_types:
+                    - int
+                exclude:
+                  type: list
+                  items:
+                    type: str
+                    convert_types:
+                    - int
+            metric:
+              type: str
+              description: Metric can be specified as an integer or named type, 0
+                = igp-metric, 1 = min-delay, 2 = te-metric. Device CLI will show the
+                name regardless.
+              convert_types:
+              - int
+              valid_values:
+              - '0'
+              - '1'
+              - '2'
+              - igp-metric
+              - min-delay
+              - te-metric
+            priority:
+              type: int
+              convert_types:
+              - str
+              min: 0
+              max: 255
+            color:
+              type: int
+              convert_types:
+              - str
+              min: 0
+              max: 4294967295
+            srlg_excludes:
+              type: list
+              items:
+                type: str
+                convert_types:
+                - int
   service_routing_configuration_bgp:
     type: dict
     keys:

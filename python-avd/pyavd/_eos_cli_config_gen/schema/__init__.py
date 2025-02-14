@@ -55959,12 +55959,135 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        _fields: ClassVar[dict] = {"enabled": {"type": bool}, "router_id": {"type": RouterId}, "segment_routing": {"type": SegmentRouting}}
+        class FlexAlgosItem(AvdModel):
+            """Subclass of AvdModel."""
+
+            class AdministrativeGroup(AvdModel):
+                """Subclass of AvdModel."""
+
+                class IncludeAll(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                IncludeAll._item_type = str
+
+                class IncludeAny(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                IncludeAny._item_type = str
+
+                class Exclude(AvdList[str]):
+                    """Subclass of AvdList with `str` items."""
+
+                Exclude._item_type = str
+
+                _fields: ClassVar[dict] = {"include_all": {"type": IncludeAll}, "include_any": {"type": IncludeAny}, "exclude": {"type": Exclude}}
+                include_all: IncludeAll
+                """Subclass of AvdList with `str` items."""
+                include_any: IncludeAny
+                """Subclass of AvdList with `str` items."""
+                exclude: Exclude
+                """Subclass of AvdList with `str` items."""
+
+                if TYPE_CHECKING:
+
+                    def __init__(
+                        self,
+                        *,
+                        include_all: IncludeAll | UndefinedType = Undefined,
+                        include_any: IncludeAny | UndefinedType = Undefined,
+                        exclude: Exclude | UndefinedType = Undefined,
+                    ) -> None:
+                        """
+                        AdministrativeGroup.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            include_all: Subclass of AvdList with `str` items.
+                            include_any: Subclass of AvdList with `str` items.
+                            exclude: Subclass of AvdList with `str` items.
+
+                        """
+
+            class SrlgExcludes(AvdList[str]):
+                """Subclass of AvdList with `str` items."""
+
+            SrlgExcludes._item_type = str
+
+            _fields: ClassVar[dict] = {
+                "number": {"type": int},
+                "name": {"type": str},
+                "administrative_group": {"type": AdministrativeGroup},
+                "metric": {"type": str},
+                "priority": {"type": int},
+                "color": {"type": int},
+                "srlg_excludes": {"type": SrlgExcludes},
+            }
+            number: int
+            name: str
+            administrative_group: AdministrativeGroup
+            """Subclass of AvdModel."""
+            metric: Literal["0", "1", "2", "igp-metric", "min-delay", "te-metric"] | None
+            """
+            Metric can be specified as an integer or named type, 0 = igp-metric, 1 = min-delay, 2 = te-metric.
+            Device CLI will show the name regardless.
+            """
+            priority: int | None
+            color: int | None
+            srlg_excludes: SrlgExcludes
+            """Subclass of AvdList with `str` items."""
+
+            if TYPE_CHECKING:
+
+                def __init__(
+                    self,
+                    *,
+                    number: int | UndefinedType = Undefined,
+                    name: str | UndefinedType = Undefined,
+                    administrative_group: AdministrativeGroup | UndefinedType = Undefined,
+                    metric: Literal["0", "1", "2", "igp-metric", "min-delay", "te-metric"] | None | UndefinedType = Undefined,
+                    priority: int | None | UndefinedType = Undefined,
+                    color: int | None | UndefinedType = Undefined,
+                    srlg_excludes: SrlgExcludes | UndefinedType = Undefined,
+                ) -> None:
+                    """
+                    FlexAlgosItem.
+
+
+                    Subclass of AvdModel.
+
+                    Args:
+                        number: number
+                        name: name
+                        administrative_group: Subclass of AvdModel.
+                        metric:
+                           Metric can be specified as an integer or named type, 0 = igp-metric, 1 = min-delay, 2 = te-metric.
+                           Device CLI will show the name regardless.
+                        priority: priority
+                        color: color
+                        srlg_excludes: Subclass of AvdList with `str` items.
+
+                    """
+
+        class FlexAlgos(AvdList[FlexAlgosItem]):
+            """Subclass of AvdList with `FlexAlgosItem` items."""
+
+        FlexAlgos._item_type = FlexAlgosItem
+
+        _fields: ClassVar[dict] = {
+            "enabled": {"type": bool},
+            "router_id": {"type": RouterId},
+            "segment_routing": {"type": SegmentRouting},
+            "flex_algos": {"type": FlexAlgos},
+        }
         enabled: bool
         router_id: RouterId
         """Subclass of AvdModel."""
         segment_routing: SegmentRouting
         """Subclass of AvdModel."""
+        flex_algos: FlexAlgos
+        """Subclass of AvdList with `FlexAlgosItem` items."""
 
         if TYPE_CHECKING:
 
@@ -55974,6 +56097,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 enabled: bool | UndefinedType = Undefined,
                 router_id: RouterId | UndefinedType = Undefined,
                 segment_routing: SegmentRouting | UndefinedType = Undefined,
+                flex_algos: FlexAlgos | UndefinedType = Undefined,
             ) -> None:
                 """
                 RouterTrafficEngineering.
@@ -55985,6 +56109,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     enabled: enabled
                     router_id: Subclass of AvdModel.
                     segment_routing: Subclass of AvdModel.
+                    flex_algos: Subclass of AvdList with `FlexAlgosItem` items.
 
                 """
 

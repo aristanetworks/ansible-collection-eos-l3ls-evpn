@@ -55,6 +55,42 @@ router traffic-engineering
 {%             endfor %}
 {%         endif %}
 {%     endif %}
+{%     if router_traffic_engineering.flex_algos is arista.avd.defined %}
+   !
+   flex-algo
+{%         for flex_algo in router_traffic_engineering.flex_algos %}
+{%             set flex_algo_cli = "flex-algo " ~ flex_algo.number %}
+{%             if flex_algo.name is arista.avd.defined %}
+{%                 set flex_algo_cli = flex_algo_cli ~ " " ~ flex_algo.name %}
+{%             endif %}
+      {{ flex_algo_cli }}
+{%             if flex_algo.priority is arista.avd.defined %}
+         priority {{ flex_algo.priority }}
+{%             endif %}
+{%             if flex_algo.administrative_group.include_all is arista.avd.defined or flex_algo.administrative_group.include_any is arista.avd.defined or flex_algo.administrative_group.exclude is arista.avd.defined %}
+{%                 set admingrp_cli = "administrative-group" %}
+{%                 if flex_algo.administrative_group.include_all is arista.avd.defined %}
+{%                     set admingrp_cli = admingrp_cli ~ " include all " ~ flex_algo.administrative_group.include_all | join(",") %}
+{%                 endif %}
+{%                 if flex_algo.administrative_group.include_any is arista.avd.defined %}
+{%                     set admingrp_cli = admingrp_cli ~ " include any " ~ flex_algo.administrative_group.include_any | join(",") %}
+{%                 endif %}
+{%                 if flex_algo.administrative_group.exclude is arista.avd.defined %}
+{%                     set admingrp_cli = admingrp_cli ~ " exclude " ~ flex_algo.administrative_group.exclude | join(",") %}
+{%                 endif %}
+         {{ admingrp_cli }}
+{%             endif %}
+{%             if flex_algo.metric is arista.avd.defined %}
+         metric {{ flex_algo.metric }}
+{%             endif %}
+{%             if flex_algo.srlg_excludes is arista.avd.defined %}
+         srlg exclude {{ flex_algo.srlg_excludes | join(",") }}
+{%             endif %}
+{%             if flex_algo.color is arista.avd.defined %}
+         color {{ flex_algo.color }}
+{%             endif %}
+{%         endfor %}
+{%     endif %}
 {%     if router_traffic_engineering.router_id.ipv4 is arista.avd.defined %}
    router-id ipv4 {{ router_traffic_engineering.router_id.ipv4 }}
 {%     endif %}
