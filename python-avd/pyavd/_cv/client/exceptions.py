@@ -66,7 +66,11 @@ class CVWorkspaceBuildFailed(CVClientException):
 
 
 class CVWorkspaceSubmitFailed(CVClientException):
-    """Build of CloudVision Workspace failed."""
+    """Failed to submit CloudVision Workspace."""
+
+
+class CVWorkspaceSubmitFailedInactiveDevices(CVClientException):
+    """Failed to submit CloudVision Workspace due to the presence of inactive devices. Use force to override."""
 
 
 class CVWorkspaceStateTimeout(CVClientException):
@@ -84,10 +88,6 @@ class CVMessageSizeExceeded(CVClientException):
     """Maximum GRPC message size"""
     size: int
     """Actual GRPC message size"""
-
-
-class CVWorkspaceSubmitInactiveDevices(CVClientException):
-    """Unable to submit Workspace due to the presence of inactive devices. Use force to override."""
 
 
 class CVInactiveDevices(CVClientException):

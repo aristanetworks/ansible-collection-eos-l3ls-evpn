@@ -25,13 +25,17 @@ async def verify_devices_on_cv(
     skip_missing_devices: bool,
     warnings: list[Exception],
     cv_client: CVClient,
-) -> None:
-    """Verify that the given Devices are already present in the CloudVision Inventory & I&T Studio and actively stream."""
+) -> list[CVDevice]:
+    """
+    Verify that the given Devices are already present in the CloudVision Inventory & I&T Studio.
+
+    Returns a list of deduplicated CVDevice objects found on CloudVision.
+    """
     LOGGER.info("verify_devices_on_cv: %s", len(devices))
 
     # Return if we have nothing to do.
     if not devices:
-        return
+        return []
 
     existing_devices = await verify_devices_in_cloudvision_inventory(
         devices=devices,
@@ -40,7 +44,18 @@ async def verify_devices_on_cv(
         cv_client=cv_client,
     )
     await verify_devices_in_topology_studio(existing_devices, workspace_id, cv_client)
-    return
+
+    # Form deduplicated list of CVDevices found to exist on CV
+    unique_existing_device_tuples: list[tuple[str | None, str | None, str | None]] = []
+    existing_deduplicated_devices: list[CVDevice] = []
+    for existing_device in existing_devices:
+        if (
+            unique_existing_device_tuple := (existing_device.serial_number, existing_device.system_mac_address, existing_device.hostname)
+        ) not in unique_existing_device_tuples:
+            unique_existing_device_tuples.append(unique_existing_device_tuple)
+            existing_deduplicated_devices.append(existing_device)
+
+    return existing_deduplicated_devices
 
 
 async def verify_devices_in_cloudvision_inventory(
