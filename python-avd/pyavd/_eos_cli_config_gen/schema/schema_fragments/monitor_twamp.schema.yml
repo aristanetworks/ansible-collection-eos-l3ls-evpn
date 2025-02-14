@@ -40,6 +40,7 @@ keys:
                   - str
           sender_profiles:
             type: list
+            primary_key: name
             items:
               type: dict
               keys:
