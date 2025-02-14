@@ -63,6 +63,12 @@ management_api_http:
 metadata:
   fabric_name: EOS_DESIGNS_UNIT_TESTS
 service_routing_protocols_model: multi-agent
+snmp_server:
+  vrfs:
+  - name: foo
+    enable: true
+  - name: bar
+    enable: true
 transceiver_qsfp_default_mode_4x10: true
 vlan_internal_order:
   allocation: ascending
