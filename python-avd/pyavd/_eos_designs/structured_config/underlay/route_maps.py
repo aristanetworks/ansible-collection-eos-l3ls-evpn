@@ -23,7 +23,7 @@ class RouteMapsMixin(Protocol):
     @structured_config_contributor
     def route_maps(self: AvdStructuredConfigUnderlayProtocol) -> None:
         """
-        Return structured config for route_maps.
+        Set structured config for route_maps.
 
         Contains two parts.
         - Route map for connected routes redistribution in BGP
