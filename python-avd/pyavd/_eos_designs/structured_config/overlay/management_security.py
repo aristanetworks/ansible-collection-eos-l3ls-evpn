@@ -30,7 +30,7 @@ class ManagementSecurityMixin(Protocol):
             return
 
         ssl_profile = EosCliConfigGen.ManagementSecurity.SslProfilesItem(
-            name=profile_name,key=f"{profile_name}.key"),
+            name=profile_name,
             tls_versions="1.2",
         )
         ssl_profile.certificate._update(file=f"{profile_name}.crt", key=f"{profile_name}.key")
