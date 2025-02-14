@@ -59,11 +59,7 @@ router traffic-engineering
    !
    flex-algo
 {%         for flex_algo in router_traffic_engineering.flex_algos %}
-{%             set flex_algo_cli = "flex-algo " ~ flex_algo.number %}
-{%             if flex_algo.name is arista.avd.defined %}
-{%                 set flex_algo_cli = flex_algo_cli ~ " " ~ flex_algo.name %}
-{%             endif %}
-      {{ flex_algo_cli }}
+      flex-algo {{ flex_algo.number }} {{ flex_algo.name }}
 {%             if flex_algo.priority is arista.avd.defined %}
          priority {{ flex_algo.priority }}
 {%             endif %}
