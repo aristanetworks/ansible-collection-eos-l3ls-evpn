@@ -211,7 +211,10 @@ network_ports:
       channel_id: 222
       mode: "active"
       structured_config:
-        description: This should be the only one render and no vlan 666
+        # TODO: Make this error out since we have conflicting structured_config
+        # Ethernet22 was inserted before 23, so even though we overwrite 22 here,
+        # it is still rendered first, so the 23 variant of structured config "wins"
+        description: This will not be rendered since it is overwritten by "Range" coming from the Eth22-23 range.
 
 # Overwriting one interface from a range to ensure that we don't reuse objects in memory across multiple interfaces.
 # We should only see updates for this interface.
