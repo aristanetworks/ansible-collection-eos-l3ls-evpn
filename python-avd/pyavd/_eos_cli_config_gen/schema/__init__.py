@@ -55965,37 +55965,31 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             class AdministrativeGroup(AvdModel):
                 """Subclass of AvdModel."""
 
-                class IncludeAll(AvdList[str]):
-                    """Subclass of AvdList with `str` items."""
-
-                IncludeAll._item_type = str
-
-                class IncludeAny(AvdList[str]):
-                    """Subclass of AvdList with `str` items."""
-
-                IncludeAny._item_type = str
-
-                class Exclude(AvdList[str]):
-                    """Subclass of AvdList with `str` items."""
-
-                Exclude._item_type = str
-
-                _fields: ClassVar[dict] = {"include_all": {"type": IncludeAll}, "include_any": {"type": IncludeAny}, "exclude": {"type": Exclude}}
-                include_all: IncludeAll
-                """Subclass of AvdList with `str` items."""
-                include_any: IncludeAny
-                """Subclass of AvdList with `str` items."""
-                exclude: Exclude
-                """Subclass of AvdList with `str` items."""
+                _fields: ClassVar[dict] = {"include_all": {"type": str}, "include_any": {"type": str}, "exclude": {"type": str}}
+                include_all: str | None
+                """
+                Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal
+                range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+                """
+                include_any: str | None
+                """
+                Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal
+                range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+                """
+                exclude: str | None
+                """
+                Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal
+                range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+                """
 
                 if TYPE_CHECKING:
 
                     def __init__(
                         self,
                         *,
-                        include_all: IncludeAll | UndefinedType = Undefined,
-                        include_any: IncludeAny | UndefinedType = Undefined,
-                        exclude: Exclude | UndefinedType = Undefined,
+                        include_all: str | None | UndefinedType = Undefined,
+                        include_any: str | None | UndefinedType = Undefined,
+                        exclude: str | None | UndefinedType = Undefined,
                     ) -> None:
                         """
                         AdministrativeGroup.
@@ -56004,16 +55998,17 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         Subclass of AvdModel.
 
                         Args:
-                            include_all: Subclass of AvdList with `str` items.
-                            include_any: Subclass of AvdList with `str` items.
-                            exclude: Subclass of AvdList with `str` items.
+                            include_all:
+                               Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal
+                               range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+                            include_any:
+                               Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal
+                               range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+                            exclude:
+                               Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal
+                               range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
 
                         """
-
-            class SrlgExcludes(AvdList[str]):
-                """Subclass of AvdList with `str` items."""
-
-            SrlgExcludes._item_type = str
 
             _fields: ClassVar[dict] = {
                 "number": {"type": int},
@@ -56022,7 +56017,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "metric": {"type": str},
                 "priority": {"type": int},
                 "color": {"type": int},
-                "srlg_excludes": {"type": SrlgExcludes},
+                "srlg_exclude": {"type": str},
             }
             number: int
             name: str
@@ -56035,8 +56030,11 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
             """
             priority: int | None
             color: int | None
-            srlg_excludes: SrlgExcludes
-            """Subclass of AvdList with `str` items."""
+            srlg_exclude: str | None
+            """
+            Comma-separated list of individual SRLG numbers in decimal (0-4294967295), named or decimal range
+            (A-B, where value of A must be less than the value of B) formats. Example. 30-34,55,RED
+            """
 
             if TYPE_CHECKING:
 
@@ -56049,7 +56047,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     metric: Literal["0", "1", "2", "igp-metric", "min-delay", "te-metric"] | None | UndefinedType = Undefined,
                     priority: int | None | UndefinedType = Undefined,
                     color: int | None | UndefinedType = Undefined,
-                    srlg_excludes: SrlgExcludes | UndefinedType = Undefined,
+                    srlg_exclude: str | None | UndefinedType = Undefined,
                 ) -> None:
                     """
                     FlexAlgosItem.
@@ -56066,7 +56064,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                            Device CLI will show the name regardless.
                         priority: priority
                         color: color
-                        srlg_excludes: Subclass of AvdList with `str` items.
+                        srlg_exclude:
+                           Comma-separated list of individual SRLG numbers in decimal (0-4294967295), named or decimal range
+                           (A-B, where value of A must be less than the value of B) formats. Example. 30-34,55,RED
 
                     """
 

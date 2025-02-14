@@ -7090,7 +7090,7 @@ router service-insertion
 | Algo Number | Algo Name | Priority | Metric | Color | Admin-groups | SRLG Excludes |
 | ----------- | --------- | -------- | ------ | ----- | ------------ | ------------- |
 | 128 | test-algo | 127 | 1 | 450000 | include-all 99,100,102,105 include-any 101,103,110-115,117 exclude 45,60-70 | test,400-500,502 |
-| 129 | test-2 | 128 | min-delay | 100 | include-all 4 exclude 101 | 100 |
+| 129 | test-2 | 128 | min-delay | 100 | include-all 4 exclude 101 | 100,0xA |
 | 130 | test-3 | 123 | te-metric | 1234 | exclude 117 | 101 |
 
 #### Router Traffic Engineering Device Configuration
@@ -7138,19 +7138,16 @@ router traffic-engineering
          priority 127
          administrative-group include all 99,100,102,105 include any 101,103,110-115,117 exclude 45,60-70
          metric 1
-         srlg exclude test,400-500,502
          color 450000
       flex-algo 129 test-2
          priority 128
          administrative-group include all 4 exclude 101
          metric min-delay
-         srlg exclude 100
          color 100
       flex-algo 130 test-3
          priority 123
          administrative-group exclude 117
          metric te-metric
-         srlg exclude 101
          color 1234
    router-id ipv4 10.0.0.1
    router-id ipv6 2001:beef:cafe::1

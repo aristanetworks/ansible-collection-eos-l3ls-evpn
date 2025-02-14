@@ -20871,23 +20871,29 @@ keys:
               type: dict
               keys:
                 include_all:
-                  type: list
-                  items:
-                    type: str
-                    convert_types:
-                    - int
+                  type: str
+                  description: Comma-separated list of individual group numbers in
+                    decimal (0-127), hexadecimal, named or decimal range (A-B, where
+                    value of A must be less than the value of B) formats. Example.
+                    0xA,RED,31-33,127
+                  convert_types:
+                  - int
                 include_any:
-                  type: list
-                  items:
-                    type: str
-                    convert_types:
-                    - int
+                  type: str
+                  description: Comma-separated list of individual group numbers in
+                    decimal (0-127), hexadecimal, named or decimal range (A-B, where
+                    value of A must be less than the value of B) formats. Example.
+                    0xA,RED,31-33,127
+                  convert_types:
+                  - int
                 exclude:
-                  type: list
-                  items:
-                    type: str
-                    convert_types:
-                    - int
+                  type: str
+                  description: Comma-separated list of individual group numbers in
+                    decimal (0-127), hexadecimal, named or decimal range (A-B, where
+                    value of A must be less than the value of B) formats. Example.
+                    0xA,RED,31-33,127
+                  convert_types:
+                  - int
             metric:
               type: str
               description: Metric can be specified as an integer or named type, 0
@@ -20914,12 +20920,13 @@ keys:
               - str
               min: 0
               max: 4294967295
-            srlg_excludes:
-              type: list
-              items:
-                type: str
-                convert_types:
-                - int
+            srlg_exclude:
+              type: str
+              description: Comma-separated list of individual SRLG numbers in decimal
+                (0-4294967295), named or decimal range (A-B, where value of A must
+                be less than the value of B) formats. Example. 30-34,55,RED
+              convert_types:
+              - int
   service_routing_configuration_bgp:
     type: dict
     keys:

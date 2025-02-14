@@ -55,19 +55,19 @@
 {%                 if algo.administrative_group is arista.avd.defined %}
 {%                     set admingrp = "" %}
 {%                     if algo.administrative_group.include_all is arista.avd.defined %}
-{%                         set admingrp = admingrp ~ "include-all " ~ algo.administrative_group.include_all | join(",") ~ " " %}
+{%                         set admingrp = admingrp ~ "include-all " ~ algo.administrative_group.include_all ~ " " %}
 {%                     endif %}
 {%                     if algo.administrative_group.include_any is arista.avd.defined %}
-{%                         set admingrp = admingrp ~ "include-any " ~ algo.administrative_group.include_any | join(",") ~ " " %}
+{%                         set admingrp = admingrp ~ "include-any " ~ algo.administrative_group.include_any ~ " " %}
 {%                     endif %}
 {%                     if algo.administrative_group.exclude is arista.avd.defined %}
-{%                         set admingrp = admingrp ~ "exclude " ~ algo.administrative_group.exclude | join(",") %}
+{%                         set admingrp = admingrp ~ "exclude " ~ algo.administrative_group.exclude %}
 {%                     endif %}
 {%                 else %}
 {%                     set admingrp = "-" %}
 {%                 endif %}
-{%                 set srlg_excludes = algo.srlg_excludes | arista.avd.default(["-"]) | join(",") %}
-| {{ algo.number }} | {{ algo.name }} | {{ priority }} | {{ metric }} | {{ color }} | {{ admingrp }} | {{ srlg_excludes }} |
+{%                 set srlg_exclude = algo.srlg_exclude | arista.avd.default("-") %}
+| {{ algo.number }} | {{ algo.name }} | {{ priority }} | {{ metric }} | {{ color }} | {{ admingrp }} | {{ srlg_exclude }} |
 {%             endfor %}
 {%         endif %}
 {%     endif %}
