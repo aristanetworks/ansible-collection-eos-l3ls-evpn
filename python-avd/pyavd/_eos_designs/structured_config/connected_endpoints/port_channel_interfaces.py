@@ -44,13 +44,11 @@ class PortChannelInterfacesMixin(Protocol):
 
                 port_channel_interface_name = f"Port-Channel{channel_group_id}"
 
-                port_channel_interface, structured_config = self._get_port_channel_interface_cfg(
-                    adapter, port_channel_interface_name, channel_group_id, connected_endpoint
-                )
+                port_channel_interface = self._get_port_channel_interface_cfg(adapter, port_channel_interface_name, channel_group_id, connected_endpoint)
                 self.structured_config.port_channel_interfaces.append(port_channel_interface)
-                if structured_config:
+                if adapter.port_channel.structured_config:
                     self.custom_structured_configs.nested.port_channel_interfaces.obtain(port_channel_interface.name)._deepmerge(
-                        structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                        adapter.port_channel.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
                     )
 
                 for subinterface in adapter.port_channel.subinterfaces:
@@ -69,11 +67,9 @@ class PortChannelInterfacesMixin(Protocol):
 
         # Temporary dict of port-channel interfaces to be added by network ports.
         # We need this since network ports can override each other, so the last one "wins"
-        # Dict keyed by interface name. Value is a tuple of the interface config and any structured config for this interface.
-        network_ports_port_channel_interfaces: dict[
-            str, tuple[EosCliConfigGen.PortChannelInterfacesItem, EosCliConfigGen.PortChannelInterfacesItem | None]
-        ] = {}
-
+        # Notice this is keyed by the ethernet interface, so we get duplication check between the members.
+        # Values are the real structured config and the custom structured config for this interface.
+        network_ports_port_channel_interfaces: dict[str, tuple[EosCliConfigGen.PortChannelInterfacesItem, EosCliConfigGen.PortChannelInterfacesItem]] = {}
         for network_port in self._filtered_network_ports:
             if not network_port.port_channel.mode:
                 continue
@@ -100,9 +96,10 @@ class PortChannelInterfacesMixin(Protocol):
                 port_channel_interface_name = f"Port-Channel{channel_group_id}"
 
                 # Using __setitem__ to replace any previous network_port.
-                network_ports_port_channel_interfaces[port_channel_interface_name] = self._get_port_channel_interface_cfg(
+                port_channel_interface = self._get_port_channel_interface_cfg(
                     network_port_as_adapter, port_channel_interface_name, channel_group_id, connected_endpoint
                 )
+                network_ports_port_channel_interfaces[ethernet_interface_name] = port_channel_interface, network_port_as_adapter.port_channel.structured_config
 
         # Now insert into the actual structured config and custom structured config
         for port_channel_interface, structured_config in network_ports_port_channel_interfaces.values():
@@ -118,7 +115,7 @@ class PortChannelInterfacesMixin(Protocol):
         port_channel_interface_name: str,
         channel_group_id: int,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
-    ) -> tuple[EosCliConfigGen.PortChannelInterfacesItem, EosCliConfigGen.PortChannelInterfacesItem | None]:
+    ) -> EosCliConfigGen.PortChannelInterfacesItem:
         """
         Return structured_config for one port_channel_interface.
 
@@ -129,8 +126,7 @@ class PortChannelInterfacesMixin(Protocol):
             connected_endpoint: The connected endpoint item.
 
         Returns:
-            The port-channel interface configuration
-            Any structured config
+            The port-channel interface configuration.
 
         Raises:
             AristaAvdInvalidInputsError: If the 'vlans' value is invalid for the given mode.
@@ -230,7 +226,7 @@ class PortChannelInterfacesMixin(Protocol):
             port_channel_interface.lacp_fallback_mode = adapter.port_channel.lacp_fallback.mode
             port_channel_interface.lacp_fallback_timeout = adapter.port_channel.lacp_fallback.timeout
 
-        return port_channel_interface, adapter.port_channel.structured_config or None
+        return port_channel_interface
 
     def _get_port_channel_subinterface_cfg(
         self: AvdStructuredConfigConnectedEndpointsProtocol,
