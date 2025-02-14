@@ -28,7 +28,7 @@
     - name: "{{ test_id | upper }} Generate random string"
       tags: ["{{ test_id }}"]
       ansible.builtin.set_fact:
-        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+        r: "{{ lookup('env', 'MOLECULE_EXECUTION_ID') or lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
       run_once: true
 
     - name: "{{ test_id | upper }} Dynamically add inactive device avd-ci-core1 to group INACTIVE"

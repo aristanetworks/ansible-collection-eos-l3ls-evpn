@@ -29,7 +29,7 @@
       tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
-        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+        r: "{{ lookup('env', 'MOLECULE_EXECUTION_ID') or lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
 
     - name: "{{ test_id | upper }} Provision with cv_run_change_control = false"
       tags: ["{{ test_id }}"]
