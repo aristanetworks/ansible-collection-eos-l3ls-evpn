@@ -76,3 +76,9 @@ tenants:
             ip_address_virtual: 10.0.4.1/24
             rt_override: 3333:3333
             rd_override: 33333:33333
+          - id: 5
+            name: "VLAN_5"
+            tags: ['test_l3']
+            enabled: true
+            ip_address_virtual: 10.0.5.1/24
+            rd_override: auto

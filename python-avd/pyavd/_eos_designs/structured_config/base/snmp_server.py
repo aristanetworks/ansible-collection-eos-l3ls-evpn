@@ -195,7 +195,7 @@ class SnmpServerMixin(Protocol):
         for local_interface in local_interfaces:
             self.structured_config.snmp_server.local_interfaces.append(EosCliConfigGen.SnmpServer.LocalInterfacesItem(**local_interface))
 
-    def _snmp_vrfs(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> EosDesigns.SnmpSettings.Vrfs:
+    def _snmp_vrfs(self: AvdStructuredConfigBaseProtocol, snmp_settings: EosDesigns.SnmpSettings) -> None:
         """
         Set list of dicts for enabling/disabling SNMP for VRFs.
 
