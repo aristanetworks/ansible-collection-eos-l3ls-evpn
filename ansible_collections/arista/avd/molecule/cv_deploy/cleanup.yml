@@ -10,8 +10,8 @@
     cv_skip_missing_devices: true
     eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
     structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
-    test_id: "global-scenario-cleanup"
-    cv_common_pattern: "avd-cv-deploy_{{ test_id }}"
+    test_id: "scenario-cleanup"
+    cv_common_pattern: "avd_cv-deploy_{{ test_id }}"
 
   tasks:
     - name: "{{ test_id | upper }} Banner"

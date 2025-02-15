@@ -13,7 +13,7 @@
     intended_tag_device: avd-ci-leaf1
     intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
     test_id: "inactive-device_force-ws-true"
-    cv_common_pattern: "avd-cv-deploy_{{ test_id }}"
+    cv_common_pattern: "avd_cv-deploy_{{ test_id }}"
 
   tasks:
     - name: "{{ test_id | upper }} Banner"
