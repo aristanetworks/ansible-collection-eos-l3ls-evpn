@@ -668,6 +668,7 @@ $defs:
                     default: true
               active_active_multihoming:
                 description: Enable Active Active Multihoming architecture for EVPN Gateways.
+                type: dict
                 keys:
                   domain_identifier:
                     type: str
