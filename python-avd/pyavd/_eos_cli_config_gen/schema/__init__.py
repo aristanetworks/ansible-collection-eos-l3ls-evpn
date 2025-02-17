@@ -24826,13 +24826,184 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Sfe(AvdModel):
             """Subclass of AvdModel."""
 
-            _fields: ClassVar[dict] = {"data_plane_cpu_allocation_max": {"type": int}}
+            class Interface(AvdModel):
+                """Subclass of AvdModel."""
+
+                class ProfilesItem(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    class InterfacesItem(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class RxQueue(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}}
+                            count: int | None
+                            """
+                            Number of receive queues.
+                            The maximum value is platform dependent.
+                            """
+                            worker: str | None
+                            """
+                            Worker ids specified as combination of range and/or comma separated values
+                            such as 0-4,7.
+                            """
+                            mode: Literal["shared", "exclusive"] | None
+                            """Mode applicable to the workers. Default mode is 'shared'."""
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    count: int | None | UndefinedType = Undefined,
+                                    worker: str | None | UndefinedType = Undefined,
+                                    mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    RxQueue.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        count:
+                                           Number of receive queues.
+                                           The maximum value is platform dependent.
+                                        worker:
+                                           Worker ids specified as combination of range and/or comma separated values
+                                           such as 0-4,7.
+                                        mode: Mode applicable to the workers. Default mode is 'shared'.
+
+                                    """
+
+                        _fields: ClassVar[dict] = {"name": {"type": str}, "rx_queue": {"type": RxQueue}}
+                        name: str
+                        """Interface name such as 'Ethernet2'."""
+                        rx_queue: RxQueue
+                        """
+                        Receive queue parameters for the selected interface.
+
+                        Subclass of AvdModel.
+                        """
+
+                        if TYPE_CHECKING:
+
+                            def __init__(self, *, name: str | UndefinedType = Undefined, rx_queue: RxQueue | UndefinedType = Undefined) -> None:
+                                """
+                                InterfacesItem.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    name: Interface name such as 'Ethernet2'.
+                                    rx_queue:
+                                       Receive queue parameters for the selected interface.
+
+                                       Subclass of AvdModel.
+
+                                """
+
+                    class Interfaces(AvdIndexedList[str, InterfacesItem]):
+                        """Subclass of AvdIndexedList with `InterfacesItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
+
+                    Interfaces._item_type = InterfacesItem
+
+                    _fields: ClassVar[dict] = {"name": {"type": str}, "interfaces": {"type": Interfaces}}
+                    name: str
+                    """RSS interface profile name."""
+                    interfaces: Interfaces
+                    """
+                    Interfaces within RSS profile.
+
+                    Subclass of AvdIndexedList with `InterfacesItem` items. Primary key
+                    is `name` (`str`).
+                    """
+
+                    if TYPE_CHECKING:
+
+                        def __init__(self, *, name: str | UndefinedType = Undefined, interfaces: Interfaces | UndefinedType = Undefined) -> None:
+                            """
+                            ProfilesItem.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                name: RSS interface profile name.
+                                interfaces:
+                                   Interfaces within RSS profile.
+
+                                   Subclass of AvdIndexedList with `InterfacesItem` items. Primary key
+                                   is `name` (`str`).
+
+                            """
+
+                class Profiles(AvdIndexedList[str, ProfilesItem]):
+                    """Subclass of AvdIndexedList with `ProfilesItem` items. Primary key is `name` (`str`)."""
+
+                    _primary_key: ClassVar[str] = "name"
+
+                Profiles._item_type = ProfilesItem
+
+                _fields: ClassVar[dict] = {"profiles": {"type": Profiles}, "interface_profile": {"type": str}}
+                profiles: Profiles
+                """
+                Configure one or more Receive Side Scaling (RSS) interface profiles.
+                This is supported on specific
+                platforms.
+
+                Subclass of AvdIndexedList with `ProfilesItem` items. Primary key is `name` (`str`).
+                """
+                interface_profile: str | None
+                """
+                RSS interface profile name to apply for the platform.
+                Needs system reload or Sfe agent restart for
+                change to take effect.
+                """
+
+                if TYPE_CHECKING:
+
+                    def __init__(self, *, profiles: Profiles | UndefinedType = Undefined, interface_profile: str | None | UndefinedType = Undefined) -> None:
+                        """
+                        Interface.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            profiles:
+                               Configure one or more Receive Side Scaling (RSS) interface profiles.
+                               This is supported on specific
+                               platforms.
+
+                               Subclass of AvdIndexedList with `ProfilesItem` items. Primary key is `name` (`str`).
+                            interface_profile:
+                               RSS interface profile name to apply for the platform.
+                               Needs system reload or Sfe agent restart for
+                               change to take effect.
+
+                        """
+
+            _fields: ClassVar[dict] = {"data_plane_cpu_allocation_max": {"type": int}, "interface": {"type": Interface}}
             data_plane_cpu_allocation_max: int | None
             """Maximum number of CPUs used for data plane traffic forwarding."""
+            interface: Interface
+            """
+            Configure interface related settings for Sfe platform.
+
+            Subclass of AvdModel.
+            """
 
             if TYPE_CHECKING:
 
-                def __init__(self, *, data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined) -> None:
+                def __init__(
+                    self, *, data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined, interface: Interface | UndefinedType = Undefined
+                ) -> None:
                     """
                     Sfe.
 
@@ -24841,6 +25012,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     Args:
                         data_plane_cpu_allocation_max: Maximum number of CPUs used for data plane traffic forwarding.
+                        interface:
+                           Configure interface related settings for Sfe platform.
+
+                           Subclass of AvdModel.
 
                     """
 
