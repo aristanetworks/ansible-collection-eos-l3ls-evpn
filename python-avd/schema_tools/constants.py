@@ -25,7 +25,7 @@ class SchemaPaths:
     docs_path: Path | None = None
 
 
-# Remember to also updated PICKLED_SCHEMAS in pyavd/_schema/constants.py
+# Remember to also update PICKLED_SCHEMAS in pyavd/_schema/constants.py
 SCHEMAS = {
     "avd_meta_schema": SchemaPaths(
         yaml_file=METASCHEMA_DIR.joinpath("avd_meta_schema.json"),
