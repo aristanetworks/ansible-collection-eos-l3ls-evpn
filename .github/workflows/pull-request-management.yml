@@ -402,7 +402,7 @@ jobs:
         run: |
           pip install -r .github/requirements-ci-dev.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
           ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
-      - name: "Run ansible-test integration test cases"
+      - name: "Run ansible-lint"
         run: |
           cd ansible_collections/arista/avd/
           ansible-lint --force-color --strict -v

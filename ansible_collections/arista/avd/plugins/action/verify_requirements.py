@@ -247,7 +247,7 @@ def _validate_ansible_collections(running_collection_name: str, info: dict) -> b
     valid = True
 
     collection_path = _get_collection_path(running_collection_name)
-    with Path(collection_path, "collections.yml").open("rb") as fd:
+    with Path(collection_path, "requirements.yml").open("rb") as fd:
         metadata = yaml.safe_load(fd)
     if "collections" not in metadata:
         # no requirements
