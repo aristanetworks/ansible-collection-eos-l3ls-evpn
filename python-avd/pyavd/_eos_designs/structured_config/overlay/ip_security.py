@@ -69,9 +69,9 @@ class IpSecurityMixin(Protocol):
 
         expected to be called AFTER _append_data_plane as CP is used for data-plane as well if not configured.
         """
-        ike_policy_name = control_plane_config.ike_policy_name if control_plane_config.ike_policy_name else "CP-IKE-POLICY"
-        sa_policy_name = control_plane_config.sa_policy_name if control_plane_config.sa_policy_name else "CP-SA-POLICY"
-        profile_name = control_plane_config.profile_name if control_plane_config.profile_name else "CP-PROFILE"
+        ike_policy_name = control_plane_config.ike_policy_name
+        sa_policy_name = control_plane_config.sa_policy_name
+        profile_name = control_plane_config.profile_name
         key = control_plane_config.shared_key
 
         self.structured_config.ip_security.ike_policies.append_new(name=ike_policy_name, local_id=self.shared_utils.vtep_ip)
@@ -90,6 +90,7 @@ class IpSecurityMixin(Protocol):
         """
         sa_policy = EosCliConfigGen.IpSecurity.SaPoliciesItem(name=name)
         if self.shared_utils.is_cv_pathfinder_router:
+            # TODO: provide options to change this cv_pathfinder_wide
             sa_policy.esp.encryption = "aes256gcm128"
             sa_policy.pfs_dh_group = 14
         self.structured_config.ip_security.sa_policies.append(sa_policy)
