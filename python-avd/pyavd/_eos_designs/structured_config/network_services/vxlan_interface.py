@@ -23,12 +23,22 @@ if TYPE_CHECKING:
 class VniContext:
     vni: int
     """The VNI."""
-    source_type: Literal["L2VLAN", "VRF", "SVI"]
+    source_type: Literal["L2VLAN", "VRF", "SVI"] = field(compare=False)
     """The source type of the VNI."""
     name: str
     """The VRF name or the VLAN ID as a string."""
     tenant: str = field(compare=False)
     """The tenant name."""
+    real_type: Literal["VLAN", "VRF"] = field(init=False)
+
+    def __post_init__(self) -> None:
+        """
+        Setting real_type to VLAN or VRF based on the source type.
+
+        The field is used in comparison to detect duplicates.
+        """
+        real_type = "VLAN" if self.source_type in ["L2VLAN", "SVI"] else "VRF"
+        object.__setattr__(self, "real_type", real_type)
 
     def __repr__(self) -> str:
         return f"{self.source_type} {self.name} in tenant {self.tenant}"

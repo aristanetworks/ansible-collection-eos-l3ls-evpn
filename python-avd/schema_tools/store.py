@@ -9,7 +9,7 @@ from pickle import HIGHEST_PROTOCOL
 from pickle import dump as pickle_dump
 from pickle import load as pickle_load
 
-from yaml import safe_load
+from yaml import CSafeLoader, load
 
 from .avdschemaresolver import AvdSchemaResolver
 from .constants import PICKLED_SCHEMAS, SCHEMA_PATHS
@@ -78,7 +78,7 @@ def _create_store_from_yaml() -> dict[str, dict]:
     store = {}
     for schema_id, schema_file in SCHEMA_PATHS.items():
         with Path(schema_file).open(encoding="UTF-8") as stream:
-            store[schema_id] = safe_load(stream)
+            store[schema_id] = load(stream=stream, Loader=CSafeLoader)
     return store
 
 
