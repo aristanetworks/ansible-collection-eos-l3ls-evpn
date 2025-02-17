@@ -18566,10 +18566,12 @@ class EosDesigns(EosDesignsRootModel):
                                 pass
 
                             _fields: ClassVar[dict] = {
+                                "d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
                                 "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
                             }
+                            d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
                             evpn_ethernet_segment: EvpnEthernetSegment
@@ -18579,6 +18581,7 @@ class EosDesigns(EosDesignsRootModel):
                                 def __init__(
                                     self,
                                     *,
+                                    d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
                                     evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
@@ -18590,6 +18593,7 @@ class EosDesigns(EosDesignsRootModel):
                                     Subclass of AvdModel.
 
                                     Args:
+                                        d_path: d_path
                                         domain_identifier: domain_identifier
                                         domain_identifier_remote: domain_identifier_remote
                                         evpn_ethernet_segment: evpn_ethernet_segment
@@ -22508,10 +22512,12 @@ class EosDesigns(EosDesignsRootModel):
                                     pass
 
                                 _fields: ClassVar[dict] = {
+                                    "d_path": {"type": bool},
                                     "domain_identifier": {"type": str},
                                     "domain_identifier_remote": {"type": str},
                                     "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
                                 }
+                                d_path: bool | None
                                 domain_identifier: str | None
                                 domain_identifier_remote: str | None
                                 evpn_ethernet_segment: EvpnEthernetSegment
@@ -22521,6 +22527,7 @@ class EosDesigns(EosDesignsRootModel):
                                     def __init__(
                                         self,
                                         *,
+                                        d_path: bool | None | UndefinedType = Undefined,
                                         domain_identifier: str | None | UndefinedType = Undefined,
                                         domain_identifier_remote: str | None | UndefinedType = Undefined,
                                         evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
@@ -22532,6 +22539,7 @@ class EosDesigns(EosDesignsRootModel):
                                         Subclass of AvdModel.
 
                                         Args:
+                                            d_path: d_path
                                             domain_identifier: domain_identifier
                                             domain_identifier_remote: domain_identifier_remote
                                             evpn_ethernet_segment: evpn_ethernet_segment
@@ -26430,10 +26438,12 @@ class EosDesigns(EosDesignsRootModel):
                                 pass
 
                             _fields: ClassVar[dict] = {
+                                "d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
                                 "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
                             }
+                            d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
                             evpn_ethernet_segment: EvpnEthernetSegment
@@ -26443,6 +26453,7 @@ class EosDesigns(EosDesignsRootModel):
                                 def __init__(
                                     self,
                                     *,
+                                    d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
                                     evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
@@ -26454,6 +26465,7 @@ class EosDesigns(EosDesignsRootModel):
                                     Subclass of AvdModel.
 
                                     Args:
+                                        d_path: d_path
                                         domain_identifier: domain_identifier
                                         domain_identifier_remote: domain_identifier_remote
                                         evpn_ethernet_segment: evpn_ethernet_segment
@@ -30399,10 +30411,12 @@ class EosDesigns(EosDesignsRootModel):
                                 pass
 
                             _fields: ClassVar[dict] = {
+                                "d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
                                 "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
                             }
+                            d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
                             evpn_ethernet_segment: EvpnEthernetSegment
@@ -30412,6 +30426,7 @@ class EosDesigns(EosDesignsRootModel):
                                 def __init__(
                                     self,
                                     *,
+                                    d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
                                     evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
@@ -30423,6 +30438,7 @@ class EosDesigns(EosDesignsRootModel):
                                     Subclass of AvdModel.
 
                                     Args:
+                                        d_path: d_path
                                         domain_identifier: domain_identifier
                                         domain_identifier_remote: domain_identifier_remote
                                         evpn_ethernet_segment: evpn_ethernet_segment
@@ -40743,10 +40759,12 @@ class EosDesigns(EosDesignsRootModel):
                                 pass
 
                             _fields: ClassVar[dict] = {
+                                "d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
                                 "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
                             }
+                            d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
                             evpn_ethernet_segment: EvpnEthernetSegment
@@ -40756,6 +40774,7 @@ class EosDesigns(EosDesignsRootModel):
                                 def __init__(
                                     self,
                                     *,
+                                    d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
                                     evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
@@ -40767,6 +40786,7 @@ class EosDesigns(EosDesignsRootModel):
                                     Subclass of AvdModel.
 
                                     Args:
+                                        d_path: d_path
                                         domain_identifier: domain_identifier
                                         domain_identifier_remote: domain_identifier_remote
                                         evpn_ethernet_segment: evpn_ethernet_segment
@@ -44685,10 +44705,12 @@ class EosDesigns(EosDesignsRootModel):
                                     pass
 
                                 _fields: ClassVar[dict] = {
+                                    "d_path": {"type": bool},
                                     "domain_identifier": {"type": str},
                                     "domain_identifier_remote": {"type": str},
                                     "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
                                 }
+                                d_path: bool | None
                                 domain_identifier: str | None
                                 domain_identifier_remote: str | None
                                 evpn_ethernet_segment: EvpnEthernetSegment
@@ -44698,6 +44720,7 @@ class EosDesigns(EosDesignsRootModel):
                                     def __init__(
                                         self,
                                         *,
+                                        d_path: bool | None | UndefinedType = Undefined,
                                         domain_identifier: str | None | UndefinedType = Undefined,
                                         domain_identifier_remote: str | None | UndefinedType = Undefined,
                                         evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
@@ -44709,6 +44732,7 @@ class EosDesigns(EosDesignsRootModel):
                                         Subclass of AvdModel.
 
                                         Args:
+                                            d_path: d_path
                                             domain_identifier: domain_identifier
                                             domain_identifier_remote: domain_identifier_remote
                                             evpn_ethernet_segment: evpn_ethernet_segment
@@ -48607,10 +48631,12 @@ class EosDesigns(EosDesignsRootModel):
                                 pass
 
                             _fields: ClassVar[dict] = {
+                                "d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
                                 "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
                             }
+                            d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
                             evpn_ethernet_segment: EvpnEthernetSegment
@@ -48620,6 +48646,7 @@ class EosDesigns(EosDesignsRootModel):
                                 def __init__(
                                     self,
                                     *,
+                                    d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
                                     evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
@@ -48631,6 +48658,7 @@ class EosDesigns(EosDesignsRootModel):
                                     Subclass of AvdModel.
 
                                     Args:
+                                        d_path: d_path
                                         domain_identifier: domain_identifier
                                         domain_identifier_remote: domain_identifier_remote
                                         evpn_ethernet_segment: evpn_ethernet_segment
@@ -52576,10 +52604,12 @@ class EosDesigns(EosDesignsRootModel):
                                 pass
 
                             _fields: ClassVar[dict] = {
+                                "d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
                                 "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
                             }
+                            d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
                             evpn_ethernet_segment: EvpnEthernetSegment
@@ -52589,6 +52619,7 @@ class EosDesigns(EosDesignsRootModel):
                                 def __init__(
                                     self,
                                     *,
+                                    d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
                                     evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
@@ -52600,6 +52631,7 @@ class EosDesigns(EosDesignsRootModel):
                                     Subclass of AvdModel.
 
                                     Args:
+                                        d_path: d_path
                                         domain_identifier: domain_identifier
                                         domain_identifier_remote: domain_identifier_remote
                                         evpn_ethernet_segment: evpn_ethernet_segment

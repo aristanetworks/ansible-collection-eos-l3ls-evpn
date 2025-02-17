@@ -670,11 +670,13 @@ $defs:
                 description: Enable Active Active Multihoming architecture for EVPN Gateways.
                 type: dict
                 keys:
+                  d_path:
+                    type: bool
                   domain_identifier:
                     type: str
                   domain_identifier_remote:
                     type: str
-                  evpn_ethernet_segment:                  
+                  evpn_ethernet_segment:
                     type: list
                     $ref: eos_cli_config_gen#/keys/router_bgp/keys/address_family_evpn/keys/evpn_ethernet_segment
           ipvpn_gateway:

@@ -659,7 +659,7 @@ class RouterBgpMixin(Protocol):
         return any(ip in ipaddress.ip_network(prefix) for prefix in listen_range_prefixes)
 
     def _bgp_overlay_dpath(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
-        if self.shared_utils.overlay_dpath is True:
+        if self.shared_utils.overlay_dpath is True or self.shared_utils.node_config.evpn_gateway.active_active_multihoming.d_path is True:
             return {
                 "bestpath": {
                     "d_path": True,

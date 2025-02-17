@@ -8558,6 +8558,8 @@ $defs:
                   Gateways.
                 type: dict
                 keys:
+                  d_path:
+                    type: bool
                   domain_identifier:
                     type: str
                   domain_identifier_remote:
