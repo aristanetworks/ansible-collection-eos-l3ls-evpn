@@ -357,6 +357,8 @@ router_bgp:
   bgp:
     default:
       ipv4_unicast: false
+    bestpath:
+      d_path: true
   peer_groups:
   - name: MLAG-IPv4-UNDERLAY-PEER
     type: ipv4
@@ -519,6 +521,8 @@ router_bgp:
 
       '
   address_family_evpn:
+    domain_identifier: '65100:1'
+    domain_identifier_remote: '65200:2'
     neighbor_default:
       next_hop_self_received_evpn_routes:
         enable: true
@@ -531,6 +535,10 @@ router_bgp:
       activate: true
     route:
       import_match_failure_action: discard
+    evpn_ethernet_segment:
+    - domain: all
+      identifier: 0000:0001:0001:0000:0508
+      route_target_import: 00:00:00:00:07:08
   address_family_rtc:
     peer_groups:
     - name: EVPN-OVERLAY-CORE

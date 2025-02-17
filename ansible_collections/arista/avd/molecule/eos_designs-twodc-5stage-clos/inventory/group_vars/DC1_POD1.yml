@@ -111,6 +111,14 @@ l3leaf:
           # mgmt_ip: 192.168.1.8/16 Test without management IP
           # uplink_switch_interfaces: [Ethernet4, Ethernet4, Ethernet7, Ethernet7] Test with "use_cv_topology"
           evpn_gateway:
+            active_active_multihoming:
+              d_path: true
+              domain_identifier: "65100:1"
+              domain_identifier_remote: "65200:2"
+              evpn_ethernet_segment:
+                - domain: all
+                  identifier: 0000:0001:0001:0000:0508
+                  route_target_import: 00:00:00:00:07:08
             remote_peers:
               - hostname: DC1-POD2-LEAF1A
             evpn_l2:
@@ -123,6 +131,14 @@ l3leaf:
           mgmt_ip: 192.168.1.9/16
           # uplink_switch_interfaces: [Ethernet5, Ethernet5, Ethernet8, Ethernet8] Test with "use_cv_topology"
           evpn_gateway:
+            active_active_multihoming:
+              d_path: true
+              domain_identifier: "65100:1"
+              domain_identifier_remote: "65200:2"
+              evpn_ethernet_segment:
+                - domain: all
+                  identifier: 0000:0001:0001:0000:0508
+                  route_target_import: 00:00:00:00:07:08
             remote_peers:
               - hostname: HOSTNAME_NOT_IN_ANSIBLE
                 ip_address: 1.1.1.1

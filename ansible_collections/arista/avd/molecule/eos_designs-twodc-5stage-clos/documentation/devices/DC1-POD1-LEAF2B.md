@@ -787,6 +787,7 @@ ASN Notation: asplain
 | BGP Tuning |
 | ---------- |
 | distance bgp 20 200 200 |
+| bgp bestpath d-path |
 | update wait-install |
 | no bgp default ipv4-unicast |
 | maximum-paths 4 ecmp 4 |
@@ -863,8 +864,12 @@ ASN Notation: asplain
 
 | Settings | Value |
 | -------- | ----- |
+| Local Domain | 65100:1 |
+| Remote Domain | 65200:2 |
 | Remote Domain Peer Groups | EVPN-OVERLAY-CORE |
 | L3 Gateway Configured | True |
+| All Domain: Ethernet-Segment Identifier | 0000:0001:0001:0000:0508 |
+| All Domain: Ethernet-Segment import Route-Target | 00:00:00:00:07:08 |
 
 #### Router BGP VLANs
 
@@ -895,6 +900,7 @@ router bgp 65112.100
    no bgp default ipv4-unicast
    maximum-paths 4 ecmp 4
    distance bgp 20 200 200
+   bgp bestpath d-path
    neighbor EVPN-OVERLAY-CORE peer group
    neighbor EVPN-OVERLAY-CORE update-source Loopback0
    neighbor EVPN-OVERLAY-CORE bfd
@@ -1020,8 +1026,14 @@ router bgp 65112.100
       neighbor EVPN-OVERLAY-CORE activate
       neighbor EVPN-OVERLAY-CORE domain remote
       neighbor EVPN-OVERLAY-PEERS activate
+      domain identifier 65100:1
+      domain identifier 65200:2 remote
       route import match-failure action discard
       neighbor default next-hop-self received-evpn-routes route-type ip-prefix
+      !
+      evpn ethernet-segment domain all
+         identifier 0000:0001:0001:0000:0508
+         route-target import 00:00:00:00:07:08
    !
    address-family ipv4
       no neighbor EVPN-OVERLAY-CORE activate
