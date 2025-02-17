@@ -3,8 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
+
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigOverlayProtocol
@@ -17,26 +19,16 @@ class IpExtCommunityListsMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def ip_extcommunity_lists(self: AvdStructuredConfigOverlayProtocol) -> list | None:
-        """Return structured config for ip_extcommunity_lists."""
+    @structured_config_contributor
+    def ip_extcommunity_lists(self: AvdStructuredConfigOverlayProtocol) -> None:
+        """Set the structured config for ip_extcommunity_lists."""
         if self.shared_utils.overlay_routing_protocol != "ibgp":
-            return None
+            return
 
         if self.shared_utils.evpn_role == "server" and not self.shared_utils.is_wan_router:
-            return None
+            return
 
         if self.shared_utils.overlay_vtep:
-            return [
-                {
-                    "name": "ECL-EVPN-SOO",
-                    "entries": [
-                        {
-                            "type": "permit",
-                            "extcommunities": f"soo {self.shared_utils.evpn_soo}",
-                        },
-                    ],
-                },
-            ]
-
-        return None
+            ip_extcommunity_list = EosCliConfigGen.IpExtcommunityListsItem(name="ECL-EVPN-SOO")
+            ip_extcommunity_list.entries.append_new(type="permit", extcommunities=f"soo {self.shared_utils.evpn_soo}")
+            self.structured_config.ip_extcommunity_lists.append(ip_extcommunity_list)
