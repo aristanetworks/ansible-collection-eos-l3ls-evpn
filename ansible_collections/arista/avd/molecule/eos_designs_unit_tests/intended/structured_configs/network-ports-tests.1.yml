@@ -682,6 +682,7 @@ ethernet_interfaces:
   peer_type: network_port
   switchport:
     enabled: true
+    access_vlan: 123
 - name: Ethernet52
   shutdown: true
   peer_type: network_port
@@ -703,6 +704,34 @@ ethernet_interfaces:
   peer_type: network_port
   switchport:
     enabled: true
+- name: Ethernet20
+  description: Single overwrite
+  shutdown: false
+  peer_type: network_port
+  switchport:
+    enabled: true
+    access_vlan: 42
+- name: Ethernet21
+  description: Range
+  shutdown: false
+  peer_type: network_port
+  switchport:
+    enabled: true
+    access_vlan: 666
+- name: Ethernet22
+  description: Single overwrite
+  shutdown: false
+  channel_group:
+    id: 222
+    mode: active
+  peer_type: network_port
+- name: Ethernet23
+  description: Range
+  shutdown: false
+  channel_group:
+    id: 222
+    mode: active
+  peer_type: network_port
 hostname: network-ports-tests.1
 ip_igmp_snooping:
   globally_enabled: true
@@ -731,6 +760,13 @@ port_channel_interfaces:
     trunk:
       groups:
       - MLAG
+- name: Port-Channel222
+  description: Range
+  shutdown: false
+  mlag: 222
+  switchport:
+    enabled: true
+    access_vlan: 666
 service_routing_protocols_model: multi-agent
 spanning_tree:
   no_spanning_tree_vlan: '4094'
