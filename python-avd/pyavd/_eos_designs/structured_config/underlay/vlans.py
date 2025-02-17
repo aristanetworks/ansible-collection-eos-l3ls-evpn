@@ -35,9 +35,10 @@ class VlansMixin(Protocol):
         # TODO: - can probably do this with sets but need list in the end so not sure it is worth it
         for vlan_trunk_group in self._underlay_vlan_trunk_groups:
             for vlan in range_expand(vlan_trunk_group["vlan_list"]):
-                new_vlan = EosCliConfigGen.VlansItem(id=int(vlan))
-                new_vlan.trunk_groups.extend(vlan_trunk_group["trunk_groups"])
-                self.structured_config.vlans.append(new_vlan, ignore_fields=("trunk_groups",))
+                self.structured_config.vlans.obtain(int(vlan)).trunk_groups.extend(vlan_trunk_group["trunk_groups"])
+
+        for vlan in self.structured_config.vlans:
+            vlan.trunk_groups = EosCliConfigGen.VlansItem.TrunkGroups(natural_sort(set(vlan.trunk_groups)))
 
         # Add configuration for uplink or peer's uplink_native_vlan if it is not defined as part of network services
         switch_vlans = range_expand(get(self._hostvars, "switch.vlans"))

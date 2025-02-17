@@ -486,12 +486,14 @@ vlans:
 - id: 200
   name: svi200_with_trunk_groups
   trunk_groups:
+  - trunk-group-tests-l2leaf3
   - TRUNK_GROUP_TESTS_L2LEAF1
   - CUSTOM_MLAG_TG_NAME
   tenant: TRUNK_GROUP_TESTS
 - id: 210
   name: l2vlan210_with_trunk_groups
   trunk_groups:
+  - trunk-group-tests-l2leaf3
   - TRUNK_GROUP_TESTS_L2LEAF1
   - CUSTOM_MLAG_TG_NAME
   tenant: TRUNK_GROUP_TESTS
