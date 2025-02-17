@@ -1,0 +1,34 @@
+{#
+ Copyright (c) 2023-2025 Arista Networks, Inc.
+ Use of this source code is governed by the Apache License 2.0
+ that can be found in the LICENSE file.
+#}
+{# eos - platform sfe interface #}
+{% if platform.sfe.interface is arista.avd.defined %}
+!
+platform sfe interface
+{# interface profile to apply #}
+{%     if platform.sfe.interface.interface_profile is arista.avd.defined %}
+   interface profile {{ platform.sfe.interface.interface_profile }}
+{%     endif %}
+{%     for profile_data in platform.sfe.interface.profiles | arista.avd.natural_sort('name') %}
+{# profiles available #}
+   !
+   profile {{ profile_data.name }}
+{%         for interface_data in profile_data.interfaces | arista.avd.natural_sort('name') %}
+      interface {{ interface_data.name }}
+{%             if interface_data.rx_queue.count is arista.avd.defined %}
+         rx-queue count {{ interface_data.rx_queue.count }}
+{%             endif %}
+{%             if interface_data.rx_queue.worker is arista.avd.defined %}
+         rx-queue worker {{ interface_data.rx_queue.worker }}
+{%             endif %}
+{%             if interface_data.rx_queue.mode is arista.avd.defined %}
+         rx-queue mode {{ interface_data.rx_queue.mode }}
+{%             endif %}
+{%             if not loop.last %}
+      !
+{%             endif %}
+{%         endfor %}
+{%     endfor %}
+{% endif %}

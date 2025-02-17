@@ -83,6 +83,31 @@
 {%             if platform.sfe.data_plane_cpu_allocation_max is arista.avd.defined %}
 | Maximum CPU Allocation | {{ platform.sfe.data_plane_cpu_allocation_max }} |
 {%             endif %}
+{## Platform Sfe Interface #}
+{%             if platform.sfe.interface is arista.avd.defined %}
+{%                 if platform.sfe.interface.interface_profile is arista.avd.defined %}
+| Interface profile | {{ platform.sfe.interface.interface_profile }} |
+{%                 endif %}
+{%                 if platform.sfe.interface.profiles is arista.avd.defined %}
+
+#### Platform Software Forwarding Engine Interface Profiles
+{%                     for profile_data in platform.sfe.interface.profiles | arista.avd.natural_sort('name') %}
+
+##### {{ profile_data.name }}
+{%                         if profile_data.interfaces is arista.avd.defined %}
+
+| Interface | Rx-Queue Count | Rx-Queue Worker | Rx-Queue Mode |
+| --------- | -------------- | --------------- | ------------- |
+{%                             for interface_data in profile_data.interfaces | arista.avd.natural_sort('name') %}
+{%                                 set rx_queue_count = interface_data.rx_queue.count | arista.avd.default('-') %}
+{%                                 set rx_queue_worker = interface_data.rx_queue.worker | arista.avd.default('-') %}
+{%                                 set rx_queue_mode = interface_data.rx_queue.mode | arista.avd.default('-') %}
+| {{ interface_data.name }} | {{ rx_queue_count }} | {{ rx_queue_worker }} | {{ rx_queue_mode }} |
+{%                             endfor %}
+{%                         endif %}
+{%                     endfor %}
+{%                 endif %}
+{%             endif %}
 {%         endif %}
 {%     endif %}
 
@@ -90,5 +115,6 @@
 
 ```eos
 {%     include 'eos/platform.j2' %}
+{%     include 'eos/platform-sfe-interface.j2' %}
 ```
 {% endif %}
