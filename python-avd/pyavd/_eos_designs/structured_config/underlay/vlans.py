@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
-from pyavd._utils import get, get_item
+from pyavd._utils import get
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
@@ -32,16 +32,12 @@ class VlansMixin(Protocol):
 
         The function also creates uplink_native_vlan for this switch or downstream switches.
         """
-        vlans = []
         # TODO: - can probably do this with sets but need list in the end so not sure it is worth it
         for vlan_trunk_group in self._underlay_vlan_trunk_groups:
             for vlan in range_expand(vlan_trunk_group["vlan_list"]):
-                if (found_vlan := get_item(vlans, "id", int(vlan))) is None:
-                    new_vlan = EosCliConfigGen.VlansItem(id=int(vlan))
-                    new_vlan.trunk_groups.extend(vlan_trunk_group["trunk_groups"])
-                    self.structured_config.vlans.append(new_vlan)
-                else:
-                    found_vlan["trunk_groups"].extend(vlan_trunk_group["trunk_groups"])
+                new_vlan = EosCliConfigGen.VlansItem(id=int(vlan))
+                new_vlan.trunk_groups.extend(vlan_trunk_group["trunk_groups"])
+                self.structured_config.vlans.append(new_vlan, ignore_fields=("trunk_groups",))
 
         # Add configuration for uplink or peer's uplink_native_vlan if it is not defined as part of network services
         switch_vlans = range_expand(get(self._hostvars, "switch.vlans"))
@@ -49,5 +45,4 @@ class VlansMixin(Protocol):
             {link["native_vlan"] for link in self._underlay_links if "native_vlan" in link and str(link["native_vlan"]) not in switch_vlans},
         )
         for peer_uplink_native_vlan in uplink_native_vlans:
-            new_vlan = EosCliConfigGen.VlansItem(id=int(peer_uplink_native_vlan), name="NATIVE", state="suspend")
-            self.structured_config.vlans.append(new_vlan)
+            self.structured_config.vlans.append_new(id=int(peer_uplink_native_vlan), name="NATIVE", state="suspend")
