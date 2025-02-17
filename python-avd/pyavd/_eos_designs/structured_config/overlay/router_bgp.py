@@ -247,6 +247,10 @@ class RouterBgpMixin(Protocol):
                         "inter_domain": self.shared_utils.node_config.evpn_gateway.evpn_l3.inter_domain,
                     },
                 }
+            if self.shared_utils.node_config.evpn_gateway.active_active_multihoming:
+                address_family_evpn["domain_identifier"] = self.shared_utils.node_config.evpn_gateway.active_active_multihoming.domain_identifier
+                address_family_evpn["domain_identifier_remote"] = self.shared_utils.node_config.evpn_gateway.active_active_multihoming.domain_identifier_remote
+                address_family_evpn["evpn_ethernet_segment"] = self.shared_utils.node_config.evpn_gateway.active_active_multihoming.evpn_ethernet_segment
 
         if self.shared_utils.overlay_routing_protocol == "ibgp":
             # TODO: - assess this condition - both can't be true at the same time.

@@ -666,6 +666,16 @@ $defs:
                   inter_domain:
                     type: bool
                     default: true
+              active_active_multihoming:
+                description: Enable Active Active Multihoming architecture for EVPN Gateways.
+                keys:
+                  domain_identifier:
+                    type: str
+                  domain_identifier_remote:
+                    type: str
+                  evpn_ethernet_segment:                  
+                    type: list
+                    $ref: eos_cli_config_gen#/keys/router_bgp/keys/address_family_evpn/keys/evpn_ethernet_segment
           ipvpn_gateway:
             documentation_options:
               table: node-type-evpn-ipvpn-gateway-configuration

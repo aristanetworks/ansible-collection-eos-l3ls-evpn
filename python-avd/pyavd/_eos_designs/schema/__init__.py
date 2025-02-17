@@ -18559,7 +18559,47 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
-                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}}
+                        class ActiveActiveMultihoming(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.EvpnEthernetSegment):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "domain_identifier": {"type": str},
+                                "domain_identifier_remote": {"type": str},
+                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                            }
+                            domain_identifier: str | None
+                            """Local EVPN domain identifier."""
+                            domain_identifier_remote: str | None
+                            """Remote EVPN domain identifier"""                            
+                            evpn_ethernet_segment: EvpnEthernetSegment
+                            """Subclass of AvdModel."""
+
+                            if TYPE_CHECKING:
+                            
+                                def __init__(
+                                    self,
+                                    *,
+                                    domain_identifier: str | None | UndefinedType = Undefined,
+                                    domain_identifier_remote: str | None | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Active active multihoming.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        domain_identifier: Local EVPN domain identifier.
+                                        domain_identifier_remote : Remote EVPN domain identifier.
+                                        evpn_ethernet_segment: Subclass of AvdModel.
+
+                                    """
+
+                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}, "active_active_multihoming": {"type": ActiveActiveMultihoming}}
                         remote_peers: RemotePeers
                         """
                         Define remote peers of the EVPN VXLAN Gateway.
@@ -18584,6 +18624,12 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        active_active_multihoming: ActiveActiveMultihoming
+                        """
+                        Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                        Subclass of AvdModel.
+                        """
 
                         if TYPE_CHECKING:
 
@@ -18593,6 +18639,7 @@ class EosDesigns(EosDesignsRootModel):
                                 remote_peers: RemotePeers | UndefinedType = Undefined,
                                 evpn_l2: EvpnL2 | UndefinedType = Undefined,
                                 evpn_l3: EvpnL3 | UndefinedType = Undefined,
+                                active_active_multihoming: ActiveActiveMultihoming | UndefinedType = Undefined,
                             ) -> None:
                                 """
                                 EvpnGateway.
@@ -18619,7 +18666,10 @@ class EosDesigns(EosDesignsRootModel):
                                        Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX).
 
                                        Subclass of AvdModel.
+                                    active_active_multihoming:
+                                        Enable Active Active Multihoming architecture for EVPN Gateways.
 
+                                        Subclass of AvdModel.                                                                          
                                 """
 
                     class IpvpnGateway(AvdModel):
@@ -22448,7 +22498,47 @@ class EosDesigns(EosDesignsRootModel):
 
                                         """
 
-                            _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}}
+                            class ActiveActiveMultihoming(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.EvpnEthernetSegment):
+                                    """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {
+                                    "domain_identifier": {"type": str},
+                                    "domain_identifier_remote": {"type": str},
+                                    "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                }
+                                domain_identifier: str | None
+                                """Local EVPN domain identifier."""
+                                domain_identifier_remote: str | None
+                                """Remote EVPN domain identifier"""                            
+                                evpn_ethernet_segment: EvpnEthernetSegment
+                                """Subclass of AvdModel."""
+
+                                if TYPE_CHECKING:
+                                
+                                    def __init__(
+                                        self,
+                                        *,
+                                        domain_identifier: str | None | UndefinedType = Undefined,
+                                        domain_identifier_remote: str | None | UndefinedType = Undefined,
+                                        evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        Active active multihoming.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            domain_identifier: Local EVPN domain identifier.
+                                            domain_identifier_remote : Remote EVPN domain identifier.
+                                            evpn_ethernet_segment: Subclass of AvdModel.
+
+                                        """
+
+                            _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}, "active_active_multihoming": {"type": ActiveActiveMultihoming}}
                             remote_peers: RemotePeers
                             """
                             Define remote peers of the EVPN VXLAN Gateway.
@@ -22473,6 +22563,12 @@ class EosDesigns(EosDesignsRootModel):
 
                             Subclass of AvdModel.
                             """
+                            active_active_multihoming: ActiveActiveMultihoming
+                            """
+                            Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                            Subclass of AvdModel.
+                            """
 
                             if TYPE_CHECKING:
 
@@ -22482,6 +22578,7 @@ class EosDesigns(EosDesignsRootModel):
                                     remote_peers: RemotePeers | UndefinedType = Undefined,
                                     evpn_l2: EvpnL2 | UndefinedType = Undefined,
                                     evpn_l3: EvpnL3 | UndefinedType = Undefined,
+                                    active_active_multihoming: ActiveActiveMultihoming | UndefinedType = Undefined,
                                 ) -> None:
                                     """
                                     EvpnGateway.
@@ -22508,7 +22605,10 @@ class EosDesigns(EosDesignsRootModel):
                                            Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX).
 
                                            Subclass of AvdModel.
+                                        active_active_multihoming:
+                                            Enable Active Active Multihoming architecture for EVPN Gateways.
 
+                                            Subclass of AvdModel.   
                                     """
 
                         class IpvpnGateway(AvdModel):
@@ -26317,7 +26417,47 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
-                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}}
+                        class ActiveActiveMultihoming(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.EvpnEthernetSegment):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "domain_identifier": {"type": str},
+                                "domain_identifier_remote": {"type": str},
+                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                            }
+                            domain_identifier: str | None
+                            """Local EVPN domain identifier."""
+                            domain_identifier_remote: str | None
+                            """Remote EVPN domain identifier"""                            
+                            evpn_ethernet_segment: EvpnEthernetSegment
+                            """Subclass of AvdModel."""
+
+                            if TYPE_CHECKING:
+                            
+                                def __init__(
+                                    self,
+                                    *,
+                                    domain_identifier: str | None | UndefinedType = Undefined,
+                                    domain_identifier_remote: str | None | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Active active multihoming.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        domain_identifier: Local EVPN domain identifier.
+                                        domain_identifier_remote : Remote EVPN domain identifier.
+                                        evpn_ethernet_segment: Subclass of AvdModel.
+
+                                    """
+
+                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}, "active_active_multihoming": {"type": ActiveActiveMultihoming}}
                         remote_peers: RemotePeers
                         """
                         Define remote peers of the EVPN VXLAN Gateway.
@@ -26342,6 +26482,12 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        active_active_multihoming: ActiveActiveMultihoming
+                        """
+                        Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                        Subclass of AvdModel.
+                        """
 
                         if TYPE_CHECKING:
 
@@ -26351,6 +26497,7 @@ class EosDesigns(EosDesignsRootModel):
                                 remote_peers: RemotePeers | UndefinedType = Undefined,
                                 evpn_l2: EvpnL2 | UndefinedType = Undefined,
                                 evpn_l3: EvpnL3 | UndefinedType = Undefined,
+                                active_active_multihoming: ActiveActiveMultihoming | UndefinedType = Undefined,
                             ) -> None:
                                 """
                                 EvpnGateway.
@@ -26377,6 +26524,10 @@ class EosDesigns(EosDesignsRootModel):
                                        Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX).
 
                                        Subclass of AvdModel.
+                                    active_active_multihoming:
+                                        Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                                        Subclass of AvdModel.
 
                                 """
 
@@ -30233,7 +30384,47 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
-                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}}
+                        class ActiveActiveMultihoming(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.EvpnEthernetSegment):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "domain_identifier": {"type": str},
+                                "domain_identifier_remote": {"type": str},
+                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                            }
+                            domain_identifier: str | None
+                            """Local EVPN domain identifier."""
+                            domain_identifier_remote: str | None
+                            """Remote EVPN domain identifier"""                            
+                            evpn_ethernet_segment: EvpnEthernetSegment
+                            """Subclass of AvdModel."""
+
+                            if TYPE_CHECKING:
+                            
+                                def __init__(
+                                    self,
+                                    *,
+                                    domain_identifier: str | None | UndefinedType = Undefined,
+                                    domain_identifier_remote: str | None | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Active active multihoming.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        domain_identifier: Local EVPN domain identifier.
+                                        domain_identifier_remote : Remote EVPN domain identifier.
+                                        evpn_ethernet_segment: Subclass of AvdModel.
+
+                                    """
+
+                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}, "active_active_multihoming": {"type": ActiveActiveMultihoming}}
                         remote_peers: RemotePeers
                         """
                         Define remote peers of the EVPN VXLAN Gateway.
@@ -30258,6 +30449,12 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        active_active_multihoming: ActiveActiveMultihoming
+                        """
+                        Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                        Subclass of AvdModel.
+                        """
 
                         if TYPE_CHECKING:
 
@@ -30267,6 +30464,7 @@ class EosDesigns(EosDesignsRootModel):
                                 remote_peers: RemotePeers | UndefinedType = Undefined,
                                 evpn_l2: EvpnL2 | UndefinedType = Undefined,
                                 evpn_l3: EvpnL3 | UndefinedType = Undefined,
+                                active_active_multihoming: ActiveActiveMultihoming | UndefinedType = Undefined,
                             ) -> None:
                                 """
                                 EvpnGateway.
@@ -30293,7 +30491,10 @@ class EosDesigns(EosDesignsRootModel):
                                        Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX).
 
                                        Subclass of AvdModel.
+                                    active_active_multihoming:
+                                        Enable Active Active Multihoming architecture for EVPN Gateways.
 
+                                        Subclass of AvdModel.
                                 """
 
                     class IpvpnGateway(AvdModel):
@@ -40523,8 +40724,47 @@ class EosDesigns(EosDesignsRootModel):
                                         inter_domain: inter_domain
 
                                     """
+                        class ActiveActiveMultihoming(AvdModel):
+                            """Subclass of AvdModel."""
 
-                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}}
+                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.EvpnEthernetSegment):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "domain_identifier": {"type": str},
+                                "domain_identifier_remote": {"type": str},
+                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                            }
+                            domain_identifier: str | None
+                            """Local EVPN domain identifier."""
+                            domain_identifier_remote: str | None
+                            """Remote EVPN domain identifier"""                            
+                            evpn_ethernet_segment: EvpnEthernetSegment
+                            """Subclass of AvdModel."""
+
+                            if TYPE_CHECKING:
+                            
+                                def __init__(
+                                    self,
+                                    *,
+                                    domain_identifier: str | None | UndefinedType = Undefined,
+                                    domain_identifier_remote: str | None | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Active active multihoming.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        domain_identifier: Local EVPN domain identifier.
+                                        domain_identifier_remote : Remote EVPN domain identifier.
+                                        evpn_ethernet_segment: Subclass of AvdModel.
+
+                                    """
+
+                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}, "active_active_multihoming": {"type": ActiveActiveMultihoming}}
                         remote_peers: RemotePeers
                         """
                         Define remote peers of the EVPN VXLAN Gateway.
@@ -40549,6 +40789,12 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        active_active_multihoming: ActiveActiveMultihoming
+                        """
+                        Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                        Subclass of AvdModel.
+                        """
 
                         if TYPE_CHECKING:
 
@@ -40558,6 +40804,7 @@ class EosDesigns(EosDesignsRootModel):
                                 remote_peers: RemotePeers | UndefinedType = Undefined,
                                 evpn_l2: EvpnL2 | UndefinedType = Undefined,
                                 evpn_l3: EvpnL3 | UndefinedType = Undefined,
+                                active_active_multihoming: ActiveActiveMultihoming | UndefinedType = Undefined,
                             ) -> None:
                                 """
                                 EvpnGateway.
@@ -40584,6 +40831,10 @@ class EosDesigns(EosDesignsRootModel):
                                        Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX).
 
                                        Subclass of AvdModel.
+                                    active_active_multihoming:
+                                        Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                                        Subclass of AvdModel. 
 
                                 """
 
@@ -44413,7 +44664,47 @@ class EosDesigns(EosDesignsRootModel):
 
                                         """
 
-                            _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}}
+                            class ActiveActiveMultihoming(AvdModel):
+                                """Subclass of AvdModel."""
+    
+                                class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.EvpnEthernetSegment):
+                                    """Subclass of AvdModel."""
+    
+                                _fields: ClassVar[dict] = {
+                                    "domain_identifier": {"type": str},
+                                    "domain_identifier_remote": {"type": str},
+                                    "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                }
+                                domain_identifier: str | None
+                                """Local EVPN domain identifier."""
+                                domain_identifier_remote: str | None
+                                """Remote EVPN domain identifier"""                            
+                                evpn_ethernet_segment: EvpnEthernetSegment
+                                """Subclass of AvdModel."""
+    
+                                if TYPE_CHECKING:
+                                
+                                    def __init__(
+                                        self,
+                                        *,
+                                        domain_identifier: str | None | UndefinedType = Undefined,
+                                        domain_identifier_remote: str | None | UndefinedType = Undefined,
+                                        evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        Active active multihoming.
+    
+    
+                                        Subclass of AvdModel.
+    
+                                        Args:
+                                            domain_identifier: Local EVPN domain identifier.
+                                            domain_identifier_remote : Remote EVPN domain identifier.
+                                            evpn_ethernet_segment: Subclass of AvdModel.
+    
+                                        """
+
+                            _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}, "active_active_multihoming": {"type": ActiveActiveMultihoming}}
                             remote_peers: RemotePeers
                             """
                             Define remote peers of the EVPN VXLAN Gateway.
@@ -44438,6 +44729,12 @@ class EosDesigns(EosDesignsRootModel):
 
                             Subclass of AvdModel.
                             """
+                            active_active_multihoming: ActiveActiveMultihoming
+                            """
+                            Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                            Subclass of AvdModel.
+                            """
 
                             if TYPE_CHECKING:
 
@@ -44447,6 +44744,7 @@ class EosDesigns(EosDesignsRootModel):
                                     remote_peers: RemotePeers | UndefinedType = Undefined,
                                     evpn_l2: EvpnL2 | UndefinedType = Undefined,
                                     evpn_l3: EvpnL3 | UndefinedType = Undefined,
+                                    active_active_multihoming: ActiveActiveMultihoming | UndefinedType = Undefined,
                                 ) -> None:
                                     """
                                     EvpnGateway.
@@ -44473,6 +44771,10 @@ class EosDesigns(EosDesignsRootModel):
                                            Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX).
 
                                            Subclass of AvdModel.
+                                        active_active_multihoming:
+                                            Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                                            Subclass of AvdModel. 
 
                                     """
 
@@ -48282,7 +48584,47 @@ class EosDesigns(EosDesignsRootModel):
 
                                     """
 
-                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}}
+                        class ActiveActiveMultihoming(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.EvpnEthernetSegment):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "domain_identifier": {"type": str},
+                                "domain_identifier_remote": {"type": str},
+                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                            }
+                            domain_identifier: str | None
+                            """Local EVPN domain identifier."""
+                            domain_identifier_remote: str | None
+                            """Remote EVPN domain identifier"""                            
+                            evpn_ethernet_segment: EvpnEthernetSegment
+                            """Subclass of AvdModel."""
+
+                            if TYPE_CHECKING:
+                            
+                                def __init__(
+                                    self,
+                                    *,
+                                    domain_identifier: str | None | UndefinedType = Undefined,
+                                    domain_identifier_remote: str | None | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Active active multihoming.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        domain_identifier: Local EVPN domain identifier.
+                                        domain_identifier_remote : Remote EVPN domain identifier.
+                                        evpn_ethernet_segment: Subclass of AvdModel.
+
+                                    """
+
+                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}, "active_active_multihoming": {"type": ActiveActiveMultihoming}}
                         remote_peers: RemotePeers
                         """
                         Define remote peers of the EVPN VXLAN Gateway.
@@ -48307,6 +48649,12 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        active_active_multihoming: ActiveActiveMultihoming
+                        """
+                        Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                        Subclass of AvdModel.
+                        """
 
                         if TYPE_CHECKING:
 
@@ -48316,6 +48664,7 @@ class EosDesigns(EosDesignsRootModel):
                                 remote_peers: RemotePeers | UndefinedType = Undefined,
                                 evpn_l2: EvpnL2 | UndefinedType = Undefined,
                                 evpn_l3: EvpnL3 | UndefinedType = Undefined,
+                                active_active_multihoming: ActiveActiveMultihoming | UndefinedType = Undefined,
                             ) -> None:
                                 """
                                 EvpnGateway.
@@ -48342,7 +48691,10 @@ class EosDesigns(EosDesignsRootModel):
                                        Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX).
 
                                        Subclass of AvdModel.
+                                    active_active_multihoming:
+                                        Enable Active Active Multihoming architecture for EVPN Gateways.
 
+                                        Subclass of AvdModel.  
                                 """
 
                     class IpvpnGateway(AvdModel):
@@ -52197,8 +52549,48 @@ class EosDesigns(EosDesignsRootModel):
                                         inter_domain: inter_domain
 
                                     """
+                                    
+                        class ActiveActiveMultihoming(AvdModel):
+                            """Subclass of AvdModel."""
 
-                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}}
+                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.EvpnEthernetSegment):
+                                """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "domain_identifier": {"type": str},
+                                "domain_identifier_remote": {"type": str},
+                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                            }
+                            domain_identifier: str | None
+                            """Local EVPN domain identifier."""
+                            domain_identifier_remote: str | None
+                            """Remote EVPN domain identifier"""                            
+                            evpn_ethernet_segment: EvpnEthernetSegment
+                            """Subclass of AvdModel."""
+
+                            if TYPE_CHECKING:
+                            
+                                def __init__(
+                                    self,
+                                    *,
+                                    domain_identifier: str | None | UndefinedType = Undefined,
+                                    domain_identifier_remote: str | None | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Active active multihoming.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        domain_identifier: Local EVPN domain identifier.
+                                        domain_identifier_remote : Remote EVPN domain identifier.
+                                        evpn_ethernet_segment: Subclass of AvdModel.
+
+                                    """
+
+                        _fields: ClassVar[dict] = {"remote_peers": {"type": RemotePeers}, "evpn_l2": {"type": EvpnL2}, "evpn_l3": {"type": EvpnL3}, "active_active_multihoming": {"type": ActiveActiveMultihoming}}
                         remote_peers: RemotePeers
                         """
                         Define remote peers of the EVPN VXLAN Gateway.
@@ -52223,6 +52615,12 @@ class EosDesigns(EosDesignsRootModel):
 
                         Subclass of AvdModel.
                         """
+                        active_active_multihoming: ActiveActiveMultihoming
+                        """
+                        Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                        Subclass of AvdModel.
+                        """
 
                         if TYPE_CHECKING:
 
@@ -52232,6 +52630,7 @@ class EosDesigns(EosDesignsRootModel):
                                 remote_peers: RemotePeers | UndefinedType = Undefined,
                                 evpn_l2: EvpnL2 | UndefinedType = Undefined,
                                 evpn_l3: EvpnL3 | UndefinedType = Undefined,
+                                active_active_multihoming: ActiveActiveMultihoming | UndefinedType = Undefined,
                             ) -> None:
                                 """
                                 EvpnGateway.
@@ -52258,6 +52657,10 @@ class EosDesigns(EosDesignsRootModel):
                                        Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX).
 
                                        Subclass of AvdModel.
+                                    active_active_multihoming:
+                                        Enable Active Active Multihoming architecture for EVPN Gateways.
+
+                                        Subclass of AvdModel.  
 
                                 """
 
