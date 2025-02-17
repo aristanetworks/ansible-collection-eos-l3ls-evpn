@@ -49,18 +49,15 @@ class IpSecurityMixin(Protocol):
 
     def _append_data_plane(self: AvdStructuredConfigOverlayProtocol, data_plane_config: EosDesigns.WanIpsecProfiles.DataPlane) -> None:
         """In place update of ip_security for DataPlane."""
-        if self.shared_utils.wan_ha_ipsec:
-            ike_policy_name = data_plane_config.ike_policy_name if data_plane_config.ike_policy_name else "DP-IKE-POLICY"
-        else:
-            ike_policy_name = None
-        sa_policy_name = data_plane_config.sa_policy_name if data_plane_config.sa_policy_name else "DP-SA-POLICY"
-        profile_name = data_plane_config.profile_name if data_plane_config.profile_name else "DP-PROFILE"
+        ike_policy_name = data_plane_config.ike_policy_name if self.shared_utils.wan_ha_ipsec else None
+        sa_policy_name = data_plane_config.sa_policy_name
+        profile_name = data_plane_config.profile_name
         key = data_plane_config.shared_key
 
         # IKE policy for data-plane is not required for dynamic tunnels except for HA cases
         if self.shared_utils.wan_ha_ipsec:
-            self._ike_policy(ike_policy_name)
-        self._sa_policy(sa_policy_name)
+            self.structured_config.ip_security.ike_policies.append_new(name=ike_policy_name, local_id=self.shared_utils.vtep_ip)
+        self._set_sa_policy(sa_policy_name)
         self._profile(profile_name, ike_policy_name, sa_policy_name, key)
 
         # For data plane, adding key_controller by default
@@ -77,19 +74,15 @@ class IpSecurityMixin(Protocol):
         profile_name = control_plane_config.profile_name if control_plane_config.profile_name else "CP-PROFILE"
         key = control_plane_config.shared_key
 
-        self._ike_policy(ike_policy_name)
-        self._sa_policy(sa_policy_name)
+        self.structured_config.ip_security.ike_policies.append_new(name=ike_policy_name, local_id=self.shared_utils.vtep_ip)
+        self._set_sa_policy(sa_policy_name)
         self._profile(profile_name, ike_policy_name, sa_policy_name, key)
 
         if not self.structured_config.ip_security.key_controller:
             # If there is no data plane IPSec profile, use the control plane one for key controller
             self._key_controller(profile_name)
 
-    def _ike_policy(self: AvdStructuredConfigOverlayProtocol, name: str) -> None:
-        """Set the IKE policy."""
-        self.structured_config.ip_security.ike_policies.append_new(name=name, local_id=self.shared_utils.vtep_ip)
-
-    def _sa_policy(self: AvdStructuredConfigOverlayProtocol, name: str) -> None:
+    def _set_sa_policy(self: AvdStructuredConfigOverlayProtocol, name: str) -> None:
         """
         Set the SA policy.
 
