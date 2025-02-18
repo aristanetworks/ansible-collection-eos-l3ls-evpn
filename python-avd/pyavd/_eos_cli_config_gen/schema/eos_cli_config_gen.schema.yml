@@ -9134,7 +9134,7 @@ keys:
                       type: int
                       required: true
                       min: 1
-                      max: 1000000
+                      max: 999999
                       convert_types:
                       - str
                       description: Offset in microseconds, used to round up calculated

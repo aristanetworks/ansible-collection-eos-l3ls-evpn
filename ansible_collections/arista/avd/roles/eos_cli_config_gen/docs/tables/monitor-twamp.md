@@ -20,7 +20,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;measurement_samples</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].measurement_samples") | Integer |  |  | Min: 1<br>Max: 65535 | Number of samples used to calculate TWAMP light metrics. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;significance</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].significance") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].significance.value") | Integer | Required |  | Min: 1<br>Max: 1000000 | Significance value in microseconds. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;offset</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].significance.offset") | Integer | Required |  | Min: 1<br>Max: 1000000 | Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be smaller than significance value. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;offset</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].significance.offset") | Integer | Required |  | Min: 1<br>Max: 999999 | Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be smaller than significance value. |
 
 === "YAML"
 
@@ -46,5 +46,5 @@
               value: <int; 1-1000000; required>
 
               # Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be smaller than significance value.
-              offset: <int; 1-1000000; required>
+              offset: <int; 1-999999; required>
     ```
