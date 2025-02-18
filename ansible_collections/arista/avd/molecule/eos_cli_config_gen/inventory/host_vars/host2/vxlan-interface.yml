@@ -14,7 +14,7 @@ vxlan_interface:
           vni: 10110
           multicast_group: 239.9.1.4
         - id: 111
-          vni: 10111
+          vni: 10111  # Ingored since the VNI is also part of a range.
           flood_vteps:
             - 10.1.1.10
             - 10.1.1.11
