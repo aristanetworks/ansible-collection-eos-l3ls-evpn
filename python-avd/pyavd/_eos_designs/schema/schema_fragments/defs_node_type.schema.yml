@@ -670,7 +670,7 @@ $defs:
                 description: Enable Active Active Multihoming architecture for EVPN Gateways.
                 type: dict
                 keys:
-                  d_path:
+                  enable_d_path:
                     type: bool
                   domain_identifier:
                     type: str

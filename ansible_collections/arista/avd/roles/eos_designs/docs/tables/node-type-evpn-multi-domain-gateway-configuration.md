@@ -20,7 +20,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.evpn_l3.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inter_domain</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.evpn_l3.inter_domain") | Boolean |  | `True` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_active_multihoming</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d_path</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.d_path") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.enable_d_path") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.domain_identifier") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.domain_identifier_remote") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.evpn_ethernet_segment") | List, items: Dictionary |  |  |  |  |
@@ -42,7 +42,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.evpn_l3.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inter_domain</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.evpn_l3.inter_domain") | Boolean |  | `True` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_active_multihoming</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d_path</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.d_path") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.enable_d_path") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.domain_identifier") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.domain_identifier_remote") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment") | List, items: Dictionary |  |  |  |  |
@@ -60,7 +60,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.evpn_l3.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inter_domain</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.evpn_l3.inter_domain") | Boolean |  | `True` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_active_multihoming</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d_path</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.d_path") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.enable_d_path") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.domain_identifier") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.domain_identifier_remote") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment") | List, items: Dictionary |  |  |  |  |
@@ -80,7 +80,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.evpn_l3.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inter_domain</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.evpn_l3.inter_domain") | Boolean |  | `True` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_active_multihoming</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d_path</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.d_path") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.enable_d_path") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.domain_identifier") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.domain_identifier_remote") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment") | List, items: Dictionary |  |  |  |  |
@@ -128,7 +128,7 @@
 
           # Enable Active Active Multihoming architecture for EVPN Gateways.
           active_active_multihoming:
-            d_path: <bool>
+            enable_d_path: <bool>
             domain_identifier: <str>
             domain_identifier_remote: <str>
             evpn_ethernet_segment:
@@ -185,7 +185,7 @@
 
                 # Enable Active Active Multihoming architecture for EVPN Gateways.
                 active_active_multihoming:
-                  d_path: <bool>
+                  enable_d_path: <bool>
                   domain_identifier: <str>
                   domain_identifier_remote: <str>
                   evpn_ethernet_segment:
@@ -229,7 +229,7 @@
 
             # Enable Active Active Multihoming architecture for EVPN Gateways.
             active_active_multihoming:
-              d_path: <bool>
+              enable_d_path: <bool>
               domain_identifier: <str>
               domain_identifier_remote: <str>
               evpn_ethernet_segment:
@@ -279,7 +279,7 @@
 
             # Enable Active Active Multihoming architecture for EVPN Gateways.
             active_active_multihoming:
-              d_path: <bool>
+              enable_d_path: <bool>
               domain_identifier: <str>
               domain_identifier_remote: <str>
               evpn_ethernet_segment:
