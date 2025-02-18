@@ -10,7 +10,6 @@ from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdMissingVariableError
 from pyavd._utils import Undefined, default, get, get_ip_from_ip_prefix, strip_empties_from_dict
-from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
@@ -143,50 +142,6 @@ class UtilsMixin(Protocol):
     @cached_property
     def _uplinks(self: AvdStructuredConfigUnderlayProtocol) -> list:
         return get(self._hostvars, "switch.uplinks")
-
-    def _get_l3_port_channel_cfg(
-        self: AvdStructuredConfigUnderlayProtocol, l3_port_channel: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
-    ) -> dict:
-        """Returns structured_configuration for one L3 Port-Channel."""
-        # build common portion of the interface cfg
-        interface = self._get_l3_common_interface_cfg(l3_port_channel)._as_dict()
-
-        interface_description = l3_port_channel.description
-        if not interface_description:
-            interface_description = self.shared_utils.interface_descriptions.underlay_port_channel_interface(
-                InterfaceDescriptionData(
-                    shared_utils=self.shared_utils,
-                    interface=l3_port_channel.name,
-                    peer=l3_port_channel.peer,
-                    peer_interface=l3_port_channel.peer_port_channel,
-                    wan_carrier=l3_port_channel.wan_carrier,
-                    wan_circuit_id=l3_port_channel.wan_circuit_id,
-                ),
-            )
-        interface["description"] = interface_description
-        interface["peer_type"] = "l3_port_channel"
-        interface["peer_interface"] = l3_port_channel.peer_port_channel
-        # speed is not applicable for port-channel, hence not set
-
-        if l3_port_channel.structured_config:
-            self.custom_structured_configs.nested.port_channel_interfaces.obtain(l3_port_channel.name)._deepmerge(
-                l3_port_channel.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
-            )
-        interface["access_group_in"] = get(self._l3_port_channel_acls, f"{l3_port_channel.name}..ipv4_acl_in..name", separator="..")
-        interface["access_group_out"] = get(self._l3_port_channel_acls, f"{l3_port_channel.name}..ipv4_acl_out..name", separator="..")
-
-        if (
-            self.shared_utils.is_wan_router
-            and (wan_carrier_name := l3_port_channel.wan_carrier) is not None
-            and interface["access_group_in"] is None
-            and (wan_carrier_name not in self.inputs.wan_carriers or not self.inputs.wan_carriers[wan_carrier_name].trusted)
-        ):
-            msg = (
-                "'ipv4_acl_in' must be set on WAN interfaces where 'wan_carrier' is set, unless the carrier is configured as 'trusted' "
-                f"under 'wan_carriers'. 'ipv4_acl_in' is missing on L3 Port-Channel '{l3_port_channel.name}'."
-            )
-            raise AristaAvdError(msg)
-        return strip_empties_from_dict(interface)
 
     # These overloads are just here to help the type checker enforce that input type x gives output type y
     @overload
@@ -348,67 +303,6 @@ class UtilsMixin(Protocol):
         self.shared_utils.get_additional_svi_config(subinterface, svi, vrf)
 
         return subinterface
-
-    @cached_property
-    def _l3_port_channel_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, dict]]:
-        """
-        Return dict of l3 Port-Channel ACLs.
-
-        <interface_name>: {
-            "ipv4_acl_in": <generated_ipv4_acl>,
-            "ipv4_acl_out": <generated_ipv4_acl>,
-        }
-
-        Only contains L3 Port-Channel with ACLs and only the ACLs that are set.
-        """
-        return self._get_l3_generic_interface_acls(self.shared_utils.node_config.l3_port_channels)
-
-    def _get_l3_generic_interface_acls(
-        self: AvdStructuredConfigUnderlayProtocol,
-        l3_generic_interfaces: (
-            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
-            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
-        ),
-    ) -> dict[str, dict[str, dict]]:
-        """
-        Return dict of l3 interface ACLs referenced by either L3 interfaces or L3 Port-Channels.
-
-        <interface_name>: {
-            "ipv4_acl_in": <generated_ipv4_acl>,
-            "ipv4_acl_out": <generated_ipv4_acl>,
-        }
-
-        Only contains interfaces with ACLs and only the ACLs that are set,
-        so use `get(self._get_l3_generic_interface_acls(<interface_placeholder>), f"{interface_name}.ipv4_acl_in")` to get the value.
-        where `<interface_placeholder> is either 'self.shared_utils.l3_interfaces' or 'self.shared_utils.l3_port_channels'`
-        """
-        l3_interface_acls = {}
-        for l3_generic_interface in l3_generic_interfaces:
-            ipv4_acl_in = l3_generic_interface.ipv4_acl_in
-            ipv4_acl_out = l3_generic_interface.ipv4_acl_out
-            if ipv4_acl_in is None and ipv4_acl_out is None:
-                continue
-
-            interface_ip = l3_generic_interface.dhcp_ip if (ip_address := l3_generic_interface.ip_address) == "dhcp" else ip_address
-            if interface_ip is not None and "/" in interface_ip:
-                interface_ip = get_ip_from_ip_prefix(interface_ip)
-
-            if ipv4_acl_in is not None:
-                l3_interface_acls.setdefault(l3_generic_interface.name, {})["ipv4_acl_in"] = self.shared_utils.get_ipv4_acl(
-                    name=ipv4_acl_in,
-                    interface_name=l3_generic_interface.name,
-                    interface_ip=interface_ip,
-                    peer_ip=l3_generic_interface.peer_ip,
-                )._as_dict()
-            if ipv4_acl_out is not None:
-                l3_interface_acls.setdefault(l3_generic_interface.name, {})["ipv4_acl_out"] = self.shared_utils.get_ipv4_acl(
-                    name=ipv4_acl_out,
-                    interface_name=l3_generic_interface.name,
-                    interface_ip=interface_ip,
-                    peer_ip=l3_generic_interface.peer_ip,
-                )._as_dict()
-
-        return l3_interface_acls
 
     def _get_acl_for_l3_generic_interface(
         self: AvdStructuredConfigUnderlayProtocol,
