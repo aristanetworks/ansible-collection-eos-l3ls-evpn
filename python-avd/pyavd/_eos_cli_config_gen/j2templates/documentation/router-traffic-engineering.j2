@@ -42,34 +42,34 @@
 {%                 endfor %}
 {%             endfor %}
 {%         endif %}
-{%         if router_traffic_engineering.flex_algos is arista.avd.defined %}
+{%     endif %}
+{%     if router_traffic_engineering.flex_algos is arista.avd.defined %}
 
 ##### Flex-algo
 
 | Algo Number | Algo Name | Priority | Metric | Color | Admin-groups | SRLG Excludes |
 | ----------- | --------- | -------- | ------ | ----- | ------------ | ------------- |
-{%             for algo in router_traffic_engineering.flex_algos %}
-{%                 set priority = algo.priority | arista.avd.default("-") %}
-{%                 set metric = algo.metric | arista.avd.default("-") %}
-{%                 set color = algo.color | arista.avd.default("-") %}
-{%                 if algo.administrative_group is arista.avd.defined %}
-{%                     set admingrp = "" %}
-{%                     if algo.administrative_group.include_all is arista.avd.defined %}
-{%                         set admingrp = admingrp ~ "include-all " ~ algo.administrative_group.include_all ~ " " %}
-{%                     endif %}
-{%                     if algo.administrative_group.include_any is arista.avd.defined %}
-{%                         set admingrp = admingrp ~ "include-any " ~ algo.administrative_group.include_any ~ " " %}
-{%                     endif %}
-{%                     if algo.administrative_group.exclude is arista.avd.defined %}
-{%                         set admingrp = admingrp ~ "exclude " ~ algo.administrative_group.exclude %}
-{%                     endif %}
-{%                 else %}
-{%                     set admingrp = "-" %}
+{%         for algo in router_traffic_engineering.flex_algos %}
+{%             set priority = algo.priority | arista.avd.default("-") %}
+{%             set metric = algo.metric | arista.avd.default("-") %}
+{%             set color = algo.color | arista.avd.default("-") %}
+{%             if algo.administrative_group is arista.avd.defined %}
+{%                 set admingrp = "" %}
+{%                 if algo.administrative_group.include_all is arista.avd.defined %}
+{%                     set admingrp = admingrp ~ "include-all " ~ algo.administrative_group.include_all ~ " " %}
 {%                 endif %}
-{%                 set srlg_exclude = algo.srlg_exclude | arista.avd.default("-") %}
+{%                 if algo.administrative_group.include_any is arista.avd.defined %}
+{%                     set admingrp = admingrp ~ "include-any " ~ algo.administrative_group.include_any ~ " " %}
+{%                 endif %}
+{%                 if algo.administrative_group.exclude is arista.avd.defined %}
+{%                     set admingrp = admingrp ~ "exclude " ~ algo.administrative_group.exclude %}
+{%                 endif %}
+{%             else %}
+{%                 set admingrp = "-" %}
+{%             endif %}
+{%             set srlg_exclude = algo.srlg_exclude | arista.avd.default("-") %}
 | {{ algo.number }} | {{ algo.name }} | {{ priority }} | {{ metric }} | {{ color }} | {{ admingrp }} | {{ srlg_exclude }} |
-{%             endfor %}
-{%         endif %}
+{%         endfor %}
 {%     endif %}
 
 #### Router Traffic Engineering Device Configuration

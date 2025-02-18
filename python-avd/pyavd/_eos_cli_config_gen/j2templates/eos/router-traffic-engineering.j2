@@ -55,6 +55,12 @@ router traffic-engineering
 {%             endfor %}
 {%         endif %}
 {%     endif %}
+{%     if router_traffic_engineering.router_id.ipv4 is arista.avd.defined %}
+   router-id ipv4 {{ router_traffic_engineering.router_id.ipv4 }}
+{%     endif %}
+{%     if router_traffic_engineering.router_id.ipv6 is arista.avd.defined %}
+   router-id ipv6 {{ router_traffic_engineering.router_id.ipv6 }}
+{%     endif %}
 {%     if router_traffic_engineering.flex_algos is arista.avd.defined %}
    !
    flex-algo
@@ -86,11 +92,5 @@ router traffic-engineering
          color {{ flex_algo.color }}
 {%             endif %}
 {%         endfor %}
-{%     endif %}
-{%     if router_traffic_engineering.router_id.ipv4 is arista.avd.defined %}
-   router-id ipv4 {{ router_traffic_engineering.router_id.ipv4 }}
-{%     endif %}
-{%     if router_traffic_engineering.router_id.ipv6 is arista.avd.defined %}
-   router-id ipv6 {{ router_traffic_engineering.router_id.ipv6 }}
 {%     endif %}
 {% endif %}

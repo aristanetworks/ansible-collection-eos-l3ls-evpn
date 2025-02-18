@@ -7132,6 +7132,8 @@ router traffic-engineering
             explicit-null ipv6
             segment-list label-stack 900002 900008 900009 900006
             segment-list label-stack 900002 900010 900011 900012
+   router-id ipv4 10.0.0.1
+   router-id ipv6 2001:beef:cafe::1
    !
    flex-algo
       flex-algo 128 test-algo
@@ -7152,8 +7154,6 @@ router traffic-engineering
          metric te-metric
          srlg exclude 101
          color 1234
-   router-id ipv4 10.0.0.1
-   router-id ipv6 2001:beef:cafe::1
 ```
 
 ### Router OSPF
