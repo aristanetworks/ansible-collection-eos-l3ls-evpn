@@ -348,7 +348,7 @@ jobs:
         run: |
           make collection-build
       - name: "Run galaxy-importer checks"
-        run: python -m galaxy_importer.main avd-collection.tar.gz
+        run: python -m galaxy_importer.main arista-avd.*.tar.gz
       - name: "Rename collection archive"
         run: |
           # Changing name for installation in subsequent steps
