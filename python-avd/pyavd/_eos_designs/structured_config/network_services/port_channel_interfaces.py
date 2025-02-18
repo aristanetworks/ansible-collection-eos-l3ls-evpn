@@ -33,23 +33,30 @@ class PortChannelInterfacesMixin(Protocol):
         if not self.shared_utils.network_services_l1:
             return
 
-        subif_parent_interfaces: list[EosCliConfigGen.PortChannelInterfacesItem] = []
-        """Set to collect all the parent interface names of all the subinterfaces defined under l3_interfaces or point_to_point_services in network_services."""
+        # Keeping separate list of auto-generated parent interfaces
+        # This is used to check for conflicts between auto-generated parents
+        # At the end of _set_point_to_point_po_interfaces, parent interfaces are
+        # added to structured_config if they were not explicitly configured.
+        potential_parent_interfaces = EosCliConfigGen.PortChannelInterfaces()
+
+        # Set to collect all the physical port-channels explicitly configured by _set_point_to_point_po_interfaces.
+        configured_physical_po: set[str] = set()
 
         for tenant in self.shared_utils.filtered_tenants:
             if not tenant.point_to_point_services:
                 continue
 
-            self._set_point_to_point_po_interfaces(tenant, subif_parent_interfaces)
+            self._set_point_to_point_po_interfaces(tenant, potential_parent_interfaces, configured_physical_po)
 
-            for subif_parent_interface in subif_parent_interfaces:
-                if subif_parent_interface.name not in self.structured_config.port_channel_interfaces:
-                    self.structured_config.port_channel_interfaces.append(subif_parent_interface)
+            for potential_parent_interface in potential_parent_interfaces:
+                if potential_parent_interface.name not in configured_physical_po:
+                    self.structured_config.port_channel_interfaces.append(potential_parent_interface)
 
     def _set_point_to_point_po_interfaces(
         self: AvdStructuredConfigNetworkServicesProtocol,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
-        subif_parent_interfaces: list[EosCliConfigGen.PortChannelInterfacesItem],
+        potential_parent_interfaces: EosCliConfigGen.PortChannelInterfaces,
+        configured_physical_po_names: set[str],
     ) -> None:
         """Set the structured_config port_channel_interfaces with the point-to-point interfaces defined under network_services."""
         for point_to_point_service in tenant.point_to_point_services._natural_sorted():
@@ -80,8 +87,8 @@ class PortChannelInterfacesMixin(Protocol):
                         if port_channel_mode == "active":
                             parent_interface.lacp_id = short_esi.replace(":", ".")
 
-                    # TODO: See to refactor
-                    subif_parent_interfaces.append(parent_interface)
+                    # Adding the auto-generated parent to the list of potential parents
+                    potential_parent_interfaces.append(parent_interface)
 
                     for subif in point_to_point_service.subinterfaces:
                         subif_name = f"{interface_name}.{subif.number}"
@@ -113,3 +120,5 @@ class PortChannelInterfacesMixin(Protocol):
                             po_interface.lacp_id = short_esi.replace(":", ".")
 
                     self.structured_config.port_channel_interfaces.append(po_interface)
+                    # Tracking the physical interfaces to determine which auto-generated should be injected.
+                    configured_physical_po_names.add(interface_name)
