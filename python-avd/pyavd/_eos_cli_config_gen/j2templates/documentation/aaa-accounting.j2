@@ -21,15 +21,14 @@
 {%             for method in aaa_accounting.exec.console.methods %}
 {%                 if method.group is arista.avd.defined and method.method == "group" %}
 {%                     do methods_list.append(method.group) %}
-{%                 endif %}
-{%                 if method.method == "logging" %}
+{%                 elif method.method == "logging" %}
 {%                     set logging_namespace.method_logging = true %}
 {%                 endif %}
 {%             endfor %}
 {%             if methods_list == [] %}
 {%                 do methods_list.append("-") %}
 {%             endif %}
-| Exec - Console | - | {{ aaa_accounting.exec.console.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} | - |
+| Exec - Console | - | {{ aaa_accounting.exec.console.type }} | {{ ", ".join(methods_list) }} | {{ logging_namespace.method_logging }} | - |
 {%         elif aaa_accounting.exec.console.logging is arista.avd.defined or aaa_accounting.exec.console.group is arista.avd.defined %}
 {%             set aaa_accounting_logging = aaa_accounting.exec.console.logging | arista.avd.default("-") %}
 {%             set aaa_accounting_group = aaa_accounting.exec.console.group | arista.avd.default("-") %}
@@ -47,15 +46,14 @@
 {%                     for method in command_console.methods %}
 {%                         if method.group is arista.avd.defined and method.method == "group" %}
 {%                             do methods_list.append(method.group) %}
-{%                         endif %}
-{%                         if method.method == "logging" %}
+{%                         elif method.method == "logging" %}
 {%                             set logging_namespace.method_logging = true %}
 {%                         endif %}
 {%                     endfor %}
 {%                     if methods_list == [] %}
 {%                         do methods_list.append("-") %}
 {%                     endif %}
-| Commands - Console | {{ command_console.commands }} | {{ command_console.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} | - |
+| Commands - Console | {{ command_console.commands }} | {{ command_console.type }} | {{ ", ".join(methods_list) }} | {{ logging_namespace.method_logging }} | - |
 {%                 elif command_console.group is arista.avd.defined or command_console.logging is arista.avd.defined %}
 {%                     set group = command_console.group | arista.avd.default(" - ") %}
 {%                     set logging = command_console.logging | arista.avd.default("False") %}
@@ -73,15 +71,14 @@
 {%             for method in aaa_accounting.exec.default.methods %}
 {%                 if method.group is arista.avd.defined and method.method == "group" %}
 {%                     do methods_list.append(method.group) %}
-{%                 endif %}
-{%                 if method.method == "logging" %}
+{%                 elif method.method == "logging" %}
 {%                     set logging_namespace.method_logging = true %}
 {%                 endif %}
 {%             endfor %}
 {%             if methods_list == [] %}
 {%                 do methods_list.append("-") %}
 {%             endif %}
-| Exec - Default | - | {{ aaa_accounting.exec.default.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} | - |
+| Exec - Default | - | {{ aaa_accounting.exec.default.type }} | {{ ", ".join(methods_list) }} | {{ logging_namespace.method_logging }} | - |
 {%         elif aaa_accounting.exec.default.logging is arista.avd.defined or aaa_accounting.exec.default.group is arista.avd.defined %}
 {%             set aaa_accounting_logging = aaa_accounting.exec.default.logging | arista.avd.default("-") %}
 {%             set aaa_accounting_group = aaa_accounting.exec.default.group | arista.avd.default("-") %}
@@ -97,15 +94,14 @@
 {%             for method in aaa_accounting.system.default.methods %}
 {%                 if method.group is arista.avd.defined and method.method == "group" %}
 {%                     do methods_list.append(method.group) %}
-{%                 endif %}
-{%                 if method.method == "logging" %}
+{%                 elif method.method == "logging" %}
 {%                     set logging_namespace.method_logging = true %}
 {%                 endif %}
 {%             endfor %}
 {%             if methods_list == [] %}
 {%                 do methods_list.append("-") %}
 {%             endif %}
-| System - Default | - | {{ aaa_accounting.system.default.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} | - |
+| System - Default | - | {{ aaa_accounting.system.default.type }} | {{ ", ".join(methods_list) }} | {{ logging_namespace.method_logging }} | - |
 {%         elif aaa_accounting.system.default.group is arista.avd.defined %}
 | System - Default | - | {{ aaa_accounting.system.default.type }} | {{ aaa_accounting.system.default.group | arista.avd.default("-") }} | - | - |
 {%         endif %}
@@ -119,8 +115,7 @@
 {%             for method in aaa_accounting.dot1x.default.methods %}
 {%                 if method.group is arista.avd.defined and method.method == "group" %}
 {%                     do methods_list.append(method.group) %}
-{%                 endif %}
-{%                 if method.method == "logging" %}
+{%                 elif method.method == "logging" %}
 {%                     set logging_namespace.method_logging = true %}
 {%                 endif %}
 {%                 if method.multicast is arista.avd.defined %}
@@ -130,7 +125,7 @@
 {%             if methods_list == [] %}
 {%                 do methods_list.append("-") %}
 {%             endif %}
-| Dot1x - Default | - | {{ aaa_accounting.dot1x.default.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} | {{ logging_namespace.multicast }} |
+| Dot1x - Default | - | {{ aaa_accounting.dot1x.default.type }} | {{ ", ".join(methods_list) }} | {{ logging_namespace.method_logging }} | {{ logging_namespace.multicast }} |
 {%         elif aaa_accounting.dot1x.default.group is arista.avd.defined %}
 | Dot1x - Default | - | {{ aaa_accounting.dot1x.default.type }} | {{ aaa_accounting.dot1x.default.group }} | - | - |
 {%         endif %}
@@ -153,7 +148,7 @@
 {%                 if methods_list == [] %}
 {%                     do methods_list.append("-") %}
 {%                 endif %}
-| Commands - Default | {{ command_default.commands }} | {{ command_default.type }} | {{ ", ".join(methods_list | arista.avd.default(["-"])) }} | {{ logging_namespace.method_logging }} | - |
+| Commands - Default | {{ command_default.commands }} | {{ command_default.type }} | {{ ", ".join(methods_list) }} | {{ logging_namespace.method_logging }} | - |
 {%             elif command_default.type is arista.avd.defined and (command_default.logging is arista.avd.defined or command_default.group is arista.avd.defined) %}
 | Commands - Default | {{ command_default.commands }} | {{ command_default.type }} | {{ command_default.group | arista.avd.default('-') }} | {{ command_default.logging | arista.avd.default("-") }} | - |
 {%             endif %}

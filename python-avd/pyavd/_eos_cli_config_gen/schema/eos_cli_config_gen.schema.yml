@@ -30,13 +30,13 @@ keys:
                 type: str
                 deprecation:
                   warning: true
-                  new_key: methods[].group
+                  new_key: methods.group
                   remove_in_version: 6.0.0
               logging:
                 type: bool
                 deprecation:
                   warning: true
-                  new_key: methods[].method
+                  new_key: methods.method
                   remove_in_version: 6.0.0
               methods:
                 type: list
@@ -61,7 +61,7 @@ keys:
                 type: bool
                 deprecation:
                   warning: true
-                  new_key: methods[].method
+                  new_key: methods.method
                   remove_in_version: 6.0.0
               methods:
                 type: list
@@ -83,7 +83,7 @@ keys:
                 type: str
                 deprecation:
                   warning: true
-                  new_key: methods[].group
+                  new_key: methods.group
                   remove_in_version: 6.0.0
               methods:
                 type: list
@@ -104,7 +104,7 @@ keys:
                 type: str
                 deprecation:
                   warning: true
-                  new_key: methods[].group
+                  new_key: methods.group
                   remove_in_version: 6.0.0
               methods:
                 type: list
@@ -144,13 +144,13 @@ keys:
                   type: str
                   deprecation:
                     warning: true
-                    new_key: methods[].group
+                    new_key: methods.group
                     remove_in_version: 6.0.0
                 logging:
                   type: bool
                   deprecation:
                     warning: true
-                    new_key: methods[].method
+                    new_key: methods.method
                     remove_in_version: 6.0.0
                 methods:
                   type: list
@@ -177,13 +177,13 @@ keys:
                   type: str
                   deprecation:
                     warning: true
-                    new_key: methods[].group
+                    new_key: methods.group
                     remove_in_version: 6.0.0
                 logging:
                   type: bool
                   deprecation:
                     warning: true
-                    new_key: methods[].method
+                    new_key: methods.method
                     remove_in_version: 6.0.0
                 methods:
                   type: list
