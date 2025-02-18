@@ -472,7 +472,8 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
     @structured_config_contributor
     def management_security(self) -> None:
         """Set the structured config for management_security."""
-        self.structured_config.management_security.entropy_sources = self.shared_utils.platform_settings.security_entropy_sources
+        self.structured_config.management_security.entropy_sources = self.shared_utils.platform_settings.security_entropy_sources._cast_as(
+            EosCliConfigGen.ManagementSecurity.EntropySources)
 
     @cached_property
     def tcam_profile(self) -> dict | None:
