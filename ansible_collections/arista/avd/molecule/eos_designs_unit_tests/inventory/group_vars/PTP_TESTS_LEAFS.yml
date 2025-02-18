@@ -17,6 +17,7 @@ l3leaf:
     ptp:
       enabled: true
       mlag: true
+    igmp_snooping_enabled: false
 
   node_groups:
     - group: ptp-test-leaf
