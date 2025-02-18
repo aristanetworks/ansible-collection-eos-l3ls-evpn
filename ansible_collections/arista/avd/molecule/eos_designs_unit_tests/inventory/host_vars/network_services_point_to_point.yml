@@ -31,7 +31,7 @@ tenants:
             nodes: [fake_node]
             interfaces: [Ethernet3]
         lldp_disable: true
-      # Sub-interface point-to-point with explicitely defined parent interface (cf next entry)
+      # Sub-interface point-to-point with explicitly defined parent interface (cf next entry)
       - name: TEN_A_ELINE_VLAN_BASE_EXPLICIT_CHILD
         type: vpws-pseudowire
         subinterfaces:
