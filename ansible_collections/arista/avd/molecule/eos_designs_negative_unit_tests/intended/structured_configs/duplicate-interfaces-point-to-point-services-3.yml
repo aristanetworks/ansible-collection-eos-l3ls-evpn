@@ -1,0 +1,122 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet6.1000
+  shutdown: false
+  encapsulation_vlan:
+    client:
+      encapsulation: dot1q
+      vlan: 1000
+    network:
+      encapsulation: client
+  peer_type: point_to_point_service
+- name: Ethernet6
+  shutdown: false
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+hostname: duplicate-interfaces-point-to-point-services-3
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 10.42.0.42/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+metadata:
+  fabric_name: EOS_DESIGNS_FAILURES
+patch_panel:
+  patches:
+  - name: TEN_A_site2_site5_eline_port_based_1000
+    enabled: true
+    connectors:
+    - id: '1'
+      type: interface
+      endpoint: Ethernet6.1000
+    - id: '2'
+      type: pseudowire
+      endpoint: bgp vpws TENANT_A pseudowire TEN_A_site2_site5_eline_port_based_1000
+  - name: TEN_B_site2_site5_eline_port_based_1000
+    enabled: true
+    connectors:
+    - id: '1'
+      type: interface
+      endpoint: Ethernet6.1000
+    - id: '2'
+      type: pseudowire
+      endpoint: bgp vpws TENANT_B pseudowire TEN_B_site2_site5_eline_port_based_1000
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 10.42.0.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '42'
+  router_id: 10.42.0.42
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: MPLS-OVERLAY-PEERS
+    type: mpls
+    remote_as: '42'
+    update_source: Loopback0
+    bfd: true
+    send_community: all
+    maximum_routes: 0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    neighbor_default:
+      encapsulation: mpls
+    peer_groups:
+    - name: MPLS-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: MPLS-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

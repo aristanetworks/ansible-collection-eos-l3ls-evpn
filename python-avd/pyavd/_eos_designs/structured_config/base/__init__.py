@@ -131,29 +131,21 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
 
         return strip_null_from_data(router_bgp)
 
-    @cached_property
-    def static_routes(self) -> list | None:
+    @structured_config_contributor
+    def static_routes(self) -> None:
         """static_routes set based on mgmt_gateway, mgmt_destination_networks and mgmt_interface_vrf."""
         if self.shared_utils.mgmt_gateway is None:
-            return None
+            return
 
         if self.inputs.mgmt_destination_networks:
-            return [
-                {
-                    "vrf": self.inputs.mgmt_interface_vrf,
-                    "destination_address_prefix": mgmt_destination_network,
-                    "gateway": self.shared_utils.mgmt_gateway,
-                }
-                for mgmt_destination_network in self.inputs.mgmt_destination_networks
-            ]
-
-        return [
-            {
-                "vrf": self.inputs.mgmt_interface_vrf,
-                "destination_address_prefix": "0.0.0.0/0",
-                "gateway": self.shared_utils.mgmt_gateway,
-            }
-        ]
+            for mgmt_destination_network in self.inputs.mgmt_destination_networks:
+                self.structured_config.static_routes.append_new(
+                    vrf=self.inputs.mgmt_interface_vrf, destination_address_prefix=mgmt_destination_network, gateway=self.shared_utils.mgmt_gateway
+                )
+        else:
+            self.structured_config.static_routes.append_new(
+                vrf=self.inputs.mgmt_interface_vrf, destination_address_prefix="0.0.0.0/0", gateway=self.shared_utils.mgmt_gateway
+            )
 
     @structured_config_contributor
     def ipv6_static_routes(self) -> None:
@@ -477,13 +469,12 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
 
         return None
 
-    @cached_property
-    def management_security(self) -> dict | None:
-        """Return structured config for management_security."""
-        if entropy_sources := self.shared_utils.platform_settings.security_entropy_sources:
-            return {"entropy_sources": entropy_sources._as_dict(include_default_values=True)}
-
-        return None
+    @structured_config_contributor
+    def management_security(self) -> None:
+        """Set the structured config for management_security."""
+        self.structured_config.management_security.entropy_sources = self.shared_utils.platform_settings.security_entropy_sources._cast_as(
+            EosCliConfigGen.ManagementSecurity.EntropySources
+        )
 
     @cached_property
     def tcam_profile(self) -> dict | None:

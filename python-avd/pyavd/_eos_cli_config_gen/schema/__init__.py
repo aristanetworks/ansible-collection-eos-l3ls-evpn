@@ -22300,7 +22300,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         """
 
             _fields: ClassVar[dict] = {"name": {"type": str}, "direction": {"type": str}, "access_group": {"type": AccessGroup}}
-            name: str | None
+            name: str
             """Interface name, range or comma separated list."""
             direction: Literal["rx", "tx", "both"] | None
             access_group: AccessGroup
@@ -22311,7 +22311,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 def __init__(
                     self,
                     *,
-                    name: str | None | UndefinedType = Undefined,
+                    name: str | UndefinedType = Undefined,
                     direction: Literal["rx", "tx", "both"] | None | UndefinedType = Undefined,
                     access_group: AccessGroup | UndefinedType = Undefined,
                 ) -> None:
@@ -22328,8 +22328,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        class Sources(AvdList[SourcesItem]):
-            """Subclass of AvdList with `SourcesItem` items."""
+        class Sources(AvdIndexedList[str, SourcesItem]):
+            """Subclass of AvdIndexedList with `SourcesItem` items. Primary key is `name` (`str`)."""
+
+            _primary_key: ClassVar[str] = "name"
 
         Sources._item_type = SourcesItem
 
@@ -22401,7 +22403,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         name: str
         """Session Name."""
         sources: Sources
-        """Subclass of AvdList with `SourcesItem` items."""
+        """Subclass of AvdIndexedList with `SourcesItem` items. Primary key is `name` (`str`)."""
         destinations: Destinations
         """Subclass of AvdList with `str` items."""
         encapsulation_gre_metadata_tx: bool | None
@@ -22453,7 +22455,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Args:
                     name: Session Name.
-                    sources: Subclass of AvdList with `SourcesItem` items.
+                    sources: Subclass of AvdIndexedList with `SourcesItem` items. Primary key is `name` (`str`).
                     destinations: Subclass of AvdList with `str` items.
                     encapsulation_gre_metadata_tx: encapsulation_gre_metadata_tx
                     header_remove_size: Number of bytes to remove from header.
@@ -22475,8 +22477,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 """
 
-    class MonitorSessions(AvdList[MonitorSessionsItem]):
-        """Subclass of AvdList with `MonitorSessionsItem` items."""
+    class MonitorSessions(AvdIndexedList[str, MonitorSessionsItem]):
+        """Subclass of AvdIndexedList with `MonitorSessionsItem` items. Primary key is `name` (`str`)."""
+
+        _primary_key: ClassVar[str] = "name"
 
     MonitorSessions._item_type = MonitorSessionsItem
 
@@ -24822,13 +24826,184 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         class Sfe(AvdModel):
             """Subclass of AvdModel."""
 
-            _fields: ClassVar[dict] = {"data_plane_cpu_allocation_max": {"type": int}}
+            class Interface(AvdModel):
+                """Subclass of AvdModel."""
+
+                class ProfilesItem(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    class InterfacesItem(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class RxQueue(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"count": {"type": int}, "worker": {"type": str}, "mode": {"type": str}}
+                            count: int | None
+                            """
+                            Number of receive queues.
+                            The maximum value is platform dependent.
+                            """
+                            worker: str | None
+                            """
+                            Worker ids specified as combination of range and/or comma separated values
+                            such as 0-4,7.
+                            """
+                            mode: Literal["shared", "exclusive"] | None
+                            """Mode applicable to the workers. Default mode is 'shared'."""
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    count: int | None | UndefinedType = Undefined,
+                                    worker: str | None | UndefinedType = Undefined,
+                                    mode: Literal["shared", "exclusive"] | None | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    RxQueue.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        count:
+                                           Number of receive queues.
+                                           The maximum value is platform dependent.
+                                        worker:
+                                           Worker ids specified as combination of range and/or comma separated values
+                                           such as 0-4,7.
+                                        mode: Mode applicable to the workers. Default mode is 'shared'.
+
+                                    """
+
+                        _fields: ClassVar[dict] = {"name": {"type": str}, "rx_queue": {"type": RxQueue}}
+                        name: str
+                        """Interface name such as 'Ethernet2'."""
+                        rx_queue: RxQueue
+                        """
+                        Receive queue parameters for the selected interface.
+
+                        Subclass of AvdModel.
+                        """
+
+                        if TYPE_CHECKING:
+
+                            def __init__(self, *, name: str | UndefinedType = Undefined, rx_queue: RxQueue | UndefinedType = Undefined) -> None:
+                                """
+                                InterfacesItem.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    name: Interface name such as 'Ethernet2'.
+                                    rx_queue:
+                                       Receive queue parameters for the selected interface.
+
+                                       Subclass of AvdModel.
+
+                                """
+
+                    class Interfaces(AvdIndexedList[str, InterfacesItem]):
+                        """Subclass of AvdIndexedList with `InterfacesItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
+
+                    Interfaces._item_type = InterfacesItem
+
+                    _fields: ClassVar[dict] = {"name": {"type": str}, "interfaces": {"type": Interfaces}}
+                    name: str
+                    """RSS interface profile name."""
+                    interfaces: Interfaces
+                    """
+                    Interfaces within RSS profile.
+
+                    Subclass of AvdIndexedList with `InterfacesItem` items. Primary key
+                    is `name` (`str`).
+                    """
+
+                    if TYPE_CHECKING:
+
+                        def __init__(self, *, name: str | UndefinedType = Undefined, interfaces: Interfaces | UndefinedType = Undefined) -> None:
+                            """
+                            ProfilesItem.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                name: RSS interface profile name.
+                                interfaces:
+                                   Interfaces within RSS profile.
+
+                                   Subclass of AvdIndexedList with `InterfacesItem` items. Primary key
+                                   is `name` (`str`).
+
+                            """
+
+                class Profiles(AvdIndexedList[str, ProfilesItem]):
+                    """Subclass of AvdIndexedList with `ProfilesItem` items. Primary key is `name` (`str`)."""
+
+                    _primary_key: ClassVar[str] = "name"
+
+                Profiles._item_type = ProfilesItem
+
+                _fields: ClassVar[dict] = {"profiles": {"type": Profiles}, "interface_profile": {"type": str}}
+                profiles: Profiles
+                """
+                Configure one or more Receive Side Scaling (RSS) interface profiles.
+                This is supported on specific
+                platforms.
+
+                Subclass of AvdIndexedList with `ProfilesItem` items. Primary key is `name` (`str`).
+                """
+                interface_profile: str | None
+                """
+                RSS interface profile name to apply for the platform.
+                Needs system reload or Sfe agent restart for
+                change to take effect.
+                """
+
+                if TYPE_CHECKING:
+
+                    def __init__(self, *, profiles: Profiles | UndefinedType = Undefined, interface_profile: str | None | UndefinedType = Undefined) -> None:
+                        """
+                        Interface.
+
+
+                        Subclass of AvdModel.
+
+                        Args:
+                            profiles:
+                               Configure one or more Receive Side Scaling (RSS) interface profiles.
+                               This is supported on specific
+                               platforms.
+
+                               Subclass of AvdIndexedList with `ProfilesItem` items. Primary key is `name` (`str`).
+                            interface_profile:
+                               RSS interface profile name to apply for the platform.
+                               Needs system reload or Sfe agent restart for
+                               change to take effect.
+
+                        """
+
+            _fields: ClassVar[dict] = {"data_plane_cpu_allocation_max": {"type": int}, "interface": {"type": Interface}}
             data_plane_cpu_allocation_max: int | None
             """Maximum number of CPUs used for data plane traffic forwarding."""
+            interface: Interface
+            """
+            Configure interface related settings for Sfe platform.
+
+            Subclass of AvdModel.
+            """
 
             if TYPE_CHECKING:
 
-                def __init__(self, *, data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined) -> None:
+                def __init__(
+                    self, *, data_plane_cpu_allocation_max: int | None | UndefinedType = Undefined, interface: Interface | UndefinedType = Undefined
+                ) -> None:
                     """
                     Sfe.
 
@@ -24837,6 +25012,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     Args:
                         data_plane_cpu_allocation_max: Maximum number of CPUs used for data plane traffic forwarding.
+                        interface:
+                           Configure interface related settings for Sfe platform.
+
+                           Subclass of AvdModel.
 
                     """
 
@@ -62012,6 +62191,35 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
+                class VlanRange(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}}
+                    vlans: str
+                    """e.g. "94,96,100-110"."""
+                    vnis: str
+                    """
+                    Set `vnis` in the correct sequence as `vlans`.
+                    e.g. "10094,10096,10100-10110".
+                    """
+
+                    if TYPE_CHECKING:
+
+                        def __init__(self, *, vlans: str | UndefinedType = Undefined, vnis: str | UndefinedType = Undefined) -> None:
+                            """
+                            VlanRange.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                vlans: e.g. "94,96,100-110".
+                                vnis:
+                                   Set `vnis` in the correct sequence as `vlans`.
+                                   e.g. "10094,10096,10100-10110".
+
+                            """
+
                 class VlansItem(AvdModel):
                     """Subclass of AvdModel."""
 
@@ -62114,6 +62322,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "virtual_router_encapsulation_mac_address": {"type": str},
                     "bfd_vtep_evpn": {"type": BfdVtepEvpn},
                     "qos": {"type": Qos},
+                    "vlan_range": {"type": VlanRange},
                     "vlans": {"type": Vlans},
                     "vrfs": {"type": Vrfs},
                     "flood_vteps": {"type": FloodVteps},
@@ -62147,8 +62356,22 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Subclass of AvdModel.
                 """
+                vlan_range: VlanRange
+                """
+                Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+                If a VNI is set for a VLAN
+                using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+                Subclass of AvdModel.
+                """
                 vlans: Vlans
-                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
+                """
+                Set VNI/multicast group/remote vtep on a vlan.
+                If a VNI is set for a VLAN using `vlan_range`, VNI
+                setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+
+                Subclass of
+                AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
+                """
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
                 flood_vteps: FloodVteps
@@ -62169,6 +62392,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         virtual_router_encapsulation_mac_address: str | None | UndefinedType = Undefined,
                         bfd_vtep_evpn: BfdVtepEvpn | UndefinedType = Undefined,
                         qos: Qos | UndefinedType = Undefined,
+                        vlan_range: VlanRange | UndefinedType = Undefined,
                         vlans: Vlans | UndefinedType = Undefined,
                         vrfs: Vrfs | UndefinedType = Undefined,
                         flood_vteps: FloodVteps | UndefinedType = Undefined,
@@ -62200,7 +62424,18 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
 
                                Subclass of AvdModel.
-                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
+                            vlan_range:
+                               Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+                               If a VNI is set for a VLAN
+                               using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+                               Subclass of AvdModel.
+                            vlans:
+                               Set VNI/multicast group/remote vtep on a vlan.
+                               If a VNI is set for a VLAN using `vlan_range`, VNI
+                               setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+
+                               Subclass of
+                               AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane
@@ -62355,6 +62590,35 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                             """
 
+                class VlanRange(AvdModel):
+                    """Subclass of AvdModel."""
+
+                    _fields: ClassVar[dict] = {"vlans": {"type": str}, "vnis": {"type": str}}
+                    vlans: str
+                    """e.g. "94,96,100-110"."""
+                    vnis: str
+                    """
+                    Set `vnis` in the correct sequence as `vlans`.
+                    e.g. "10094,10096,10100-10110".
+                    """
+
+                    if TYPE_CHECKING:
+
+                        def __init__(self, *, vlans: str | UndefinedType = Undefined, vnis: str | UndefinedType = Undefined) -> None:
+                            """
+                            VlanRange.
+
+
+                            Subclass of AvdModel.
+
+                            Args:
+                                vlans: e.g. "94,96,100-110".
+                                vnis:
+                                   Set `vnis` in the correct sequence as `vlans`.
+                                   e.g. "10094,10096,10100-10110".
+
+                            """
+
                 class VlansItem(AvdModel):
                     """Subclass of AvdModel."""
 
@@ -62457,6 +62721,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     "virtual_router_encapsulation_mac_address": {"type": str},
                     "bfd_vtep_evpn": {"type": BfdVtepEvpn},
                     "qos": {"type": Qos},
+                    "vlan_range": {"type": VlanRange},
                     "vlans": {"type": Vlans},
                     "vrfs": {"type": Vrfs},
                     "flood_vteps": {"type": FloodVteps},
@@ -62490,8 +62755,22 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                 Subclass of AvdModel.
                 """
+                vlan_range: VlanRange
+                """
+                Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+                If a VNI is set for a VLAN
+                using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+                Subclass of AvdModel.
+                """
                 vlans: Vlans
-                """Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`)."""
+                """
+                Set VNI/multicast group/remote vtep on a vlan.
+                If a VNI is set for a VLAN using `vlan_range`, VNI
+                setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+
+                Subclass of
+                AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
+                """
                 vrfs: Vrfs
                 """Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`)."""
                 flood_vteps: FloodVteps
@@ -62512,6 +62791,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                         virtual_router_encapsulation_mac_address: str | None | UndefinedType = Undefined,
                         bfd_vtep_evpn: BfdVtepEvpn | UndefinedType = Undefined,
                         qos: Qos | UndefinedType = Undefined,
+                        vlan_range: VlanRange | UndefinedType = Undefined,
                         vlans: Vlans | UndefinedType = Undefined,
                         vrfs: Vrfs | UndefinedType = Undefined,
                         flood_vteps: FloodVteps | UndefinedType = Undefined,
@@ -62543,7 +62823,18 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
 
                                Subclass of AvdModel.
-                            vlans: Subclass of AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
+                            vlan_range:
+                               Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+                               If a VNI is set for a VLAN
+                               using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+                               Subclass of AvdModel.
+                            vlans:
+                               Set VNI/multicast group/remote vtep on a vlan.
+                               If a VNI is set for a VLAN using `vlan_range`, VNI
+                               setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+
+                               Subclass of
+                               AvdIndexedList with `VlansItem` items. Primary key is `id` (`int`).
                             vrfs: Subclass of AvdIndexedList with `VrfsItem` items. Primary key is `name` (`str`).
                             flood_vteps: Subclass of AvdList with `str` items.
                             flood_vtep_learned_data_plane: flood_vtep_learned_data_plane
@@ -63168,7 +63459,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
     monitor_session_default_encapsulation_gre: MonitorSessionDefaultEncapsulationGre
     """Subclass of AvdModel."""
     monitor_sessions: MonitorSessions
-    """Subclass of AvdList with `MonitorSessionsItem` items."""
+    """Subclass of AvdIndexedList with `MonitorSessionsItem` items. Primary key is `name` (`str`)."""
     monitor_telemetry_influx: MonitorTelemetryInflux
     """Subclass of AvdModel."""
     monitor_telemetry_postcard_policy: MonitorTelemetryPostcardPolicy
@@ -63772,7 +64063,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                    Subclass of AvdModel.
                 monitor_session_default_encapsulation_gre: Subclass of AvdModel.
-                monitor_sessions: Subclass of AvdList with `MonitorSessionsItem` items.
+                monitor_sessions: Subclass of AvdIndexedList with `MonitorSessionsItem` items. Primary key is `name` (`str`).
                 monitor_telemetry_influx: Subclass of AvdModel.
                 monitor_telemetry_postcard_policy: Subclass of AvdModel.
                 mpls: Subclass of AvdModel.

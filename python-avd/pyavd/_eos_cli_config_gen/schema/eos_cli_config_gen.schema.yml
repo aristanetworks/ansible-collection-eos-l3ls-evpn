@@ -8752,15 +8752,16 @@ keys:
         - inner-packet
   monitor_sessions:
     type: list
+    primary_key: name
     items:
       type: dict
       keys:
         name:
           type: str
-          required: true
           description: Session Name.
         sources:
           type: list
+          primary_key: name
           items:
             type: dict
             keys:
@@ -9829,6 +9830,64 @@ keys:
             - str
             min: 1
             max: 128
+          interface:
+            type: dict
+            description: Configure interface related settings for Sfe platform.
+            keys:
+              profiles:
+                type: list
+                primary_key: name
+                description: 'Configure one or more Receive Side Scaling (RSS) interface
+                  profiles.
+
+                  This is supported on specific platforms.'
+                items:
+                  type: dict
+                  keys:
+                    name:
+                      type: str
+                      description: RSS interface profile name.
+                    interfaces:
+                      type: list
+                      description: Interfaces within RSS profile.
+                      primary_key: name
+                      items:
+                        type: dict
+                        keys:
+                          name:
+                            type: str
+                            description: Interface name such as 'Ethernet2'.
+                          rx_queue:
+                            type: dict
+                            description: Receive queue parameters for the selected
+                              interface.
+                            keys:
+                              count:
+                                type: int
+                                min: 1
+                                convert_types:
+                                - str
+                                description: 'Number of receive queues.
+
+                                  The maximum value is platform dependent.'
+                              worker:
+                                type: str
+                                description: 'Worker ids specified as combination
+                                  of range and/or comma separated values
+
+                                  such as 0-4,7.'
+                              mode:
+                                type: str
+                                description: Mode applicable to the workers. Default
+                                  mode is 'shared'.
+                                valid_values:
+                                - shared
+                                - exclusive
+              interface_profile:
+                type: str
+                description: 'RSS interface profile name to apply for the platform.
+
+                  Needs system reload or Sfe agent restart for change to take effect.'
   poe:
     type: dict
     keys:
@@ -23023,9 +23082,31 @@ keys:
                       '
                   map_dscp_to_traffic_class_decapsulation:
                     type: bool
+              vlan_range:
+                type: dict
+                description: 'Set VNI on range of VLANs. Number of VLANs must equal
+                  number of VNIs.
+
+                  If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans`
+                  is ignored for that VLAN.'
+                keys:
+                  vlans:
+                    type: str
+                    required: true
+                    description: e.g. "94,96,100-110".
+                  vnis:
+                    type: str
+                    required: true
+                    description: 'Set `vnis` in the correct sequence as `vlans`.
+
+                      e.g. "10094,10096,10100-10110".'
               vlans:
                 type: list
                 primary_key: id
+                description: 'Set VNI/multicast group/remote vtep on a vlan.
+
+                  If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans`
+                  is ignored for that VLAN.'
                 items:
                   type: dict
                   keys:

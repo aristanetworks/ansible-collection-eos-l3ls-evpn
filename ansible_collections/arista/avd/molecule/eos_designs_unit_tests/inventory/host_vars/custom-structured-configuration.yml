@@ -107,3 +107,14 @@ csc_1_domain_list:
   - foo.foo
   - bar.bar
 csc_2_domain_list: null
+
+# Testing a model where we are using a $ref for the entire schema, so the classes will be cli_gen classes.
+snmp_settings:
+  vrfs:
+    - name: foo
+      enable: true
+
+csc_1_snmp_server:
+  vrfs:
+    - name: bar
+      enable: true

@@ -162,4 +162,4 @@ evpn_vlan_bundles:
   - name: bundle6
     id: 6
     rt_override: 666
-    rd_override: 1.1.1.1:666
+    rd_override: auto
