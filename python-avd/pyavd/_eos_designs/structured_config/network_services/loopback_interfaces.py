@@ -36,6 +36,7 @@ class LoopbackInterfacesMixin(Protocol):
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 if (loopback_interface := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is not None:
+                    self._set_virtual_source_nat_for_vrf_loopback(loopback_interface)
                     self.structured_config.loopback_interfaces.append(loopback_interface)
 
                 # The loopbacks have already been filtered in _filtered_tenants
@@ -52,7 +53,7 @@ class LoopbackInterfacesMixin(Protocol):
                         loopback_interface_item.vrf = vrf.name
                     if loopback.ospf.enabled and vrf.ospf.enabled:
                         loopback_interface_item.ospf_area = loopback.ospf.area
-
+                    self._set_virtual_source_nat_for_vrf_loopback(loopback_interface_item)
                     self.structured_config.loopback_interfaces.append(loopback_interface_item)
 
     def _get_vtep_diagnostic_loopback_for_vrf(
