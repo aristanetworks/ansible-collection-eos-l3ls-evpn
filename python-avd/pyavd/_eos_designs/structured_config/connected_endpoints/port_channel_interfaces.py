@@ -43,9 +43,13 @@ class PortChannelInterfacesMixin(Protocol):
                 channel_group_id = adapter.port_channel.channel_id or default_channel_group_id
 
                 port_channel_interface_name = f"Port-Channel{channel_group_id}"
-                self.structured_config.port_channel_interfaces.append(
-                    self._get_port_channel_interface_cfg(adapter, port_channel_interface_name, channel_group_id, connected_endpoint)
-                )
+
+                port_channel_interface = self._get_port_channel_interface_cfg(adapter, port_channel_interface_name, channel_group_id, connected_endpoint)
+                self.structured_config.port_channel_interfaces.append(port_channel_interface)
+                if adapter.port_channel.structured_config:
+                    self.custom_structured_configs.nested.port_channel_interfaces.obtain(port_channel_interface.name)._deepmerge(
+                        adapter.port_channel.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                    )
 
                 for subinterface in adapter.port_channel.subinterfaces:
                     if not subinterface.number:
@@ -61,9 +65,11 @@ class PortChannelInterfacesMixin(Protocol):
                         )
                     )
 
-        # Temporary list of port-channel interfaces to be added by network ports.
+        # Temporary dict of port-channel interfaces to be added by network ports.
         # We need this since network ports can override each other, so the last one "wins"
-        network_ports_port_channel_interfaces = EosCliConfigGen.PortChannelInterfaces()
+        # Notice this is keyed by the ethernet interface, so we get duplication check between the members.
+        # Values are the real structured config and the custom structured config for this interface.
+        network_ports_port_channel_interfaces: dict[str, tuple[EosCliConfigGen.PortChannelInterfacesItem, EosCliConfigGen.PortChannelInterfacesItem]] = {}
         for network_port in self._filtered_network_ports:
             if not network_port.port_channel.mode:
                 continue
@@ -84,21 +90,24 @@ class PortChannelInterfacesMixin(Protocol):
                 network_port_as_adapter.switches = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.Switches(
                     [self.shared_utils.hostname, ""]
                 )
-
                 default_channel_group_id = int("".join(re.findall(r"\d", ethernet_interface_name)))
                 channel_group_id = network_port_as_adapter.port_channel.channel_id or default_channel_group_id
 
                 port_channel_interface_name = f"Port-Channel{channel_group_id}"
 
+                # Using __setitem__ to replace any previous network_port.
                 port_channel_interface = self._get_port_channel_interface_cfg(
                     network_port_as_adapter, port_channel_interface_name, channel_group_id, connected_endpoint
                 )
+                network_ports_port_channel_interfaces[ethernet_interface_name] = port_channel_interface, network_port_as_adapter.port_channel.structured_config
 
-                # Using __setitem__ to replace any previous network_port.
-                network_ports_port_channel_interfaces[port_channel_interface_name] = port_channel_interface
-
-        if network_ports_port_channel_interfaces:
-            self.structured_config.port_channel_interfaces.extend(network_ports_port_channel_interfaces)
+        # Now insert into the actual structured config and custom structured config
+        for port_channel_interface, structured_config in network_ports_port_channel_interfaces.values():
+            self.structured_config.port_channel_interfaces.append(port_channel_interface)
+            if structured_config:
+                self.custom_structured_configs.nested.port_channel_interfaces.obtain(port_channel_interface.name)._deepmerge(
+                    structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                )
 
     def _get_port_channel_interface_cfg(
         self: AvdStructuredConfigConnectedEndpointsProtocol,
@@ -107,7 +116,21 @@ class PortChannelInterfacesMixin(Protocol):
         channel_group_id: int,
         connected_endpoint: EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem,
     ) -> EosCliConfigGen.PortChannelInterfacesItem:
-        """Return structured_config for one port_channel_interface."""
+        """
+        Return structured_config for one port_channel_interface.
+
+        Args:
+            adapter: The adapter item containing port-channel configuration.
+            port_channel_interface_name: The name of the port-channel interface.
+            channel_group_id: The channel group ID for the port-channel.
+            connected_endpoint: The connected endpoint item.
+
+        Returns:
+            The port-channel interface configuration.
+
+        Raises:
+            AristaAvdInvalidInputsError: If the 'vlans' value is invalid for the given mode.
+        """
         peer = connected_endpoint.name
         adapter_description = adapter.description
         port_channel_description = adapter.port_channel.description
@@ -146,10 +169,6 @@ class PortChannelInterfacesMixin(Protocol):
             validate_lldp=None if (adapter.validate_lldp if adapter.validate_lldp is not None else True) else False,
             eos_cli=adapter.port_channel.raw_eos_cli,
         )
-        if adapter.port_channel.structured_config:
-            self.custom_structured_configs.nested.port_channel_interfaces.obtain(port_channel_interface_name)._deepmerge(
-                adapter.port_channel.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
-            )
 
         if adapter.port_channel.subinterfaces:
             port_channel_interface.switchport.enabled = False

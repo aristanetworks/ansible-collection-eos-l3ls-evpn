@@ -119,7 +119,7 @@ ethernet_interfaces:
   peer_type: server
 hostname: ptp-tests-leaf2
 ip_igmp_snooping:
-  globally_enabled: true
+  globally_enabled: false
 ip_routing: true
 is_deployed: true
 loopback_interfaces:
