@@ -25,7 +25,7 @@ class LoopbackInterfacesMixin(Protocol):
 
     @structured_config_contributor
     def loopback_interfaces(self: AvdStructuredConfigUnderlayProtocol) -> None:
-        """Set structured config for loopback_interfaces."""
+        """Set the structured config for loopback_interfaces."""
         if not self.shared_utils.underlay_router:
             return
 
