@@ -1159,10 +1159,10 @@ router_path_selection:
     dynamic_peers:
       enabled: true
     static_peers:
-    - router_ip: 192.168.144.3
-      name: cv-pathfinder-pathfinder2
+    - router_ip: 192.168.144.2
+      name: cv-pathfinder-pathfinder1
       ipv4_addresses:
-      - 10.9.9.6
+      - 10.8.8.8
     - router_ip: 192.168.144.3
       name: cv-pathfinder-pathfinder2
       ipv4_addresses:

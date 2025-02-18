@@ -84,10 +84,6 @@ class RouterPathSelectionMixin(Protocol):
                             )
                             raise AristaAvdError(msg)
                         path_group_item.keepalive._update(interval=int(interval), failure_threshold=path_group.dps_keepalive.failure_threshold)
-                        # path_group_data["keepalive"] = {
-                        #     "interval": int(interval),
-                        #     "failure_threshold": path_group.dps_keepalive.failure_threshold,
-                        # }
 
             router_path_selection.path_groups.append(path_group_item)
 
@@ -176,9 +172,7 @@ class RouterPathSelectionMixin(Protocol):
             return
 
         path_group_item.dynamic_peers.enabled = True
-        # path_group_item._update(
-        #     dynamic_peers = EosCliConfigGen.RouterPathSelection.PathGroupsItem.DynamicPeers(enabled=True)
-        # )
+
         if disable_ipsec:
             path_group_item.dynamic_peers.ipsec = False
 
@@ -189,7 +183,6 @@ class RouterPathSelectionMixin(Protocol):
         if not self.shared_utils.is_wan_router:
             return
 
-        static_peer = EosCliConfigGen.RouterPathSelection.PathGroupsItem.StaticPeersItem()
         for wan_route_server in self.shared_utils.filtered_wan_route_servers:
             if path_group_name not in wan_route_server.path_groups:
                 continue
@@ -198,17 +191,8 @@ class RouterPathSelectionMixin(Protocol):
                 get_ip_from_ip_prefix(interface.public_ip) for interface in wan_route_server.path_groups[path_group_name].interfaces if interface.public_ip
             ]
 
-            static_peer._update(
+            path_group_item.static_peers.append_new(
                 router_ip=wan_route_server.vtep_ip,
                 name=wan_route_server.hostname,
                 ipv4_addresses=EosCliConfigGen.RouterPathSelection.PathGroupsItem.StaticPeersItem.Ipv4Addresses(ipv4_addresses),
-                # {
-                #     "router_ip": wan_route_server.vtep_ip,
-                #     "name": wan_route_server.hostname,
-                #     "ipv4_addresses": ipv4_addresses,
-                # },
             )
-            # if wan_route_server.vtep_ip is not None:
-            #     static_peer.router_ip = wan_route_server.vtep_ip
-
-            path_group_item.static_peers.append(static_peer)
