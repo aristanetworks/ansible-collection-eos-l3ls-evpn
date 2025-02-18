@@ -45,6 +45,16 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;mdb_profile</samp>](## "platform.sand.mdb_profile") | String |  |  | Valid Values:<br>- <code>balanced</code><br>- <code>balanced-xl</code><br>- <code>l3</code><br>- <code>l3-xl</code><br>- <code>l3-xxl</code><br>- <code>l3-xxxl</code> | Sand platforms MDB Profile configuration. Note: l3-xxxl does not support MLAG. |
     | [<samp>&nbsp;&nbsp;sfe</samp>](## "platform.sfe") | Dictionary |  |  |  | Sfe (Software Forwarding Engine) settings. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;data_plane_cpu_allocation_max</samp>](## "platform.sfe.data_plane_cpu_allocation_max") | Integer |  |  | Min: 1<br>Max: 128 | Maximum number of CPUs used for data plane traffic forwarding. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;interface</samp>](## "platform.sfe.interface") | Dictionary |  |  |  | Configure interface related settings for Sfe platform. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;profiles</samp>](## "platform.sfe.interface.profiles") | List, items: Dictionary |  |  |  | Configure one or more Receive Side Scaling (RSS) interface profiles.<br>This is supported on specific platforms. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "platform.sfe.interface.profiles.[].name") | String | Required, Unique |  |  | RSS interface profile name. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interfaces</samp>](## "platform.sfe.interface.profiles.[].interfaces") | List, items: Dictionary |  |  |  | Interfaces within RSS profile. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "platform.sfe.interface.profiles.[].interfaces.[].name") | String | Required, Unique |  |  | Interface name such as 'Ethernet2'. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rx_queue</samp>](## "platform.sfe.interface.profiles.[].interfaces.[].rx_queue") | Dictionary |  |  |  | Receive queue parameters for the selected interface. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;count</samp>](## "platform.sfe.interface.profiles.[].interfaces.[].rx_queue.count") | Integer |  |  | Min: 1 | Number of receive queues.<br>The maximum value is platform dependent. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;worker</samp>](## "platform.sfe.interface.profiles.[].interfaces.[].rx_queue.worker") | String |  |  |  | Worker ids specified as combination of range and/or comma separated values<br>such as 0-4,7. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mode</samp>](## "platform.sfe.interface.profiles.[].interfaces.[].rx_queue.mode") | String |  |  | Valid Values:<br>- <code>shared</code><br>- <code>exclusive</code> | Mode applicable to the workers. Default mode is 'shared'. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interface_profile</samp>](## "platform.sfe.interface.interface_profile") | String |  |  |  | RSS interface profile name to apply for the platform.<br>Needs system reload or Sfe agent restart for change to take effect. |
 
 === "YAML"
 
@@ -122,4 +132,38 @@
 
         # Maximum number of CPUs used for data plane traffic forwarding.
         data_plane_cpu_allocation_max: <int; 1-128>
+
+        # Configure interface related settings for Sfe platform.
+        interface:
+
+          # Configure one or more Receive Side Scaling (RSS) interface profiles.
+          # This is supported on specific platforms.
+          profiles:
+
+              # RSS interface profile name.
+            - name: <str; required; unique>
+
+              # Interfaces within RSS profile.
+              interfaces:
+
+                  # Interface name such as 'Ethernet2'.
+                - name: <str; required; unique>
+
+                  # Receive queue parameters for the selected interface.
+                  rx_queue:
+
+                    # Number of receive queues.
+                    # The maximum value is platform dependent.
+                    count: <int; >=1>
+
+                    # Worker ids specified as combination of range and/or comma separated values
+                    # such as 0-4,7.
+                    worker: <str>
+
+                    # Mode applicable to the workers. Default mode is 'shared'.
+                    mode: <str; "shared" | "exclusive">
+
+          # RSS interface profile name to apply for the platform.
+          # Needs system reload or Sfe agent restart for change to take effect.
+          interface_profile: <str>
     ```
