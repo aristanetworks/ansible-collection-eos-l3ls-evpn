@@ -77,7 +77,7 @@ class UtilsMixin(Protocol):
                 if filtered_adapters:
                     # The object was deepcopied inside "get_merged_adapter_settings" so we can modify it here.
                     connected_endpoint.adapters = filtered_adapters
-                    connected_endpoint._type = self.inputs.connected_endpoints_keys[connected_endpoints_key.key].type
+                    connected_endpoint._internal_data.type = self.inputs.connected_endpoints_keys[connected_endpoints_key.key].type
                     filtered_connected_endpoints.append(connected_endpoint)
 
         return filtered_connected_endpoints
@@ -162,7 +162,7 @@ class UtilsMixin(Protocol):
         output_type: type[T_StormControl],
     ) -> T_StormControl | UndefinedType:
         """Return storm_control for one adapter."""
-        if self.shared_utils.platform_settings.feature_support.interface_storm_control:
+        if self.shared_utils.platform_settings.feature_support.interface_storm_control and adapter.storm_control:
             return adapter.storm_control._cast_as(output_type)
 
         return Undefined
@@ -241,7 +241,7 @@ class UtilsMixin(Protocol):
         # Apply PTP profile config
         if (ptp_profile_name := adapter.ptp.profile or self.shared_utils.ptp_profile_name) is not None:
             if ptp_profile_name not in self.inputs.ptp_profiles:
-                msg = f"PTP Profile '{ptp_profile_name}' referenced under {adapter._source} does not exist in `ptp_profiles`."
+                msg = f"PTP Profile '{ptp_profile_name}' referenced under '{adapter._source}' does not exist in 'ptp_profiles'."
                 raise AristaAvdInvalidInputsError(msg)
 
             # Create a copy and removes the .profile attribute since the target model has a .profile key with a different schema.

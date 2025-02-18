@@ -39,7 +39,7 @@ class VlansMixin(Protocol):
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 for svi in vrf.svis:
-                    self.structured_config.vlans.append(self._get_vlan_config(svi), ignore_fields=("tenant",))
+                    self.structured_config.vlans.append(self._get_vlan_config(svi, tenant), ignore_fields=("tenant",))
 
                 # MLAG IBGP Peering VLANs per VRF
                 # Continue to next VRF if mlag vlan_id is not set
@@ -56,12 +56,13 @@ class VlansMixin(Protocol):
 
             # L2 Vlans per Tenant
             for l2vlan in tenant.l2vlans:
-                self.structured_config.vlans.append(self._get_vlan_config(l2vlan), ignore_fields=("tenant",))
+                self.structured_config.vlans.append(self._get_vlan_config(l2vlan, tenant), ignore_fields=("tenant",))
 
     def _get_vlan_config(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> EosCliConfigGen.VlansItem:
         """
         Return structured config for one given vlan.
@@ -71,7 +72,7 @@ class VlansMixin(Protocol):
         vlans_vlan = EosCliConfigGen.VlansItem(
             id=vlan.id,
             name=vlan.name,
-            tenant=vlan._tenant,
+            tenant=tenant.name,
         )
         if self.inputs.enable_trunk_groups:
             trunk_groups = vlan.trunk_groups

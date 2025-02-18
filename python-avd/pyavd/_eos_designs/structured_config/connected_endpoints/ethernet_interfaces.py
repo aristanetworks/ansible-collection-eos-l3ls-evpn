@@ -41,14 +41,20 @@ class EthernetInterfacesMixin(Protocol):
                     if node_name != self.shared_utils.hostname:
                         continue
 
-                    self.structured_config.ethernet_interfaces.append(self._get_ethernet_interface_cfg(adapter, node_index, connected_endpoint))
+                    ethernet_interface = self._get_ethernet_interface_cfg(adapter, node_index, connected_endpoint)
+                    self.structured_config.ethernet_interfaces.append(ethernet_interface)
+                    if adapter.structured_config:
+                        self.custom_structured_configs.nested.ethernet_interfaces.obtain(ethernet_interface.name)._deepmerge(
+                            adapter.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                        )
 
-        # Temporary list of ethernet interfaces to be added by network ports.
+        # Temporary dict of ethernet interfaces to be added by network ports.
         # We need this since network ports can override each other, so the last one "wins"
-        network_ports_ethernet_interfaces = EosCliConfigGen.EthernetInterfaces()
+        # Values are the real structured config and the custom structured config for this interface.
+        network_ports_ethernet_interfaces: dict[str, tuple[EosCliConfigGen.EthernetInterfacesItem, EosCliConfigGen.EthernetInterfacesItem]] = {}
         for network_port in self._filtered_network_ports:
             connected_endpoint = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem(name=network_port.endpoint or Undefined)
-            connected_endpoint._type = "network_port"
+            connected_endpoint._internal_data.type = "network_port"
             network_port_as_adapter = network_port._cast_as(
                 EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem, ignore_extra_keys=True
             )
@@ -64,13 +70,18 @@ class EthernetInterfacesMixin(Protocol):
                 network_port_as_adapter.switches = EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.Switches(
                     [self.shared_utils.hostname]
                 )
-                ethernet_interface = self._get_ethernet_interface_cfg(network_port_as_adapter, 0, connected_endpoint)
 
                 # Using __setitem__ to replace any previous network_port.
-                network_ports_ethernet_interfaces[ethernet_interface_name] = ethernet_interface
+                ethernet_interface = self._get_ethernet_interface_cfg(network_port_as_adapter, 0, connected_endpoint)
+                network_ports_ethernet_interfaces[ethernet_interface_name] = ethernet_interface, network_port_as_adapter.structured_config
 
-        if network_ports_ethernet_interfaces:
-            self.structured_config.ethernet_interfaces.extend(network_ports_ethernet_interfaces)
+        # Now insert into the actual structured config and custom structured config
+        for ethernet_interface, structured_config in network_ports_ethernet_interfaces.values():
+            self.structured_config.ethernet_interfaces.append(ethernet_interface)
+            if structured_config:
+                self.custom_structured_configs.nested.ethernet_interfaces.obtain(ethernet_interface.name)._deepmerge(
+                    structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+                )
 
     def _update_ethernet_interface_cfg(
         self: AvdStructuredConfigConnectedEndpointsProtocol,
@@ -162,7 +173,7 @@ class EthernetInterfacesMixin(Protocol):
             name=adapter.switch_ports[node_index],
             peer=peer,
             peer_interface=peer_interface,
-            peer_type=connected_endpoint._type,
+            peer_type=connected_endpoint._internal_data.type,
             port_profile=adapter.profile,
             description=self.shared_utils.interface_descriptions.connected_endpoints_ethernet_interface(
                 InterfaceDescriptionData(
@@ -170,7 +181,7 @@ class EthernetInterfacesMixin(Protocol):
                     interface=adapter.switch_ports[node_index],
                     peer=peer,
                     peer_interface=peer_interface,
-                    peer_type=connected_endpoint._type,
+                    peer_type=connected_endpoint._internal_data.type,
                     description=interface_description,
                     port_channel_id=channel_group_id if port_channel_mode is not None else None,
                 ),
@@ -184,11 +195,6 @@ class EthernetInterfacesMixin(Protocol):
             poe=self._get_adapter_poe(adapter),
             eos_cli=adapter.raw_eos_cli,
         )
-
-        if adapter.structured_config:
-            self.custom_structured_configs.nested.ethernet_interfaces.obtain(adapter.switch_ports[node_index])._deepmerge(
-                adapter.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
-            )
 
         # Port-channel member
         if adapter.port_channel.mode:
@@ -210,7 +216,7 @@ class EthernetInterfacesMixin(Protocol):
                 profile = self.shared_utils.get_merged_port_profile(profile_name, context=f"{adapter._source}.port_channel.lacp_fallback.individual")._cast_as(
                     EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem
                 )
-                ethernet_interface = self._update_ethernet_interface_cfg(profile, ethernet_interface, connected_endpoint)
+                self._update_ethernet_interface_cfg(profile, ethernet_interface, connected_endpoint)
 
             if adapter.port_channel.mode != "on" and adapter.port_channel.lacp_timer.mode is not None:
                 ethernet_interface.lacp_timer.mode = adapter.port_channel.lacp_timer.mode

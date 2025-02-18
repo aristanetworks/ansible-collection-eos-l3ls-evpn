@@ -3,8 +3,9 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
+
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
@@ -17,14 +18,12 @@ class IpVirtualRouterMacAddressMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def ip_virtual_router_mac_address(self: AvdStructuredConfigNetworkServicesProtocol) -> str | None:
-        """Return structured config for ip_virtual_router_mac_address."""
+    @structured_config_contributor
+    def ip_virtual_router_mac_address(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
+        """Set the structured config for ip_virtual_router_mac_address."""
         if (
             self.shared_utils.network_services_l2
             and self.shared_utils.network_services_l3
             and self.shared_utils.node_config.virtual_router_mac_address is not None
         ):
-            return str(self.shared_utils.node_config.virtual_router_mac_address).lower()
-
-        return None
+            self.structured_config.ip_virtual_router_mac_address = str(self.shared_utils.node_config.virtual_router_mac_address).lower()

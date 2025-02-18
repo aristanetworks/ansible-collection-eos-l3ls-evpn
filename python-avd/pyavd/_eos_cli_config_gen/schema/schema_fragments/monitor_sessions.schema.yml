@@ -8,15 +8,16 @@ type: dict
 keys:
   monitor_sessions:
     type: list
+    primary_key: name
     items:
       type: dict
       keys:
         name:
           type: str
-          required: true
           description: Session Name.
         sources:
           type: list
+          primary_key: name
           items:
             type: dict
             keys:

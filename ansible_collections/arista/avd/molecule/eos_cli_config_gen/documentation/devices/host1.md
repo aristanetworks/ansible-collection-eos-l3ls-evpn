@@ -9291,6 +9291,8 @@ router bfd
 | LDP Interface Disabled Default | True |
 | LDP Transport-Address Interface | Loopback0 |
 | ICMP Fragmentation-Needed Tunneling Enabled | True |
+| Tunnel Termination Model | TTL: uniform, DSCP: uniform |
+| Tunnel Termination PHP Model | TTL: pipe, DSCP: pipe |
 
 ### MPLS Interfaces
 
@@ -9356,6 +9358,8 @@ router bfd
 ```eos
 !
 mpls ip
+mpls tunnel termination model ttl uniform dscp uniform
+mpls tunnel termination php model ttl pipe dscp pipe
 !
 mpls ldp
    router-id 192.168.1.1
@@ -10696,6 +10700,27 @@ ipv6 address virtual source-nat vrf TEST_04 address 2001:db8:85a3::8a2e:370:7335
 | Settings | Value |
 | -------- | ----- |
 | Maximum CPU Allocation | 42 |
+| Interface profile | TestProfile1 |
+
+#### Platform Software Forwarding Engine Interface Profiles
+
+##### TestProfile1
+
+| Interface | Rx-Queue Count | Rx-Queue Worker | Rx-Queue Mode |
+| --------- | -------------- | --------------- | ------------- |
+| Ethernet1/1 | 4 | 0-2,5 | - |
+| Ethernet1/2 | 2 | - | shared |
+| Ethernet1/4 | 1 | - | - |
+| Ethernet1/5 | 2 | 3,4 | exclusive |
+
+##### TestProfile2
+
+| Interface | Rx-Queue Count | Rx-Queue Worker | Rx-Queue Mode |
+| --------- | -------------- | --------------- | ------------- |
+| Ethernet1 | 3 | 2 | - |
+| Ethernet9 | - | - | - |
+
+##### TestProfile3
 
 ### Platform Device Configuration
 
@@ -10712,6 +10737,35 @@ platform sand qos map traffic-class 2 to network-qos 15
 platform sand multicast replication default ingress
 platform sand mdb profile l3-xxl
 platform sfe data-plane cpu allocation maximum 42
+!
+platform sfe interface
+   interface profile TestProfile1
+   !
+   profile TestProfile1
+      interface Ethernet1/1
+         rx-queue count 4
+         rx-queue worker 0-2,5
+      !
+      interface Ethernet1/2
+         rx-queue count 2
+         rx-queue mode shared
+      !
+      interface Ethernet1/4
+         rx-queue count 1
+      !
+      interface Ethernet1/5
+         rx-queue count 2
+         rx-queue worker 3,4
+         rx-queue mode exclusive
+   !
+   profile TestProfile2
+      interface Ethernet1
+         rx-queue count 3
+         rx-queue worker 2
+      !
+      interface Ethernet9
+   !
+   profile TestProfile3
 ```
 
 ## System L1
@@ -11604,35 +11658,28 @@ ip nat synchronization
 
 ### Errdisable Summary
 
-|  Detect Cause | Enabled |
-| ------------- | ------- |
-| acl | True |
-| arp-inspection | True |
-| dot1x | True |
-| link-change | True |
-| tapagg | True |
-| xcvr-misconfigured | True |
-| xcvr-overheat | True |
-| xcvr-power-unsupported | True |
+Errdisable recovery timer interval: 300 seconds
 
-|  Detect Cause | Enabled | Interval |
-| ------------- | ------- | -------- |
-| arp-inspection | True | 300 |
-| bpduguard | True | 300 |
-| dot1x | True | 300 |
-| hitless-reload-down | True | 300 |
-| lacp-rate-limit | True | 300 |
-| link-flap | True | 300 |
-| no-internal-vlan | True | 300 |
-| portchannelguard | True | 300 |
-| portsec | True | 300 |
-| speed-misconfigured | True | 300 |
-| tapagg | True | 300 |
-| uplink-failure-detection | True | 300 |
-| xcvr-misconfigured | True | 300 |
-| xcvr-overheat | True | 300 |
-| xcvr-power-unsupported | True | 300 |
-| xcvr-unsupported | True | 300 |
+|  Cause | Detection Enabled | Recovery Enabled |
+| ------ | ----------------- | ---------------- |
+| acl | True | - |
+| arp-inspection | True | True |
+| bpduguard | - | True |
+| dot1x | True | True |
+| hitless-reload-down | - | True |
+| lacp-rate-limit | - | True |
+| link-change | True | - |
+| link-flap | - | True |
+| no-internal-vlan | - | True |
+| portchannelguard | - | True |
+| portsec | - | True |
+| speed-misconfigured | - | True |
+| tapagg | True | True |
+| uplink-failure-detection | - | True |
+| xcvr-misconfigured | True | True |
+| xcvr-overheat | True | True |
+| xcvr-power-unsupported | True | True |
+| xcvr-unsupported | - | True |
 
 ```eos
 !
