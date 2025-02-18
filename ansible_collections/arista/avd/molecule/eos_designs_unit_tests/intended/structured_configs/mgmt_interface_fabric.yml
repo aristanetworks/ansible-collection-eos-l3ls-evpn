@@ -121,6 +121,9 @@ vlans:
 - id: 151
   name: svi_with_no_tags
   tenant: Tenant_A
+- id: 166
+  name: L2VLAN_AND_SVI
+  tenant: Tenant_A
 - id: 120
   name: Tenant_A_WEB_Zone_1
   tenant: Tenant_A

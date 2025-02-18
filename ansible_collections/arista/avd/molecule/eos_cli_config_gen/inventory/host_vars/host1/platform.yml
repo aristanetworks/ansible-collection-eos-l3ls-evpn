@@ -71,3 +71,32 @@ platform:
     mdb_profile: "l3-xxl"
   sfe:
     data_plane_cpu_allocation_max: 42
+    interface:
+      profiles:
+        - name: TestProfile1
+          interfaces:
+            - name: Ethernet1/1
+              rx_queue:
+                count: 4
+                worker: "0-2,5"
+            - name: Ethernet1/5
+              rx_queue:
+                count: 2
+                worker: "3,4"
+                mode: exclusive
+            - name: Ethernet1/2
+              rx_queue:
+                count: 2
+                mode: shared
+            - name: Ethernet1/4
+              rx_queue:
+                count: 1
+        - name: TestProfile2
+          interfaces:
+            - name: Ethernet1
+              rx_queue:
+                count: 3
+                worker: "2"
+            - name: Ethernet9
+        - name: TestProfile3
+      interface_profile: TestProfile1

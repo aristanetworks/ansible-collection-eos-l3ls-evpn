@@ -7,10 +7,7 @@ from pyavd.constants import RUNNING_FROM_SRC
 from schema_tools.build_schemas import build_schemas
 from schema_tools.hash_dir import changed_hash, hash_dir
 
-from .constants import (
-    EOS_CLI_CONFIG_GEN_FRAGMENTS_PATH,
-    EOS_DESIGNS_FRAGMENTS_PATH,
-)
+from .constants import SCHEMAS
 
 LOGGER = logging.getLogger(__name__)
 
@@ -29,16 +26,16 @@ def check_schemas() -> bool:
 
     LOGGER.info("pyavd running from source detected, checking schemas for any changes...")
 
-    return changed_hash(EOS_DESIGNS_FRAGMENTS_PATH) or changed_hash(EOS_CLI_CONFIG_GEN_FRAGMENTS_PATH)
+    return any(changed_hash(schema_paths.fragments_dir) for schema_paths in SCHEMAS.values() if schema_paths.fragments_dir)
 
 
 def rebuild_schemas() -> None:
     """Rebuild the schema and saves the new hashes."""
     LOGGER.info("Recompiling schemas...")
     build_schemas()
-    with (EOS_DESIGNS_FRAGMENTS_PATH / ".hash").open("w") as fd:
-        eos_designs_new_hash = hash_dir(EOS_DESIGNS_FRAGMENTS_PATH)
-        fd.write(eos_designs_new_hash)
-    with (EOS_CLI_CONFIG_GEN_FRAGMENTS_PATH / ".hash").open("w") as fd:
-        eos_cli_config_gen_new_hash = hash_dir(EOS_CLI_CONFIG_GEN_FRAGMENTS_PATH)
-        fd.write(eos_cli_config_gen_new_hash)
+    for schema_paths in SCHEMAS.values():
+        if not schema_paths.fragments_dir:
+            continue
+        with (schema_paths.fragments_dir / ".hash").open("w") as fd:
+            new_hash = hash_dir(schema_paths.fragments_dir)
+            fd.write(new_hash)
