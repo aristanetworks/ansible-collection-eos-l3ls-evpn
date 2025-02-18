@@ -18249,19 +18249,16 @@ class EosDesigns(EosDesignsRootModel):
                         class ActiveActiveMultihoming(AvdModel):
                             """Subclass of AvdModel."""
 
-                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment):
-                                pass
-
                             _fields: ClassVar[dict] = {
                                 "enable_d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
-                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                "evpn_ethernet_segment": {"type": EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment},
                             }
                             enable_d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
-                            evpn_ethernet_segment: EvpnEthernetSegment
+                            evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment
 
                             if TYPE_CHECKING:
 
@@ -18271,7 +18268,7 @@ class EosDesigns(EosDesignsRootModel):
                                     enable_d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
-                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment | UndefinedType = Undefined,
                                 ) -> None:
                                     """
                                     ActiveActiveMultihoming.
@@ -22126,19 +22123,16 @@ class EosDesigns(EosDesignsRootModel):
                             class ActiveActiveMultihoming(AvdModel):
                                 """Subclass of AvdModel."""
 
-                                class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment):
-                                    pass
-
                                 _fields: ClassVar[dict] = {
                                     "enable_d_path": {"type": bool},
                                     "domain_identifier": {"type": str},
                                     "domain_identifier_remote": {"type": str},
-                                    "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                    "evpn_ethernet_segment": {"type": EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment},
                                 }
                                 enable_d_path: bool | None
                                 domain_identifier: str | None
                                 domain_identifier_remote: str | None
-                                evpn_ethernet_segment: EvpnEthernetSegment
+                                evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment
 
                                 if TYPE_CHECKING:
 
@@ -22148,7 +22142,7 @@ class EosDesigns(EosDesignsRootModel):
                                         enable_d_path: bool | None | UndefinedType = Undefined,
                                         domain_identifier: str | None | UndefinedType = Undefined,
                                         domain_identifier_remote: str | None | UndefinedType = Undefined,
-                                        evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                        evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment | UndefinedType = Undefined,
                                     ) -> None:
                                         """
                                         ActiveActiveMultihoming.
@@ -25983,19 +25977,16 @@ class EosDesigns(EosDesignsRootModel):
                         class ActiveActiveMultihoming(AvdModel):
                             """Subclass of AvdModel."""
 
-                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment):
-                                pass
-
                             _fields: ClassVar[dict] = {
                                 "enable_d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
-                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                "evpn_ethernet_segment": {"type": EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment},
                             }
                             enable_d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
-                            evpn_ethernet_segment: EvpnEthernetSegment
+                            evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment
 
                             if TYPE_CHECKING:
 
@@ -26005,7 +25996,7 @@ class EosDesigns(EosDesignsRootModel):
                                     enable_d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
-                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment | UndefinedType = Undefined,
                                 ) -> None:
                                     """
                                     ActiveActiveMultihoming.
@@ -29887,19 +29878,16 @@ class EosDesigns(EosDesignsRootModel):
                         class ActiveActiveMultihoming(AvdModel):
                             """Subclass of AvdModel."""
 
-                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment):
-                                pass
-
                             _fields: ClassVar[dict] = {
                                 "enable_d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
-                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                "evpn_ethernet_segment": {"type": EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment},
                             }
                             enable_d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
-                            evpn_ethernet_segment: EvpnEthernetSegment
+                            evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment
 
                             if TYPE_CHECKING:
 
@@ -29909,7 +29897,7 @@ class EosDesigns(EosDesignsRootModel):
                                     enable_d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
-                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment | UndefinedType = Undefined,
                                 ) -> None:
                                     """
                                     ActiveActiveMultihoming.
@@ -40080,19 +40068,16 @@ class EosDesigns(EosDesignsRootModel):
                         class ActiveActiveMultihoming(AvdModel):
                             """Subclass of AvdModel."""
 
-                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment):
-                                pass
-
                             _fields: ClassVar[dict] = {
                                 "enable_d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
-                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                "evpn_ethernet_segment": {"type": EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment},
                             }
                             enable_d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
-                            evpn_ethernet_segment: EvpnEthernetSegment
+                            evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment
 
                             if TYPE_CHECKING:
 
@@ -40102,7 +40087,7 @@ class EosDesigns(EosDesignsRootModel):
                                     enable_d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
-                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment | UndefinedType = Undefined,
                                 ) -> None:
                                     """
                                     ActiveActiveMultihoming.
@@ -43957,19 +43942,16 @@ class EosDesigns(EosDesignsRootModel):
                             class ActiveActiveMultihoming(AvdModel):
                                 """Subclass of AvdModel."""
 
-                                class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment):
-                                    pass
-
                                 _fields: ClassVar[dict] = {
                                     "enable_d_path": {"type": bool},
                                     "domain_identifier": {"type": str},
                                     "domain_identifier_remote": {"type": str},
-                                    "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                    "evpn_ethernet_segment": {"type": EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment},
                                 }
                                 enable_d_path: bool | None
                                 domain_identifier: str | None
                                 domain_identifier_remote: str | None
-                                evpn_ethernet_segment: EvpnEthernetSegment
+                                evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment
 
                                 if TYPE_CHECKING:
 
@@ -43979,7 +43961,7 @@ class EosDesigns(EosDesignsRootModel):
                                         enable_d_path: bool | None | UndefinedType = Undefined,
                                         domain_identifier: str | None | UndefinedType = Undefined,
                                         domain_identifier_remote: str | None | UndefinedType = Undefined,
-                                        evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                        evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment | UndefinedType = Undefined,
                                     ) -> None:
                                         """
                                         ActiveActiveMultihoming.
@@ -47814,19 +47796,16 @@ class EosDesigns(EosDesignsRootModel):
                         class ActiveActiveMultihoming(AvdModel):
                             """Subclass of AvdModel."""
 
-                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment):
-                                pass
-
                             _fields: ClassVar[dict] = {
                                 "enable_d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
-                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                "evpn_ethernet_segment": {"type": EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment},
                             }
                             enable_d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
-                            evpn_ethernet_segment: EvpnEthernetSegment
+                            evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment
 
                             if TYPE_CHECKING:
 
@@ -47836,7 +47815,7 @@ class EosDesigns(EosDesignsRootModel):
                                     enable_d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
-                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment | UndefinedType = Undefined,
                                 ) -> None:
                                     """
                                     ActiveActiveMultihoming.
@@ -51718,19 +51697,16 @@ class EosDesigns(EosDesignsRootModel):
                         class ActiveActiveMultihoming(AvdModel):
                             """Subclass of AvdModel."""
 
-                            class EvpnEthernetSegment(EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment):
-                                pass
-
                             _fields: ClassVar[dict] = {
                                 "enable_d_path": {"type": bool},
                                 "domain_identifier": {"type": str},
                                 "domain_identifier_remote": {"type": str},
-                                "evpn_ethernet_segment": {"type": EvpnEthernetSegment},
+                                "evpn_ethernet_segment": {"type": EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment},
                             }
                             enable_d_path: bool | None
                             domain_identifier: str | None
                             domain_identifier_remote: str | None
-                            evpn_ethernet_segment: EvpnEthernetSegment
+                            evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment
 
                             if TYPE_CHECKING:
 
@@ -51740,7 +51716,7 @@ class EosDesigns(EosDesignsRootModel):
                                     enable_d_path: bool | None | UndefinedType = Undefined,
                                     domain_identifier: str | None | UndefinedType = Undefined,
                                     domain_identifier_remote: str | None | UndefinedType = Undefined,
-                                    evpn_ethernet_segment: EvpnEthernetSegment | UndefinedType = Undefined,
+                                    evpn_ethernet_segment: EosCliConfigGen.RouterBgp.AddressFamilyEvpn.EvpnEthernetSegment | UndefinedType = Undefined,
                                 ) -> None:
                                     """
                                     ActiveActiveMultihoming.
