@@ -721,6 +721,8 @@ ethernet_interfaces:
     id: 43
     mode: active
   peer_type: network_port
+  switchport:
+    access_vlan: 123
 - name: Ethernet52
   shutdown: false
   channel_group:
