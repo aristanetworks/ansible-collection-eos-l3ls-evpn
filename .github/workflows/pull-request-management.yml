@@ -321,92 +321,6 @@ jobs:
           check_git_enforced: true
 
   # ----------------------------------- #
-  # Ansible tests
-  # ----------------------------------- #
-  ansible_test_sanity:
-    name: Run ansible-test sanity validation
-    runs-on: ubuntu-latest
-    needs: [file-changes]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: |
-            3.10
-            3.11
-            3.12
-            3.13
-      - name: "Install Python requirements"
-        run: |
-          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
-      - name: "Run ansible-test sanity"
-        run: |
-          cd ansible_collections/arista/avd/
-          ansible-test sanity --color yes -v
-
-  ansible_test_units:
-    name: Run ansible-test units test cases
-    runs-on: ubuntu-latest
-    needs: [file-changes]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: |
-            3.12
-      - name: "Install Python requirements"
-        run: |
-          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
-      - name: "Run ansible-test units test cases"
-        run: |
-          cd ansible_collections/arista/avd/
-          ansible-test units -vv
-
-  ansible_test_integration:
-    name: Run ansible-test integration test cases
-    runs-on: ubuntu-latest
-    needs: [file-changes]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: |
-            3.12
-            3.13
-      - name: "Install Python requirements"
-        run: |
-          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
-      - name: "Run ansible-test integration test cases"
-        run: |
-          cd ansible_collections/arista/avd/
-          ansible-test integration -vv
-
-  ansible_lint:
-    name: Run ansible-lint test case
-    runs-on: ubuntu-latest
-    needs: [file-changes]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: |
-            3.10
-            3.11
-            3.12
-            3.13
-      - name: "Install Python & Ansible requirements"
-        run: |
-          pip install -r .github/requirements-ci-dev.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
-          ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
-      - name: "Run ansible-lint"
-        run: |
-          cd ansible_collections/arista/avd/
-          ansible-lint --force-color --strict -v
-  # ----------------------------------- #
   # Galaxy Importer
   # ----------------------------------- #
   galaxy_importer:
@@ -431,13 +345,133 @@ jobs:
         run: |
           pip install "galaxy-importer==0.4.26"
       - name: "Build ansible package"
-        run: make collection-build
+        run: |
+          make collection-build
       - name: "Run galaxy-importer checks"
-        run: python -m galaxy_importer.main *.tar.gz
+        run: python -m galaxy_importer.main avd-collection.tar.gz
+      - name: "Rename collection archive"
+        run: |
+          # Changing name for installation in subsequent steps
+          mv *.tar.gz arista-avd-collection.tar.gz
       - uses: actions/upload-artifact@v4
         with:
           name: importer-logs
           path: ./importer_result.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: avd-collection
+          path: ./arista-avd-collection.tar.gz
+
+  # ----------------------------------- #
+  # Ansible tests
+  # Run on the built collection from Galaxy importer
+  # ----------------------------------- #
+  ansible_test_sanity:
+    name: Run ansible-test sanity validation
+    runs-on: ubuntu-latest
+    needs: [galaxy_importer]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.10
+            3.11
+            3.12
+            3.13
+      - name: "Install Python requirements"
+        run: |
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+      - name: Download collection
+        uses: actions/download-artifact@v4
+        with:
+          name: avd-collection
+      - name: "Run ansible-test sanity"
+        run: |
+          mkdir collections
+          tar xvzf arista-avd-collection.tar.gz -C collections
+          cd collections/
+          ansible-test sanity --color yes -v
+
+  ansible_test_units:
+    name: Run ansible-test units test cases
+    runs-on: ubuntu-latest
+    needs: [galaxy_importer]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.12
+      - name: "Install Python requirements"
+        run: |
+          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+      - name: Download collection
+        uses: actions/download-artifact@v4
+        with:
+          name: avd-collection
+      - name: "Run ansible-test units test cases"
+        run: |
+          mkdir collections
+          tar xvzf arista-avd-collection.tar.gz -C collections
+          cd collections/
+          ansible-test units -vv
+
+  ansible_test_integration:
+    name: Run ansible-test integration test cases
+    runs-on: ubuntu-latest
+    needs: [galaxy_importer]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.12
+            3.13
+      - name: "Install Python requirements"
+        run: |
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+      - name: Download collection
+        uses: actions/download-artifact@v4
+        with:
+          name: avd-collection
+      - name: "Run ansible-test units test cases"
+        run: |
+          mkdir collections
+          tar xvzf arista-avd-collection.tar.gz -C collections
+          cd collections/
+          ansible-test integration -vv
+
+  ansible_lint:
+    name: Run ansible-lint test case
+    runs-on: ubuntu-latest
+    needs: [galaxy_importer]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.10
+            3.11
+            3.12
+            3.13
+      - name: "Install Python & Ansible requirements"
+        run: |
+          pip install -r .github/requirements-ci-dev.txt -r ansible_collections/arista/avd/requirements-dev.txt --upgrade
+      - name: Download collection
+        uses: actions/download-artifact@v4
+        with:
+          name: avd-collection
+      - name: "Run ansible-test units test cases"
+        run: |
+          mkdir collections
+          tar xvzf arista-avd-collection.tar.gz -C collections
+          cd collections/
+          ansible-lint --force-color --strict -v
 
   # ----------------------------------- #
   # Test of pyavd
