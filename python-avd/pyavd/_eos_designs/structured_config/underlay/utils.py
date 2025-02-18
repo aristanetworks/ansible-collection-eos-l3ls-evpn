@@ -350,20 +350,6 @@ class UtilsMixin(Protocol):
         return subinterface
 
     @cached_property
-    def _l3_interface_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, dict]]:
-        """
-        Return dict of l3 interface ACLs.
-
-        <interface_name>: {
-            "ipv4_acl_in": <generated_ipv4_acl>,
-            "ipv4_acl_out": <generated_ipv4_acl>,
-        }
-
-        Only contains L3 interfaces with ACLs and only the ACLs that are set.
-        """
-        return self._get_l3_generic_interface_acls(self.shared_utils.l3_interfaces)
-
-    @cached_property
     def _l3_port_channel_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, dict]]:
         """
         Return dict of l3 Port-Channel ACLs.

@@ -30,7 +30,7 @@ class IpAccesslistsMixin(Protocol):
 
         Covers ipv4_acl_in/out defined under node l3_port_channels.
         """
-        if not self._l3_interface_acls and not self._l3_port_channel_acls:
+        if not self._l3_port_channel_acls:
             return None
 
         ip_access_lists = []
