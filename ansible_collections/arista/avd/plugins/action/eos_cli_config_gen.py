@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import logging
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
@@ -29,8 +30,10 @@ CUSTOM_TEMPLATES_CFG_TEMPLATE = "eos/custom-templates.j2"
 CUSTOM_TEMPLATES_DOC_TEMPLATE = "documentation/custom-templates.j2"
 
 LOGGER = logging.getLogger("ansible_collections.arista.avd")
-# Avoid duplicate logs in debug files
-LOGGER.propagate = False
+with suppress(AttributeError):
+    # Avoid duplicate logs in debug files
+    # Suppressing AttribueError for ansible-lint
+    LOGGER.propagate = False
 
 ARGUMENT_SPEC = {
     "structured_config_filename": {"type": "str"},
