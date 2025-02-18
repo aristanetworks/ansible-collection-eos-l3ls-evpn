@@ -28,9 +28,13 @@ tenants:
   - name: TENANT
     vrfs:
       - name: TEST
-        vrf_id: 1  # Only set to avoid the general VRF code triggering other errors.
+        vrf_id: 1 # Only set to avoid the general VRF code triggering other errors.
         l3_interfaces:
-          - nodes: ["duplicate-interfaces-point-to-point-services-4", "some_other_device"]
+          - nodes:
+              [
+                "duplicate-interfaces-point-to-point-services-4",
+                "some_other_device",
+              ]
             interfaces: ["Ethernet6.1000", "some_other_interface"]
             ip_addresses: [10.42.255.0/31, 10.42.255.1/31]
 
@@ -49,8 +53,7 @@ tenants:
             interfaces: ["Ethernet6"]
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
-  {'name': 'Ethernet6.1000', 'shutdown': False, 'encapsulation_vlan': {'client': {'encapsulation': 'dot1q', 'vlan': 1000},
-  'network': {'encapsulation': 'client'}}, 'peer_type': 'point_to_point_service'} conflicts with
-  {'name': 'Ethernet6.1000', 'shutdown': False, 'vrf': 'TEST', 'encapsulation_dot1q': {'vlan': 1000},
-  'ip_address': '10.42.255.0/31', 'peer_type': 'l3_interface'}.
+  Found duplicate objects with conflicting data while generating configuration for Network Services point-to-point EthernetInterfaces.
+  Interface Ethernet6.1000 defined under tenants[TENANT_A].point_to_point_services[TEN_A_site2_site5_eline_port_based].endpoints[0] conflicts with
+  {'name': 'Ethernet6.1000', 'description': None, 'shutdown': False, 'mtu': None, 'vrf': 'TEST', 'encapsulation_dot1q':
+  {'vlan': 1000}, 'ip_address': '10.42.255.0/31', 'access_group_in': None, 'access_group_out': None, 'peer_type': 'l3_interface', 'eos_cli': None}.
