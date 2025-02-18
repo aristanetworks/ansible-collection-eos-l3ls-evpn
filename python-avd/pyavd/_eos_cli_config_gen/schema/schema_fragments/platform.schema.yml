@@ -182,3 +182,58 @@ keys:
               - str
             min: 1
             max: 128
+          interface:
+            type: dict
+            description: Configure interface related settings for Sfe platform.
+            keys:
+              profiles:
+                type: list
+                primary_key: name
+                description: |-
+                  Configure one or more Receive Side Scaling (RSS) interface profiles.
+                  This is supported on specific platforms.
+                items:
+                  type: dict
+                  keys:
+                    name:
+                      type: str
+                      description: RSS interface profile name.
+                    interfaces:
+                      type: list
+                      description: Interfaces within RSS profile.
+                      primary_key: name
+                      items:
+                        type: dict
+                        keys:
+                          name:
+                            type: str
+                            description: Interface name such as 'Ethernet2'.
+                            # pattern: "Ethernet[\\d/]+"
+                          rx_queue:
+                            type: dict
+                            description: Receive queue parameters for the selected interface.
+                            keys:
+                              count:
+                                type: int
+                                min: 1
+                                convert_types:
+                                  - str
+                                description: |-
+                                  Number of receive queues.
+                                  The maximum value is platform dependent.
+                              worker:
+                                type: str
+                                description: |-
+                                  Worker ids specified as combination of range and/or comma separated values
+                                  such as 0-4,7.
+                              mode:
+                                type: str
+                                description: Mode applicable to the workers. Default mode is 'shared'.
+                                valid_values:
+                                  - shared
+                                  - exclusive
+              interface_profile:
+                type: str
+                description: |-
+                  RSS interface profile name to apply for the platform.
+                  Needs system reload or Sfe agent restart for change to take effect.
