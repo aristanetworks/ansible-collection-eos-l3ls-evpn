@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
-from pyavd._utils import AvdStringFormatter, default, strip_empties_from_dict
+from pyavd._utils import AvdStringFormatter, default
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
@@ -36,8 +36,7 @@ class LoopbackInterfacesMixin(Protocol):
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 if (loopback_interface := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is not None:
-                    loopback_item = EosCliConfigGen.LoopbackInterfacesItem(**loopback_interface)
-                    self.structured_config.loopback_interfaces.append(loopback_item)
+                    self.structured_config.loopback_interfaces.append(loopback_interface)
 
                 # The loopbacks have already been filtered in _filtered_tenants
                 # to only contain entries with our hostname
@@ -60,7 +59,7 @@ class LoopbackInterfacesMixin(Protocol):
         self: AvdStructuredConfigNetworkServicesProtocol,
         vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
-    ) -> dict | None:
+    ) -> EosCliConfigGen.LoopbackInterfacesItem | None:
         if (loopback := vrf.vtep_diagnostic.loopback) is None:
             return None
 
@@ -77,13 +76,11 @@ class LoopbackInterfacesMixin(Protocol):
 
         interface_name = f"Loopback{loopback}"
         description_template = default(vrf.vtep_diagnostic.loopback_description, self.inputs.default_vrf_diag_loopback_description)
-        return strip_empties_from_dict(
-            {
-                "name": interface_name,
-                "description": AvdStringFormatter().format(description_template, interface=interface_name, vrf=vrf.name, tenant=tenant.name),
-                "shutdown": False,
-                "vrf": vrf.name,
-                "ip_address": f"{self.shared_utils.ip_addressing.vrf_loopback_ip(loopback_ipv4_pool)}/32" if loopback_ipv4_pool else None,
-                "ipv6_address": f"{self.shared_utils.ip_addressing.vrf_loopback_ipv6(loopback_ipv6_pool)}/128" if loopback_ipv6_pool else None,
-            }
+        return EosCliConfigGen.LoopbackInterfacesItem(
+            name=interface_name,
+            description=AvdStringFormatter().format(description_template, interface=interface_name, vrf=vrf.name, tenant=tenant.name),
+            shutdown=False,
+            vrf=vrf.name,
+            ip_address=f"{self.shared_utils.ip_addressing.vrf_loopback_ip(loopback_ipv4_pool)}/32" if loopback_ipv4_pool else None,
+            ipv6_address=f"{self.shared_utils.ip_addressing.vrf_loopback_ipv6(loopback_ipv6_pool)}/128" if loopback_ipv6_pool else None,
         )

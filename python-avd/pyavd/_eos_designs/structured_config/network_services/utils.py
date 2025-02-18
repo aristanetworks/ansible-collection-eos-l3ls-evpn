@@ -410,7 +410,7 @@ class UtilsMixin(Protocol):
                 )
                 raise AristaAvdInvalidInputsError(msg)
             # Resolve router ID from loopback interface
-            return get_ip_from_ip_prefix(interface_data["ip_address"])
+            return get_ip_from_ip_prefix(str(interface_data.ip_address))
         if router_id == "main_router_id":
             return self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None
         # Handle "none" router ID
