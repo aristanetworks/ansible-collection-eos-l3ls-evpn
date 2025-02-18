@@ -191,7 +191,7 @@ router_bgp:
       - '14:14'
     redistribute_routes:
     - learned
-    vlan: 150-151
+    vlan: 150-151,166
   - name: Tenant_A_WEB_Zone
     rd: 192.168.255.109:11
     route_targets:
@@ -200,6 +200,15 @@ router_bgp:
     redistribute_routes:
     - learned
     vlan: 120-121
+  - name: L2VLAN_AND_SVI
+    tenant: Tenant_A
+    rd: 192.168.255.109:20166
+    route_targets:
+      both:
+      - 20166:20166
+    redistribute_routes:
+    - learned
+    vlan: '166'
   - name: Tenant_A_NFS
     tenant: Tenant_A
     rd: 192.168.255.109:20161
@@ -670,6 +679,12 @@ vlan_interfaces:
   vrf: Tenant_A_WAN_Zone
   ip_address_virtual: 10.1.51.1/24
   tenant: Tenant_A
+- name: Vlan166
+  description: L2VLAN_AND_SVI
+  shutdown: false
+  vrf: Tenant_A_WAN_Zone
+  ip_address_virtual: 10.1.66.1/24
+  tenant: Tenant_A
 - name: Vlan120
   description: Tenant_A_WEB_Zone_1
   shutdown: false
@@ -890,6 +905,9 @@ vlans:
 - id: 151
   name: svi_with_no_tags
   tenant: Tenant_A
+- id: 166
+  name: L2VLAN_AND_SVI
+  tenant: Tenant_A
 - id: 120
   name: Tenant_A_WEB_Zone_1
   tenant: Tenant_A
@@ -1036,6 +1054,8 @@ vxlan_interface:
         vni: 10150
       - id: 151
         vni: 10151
+      - id: 166
+        vni: 10166
       - id: 120
         vni: 10120
       - id: 121

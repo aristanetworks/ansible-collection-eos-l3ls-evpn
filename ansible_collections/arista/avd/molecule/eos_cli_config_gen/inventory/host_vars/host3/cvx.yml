@@ -1,0 +1,11 @@
+---
+### CVX ###
+cvx:
+  shutdown: false
+  services:
+    mcs:
+      redis:
+        password: 01150F165E1C07032D
+        password_type: 7
+    vxlan:
+      vtep_mac_learning: control-plane

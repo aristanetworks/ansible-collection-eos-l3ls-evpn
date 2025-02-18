@@ -2,6 +2,7 @@
 management_api_http:
   enable_http: false
   enable_https: true
+  enable_unix: true
   https_ssl_profile: SSL_PROFILE
   default_services: true
   enable_vrfs:

@@ -1094,6 +1094,13 @@ $defs:
                     - "aes67"
                     - "aes67-r16-2016"
                     - "smpte2059-2"
+              uplinks:
+                type: list
+                items:
+                  type: str
+                  description: |-
+                    Limit PTP to the specified uplink interfaces.
+                    Only considered when `uplink_type` is `p2p`.
               mlag:
                 description: Configure PTP on the MLAG peer-link port-channel when PTP is enabled. By default PTP will not be configured on the MLAG peer-link port-channel.
                 type: bool
@@ -1104,7 +1111,6 @@ $defs:
                   - str
                 min: 0
                 max: 255
-                default: 127
               priority1:
                 type: int
                 convert_types:
@@ -1393,7 +1399,6 @@ $defs:
               table: node-type-l3-interfaces-configuration
             description: |-
               L3 Interfaces to configure on the node.
-              Used to define the node for WAN interfaces when `wan_carrier` is set.
             items:
               type: dict
               keys:
@@ -1401,6 +1406,13 @@ $defs:
                   type: str
                   description: |
                     L3 interface profile name. Profile defined under `l3_interface_profiles`.
+          l3_port_channels:
+            type: list
+            $ref: "eos_designs#/$defs/node_type_l3_port_channels"
+            documentation_options:
+              table: node-type-l3-port-channels-configuration
+            description: |-
+              L3 Port-Channel interfaces to configure on the node.
           data_plane_cpu_allocation_max:
             documentation_options:
               table: system-settings

@@ -1,0 +1,4 @@
+---
+router_l2_vpn:
+  arp_proxy:
+    prefix_list: pl-router-l2-vpn

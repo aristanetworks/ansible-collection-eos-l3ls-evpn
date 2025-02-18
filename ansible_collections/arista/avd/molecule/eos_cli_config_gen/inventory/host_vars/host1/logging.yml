@@ -1,17 +1,21 @@
+---
 ### Logging ###
 logging:
   console: errors
+  monitor: disabled
   buffered:
     size: 1000000
     level: warnings
   repeat_messages: true
   trap: disabled
   synchronous:
-    level:
+    level: warnings
   format:
     timestamp: traditional year timezone
     rfc5424: true
-  source_interface:
+    hostname: fqdn
+    sequence_numbers: true
+  source_interface: Ethernet2
   vrfs:
     - name: mgt
       source_interface: Management0
@@ -36,6 +40,11 @@ logging:
           ports:
             - 300
             - 400
+        - name: sslhost.net
+          protocol: tls
+          ssl_profile: logging-ssl
+          ports:
+            - 6515
     - name: vrf_with_no_source_interface
       hosts:
         - name: 1.2.3.4
