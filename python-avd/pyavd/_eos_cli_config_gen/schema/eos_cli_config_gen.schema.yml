@@ -55,7 +55,7 @@ keys:
                 type: str
                 deprecation:
                   warning: true
-                  new_key: methods[].group
+                  new_key: methods.group
                   remove_in_version: 6.0.0
               logging:
                 type: bool
@@ -108,6 +108,7 @@ keys:
                   remove_in_version: 6.0.0
               methods:
                 type: list
+                min_length: 1
                 items:
                   type: dict
                   $ref: eos_cli_config_gen#/$defs/methods/items

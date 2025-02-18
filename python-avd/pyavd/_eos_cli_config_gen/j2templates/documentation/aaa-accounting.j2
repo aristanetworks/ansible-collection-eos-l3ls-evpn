@@ -115,11 +115,11 @@
 {%             for method in aaa_accounting.dot1x.default.methods %}
 {%                 if method.group is arista.avd.defined and method.method == "group" %}
 {%                     do methods_list.append(method.group) %}
+{%                     if method.multicast is arista.avd.defined %}
+{%                         set logging_namespace.multicast = True %}
+{%                     endif %}
 {%                 elif method.method == "logging" %}
 {%                     set logging_namespace.method_logging = true %}
-{%                 endif %}
-{%                 if method.multicast is arista.avd.defined %}
-{%                     set logging_namespace.multicast = True %}
 {%                 endif %}
 {%             endfor %}
 {%             if methods_list == [] %}
@@ -140,8 +140,7 @@
 {%                 for method in command_default.methods %}
 {%                     if method.group is arista.avd.defined and method.method == "group" %}
 {%                         do methods_list.append(method.group) %}
-{%                     endif %}
-{%                     if method.method == "logging" %}
+{%                     elif method.method == "logging" %}
 {%                         set logging_namespace.method_logging = true %}
 {%                     endif %}
 {%                 endfor %}
