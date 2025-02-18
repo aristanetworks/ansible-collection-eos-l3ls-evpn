@@ -3,9 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._utils import get
 
 if TYPE_CHECKING:
@@ -19,58 +20,49 @@ class RouteMapsMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def route_maps(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
+    @structured_config_contributor
+    def route_maps(self: AvdStructuredConfigUnderlayProtocol) -> None:
         """
-        Return structured config for route_maps.
+        Set structured config for route_maps.
 
         Contains two parts.
         - Route map for connected routes redistribution in BGP
         - Route map to filter peer AS in underlay
         """
         if not self.shared_utils.underlay_bgp and not self.shared_utils.is_wan_router:
-            return None
-
-        route_maps = []
+            return
 
         if self.shared_utils.overlay_routing_protocol != "none" and self.inputs.underlay_filter_redistribute_connected:
             # RM-CONN-2-BGP
-            sequence_10 = {
-                "sequence": 10,
-                "type": "permit",
-                "match": ["ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"],
-            }
+            sequence_numbers = EosCliConfigGen.RouteMapsItem.SequenceNumbers()
+            sequence_10 = EosCliConfigGen.RouteMapsItem.SequenceNumbersItem(
+                sequence=10, type="permit", match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY"])
+            )
             if self.shared_utils.wan_role:
-                sequence_10["set"] = [f"extcommunity soo {self.shared_utils.evpn_soo} additive"]
+                sequence_10.set = EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set([f"extcommunity soo {self.shared_utils.evpn_soo} additive"])
 
-            sequence_numbers = [sequence_10]
+            sequence_numbers.append(sequence_10)
             # SEQ 20 is set by inband management if applicable, so avoid setting that here
 
             if self.shared_utils.underlay_ipv6 is True:
-                sequence_numbers.append(
-                    {
-                        "sequence": 30,
-                        "type": "permit",
-                        "match": ["ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6"],
-                    },
+                sequence_numbers.append_new(
+                    sequence=30,
+                    type="permit",
+                    match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["ipv6 address prefix-list PL-LOOPBACKS-EVPN-OVERLAY-V6"]),
                 )
 
             if self.shared_utils.underlay_multicast_rp_interfaces is not None:
-                sequence_numbers.append(
-                    {
-                        "sequence": 40,
-                        "type": "permit",
-                        "match": ["ip address prefix-list PL-LOOPBACKS-PIM-RP"],
-                    },
+                sequence_numbers.append_new(
+                    sequence=40,
+                    type="permit",
+                    match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["ip address prefix-list PL-LOOPBACKS-PIM-RP"]),
                 )
 
             if self.shared_utils.wan_ha and self.shared_utils.use_uplinks_for_wan_ha:
-                sequence_numbers.append(
-                    {
-                        "sequence": 50,
-                        "type": "permit",
-                        "match": ["ip address prefix-list PL-WAN-HA-PREFIXES"],
-                    },
+                sequence_numbers.append_new(
+                    sequence=50,
+                    type="permit",
+                    match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["ip address prefix-list PL-WAN-HA-PREFIXES"]),
                 )
 
             add_p2p_links = False
@@ -89,84 +81,58 @@ class RouteMapsMixin(Protocol):
                 if add_p2p_links:
                     break
             if add_p2p_links:
-                sequence_numbers.append(
-                    {
-                        "sequence": 70,
-                        "type": "permit",
-                        "match": ["ip address prefix-list PL-P2P-LINKS"],
-                    }
+                sequence_numbers.append_new(
+                    sequence=70,
+                    type="permit",
+                    match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["ip address prefix-list PL-P2P-LINKS"]),
                 )
 
-            route_maps.append({"name": "RM-CONN-2-BGP", "sequence_numbers": sequence_numbers})
+            self.structured_config.route_maps.append_new(name="RM-CONN-2-BGP", sequence_numbers=sequence_numbers)
 
         # RM-BGP-AS{{ asn }}-OUT
         for asn in self._underlay_filter_peer_as_route_maps_asns:
             route_map_name = f"RM-BGP-AS{asn}-OUT"
-            route_maps.append(
-                {
-                    "name": route_map_name,
-                    "sequence_numbers": [
-                        {
-                            "sequence": 10,
-                            "type": "deny",
-                            "match": [f"as {asn}"],
-                        },
-                        {
-                            "sequence": 20,
-                            "type": "permit",
-                        },
-                    ],
-                },
-            )
+            sequence_numbers = EosCliConfigGen.RouteMapsItem.SequenceNumbers()
+            sequence_numbers.append_new(sequence=10, type="deny", match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match([f"as {asn}"]))
+            sequence_numbers.append_new(sequence=20, type="permit")
+            self.structured_config.route_maps.append_new(name=route_map_name, sequence_numbers=sequence_numbers)
 
         # Route-map IN and OUT for SOO, rendered for WAN routers
         if self.shared_utils.underlay_routing_protocol == "ebgp" and self.shared_utils.wan_role == "client":
             # RM-BGP-UNDERLAY-PEERS-IN
-            sequence_numbers = [
-                {
-                    "sequence": 40,
-                    "type": "permit",
-                    "description": "Mark prefixes originated from the LAN",
-                    "set": [f"extcommunity soo {self.shared_utils.evpn_soo} additive"],
-                },
-            ]
+            sequence_numbers = EosCliConfigGen.RouteMapsItem.SequenceNumbers()
+            sequence_numbers.append_new(
+                sequence=40,
+                type="permit",
+                set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set([f"extcommunity soo {self.shared_utils.evpn_soo} additive"]),
+                description="Mark prefixes originated from the LAN",
+            )
             if self.shared_utils.wan_ha and self.shared_utils.use_uplinks_for_wan_ha:
-                sequence_numbers.extend(
-                    [
-                        {
-                            "sequence": 10,
-                            "type": "permit",
-                            "description": "Allow WAN HA peer interface prefixes",
-                            "match": ["ip address prefix-list PL-WAN-HA-PEER-PREFIXES"],
-                        },
-                        {
-                            "sequence": 20,
-                            "type": "deny",
-                            "description": "Deny other routes from the HA peer",
-                            "match": ["as-path ASPATH-WAN"],
-                        },
-                    ],
+                sequence_numbers.append_new(
+                    sequence=10,
+                    type="permit",
+                    match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["ip address prefix-list PL-WAN-HA-PEER-PREFIXES"]),
+                    description="Allow WAN HA peer interface prefixes",
                 )
-            route_maps.append({"name": "RM-BGP-UNDERLAY-PEERS-IN", "sequence_numbers": sequence_numbers})
+                sequence_numbers.append_new(
+                    sequence=20,
+                    type="deny",
+                    match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["as-path ASPATH-WAN"]),
+                    description="Deny other routes from the HA peer",
+                )
+
+            self.structured_config.route_maps.append_new(name="RM-BGP-UNDERLAY-PEERS-IN", sequence_numbers=sequence_numbers)
 
             # RM-BGP-UNDERLAY-PEERS-OUT
             if self.shared_utils.wan_ha:
-                sequence_numbers = [
-                    {
-                        "sequence": 10,
-                        "type": "permit",
-                        "description": "Make routes learned from WAN HA peer less preferred on LAN routers",
-                        "match": ["tag 50", "route-type internal"],
-                        "set": ["metric 50"],
-                    },
-                    {
-                        "sequence": 20,
-                        "type": "permit",
-                    },
-                ]
-                route_maps.append({"name": "RM-BGP-UNDERLAY-PEERS-OUT", "sequence_numbers": sequence_numbers})
+                sequence_numbers = EosCliConfigGen.RouteMapsItem.SequenceNumbers()
+                sequence_numbers.append_new(
+                    sequence=10,
+                    type="permit",
+                    match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["tag 50", "route-type internal"]),
+                    description="Make routes learned from WAN HA peer less preferred on LAN routers",
+                    set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set(["metric 50"]),
+                )
+                sequence_numbers.append_new(sequence=20, type="permit")
 
-        if route_maps:
-            return route_maps
-
-        return None
+                self.structured_config.route_maps.append_new(name="RM-BGP-UNDERLAY-PEERS-OUT", sequence_numbers=sequence_numbers)
