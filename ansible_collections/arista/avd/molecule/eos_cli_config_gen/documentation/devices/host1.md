@@ -90,6 +90,9 @@
   - [Monitor Connectivity Device Configuration](#monitor-connectivity-device-configuration)
 - [Monitor Layer 1 Logging](#monitor-layer-1-logging)
   - [Monitor Layer 1 Device Configuration](#monitor-layer-1-device-configuration)
+- [Monitor TWAMP](#monitor-twamp)
+  - [TWAMP-light Summary](#twamp-light-summary)
+  - [Monitor TWAMP configuration](#monitor-twamp-configuration)
 - [Hardware TCAM Profile](#hardware-tcam-profile)
   - [Custom TCAM Profiles](#custom-tcam-profiles)
   - [Hardware TCAM Device Configuration](#hardware-tcam-device-configuration)
@@ -3020,6 +3023,45 @@ monitor layer1
    logging transceiver dom
    logging transceiver communication
    logging mac fault
+```
+
+## Monitor TWAMP
+
+### TWAMP-light Summary
+
+- Reflector Default Listen Port is 12345
+
+- Sender Default Destination Port is 123
+
+- Sender Default Source Port is 45678
+
+#### TWAMP-light Sender Profiles
+
+| Profile Name | Measurement Interval | Measurement Samples | Significance Value | Significance Offset |
+| ------------ | -------------------- | ------------------- | ------------------ | ------------------- |
+| test-profile | 5 | 10 | 50 | 5 |
+| test-profile2 | - | - | - | - |
+
+### Monitor TWAMP configuration
+
+```eos
+!
+monitor twamp
+   twamp-light
+      reflector defaults
+         listen port 12345
+      !
+      sender defaults
+         destination port 123
+         source port 45678
+      !
+      sender profile test-profile
+         measurement interval 5 seconds
+         measurement samples 10
+         significance 50 microseconds offset 5 microseconds
+      !
+      sender profile test-profile2
+      !
 ```
 
 ## Hardware TCAM Profile

@@ -13,3 +13,4 @@ monitor_twamp:
         significance:
           value: 50
           offset: 5
+      - name: test-profile2
