@@ -35,24 +35,24 @@ class PortChannelInterfacesMixin(Protocol):
 
         # Keeping separate list of auto-generated parent interfaces
         # This is used to check for conflicts between auto-generated parents
-        # At the end of _set_point_to_point_po_interfaces, parent interfaces are
+        # At the end of _set_point_to_point_port_channel_interfaces, parent interfaces are
         # added to structured_config if they were not explicitly configured.
         potential_parent_interfaces = EosCliConfigGen.PortChannelInterfaces()
 
-        # Set to collect all the physical port-channels explicitly configured by _set_point_to_point_po_interfaces.
+        # Set to collect all the physical port-channels explicitly configured by _set_point_to_point_port_channel_interfaces.
         configured_physical_po: set[str] = set()
 
         for tenant in self.shared_utils.filtered_tenants:
             if not tenant.point_to_point_services:
                 continue
 
-            self._set_point_to_point_po_interfaces(tenant, potential_parent_interfaces, configured_physical_po)
+            self._set_point_to_point_port_channel_interfaces(tenant, potential_parent_interfaces, configured_physical_po)
 
             for potential_parent_interface in potential_parent_interfaces:
                 if potential_parent_interface.name not in configured_physical_po:
                     self.structured_config.port_channel_interfaces.append(potential_parent_interface)
 
-    def _set_point_to_point_po_interfaces(
+    def _set_point_to_point_port_channel_interfaces(
         self: AvdStructuredConfigNetworkServicesProtocol,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         potential_parent_interfaces: EosCliConfigGen.PortChannelInterfaces,
@@ -93,32 +93,32 @@ class PortChannelInterfacesMixin(Protocol):
                     for subif in point_to_point_service.subinterfaces:
                         subif_name = f"{interface_name}.{subif.number}"
 
-                        po_interface = EosCliConfigGen.PortChannelInterfacesItem(
+                        self.structured_config.port_channel_interfaces.append_new(
                             name=subif_name,
                             peer_type="point_to_point_service",
                             shutdown=False,
+                            encapsulation_vlan=EosCliConfigGen.PortChannelInterfacesItem.EncapsulationVlan(
+                                client=EosCliConfigGen.PortChannelInterfacesItem.EncapsulationVlan.Client(encapsulation="dot1q", vlan=subif.number),
+                                network=EosCliConfigGen.PortChannelInterfacesItem.EncapsulationVlan.Network(encapsulation="client"),
+                            ),
                         )
-                        po_interface.encapsulation_vlan.client._update(encapsulation="dot1q", vlan=subif.number)
-                        po_interface.encapsulation_vlan.network.encapsulation = "client"
-
-                        self.structured_config.port_channel_interfaces.append(po_interface)
 
                 else:
-                    po_interface = EosCliConfigGen.PortChannelInterfacesItem(
+                    port_channel_interface = EosCliConfigGen.PortChannelInterfacesItem(
                         name=interface_name,
                         peer_type="point_to_point_service",
                         shutdown=False,
                     )
-                    po_interface.switchport.enabled = False
+                    port_channel_interface.switchport.enabled = False
 
                     if (short_esi := endpoint.port_channel.short_esi) is not None and len(short_esi.split(":")) == 3:
-                        po_interface.evpn_ethernet_segment._update(
+                        port_channel_interface.evpn_ethernet_segment._update(
                             identifier=f"{self.inputs.evpn_short_esi_prefix}{short_esi}",
                             route_target=short_esi_to_route_target(short_esi),
                         )
                         if port_channel_mode == "active":
-                            po_interface.lacp_id = short_esi.replace(":", ".")
+                            port_channel_interface.lacp_id = short_esi.replace(":", ".")
 
-                    self.structured_config.port_channel_interfaces.append(po_interface)
+                    self.structured_config.port_channel_interfaces.append(port_channel_interface)
                     # Tracking the physical interfaces to determine which auto-generated should be injected.
                     configured_physical_po_names.add(interface_name)
