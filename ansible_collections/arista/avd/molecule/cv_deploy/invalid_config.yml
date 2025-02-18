@@ -1,0 +1,951 @@
+---
+- name: "{{ test_id | upper }} Converge - cv_deploy with invalid Designed Config"
+  hosts: SITE1_FABRIC
+  connection: local
+  gather_facts: false
+  vars:
+    cv_server: "{{ lookup('env', 'CV_SERVER') }}"
+    cv_token: "{{ lookup('env', 'CV_ACCESS_TOKEN') }}"
+    cv_verify_certs: true
+    cv_skip_missing_devices: true
+    eos_config_dir: "{{ playbook_dir }}/intended/configs/test_invalid_configs"
+    structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_invalid_configs"
+    intended_tag_device: avd-ci-leaf1
+    intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
+    test_id: "workspace-invalid-configs"
+    cv_common_pattern: "avd-cv-deploy-{{ test_id }}"
+
+  tasks:
+    - name: "{{ test_id | upper }} Banner"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      ansible.builtin.debug:
+        msg:
+          - "######################################################################"
+          - "### STARTING MOLECULE TEST {{ '{:<38}'.format(test_id[:38]) | upper }} ####"
+          - "######################################################################"
+
+    - name: "{{ test_id | upper }} Generate random string"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      ansible.builtin.set_fact:
+        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+
+    - name: "{{ test_id | upper }} Build Workspace with default errors and warnings handling"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_register_detailed_results: true
+            cv_devices: "{{ ansible_play_hosts_all }}"
+            cv_submit_workspace: false
+      rescue:
+        - name: "{{ test_id | upper }} Display CVP result with default errors and warnings handling"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Check CVP returns with default errors and warnings handling"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              - cv_deploy_results.workspace.build_warnings is true
+              - cv_deploy_results.workspace.build_warnings_suppress_patterns | length == 0
+              - cv_deploy_results.workspace.build_warnings_suppress_portfast is false
+              # avd-ci-spine1 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine1 % Invalid input (at token 2: \'spine1\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '>    seqq 10 permit 10.20.0.0/24 eq 32 % Invalid input (at token 0: \'seqq\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # avd-ci-spine1 and avd-ci-leaf1 warning
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_msg', 'equalto', '! portfast should only be enabled on ports connected to a single host. '
+                ~ 'Connecting hubs, concentrators, switches, bridges, etc. '
+                ~ 'to this interface when portfast is enabled can cause temporary bridging loops. Use with CAUTION.') |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 2
+              # avd-ci-spine1 warning
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_msg', 'equalto', '! /32 IPv4 address is not configured on the interface') |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 1
+              # avd-ci-spine2 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine2 % Invalid input (at token 2: \'spine2\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # three errors and three warnings total
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 3
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 3
+      always:
+        - name: "{{ test_id | upper }} Cleanup orphan workspace with default errors and warnings handling"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.legacy.uri:
+            url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+            validate_certs: true
+            return_content: true
+            headers:
+              Accept: "application/json"
+              Content-Type: "application/json"
+              Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+            method: POST
+            body_format: json
+            body:
+              {
+                "values": [
+                  {
+                    "key": {
+                      "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                    },
+                    "request": "REQUEST_ABANDON",
+                    "requestParams": {
+                      "requestId": "{{ r }}"
+                    }
+                  }
+                ]
+              }
+            force_basic_auth: true
+            timeout: 10
+          register: cvp_abandon_workspace_result
+          until: cvp_abandon_workspace_result.status == 200
+          retries: 3
+          delay: 3
+          ignore_errors: true
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
+
+    - name: "{{ test_id | upper }} Build Workspace with portfast warning suppressed by knob"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_register_detailed_results: true
+            cv_devices: "{{ ansible_play_hosts_all }}"
+            cv_submit_workspace: false
+            cv_workspace_build_warnings_suppress_portfast: true
+      rescue:
+        - name: "{{ test_id | upper }} Display CVP result with portfast warning suppressed by knob"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Check CVP returns with portfast warning suppressed by knob"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              - cv_deploy_results.workspace.build_warnings is true
+              - cv_deploy_results.workspace.build_warnings_suppress_patterns | length == 0
+              - cv_deploy_results.workspace.build_warnings_suppress_portfast is true
+              # avd-ci-spine1 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine1 % Invalid input (at token 2: \'spine1\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '>    seqq 10 permit 10.20.0.0/24 eq 32 % Invalid input (at token 0: \'seqq\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # avd-ci-spine1 warnings
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_msg', 'equalto', '! /32 IPv4 address is not configured on the interface') |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 1
+              # avd-ci-spine2 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine2 % Invalid input (at token 2: \'spine2\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # three errors and one warning total
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 3
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 1
+      always:
+        - name: "{{ test_id | upper }} Cleanup orphan workspace with portfast warning suppressed by knob"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.legacy.uri:
+            url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+            validate_certs: true
+            return_content: true
+            headers:
+              Accept: "application/json"
+              Content-Type: "application/json"
+              Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+            method: POST
+            body_format: json
+            body:
+              {
+                "values": [
+                  {
+                    "key": {
+                      "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                    },
+                    "request": "REQUEST_ABANDON",
+                    "requestParams": {
+                      "requestId": "{{ r }}"
+                    }
+                  }
+                ]
+              }
+            force_basic_auth: true
+            timeout: 10
+          register: cvp_abandon_workspace_result
+          until: cvp_abandon_workspace_result.status == 200
+          retries: 3
+          delay: 3
+          ignore_errors: true
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
+
+    - name: "{{ test_id | upper }} Build Workspace with manually suppressed warning"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_register_detailed_results: true
+            cv_devices: "{{ ansible_play_hosts_all }}"
+            cv_submit_workspace: false
+            cv_workspace_build_warnings_suppress_patterns:
+              - ".*! /32 IPv4 address is not [a-z]+ on the.*"
+      rescue:
+        - name: "{{ test_id | upper }} Display CVP result with manually suppressed warning"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Check CVP returns with manually suppressed warning"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              - cv_deploy_results.workspace.build_warnings is true
+              - cv_deploy_results.workspace.build_warnings_suppress_patterns | length == 1
+              - cv_deploy_results.workspace.build_warnings_suppress_portfast is false
+              # avd-ci-spine1 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine1 % Invalid input (at token 2: \'spine1\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '>    seqq 10 permit 10.20.0.0/24 eq 32 % Invalid input (at token 0: \'seqq\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # avd-ci-spine1 and avd-ci-leaf1 warning
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_msg', 'equalto', '! portfast should only be enabled on ports connected to a single host. '
+                ~ 'Connecting hubs, concentrators, switches, bridges, etc. '
+                ~ 'to this interface when portfast is enabled can cause temporary bridging loops. Use with CAUTION.') |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 2
+              # avd-ci-spine2 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine2 % Invalid input (at token 2: \'spine2\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # three errors and two warnings total
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 3
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 2
+      always:
+        - name: "{{ test_id | upper }} Cleanup orphan workspace with manually suppressed warning"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.legacy.uri:
+            url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+            validate_certs: true
+            return_content: true
+            headers:
+              Accept: "application/json"
+              Content-Type: "application/json"
+              Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+            method: POST
+            body_format: json
+            body:
+              {
+                "values": [
+                  {
+                    "key": {
+                      "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                    },
+                    "request": "REQUEST_ABANDON",
+                    "requestParams": {
+                      "requestId": "{{ r }}"
+                    }
+                  }
+                ]
+              }
+            force_basic_auth: true
+            timeout: 10
+          register: cvp_abandon_workspace_result
+          until: cvp_abandon_workspace_result.status == 200
+          retries: 3
+          delay: 3
+          ignore_errors: true
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
+
+    - name: "{{ test_id | upper }} Build Workspace with two manually suppressed warnings"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_register_detailed_results: true
+            cv_devices: "{{ ansible_play_hosts_all }}"
+            cv_submit_workspace: false
+            cv_workspace_build_warnings_suppress_patterns:
+              - ".*/32 IPv4 address is not configured.*"
+              - >-
+                ^! portfast should only be enabled on ports connected to a single host. Connecting hubs, concentrators, switches, bridges, etc.
+                to this interface when portfast is enabled can cause temporary bridging loops.*
+      rescue:
+        - name: "{{ test_id | upper }} Display CVP result with two manually suppressed warnings"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Check CVP returns with two manually suppressed warnings"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              - cv_deploy_results.workspace.build_warnings is true
+              - cv_deploy_results.workspace.build_warnings_suppress_patterns | length == 2
+              - cv_deploy_results.workspace.build_warnings_suppress_portfast is false
+              # avd-ci-spine1 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine1 % Invalid input (at token 2: \'spine1\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '>    seqq 10 permit 10.20.0.0/24 eq 32 % Invalid input (at token 0: \'seqq\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # avd-ci-spine2 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine2 % Invalid input (at token 2: \'spine2\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # three errors and zero warning total
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 3
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 0
+      always:
+        - name: "{{ test_id | upper }} Cleanup orphan workspace with two manually suppressed warnings"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.legacy.uri:
+            url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+            validate_certs: true
+            return_content: true
+            headers:
+              Accept: "application/json"
+              Content-Type: "application/json"
+              Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+            method: POST
+            body_format: json
+            body:
+              {
+                "values": [
+                  {
+                    "key": {
+                      "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                    },
+                    "request": "REQUEST_ABANDON",
+                    "requestParams": {
+                      "requestId": "{{ r }}"
+                    }
+                  }
+                ]
+              }
+            force_basic_auth: true
+            timeout: 10
+          register: cvp_abandon_workspace_result
+          until: cvp_abandon_workspace_result.status == 200
+          retries: 3
+          delay: 3
+          ignore_errors: true
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
+
+    - name: "{{ test_id | upper }} Build Workspace with mix of manual and knob-based suppressed warnings"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_register_detailed_results: true
+            cv_devices: "{{ ansible_play_hosts_all }}"
+            cv_submit_workspace: false
+            cv_workspace_build_warnings_suppress_patterns:
+              - "^! /32 IPv4 address is not configured on the interface$"
+            cv_workspace_build_warnings_suppress_portfast: true
+      rescue:
+        - name: "{{ test_id | upper }} Display CVP result with mix of manual and knob-based suppressed warnings"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Check CVP returns with mix of manual and knob-based suppressed warnings"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              - cv_deploy_results.workspace.build_warnings is true
+              - cv_deploy_results.workspace.build_warnings_suppress_patterns | length == 1
+              - cv_deploy_results.workspace.build_warnings_suppress_portfast is true
+              # avd-ci-spine1 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine1 % Invalid input (at token 2: \'spine1\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '>    seqq 10 permit 10.20.0.0/24 eq 32 % Invalid input (at token 0: \'seqq\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # avd-ci-spine2 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine2 % Invalid input (at token 2: \'spine2\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # three errors and zero warning total
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 3
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 0
+      always:
+        - name: "{{ test_id | upper }} Cleanup orphan workspace with mix of manual and knob-based suppressed warnings"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.legacy.uri:
+            url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+            validate_certs: true
+            return_content: true
+            headers:
+              Accept: "application/json"
+              Content-Type: "application/json"
+              Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+            method: POST
+            body_format: json
+            body:
+              {
+                "values": [
+                  {
+                    "key": {
+                      "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                    },
+                    "request": "REQUEST_ABANDON",
+                    "requestParams": {
+                      "requestId": "{{ r }}"
+                    }
+                  }
+                ]
+              }
+            force_basic_auth: true
+            timeout: 10
+          register: cvp_abandon_workspace_result
+          until: cvp_abandon_workspace_result.status == 200
+          retries: 3
+          delay: 3
+          ignore_errors: true
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
+
+    - name: "{{ test_id | upper }} Build Workspace with invalid regex suppression pattern"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_register_detailed_results: true
+            cv_devices: "{{ ansible_play_hosts_all }}"
+            cv_submit_workspace: false
+            cv_workspace_build_warnings_suppress_patterns:
+              - r"^! /32 IPv4 address is not configured on the interface\z$"
+      rescue:
+        - name: "{{ test_id | upper }} Display CVP result with invalid regex suppression pattern"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Check CVP returns with invalid regex suppression pattern"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              - cv_deploy_results.workspace.build_warnings is true
+              - cv_deploy_results.workspace.build_warnings_suppress_patterns | length == 0
+              - cv_deploy_results.workspace.build_warnings_suppress_portfast is false
+              # avd-ci-spine1 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine1 % Invalid input (at token 2: \'spine1\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '>    seqq 10 permit 10.20.0.0/24 eq 32 % Invalid input (at token 0: \'seqq\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # avd-ci-spine1 and avd-ci-leaf1 warning
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_msg', 'equalto', '! portfast should only be enabled on ports connected to a single host. '
+                ~ 'Connecting hubs, concentrators, switches, bridges, etc. '
+                ~ 'to this interface when portfast is enabled can cause temporary bridging loops. Use with CAUTION.') |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 2
+              # avd-ci-spine1 warning
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_msg', 'equalto', '! /32 IPv4 address is not configured on the interface') |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 1
+              # avd-ci-spine2 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine2 % Invalid input (at token 2: \'spine2\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # three errors and three warnings total
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 3
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 3
+      always:
+        - name: "{{ test_id | upper }} Cleanup orphan workspace with invalid regex suppression pattern"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.legacy.uri:
+            url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+            validate_certs: true
+            return_content: true
+            headers:
+              Accept: "application/json"
+              Content-Type: "application/json"
+              Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+            method: POST
+            body_format: json
+            body:
+              {
+                "values": [
+                  {
+                    "key": {
+                      "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                    },
+                    "request": "REQUEST_ABANDON",
+                    "requestParams": {
+                      "requestId": "{{ r }}"
+                    }
+                  }
+                ]
+              }
+            force_basic_auth: true
+            timeout: 10
+          register: cvp_abandon_workspace_result
+          until: cvp_abandon_workspace_result.status == 200
+          retries: 3
+          delay: 3
+          ignore_errors: true
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
+
+    - name: "{{ test_id | upper }} Build Workspace with portfast warning suppressed by both knob and regex pattern"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_register_detailed_results: true
+            cv_devices: "{{ ansible_play_hosts_all }}"
+            cv_submit_workspace: false
+            cv_workspace_build_warnings_suppress_patterns:
+              - ".*portfast should only be enabled on ports connected to a single host.*"
+            cv_workspace_build_warnings_suppress_portfast: true
+      rescue:
+        - name: "{{ test_id | upper }} Display CVP result with portfast warning suppressed by both knob and regex pattern"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Check CVP returns with portfast warning suppressed by both knob and regex pattern"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              - cv_deploy_results.workspace.build_warnings is true
+              - cv_deploy_results.workspace.build_warnings_suppress_patterns | length == 1
+              - cv_deploy_results.workspace.build_warnings_suppress_portfast is true
+              # avd-ci-spine1 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine1 % Invalid input (at token 2: \'spine1\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '>    seqq 10 permit 10.20.0.0/24 eq 32 % Invalid input (at token 0: \'seqq\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # avd-ci-spine1 warnings
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_msg', 'equalto', '! /32 IPv4 address is not configured on the interface') |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 1
+              # avd-ci-spine2 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine2 % Invalid input (at token 2: \'spine2\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # three errors and one warning total
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 3
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 1
+      always:
+        - name: "{{ test_id | upper }} Cleanup orphan workspace with portfast warning suppressed by both knob and regex pattern"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.legacy.uri:
+            url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+            validate_certs: true
+            return_content: true
+            headers:
+              Accept: "application/json"
+              Content-Type: "application/json"
+              Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+            method: POST
+            body_format: json
+            body:
+              {
+                "values": [
+                  {
+                    "key": {
+                      "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                    },
+                    "request": "REQUEST_ABANDON",
+                    "requestParams": {
+                      "requestId": "{{ r }}"
+                    }
+                  }
+                ]
+              }
+            force_basic_auth: true
+            timeout: 10
+          register: cvp_abandon_workspace_result
+          until: cvp_abandon_workspace_result.status == 200
+          retries: 3
+          delay: 3
+          ignore_errors: true
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
+
+    - name: "{{ test_id | upper }} Build Workspace with suppressed warnings"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: Trigger errors by building WS with EOS CLI errors
+          tags: ["{{ test_id }}"]
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_change_control_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_register_detailed_results: true
+            cv_devices: "{{ ansible_play_hosts_all }}"
+            cv_submit_workspace: false
+            cv_workspace_build_warnings_enabled: false
+      rescue:
+        - name: "{{ test_id | upper }} Display CVP result with suppressed warnings"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Check CVP returns with suppressed warnings"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              - cv_deploy_results.workspace.build_warnings is false
+              - cv_deploy_results.workspace.build_warnings_suppress_patterns | length == 0
+              - cv_deploy_results.workspace.build_warnings_suppress_portfast is false
+              # avd-ci-spine1 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine1 % Invalid input (at token 2: \'spine1\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '>    seqq 10 permit 10.20.0.0/24 eq 32 % Invalid input (at token 0: \'seqq\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # avd-ci-spine2 errors
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_msg', 'equalto', '> spanning-tree mode spine2 % Invalid input (at token 2: \'spine2\')') |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 1
+              # three errors and zero warnings total
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.errors', 'defined') |
+                map(attribute='config_validation.errors') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_ERROR') |
+                list | length == 3
+              - >
+                cv_deploy_results.workspace.build_results | selectattr('config_validation.warnings', 'defined') |
+                map(attribute='config_validation.warnings') | list | flatten |
+                selectattr('error_code', 'equalto', 'DEVICE_WARNING') |
+                list | length == 0
+      always:
+        - name: "{{ test_id | upper }} Cleanup orphan workspace with suppressed warnings"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.legacy.uri:
+            url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+            validate_certs: true
+            return_content: true
+            headers:
+              Accept: "application/json"
+              Content-Type: "application/json"
+              Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+            method: POST
+            body_format: json
+            body:
+              {
+                "values": [
+                  {
+                    "key": {
+                      "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                    },
+                    "request": "REQUEST_ABANDON",
+                    "requestParams": {
+                      "requestId": "{{ r }}"
+                    }
+                  }
+                ]
+              }
+            force_basic_auth: true
+            timeout: 10
+          register: cvp_abandon_workspace_result
+          until: cvp_abandon_workspace_result.status == 200
+          retries: 3
+          delay: 3
+          ignore_errors: true
+          when: |
+            cv_deploy_results.workspace.id is not none and
+            cv_deploy_results.workspace.id | length > 0 and
+            cv_deploy_results.workspace.state | default('') != "abandoned"
+
+    - name: "{{ test_id | upper }}  Cleanup"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      ansible.builtin.import_role:
+        name: arista.avd.cv_deploy
+      vars:
+        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+        cv_workspace_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+        cv_change_control_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+        cv_register_detailed_results: true
+        cv_devices: "{{ ansible_play_hosts_all }}"
+        eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
+        structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
+        cv_submit_workspace_force: true
+        cv_run_change_control: true
+
+    # Clear failed state of failed hosts for next engaged playbook (no impact within running playbook)
+    - name: Reset ansible_play_hosts for next playbook (no impact within running playbook)
+      tags: ["{{ test_id }}"]
+      ansible.builtin.meta: clear_host_errors

@@ -5,8 +5,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal
 from uuid import uuid4
+
+if TYPE_CHECKING:
+    from pyavd._cv.api.arista.configstatus.v1 import ErrorCode as ConfigStatusErrorCode
+    from pyavd._cv.api.arista.imagestatus.v1 import ErrorCode as ImageStatusErrorCode
+    from pyavd._cv.api.arista.imagestatus.v1 import WarningCode as ImageStatusWarningCode
+    from pyavd._cv.api.arista.workspace.v1 import BuildStage as WorkspaceBuildStage
+    from pyavd._cv.api.arista.workspace.v1 import BuildState as WorkspaceBuildState
 
 
 @dataclass
@@ -74,6 +81,70 @@ class CVPathfinderMetadata:
 
 
 @dataclass
+class CVWorkspaceBuildConfigValidationError:
+    error_code: ConfigStatusErrorCode | None = None
+    """Error code of the returned error or warning."""
+    error_msg: str | None = None
+    """EOS-returned error message."""
+    line_num: int | None = None
+    """Line number of the violating configuration line within the configlet."""
+    configlet_name: str | None = None
+    """Name of the Studio-generated configlet which raised validation error."""
+
+
+@dataclass
+class CVWorkspaceBuildConfigValidationResult:
+    errors: list[CVWorkspaceBuildConfigValidationError] = field(default_factory=list)
+    warnings: list[CVWorkspaceBuildConfigValidationError] = field(default_factory=list)
+
+
+@dataclass
+class CVWorkspaceBuildImageValidationError:
+    sku: str | None = None
+    """Name of the SKU."""
+    error_code: ImageStatusErrorCode | None = None
+    """Error code of the returned error."""
+    error_msg: str | None = None
+    """EOS-returned error message."""
+
+
+@dataclass
+class CVWorkspaceBuildImageValidationWarning:
+    sku: str | None = None
+    """Name of the sku."""
+    warning_code: ImageStatusWarningCode | None = None
+    """Warning code of the returned warning."""
+    warning_msg: str | None = None
+    """EOS-returned warning message."""
+
+
+@dataclass
+class CVWorkspaceBuildImageValidationResult:
+    errors: list[CVWorkspaceBuildImageValidationError] = field(default_factory=list)
+    warnings: list[CVWorkspaceBuildImageValidationWarning] = field(default_factory=list)
+    image_input_error: str | None = None
+
+
+@dataclass
+class CVWorkspaceBuildStageState:
+    stage: WorkspaceBuildStage | None = None
+    """Stage of the build."""
+    state: WorkspaceBuildState | None = None
+    """Execution status of the build."""
+
+
+@dataclass
+class CVWorkspaceBuildResult:
+    device: CVDevice | None = None
+    stages_states: list[CVWorkspaceBuildStageState] = field(default_factory=list)
+    """Stages of the Workspace build process and their final states."""
+    config_validation: CVWorkspaceBuildConfigValidationResult | None = None
+    """Configuration validation results."""
+    image_validation: CVWorkspaceBuildImageValidationResult | None = None
+    """Image validation results."""
+
+
+@dataclass
 class CVWorkspace:
     name: str = field(default_factory=lambda: f"AVD {datetime.now()}")
     description: str | None = None
@@ -92,10 +163,20 @@ class CVWorkspace:
     """
     force: bool = False
     """ Force submit the workspace even if some devices are not actively streaming to CloudVision."""
+    build_warnings: bool = True
+    """Fetch and expose Workspace build warnings."""
+    build_warnings_suppress_patterns: list[str] = field(default_factory=list)
+    """List of the EoS CLI warning string patterns to suppress."""
+    build_warnings_suppress_portfast: bool = False
+    """Suppress Workspace build warnings related to the usage of the `portfast` feature on switchports."""
     state: Literal["pending", "built", "submitted", "build failed", "submit failed", "abandoned", "deleted"] | None = None
     """The final state of the Workspace. Do not set this manually."""
     change_control_id: str | None = None
     """Do not set this manually."""
+    build_id: str | None = None
+    """last_build_id of the Workspace. Used to fetch build details related to the last Workspace build attempt."""
+    build_results: list[CVWorkspaceBuildResult] = field(default_factory=list)
+    """Details of Workspace build results."""
 
 
 @dataclass

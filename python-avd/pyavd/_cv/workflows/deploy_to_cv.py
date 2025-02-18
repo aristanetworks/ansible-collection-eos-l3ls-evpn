@@ -18,6 +18,7 @@ from .finalize_workspace_on_cv import finalize_workspace_on_cv
 from .models import (
     CloudVision,
     CVChangeControl,
+    CVDevice,
     CVDeviceTag,
     CVEosConfig,
     CVInterfaceTag,
@@ -132,11 +133,12 @@ async def deploy_to_cv(
             await create_workspace_on_cv(workspace=result.workspace, cv_client=cv_client)
 
             try:
+                existing_devices: list[CVDevice]
                 # Verify devices exist and update CVDevice objects with _exists_on_cv.
                 # Depending on skip_missing_devices we will raise or skip missing devices.
                 # Since verify_devices will silently return if _exists_on_cv is already set,
                 # we can just send all the items even if we have duplicate device objects.
-                await verify_devices_on_cv(
+                existing_devices = await verify_devices_on_cv(
                     devices=(
                         [tag.device for tag in device_tags if tag.device is not None]
                         + [tag.device for tag in interface_tags if tag.device is not None]
@@ -201,7 +203,7 @@ async def deploy_to_cv(
                 result.workspace.state = "abandoned"
                 return result
 
-            await finalize_workspace_on_cv(workspace=result.workspace, cv_client=cv_client)
+            await finalize_workspace_on_cv(workspace=result.workspace, cv_client=cv_client, devices=existing_devices)
 
             # Create/update CVChangeControl object with ID created by workspace.
             if result.workspace.change_control_id is not None:

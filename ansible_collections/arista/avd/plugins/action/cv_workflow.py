@@ -61,6 +61,9 @@ ARGUMENT_SPEC = {
             "id": {"type": "str", "required": False},
             "requested_state": {"type": "str", "default": "built", "choices": ["pending", "built", "submitted", "abandoned", "deleted"]},
             "force": {"type": "bool", "default": False},
+            "build_warnings": {"type": "bool", "required": False, "default": True},
+            "build_warnings_suppress_patterns": {"type": "list", "elements": "str", "required": False, "default": []},
+            "build_warnings_suppress_portfast": {"type": "bool", "required": False, "default": False},
         },
     },
     "change_control": {

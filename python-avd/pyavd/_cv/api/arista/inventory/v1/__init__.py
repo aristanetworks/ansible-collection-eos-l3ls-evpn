@@ -39,6 +39,10 @@ class StreamingStatus(aristaproto.Enum):
     """
 
     UNSPECIFIED = 0
+    """
+    STREAMING_STATUS_UNSPECIFIED indicates the device streaming telemetry status is unspecified.
+    """
+
     INACTIVE = 1
     """
     STREAMING_STATUS_INACTIVE indicates the device is not streaming telemetry.
@@ -55,6 +59,10 @@ class OnboardingStatus(aristaproto.Enum):
     """
 
     UNSPECIFIED = 0
+    """
+    ONBOARDING_STATUS_UNSPECIFIED indicates onboarding status is unspecified.
+    """
+
     IN_PROGRESS = 1
     """ONBOARDING_STATUS_IN_PROGRESS indicates onboarding is in progress."""
 
@@ -72,6 +80,10 @@ class DecommissioningStatus(aristaproto.Enum):
     """
 
     UNSPECIFIED = 0
+    """
+    DECOMMISSIONING_STATUS_UNSPECIFIED indicates decommissioning status is unspecified.
+    """
+
     IN_PROGRESS = 1
     """
     DECOMMISSIONING_STATUS_IN_PROGRESS indicates decommissioning is in progress.
@@ -91,6 +103,10 @@ class ProvisioningStatus(aristaproto.Enum):
     """
 
     UNSPECIFIED = 0
+    """
+    PROVISIONING_STATUS_UNSPECIFIED indicates provisioning status is unspecified.
+    """
+
     IN_PROGRESS = 1
     """
     PROVISIONING_STATUS_IN_PROGRESS indicates provisioning is in progress.
@@ -270,10 +286,17 @@ class DeviceDecommissioningConfig(aristaproto.Message):
      tasks would be ignored and decommissioning will be continued.
     """
 
+    user_name: Optional[str] = aristaproto.message_field(
+        4, wraps=aristaproto.TYPE_STRING
+    )
+    """user_name is name of the user who decommissioned the device."""
+
 
 @dataclass(eq=False, repr=False)
 class DeviceDecommissioning(aristaproto.Message):
-    """DeviceOnboarding describes the status of a decommissioning process."""
+    """
+    DeviceDecommissioning describes the status of a decommissioning process.
+    """
 
     key: "UuidKey" = aristaproto.message_field(1)
     """

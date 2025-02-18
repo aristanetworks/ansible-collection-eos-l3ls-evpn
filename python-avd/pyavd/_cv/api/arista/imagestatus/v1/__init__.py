@@ -207,6 +207,12 @@ class ErrorCode(aristaproto.Enum):
      version doesn't support the given EOS version.
     """
 
+    ARCH_UNSUPPORTED = 17
+    """
+    ERROR_CODE_ARCH_UNSUPPORTED represents the case where the given image architecture is not
+     supported by CloudVision.
+    """
+
 
 class WarningCode(aristaproto.Enum):
     """WarningCode indicates warnings produced during image validations."""
@@ -498,6 +504,9 @@ class SoftwareImageDiff(aristaproto.Message):
     b: "SoftwareImage" = aristaproto.message_field(3)
     """b is the software image on the b side (right hand side)."""
 
+    text_code: "DiffOp" = aristaproto.enum_field(4)
+    """text_code is the color in the diff view page."""
+
 
 @dataclass(eq=False, repr=False)
 class SoftwareImageDiffsBySup(aristaproto.Message):
@@ -527,6 +536,9 @@ class ExtensionDiff(aristaproto.Message):
 
     b: "Extension" = aristaproto.message_field(3)
     """b is the extension on the b side (right hand side)."""
+
+    text_code: "DiffOp" = aristaproto.enum_field(4)
+    """text_code is the color in the diff view page."""
 
 
 @dataclass(eq=False, repr=False)
