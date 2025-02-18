@@ -44,13 +44,7 @@ class InternalData:
 class AvdBase(ABC):
     """Base class used for schema-based data classes holding data loaded from AVD inputs."""
 
-    _source: InputPath = InputPath()
-    """Source of the class.
-
-    For now only InputPath (path in the input data) is supported.
-    """
-
-    __slots__ = ("_block_inheritance", "_created_from_null", "_internal_data_instance")
+    __slots__ = ("_block_inheritance", "_created_from_null", "_internal_data_instance", "_source")
 
     _created_from_null: bool
     """
@@ -65,6 +59,12 @@ class AvdBase(ABC):
     Only exception is on _cast_as, where the flag is carried over.
     """
 
+    _source: InputPath
+    """Source of the class.
+
+    For now only InputPath (path in the input data) is supported.
+    """
+
     _block_inheritance: bool
     """Flag to block inheriting further if we at some point inherited from a class with _created_from_null set."""
 
@@ -75,6 +75,7 @@ class AvdBase(ABC):
         """Setting default values since these are slots."""
         self._created_from_null = False
         self._block_inheritance = False
+        self._source = InputPath()
 
     def _deepcopy(self) -> Self:
         """Return a copy including all nested models."""
