@@ -8,6 +8,8 @@ wan_router:
       id: 1
       loopback_ipv4_pool: 192.168.0.0/24
       vtep_loopback_ipv4_pool: 192.168.1.0/24
+      cv_pathfinder_site: Site412
+      cv_pathfinder_region: AVD_Land_West
       l3_port_channels:
         - name: Port-Channel5
           wan_carrier: BAR
@@ -22,5 +24,15 @@ wan_path_groups:
   - id: 100
     name: INTERNET
 
+cv_pathfinder_regions:
+  - name: AVD_Land_West
+    id: 42
+    description: AVD Region
+    sites:
+      - name: Site412
+        id: 412
+        location: Atlantis
+
 expected_error_message: >-
-  A node variable 'cv_pathfinder_site' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'.
+  'ipv4_acl_in' must be set on WAN interfaces where 'wan_carrier' is set,
+  unless the carrier is configured as 'trusted' under 'wan_carriers'. 'ipv4_acl_in' is missing on L3 Port-Channel 'Port-Channel5'.
