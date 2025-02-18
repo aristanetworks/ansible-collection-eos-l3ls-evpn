@@ -25,7 +25,7 @@ class LoopbackInterfacesMixin(Protocol):
     @structured_config_contributor
     def loopback_interfaces(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
-        Set structured config for loopback_interfaces.
+        Set the structured config for loopback_interfaces.
 
         Used for Tenant vrf loopback interfaces
         This function is also called from virtual_source_nat_vrfs to avoid duplicate logic
