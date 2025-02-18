@@ -253,10 +253,10 @@ router_path_selection:
     dynamic_peers:
       enabled: true
     static_peers:
-    - router_ip: 192.168.131.1
-      name: autovpn-rr1
+    - router_ip: 192.168.131.2
+      name: autovpn-rr2
       ipv4_addresses:
-      - 10.7.7.7
+      - 10.8.8.8
     - router_ip: 192.168.131.2
       name: autovpn-rr2
       ipv4_addresses:

@@ -777,10 +777,10 @@ router_path_selection:
     local_interfaces:
     - name: Ethernet1
     static_peers:
-    - router_ip: 192.168.144.2
-      name: cv-pathfinder-pathfinder1
+    - router_ip: 6.6.6.6
+      name: cv-pathfinder-pathfinder3
       ipv4_addresses:
-      - 10.8.8.8
+      - 10.50.50.50
     - router_ip: 6.6.6.6
       name: cv-pathfinder-pathfinder3
       ipv4_addresses:
