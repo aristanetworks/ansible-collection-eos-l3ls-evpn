@@ -30,11 +30,15 @@ interface Vxlan1
 {%     if vxlan_config.vxlan.flood_vtep_learned_data_plane is arista.avd.defined(true) %}
    vxlan flood vtep learned data-plane
 {%     endif %}
+{%     set range_vlans = vxlan_config.vxlan.vlan_range.vlans | arista.avd.default([]) | arista.avd.range_expand %}
 {%     for vlan in vxlan_config.vxlan.vlans | arista.avd.natural_sort('id') %}
-{%         if vlan.vni is arista.avd.defined %}
+{%         if vlan.vni is arista.avd.defined and vlan.id | string not in range_vlans %}
    vxlan vlan {{ vlan.id }} vni {{ vlan.vni }}
 {%         endif %}
 {%     endfor %}
+{%     if vxlan_config.vxlan.vlan_range is arista.avd.defined %}
+   vxlan vlan {{ vxlan_config.vxlan.vlan_range.vlans }} vni {{ vxlan_config.vxlan.vlan_range.vnis }}
+{%     endif %}
 {%     for vrf in vxlan_config.vxlan.vrfs | arista.avd.natural_sort('name') %}
 {%         if vrf.vni is arista.avd.defined %}
    vxlan vrf {{ vrf.name }} vni {{ vrf.vni }}
