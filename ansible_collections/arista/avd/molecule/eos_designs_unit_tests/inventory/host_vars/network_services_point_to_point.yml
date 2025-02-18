@@ -44,6 +44,8 @@ tenants:
             interfaces: [Ethernet6, Ethernet6]
             port_channel:
               mode: active
+              # This is ignored because the parent is explicitly defined
+              # TODO: AVD 6.0.0 decide if it makes sense
               short_esi: "0102:DEAD:BEEF"
           # Normal single-homed port-channel endpoint with subinterfaces.
           - id: 50000
