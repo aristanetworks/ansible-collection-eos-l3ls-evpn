@@ -29,7 +29,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp_propagation_encapsulation</samp>](## "vxlan_interface.vxlan1.vxlan.qos.dscp_propagation_encapsulation") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ecn_propagation</samp>](## "vxlan_interface.vxlan1.vxlan.qos.ecn_propagation") | Boolean |  |  |  | Enable copying the ECN marking to/from encapsulated packets.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map_dscp_to_traffic_class_decapsulation</samp>](## "vxlan_interface.vxlan1.vxlan.qos.map_dscp_to_traffic_class_decapsulation") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.vxlan1.vxlan.vlans") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_range</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range") | Dictionary |  |  |  | Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.<br>If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range.vlans") | String | Required |  |  | e.g. "94,96,100-110". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vnis</samp>](## "vxlan_interface.vxlan1.vxlan.vlan_range.vnis") | String | Required |  |  | Set `vnis` in the correct sequence as `vlans`.<br>e.g. "10094,10096,10100-10110". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.vxlan1.vxlan.vlans") | List, items: Dictionary |  |  |  | Set VNI/multicast group/remote vtep on a vlan.<br>If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id</samp>](## "vxlan_interface.vxlan1.vxlan.vlans.[].id") | Integer | Required, Unique |  |  | VLAN ID. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vni</samp>](## "vxlan_interface.vxlan1.vxlan.vlans.[].vni") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multicast_group</samp>](## "vxlan_interface.vxlan1.vxlan.vlans.[].multicast_group") | String |  |  |  | IP Multicast Group Address. |
@@ -64,7 +67,10 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dscp_propagation_encapsulation</samp>](## "vxlan_interface.Vxlan1.vxlan.qos.dscp_propagation_encapsulation") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ecn_propagation</samp>](## "vxlan_interface.Vxlan1.vxlan.qos.ecn_propagation") | Boolean |  |  |  | Enable copying the ECN marking to/from encapsulated packets.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;map_dscp_to_traffic_class_decapsulation</samp>](## "vxlan_interface.Vxlan1.vxlan.qos.map_dscp_to_traffic_class_decapsulation") | Boolean |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlan_range</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range") | Dictionary |  |  |  | Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.<br>If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range.vlans") | String | Required |  |  | e.g. "94,96,100-110". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vnis</samp>](## "vxlan_interface.Vxlan1.vxlan.vlan_range.vnis") | String | Required |  |  | Set `vnis` in the correct sequence as `vlans`.<br>e.g. "10094,10096,10100-10110". |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vlans</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans") | List, items: Dictionary |  |  |  | Set VNI/multicast group/remote vtep on a vlan.<br>If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;id</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans.[].id") | Integer | Required, Unique |  |  | VLAN ID. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;vni</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans.[].vni") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;multicast_group</samp>](## "vxlan_interface.Vxlan1.vxlan.vlans.[].multicast_group") | String |  |  |  | IP Multicast Group Address. |
@@ -117,6 +123,20 @@
             # Enable copying the ECN marking to/from encapsulated packets.
             ecn_propagation: <bool>
             map_dscp_to_traffic_class_decapsulation: <bool>
+
+          # Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+          # If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+          vlan_range:
+
+            # e.g. "94,96,100-110".
+            vlans: <str; required>
+
+            # Set `vnis` in the correct sequence as `vlans`.
+            # e.g. "10094,10096,10100-10110".
+            vnis: <str; required>
+
+          # Set VNI/multicast group/remote vtep on a vlan.
+          # If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
           vlans:
 
               # VLAN ID.
@@ -182,6 +202,20 @@
             # Enable copying the ECN marking to/from encapsulated packets.
             ecn_propagation: <bool>
             map_dscp_to_traffic_class_decapsulation: <bool>
+
+          # Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+          # If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+          vlan_range:
+
+            # e.g. "94,96,100-110".
+            vlans: <str; required>
+
+            # Set `vnis` in the correct sequence as `vlans`.
+            # e.g. "10094,10096,10100-10110".
+            vnis: <str; required>
+
+          # Set VNI/multicast group/remote vtep on a vlan.
+          # If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
           vlans:
 
               # VLAN ID.
