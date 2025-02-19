@@ -1,0 +1,41 @@
+---
+name: Analysis with Sonarlint and publish to SonarCloud
+"on":
+  push:
+    branches:
+      - devel
+  # Need to do this to be able to have coverage on PR across forks.
+  pull_request_target:
+
+jobs:
+  sonarcloud:
+    name: Run Sonarlint analysis and upload to SonarCloud.
+    if: github.repository == 'aristanetworks/avd'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.11
+      - name: Install dependencies
+        run: pip install tox tox-gh-actions
+      - name: "Run pytest via tox for ${{ matrix.python }}"
+        working-directory: python-avd
+        run: tox -e coverage,xml-report
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          # Using ACTION_STEP_DEBUG to trigger verbose when debugging in Github Action
+          args: >
+            -Dsonar.scm.revision=${{ github.event.pull_request.head.sha }}
+            -Dsonar.pullrequest.key=${{ github.event.number }}
+            -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }}
+            -Dsonar.pullrequest.base=${{ github.event.pull_request.base.ref }}
+            -Dsonar.verbose=${{ secrets.ACTIONS_STEP_DEBUG }}
