@@ -482,5 +482,5 @@ jobs:
           matrix.python == "3.11"
         uses: actions/upload-artifact@v4
         with:
-          name: ansible-test-integration-coverage
-          path: ansible_collections/arista/avd/tests/output/coverage/
+          name: pytest-coverage
+          path: python-avd/coverage.xml
