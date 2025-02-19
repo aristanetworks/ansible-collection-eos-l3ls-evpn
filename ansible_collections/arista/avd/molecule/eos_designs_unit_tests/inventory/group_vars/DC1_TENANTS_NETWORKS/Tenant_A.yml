@@ -236,6 +236,11 @@ tenant_a:
             enabled: true
             ip_address_virtual: 10.1.51.1/24
             # No "tags" defined - should render on switches with tag "all" or no tags
+          - id: 166
+            name: L2VLAN_AND_SVI
+            enabled: true
+            ip_address_virtual: 10.1.66.1/24
+            # ID defined both in L2VLAN and SVI, making sure this does not raise a conflict.
         additional_route_targets:
           - type: import
             address_family: vpn-ipv4
@@ -343,6 +348,9 @@ tenant_a:
         name: overlapping_name
       - id: 165
         name: overlapping_name
+      - id: 166
+        name: L2VLAN_AND_SVI
+        # ID defined both in L2VLAN and SVI, making sure this does not raise a conflict.
 
 ipv4_acls:
   - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN

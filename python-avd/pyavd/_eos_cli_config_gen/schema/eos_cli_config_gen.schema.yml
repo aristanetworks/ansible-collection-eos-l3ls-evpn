@@ -4488,20 +4488,45 @@ keys:
                   - percent
             min_delay_static:
               type: dict
+              description: Mutually exclusive with min_delay_dynamic, if both are
+                defined min_delay_static takes precedence.
               keys:
                 number:
                   type: int
+                  description: Valid values are 1-16777215 microseconds. This is regardless
+                    of whether the specified unit is milliseconds or microseconds.
                   required: true
                   convert_types:
                   - str
-                  min: 1
-                  max: 16777215
                 unit:
                   type: str
                   required: true
                   valid_values:
                   - microseconds
                   - milliseconds
+            min_delay_dynamic:
+              type: dict
+              description: Mutually exclusive with min_delay_static, if both are defined
+                min_delay_static takes precedence.
+              keys:
+                twamp_light_fallback:
+                  type: dict
+                  keys:
+                    number:
+                      type: int
+                      description: 'Valid values are 1-16777215 microseconds.
+
+                        This is regardless of whether the specified unit is milliseconds
+                        or microseconds.'
+                      required: true
+                      convert_types:
+                      - str
+                    unit:
+                      type: str
+                      required: true
+                      valid_values:
+                      - microseconds
+                      - milliseconds
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface
@@ -8727,15 +8752,16 @@ keys:
         - inner-packet
   monitor_sessions:
     type: list
+    primary_key: name
     items:
       type: dict
       keys:
         name:
           type: str
-          required: true
           description: Session Name.
         sources:
           type: list
+          primary_key: name
           items:
             type: dict
             keys:
@@ -9320,6 +9346,51 @@ keys:
           shutdown:
             type: bool
             description: Make `shutdown` key false for `no shutdown` cli.
+      tunnel:
+        description: Configure MPLS tunnel.
+        type: dict
+        keys:
+          termination:
+            description: Controls selection of the TTL/DSCP values by LER when decapsulating
+              MPLS packets.
+            type: dict
+            keys:
+              model:
+                type: dict
+                keys:
+                  ttl:
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+                  dscp:
+                    description: The DSCP model `uniform` is supported only on specific
+                      hardware platforms.
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+              php_model:
+                description: Used on PHP router in the absence of any VPN routes and
+                  explicit null VRF labels.
+                type: dict
+                keys:
+                  ttl:
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+                  dscp:
+                    description: The DSCP model `uniform` is supported only on specific
+                      hardware platforms.
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
   name_server:
     documentation_options:
       table: ip-name-servers
@@ -9759,6 +9830,64 @@ keys:
             - str
             min: 1
             max: 128
+          interface:
+            type: dict
+            description: Configure interface related settings for Sfe platform.
+            keys:
+              profiles:
+                type: list
+                primary_key: name
+                description: 'Configure one or more Receive Side Scaling (RSS) interface
+                  profiles.
+
+                  This is supported on specific platforms.'
+                items:
+                  type: dict
+                  keys:
+                    name:
+                      type: str
+                      description: RSS interface profile name.
+                    interfaces:
+                      type: list
+                      description: Interfaces within RSS profile.
+                      primary_key: name
+                      items:
+                        type: dict
+                        keys:
+                          name:
+                            type: str
+                            description: Interface name such as 'Ethernet2'.
+                          rx_queue:
+                            type: dict
+                            description: Receive queue parameters for the selected
+                              interface.
+                            keys:
+                              count:
+                                type: int
+                                min: 1
+                                convert_types:
+                                - str
+                                description: 'Number of receive queues.
+
+                                  The maximum value is platform dependent.'
+                              worker:
+                                type: str
+                                description: 'Worker ids specified as combination
+                                  of range and/or comma separated values
+
+                                  such as 0-4,7.'
+                              mode:
+                                type: str
+                                description: Mode applicable to the workers. Default
+                                  mode is 'shared'.
+                                valid_values:
+                                - shared
+                                - exclusive
+              interface_profile:
+                type: str
+                description: 'RSS interface profile name to apply for the platform.
+
+                  Needs system reload or Sfe agent restart for change to take effect.'
   poe:
     type: dict
     keys:
@@ -10845,6 +10974,10 @@ keys:
         ip_nat:
           type: dict
           $ref: eos_cli_config_gen#/$defs/interface_ip_nat
+          keys:
+            service_profile:
+              type: str
+              description: NAT interface profile.
         ipv6_enable:
           type: bool
         ipv6_address:
@@ -11464,20 +11597,47 @@ keys:
                   - percent
             min_delay_static:
               type: dict
+              description: Mutually exclusive with min_delay_dynamic, if both are
+                defined min_delay_static takes precedence.
               keys:
                 number:
                   type: int
+                  description: 'Valid values are 1-16777215 microseconds.
+
+                    This is regardless of whether the specified unit is milliseconds
+                    or microseconds.'
                   required: true
                   convert_types:
                   - str
-                  min: 1
-                  max: 16777215
                 unit:
                   type: str
                   required: true
                   valid_values:
                   - microseconds
                   - milliseconds
+            min_delay_dynamic:
+              description: Mutually exclusive with min_delay_static, if both are defined
+                min_delay_static takes precedence.
+              type: dict
+              keys:
+                twamp_light_fallback:
+                  type: dict
+                  keys:
+                    number:
+                      type: int
+                      description: 'Valid values are 1-16777215 microseconds.
+
+                        This is regardless of whether the specified unit is milliseconds
+                        or microseconds.'
+                      required: true
+                      convert_types:
+                      - str
+                    unit:
+                      type: str
+                      required: true
+                      valid_values:
+                      - microseconds
+                      - milliseconds
         validate_state:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
@@ -22922,9 +23082,31 @@ keys:
                       '
                   map_dscp_to_traffic_class_decapsulation:
                     type: bool
+              vlan_range:
+                type: dict
+                description: 'Set VNI on range of VLANs. Number of VLANs must equal
+                  number of VNIs.
+
+                  If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans`
+                  is ignored for that VLAN.'
+                keys:
+                  vlans:
+                    type: str
+                    required: true
+                    description: e.g. "94,96,100-110".
+                  vnis:
+                    type: str
+                    required: true
+                    description: 'Set `vnis` in the correct sequence as `vlans`.
+
+                      e.g. "10094,10096,10100-10110".'
               vlans:
                 type: list
                 primary_key: id
+                description: 'Set VNI/multicast group/remote vtep on a vlan.
+
+                  If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans`
+                  is ignored for that VLAN.'
                 items:
                   type: dict
                   keys:

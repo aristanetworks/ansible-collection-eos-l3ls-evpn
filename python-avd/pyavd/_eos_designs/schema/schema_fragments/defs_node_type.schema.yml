@@ -508,9 +508,9 @@ $defs:
             documentation_options:
               table: node-type-bgp-configuration
             description: |-
-                BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
-                For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number.
-                Required with eBGP.
+              BGP AS <1-4294967295> or AS number in asdot notation "<1-65535>.<0-65535>".
+              For asdot notation in YAML inputs, the value must be put in quotes, to prevent it from being interpreted as a float number.
+              Required with eBGP.
             type: str
             convert_types:
               - int
@@ -1111,7 +1111,6 @@ $defs:
                   - str
                 min: 0
                 max: 255
-                default: 127
               priority1:
                 type: int
                 convert_types:
@@ -1284,8 +1283,6 @@ $defs:
               This is used both for AutoVPN and Pathfinder designs.
               That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
               `server` indicates that the router is a route-reflector.
-
-              Only supported if `overlay_routing_protocol` is set to `ibgp`.
           cv_pathfinder_transit_mode:
             documentation_options:
               table: node-type-wan-configuration
@@ -1400,7 +1397,6 @@ $defs:
               table: node-type-l3-interfaces-configuration
             description: |-
               L3 Interfaces to configure on the node.
-              Used to define the node for WAN interfaces when `wan_carrier` is set.
             items:
               type: dict
               keys:
@@ -1408,6 +1404,13 @@ $defs:
                   type: str
                   description: |
                     L3 interface profile name. Profile defined under `l3_interface_profiles`.
+          l3_port_channels:
+            type: list
+            $ref: "eos_designs#/$defs/node_type_l3_port_channels"
+            documentation_options:
+              table: node-type-l3-port-channels-configuration
+            description: |-
+              L3 Port-Channel interfaces to configure on the node.
           data_plane_cpu_allocation_max:
             documentation_options:
               table: system-settings
