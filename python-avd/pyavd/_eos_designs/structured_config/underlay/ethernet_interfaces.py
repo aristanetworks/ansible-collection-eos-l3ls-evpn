@@ -152,12 +152,12 @@ class EthernetInterfacesMixin(Protocol):
 
             # L2 interface
             elif link["type"] == "underlay_l2":
-                ethernet_subinterfaces = ()
                 if self.shared_utils.network_services_l2_as_subint:
                     # Render L3 subinterfaces for each SVI.
                     # The peer will just render a regular trunk.
                     main_interface, ethernet_subinterfaces = self._get_l3_uplink_with_l2_as_subint(link)
                     ethernet_interface._deepmerge(main_interface)
+                    self.structured_config.ethernet_interfaces.extend(ethernet_subinterfaces)
 
                 elif (channel_group_id := link.get("channel_group_id")) is not None:
                     # Render port-channel member
@@ -186,8 +186,6 @@ class EthernetInterfacesMixin(Protocol):
                             )
 
                 self.structured_config.ethernet_interfaces.append(ethernet_interface)
-                if ethernet_subinterfaces:
-                    self.structured_config.ethernet_interfaces.extend(ethernet_subinterfaces)
 
             # Adding subinterfaces for each VRF after the main interface.
             if link["type"] == "underlay_p2p" and "subinterfaces" in link:
