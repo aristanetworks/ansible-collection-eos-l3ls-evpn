@@ -178,7 +178,7 @@ class AvdStructuredConfigFlows(StructuredConfigGenerator):
 
         return flow_tracking
 
-    def _get_enabled_flow_trackers(self) -> set:
+    def _get_enabled_flow_trackers(self) -> set[str]:
         """
         Enable flow-tracking if any interface is enabled for flow-tracking.
 
