@@ -80,15 +80,6 @@ dps_interfaces:
 enable_password:
   disabled: true
 ethernet_interfaces:
-- name: Ethernet1
-  description: L2_site3-leaf1_Ethernet1
-  shutdown: false
-  mtu: 9214
-  peer: site3-leaf1
-  peer_interface: Ethernet1
-  peer_type: l2leaf
-  switchport:
-    enabled: false
 - name: Ethernet1.666
   description: BLUE-TEST
   shutdown: false
@@ -113,6 +104,15 @@ ethernet_interfaces:
   peer: site3-leaf1
   peer_interface: Ethernet1 VLAN 42
   peer_type: l2leaf
+- name: Ethernet1
+  description: L2_site3-leaf1_Ethernet1
+  shutdown: false
+  mtu: 9214
+  peer: site3-leaf1
+  peer_interface: Ethernet1
+  peer_type: l2leaf
+  switchport:
+    enabled: false
 - name: Ethernet4
   description: inet-cloud_Ethernet8
   shutdown: false
@@ -269,15 +269,15 @@ metadata:
     - name: Site
       value: SITE3
     interface_tags:
-    - interface: Ethernet1
-      tags:
-      - name: Type
-        value: lan
     - interface: Ethernet1.666
       tags:
       - name: Type
         value: lan
     - interface: Ethernet1.42
+      tags:
+      - name: Type
+        value: lan
+    - interface: Ethernet1
       tags:
       - name: Type
         value: lan
