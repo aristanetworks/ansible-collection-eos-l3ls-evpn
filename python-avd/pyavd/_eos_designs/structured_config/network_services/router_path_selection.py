@@ -45,8 +45,7 @@ class RouterPathSelectionMixin(Protocol):
         for policy in self._filtered_wan_policies:
             for match in policy.get("matches", []):
                 if "load_balance_policy" in match:
-                    lb_policy = EosCliConfigGen.RouterPathSelection.LoadBalancePoliciesItem()
-                    lb_policy._update(
+                    lb_policy = EosCliConfigGen.RouterPathSelection.LoadBalancePoliciesItem(
                         name=get(match["load_balance_policy"], "name", None),
                         lowest_hop_count=get(match["load_balance_policy"], "lowest_hop_count", None),
                         jitter=get(match["load_balance_policy"], "jitter", None),
@@ -61,8 +60,7 @@ class RouterPathSelectionMixin(Protocol):
                     self.structured_config.router_path_selection.load_balance_policies.append(lb_policy)
 
             if (default_match := policy.get("default_match")) is not None and "load_balance_policy" in default_match:
-                lb_policy = EosCliConfigGen.RouterPathSelection.LoadBalancePoliciesItem()
-                lb_policy._update(
+                lb_policy = EosCliConfigGen.RouterPathSelection.LoadBalancePoliciesItem(
                     name=get(default_match["load_balance_policy"], "name", None),
                 )
                 for group in get(default_match["load_balance_policy"], "path_groups", None):
