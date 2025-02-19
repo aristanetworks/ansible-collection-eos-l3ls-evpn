@@ -1,11 +1,9 @@
 ---
 name: Analysis with Sonarlint and publish to SonarCloud
 "on":
-  push:
-    branches:
-      - devel
-  # Need to do this to be able to have coverage on PR across forks.
-  pull_request_target:
+  workflow_run:
+    workflows: ["Collection code testing"]
+    types: [completed]
 
 jobs:
   sonarcloud:
@@ -25,16 +23,11 @@ jobs:
       - name: Download coverage from ansible-test integration
         uses: actions/download-artifact@v4
         with:
-          name: ansible-test-units-integration
-      - name: Setup Python
-        uses: actions/setup-python@v5
+          name: ansible-test-integration-coverage
+      - name: Download coverage from pytest
+        uses: actions/download-artifact@v4
         with:
-          python-version: 3.11
-      - name: Install dependencies
-        run: pip install tox tox-gh-actions
-      - name: "Run pytest via tox for ${{ matrix.python }}"
-        working-directory: python-avd
-        run: tox -e coverage,xml-report
+          name: pytest-coverage
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         env:

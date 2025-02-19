@@ -363,7 +363,8 @@ jobs:
         run: |
           cd ansible_collections/arista/avd/
           ansible-test units --coverage -vv
-      - uses: actions/upload-artifact@v4
+      - name: Upload coverage from ansible-test units
+        uses: actions/upload-artifact@v4
         with:
           name: ansible-test-units-coverage
           path: ansible_collections/arista/avd/tests/output/coverage/
@@ -387,7 +388,8 @@ jobs:
         run: |
           cd ansible_collections/arista/avd/
           ansible-test integration --coverage -vv
-      - uses: actions/upload-artifact@v4
+      - name: Upload coverage from ansible-test integration
+        uses: actions/upload-artifact@v4
         with:
           name: ansible-test-integration-coverage
           path: ansible_collections/arista/avd/tests/output/coverage/
@@ -474,3 +476,11 @@ jobs:
         working-directory: python-avd
         run: |
           tox
+      - name: Upload coverage from pytest
+        # Coverage only runs as part of 3.11.
+        if: |
+          ${{ matrix.python }} == "3.11"
+        uses: actions/upload-artifact@v4
+        with:
+          name: ansible-test-integration-coverage
+          path: ansible_collections/arista/avd/tests/output/coverage/
