@@ -7,12 +7,16 @@ aaa_accounting:
       methods:
         - method: group
           group: TACACS
+        - method: group
+          group: RADIUS
         - method: logging
     default:
       type: start-stop
       methods:
         - method: group
           group: TACACS
+        - method: group
+          group: RADIUS
         - method: logging
   system:
     default:
@@ -20,6 +24,8 @@ aaa_accounting:
       methods:
         - method: group
           group: TACACS
+        - method: group
+          group: RADIUS
         - method: logging
   dot1x:
     default:
@@ -27,6 +33,9 @@ aaa_accounting:
       methods:
         - method: group
           group: RADIUS
+          multicast: true
+        - method: group
+          group: TACACS
           multicast: true
         - method: logging
   commands:
@@ -36,16 +45,24 @@ aaa_accounting:
         methods:
           - method: group
             group: TACACS
+          - method: group
+            group: RADIUS
           - method: logging
       - commands: 0
         type: start-stop
         methods:
+          - method: group
+            group: RADIUS
+          - method: group
+            group: TACACS
           - method: logging
       - commands: 1
         type: start-stop
         methods:
           - method: group
             group: TACACS1
+          - method: group
+            group: RADIUS
       # As type is none hence logging will not render in config as per actual EOS
       - commands: 2
         type: none
@@ -59,6 +76,8 @@ aaa_accounting:
         methods:
           - method: group
             group: TACACS
+          - method: group
+            group: RADIUS
           - method: logging
       - commands: 0
         type: start-stop
@@ -69,6 +88,8 @@ aaa_accounting:
         methods:
           - method: group
             group: TACACS
+          - method: group
+            group: RADIUS
       - commands: 2
         type: none
         methods:
