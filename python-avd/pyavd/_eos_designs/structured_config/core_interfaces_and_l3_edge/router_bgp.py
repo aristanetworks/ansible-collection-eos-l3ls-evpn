@@ -3,9 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get_ip_from_ip_prefix
 
@@ -20,14 +21,12 @@ class RouterBgpMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def router_bgp(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> dict | None:
+    @structured_config_contributor
+    def router_bgp(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> None:
         """Return structured config for router_bgp."""
         if not self.shared_utils.underlay_bgp:
-            return None
+            return
 
-        neighbors = []
-        neighbor_interfaces = []
         for p2p_link, p2p_link_data in self._filtered_p2p_links:
             if not p2p_link.include_in_underlay_protocol:
                 continue
@@ -36,16 +35,22 @@ class RouterBgpMixin(Protocol):
                 msg = f"{self.data_model}.p2p_links.[].as or {self.data_model}.p2p_links_profiles.[].as"
                 raise AristaAvdInvalidInputsError(msg)
 
-            neighbor = {
-                "remote_as": p2p_link_data["peer_bgp_as"],
-                "peer": p2p_link_data["peer"],
-                "description": p2p_link_data["peer"],
-                "peer_group": self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
-            }
+            neighbors = EosCliConfigGen.RouterBgp.NeighborsItem(
+                remote_as=p2p_link_data["peer_bgp_as"],
+                peer=p2p_link_data["peer"],
+                description=p2p_link_data["peer"],
+                peer_group=self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
+            )
 
             # RFC5549
             if self.inputs.underlay_rfc5549 and p2p_link.routing_protocol != "ebgp":
-                neighbor_interfaces.append({"name": p2p_link_data["interface"], **neighbor})
+                self.structured_config.router_bgp.neighbor_interfaces.append_new(
+                    name=p2p_link_data["interface"],
+                    remote_as=p2p_link_data["peer_bgp_as"],
+                    peer=p2p_link_data["peer"],
+                    description=p2p_link_data["peer"],
+                    peer_group=self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
+                )
                 continue
 
             # Regular BGP Neighbors
@@ -53,23 +58,9 @@ class RouterBgpMixin(Protocol):
                 msg = f"{self.data_model}.p2p_links.[].ip, .subnet or .ip_pool"
                 raise AristaAvdInvalidInputsError(msg)
 
-            neighbor["bfd"] = p2p_link.bfd
+            neighbors.bfd = p2p_link.bfd
             if p2p_link_data["bgp_as"] != self.shared_utils.bgp_as:
-                neighbor["local_as"] = p2p_link_data["bgp_as"]
+                neighbors.local_as = p2p_link_data["bgp_as"]
 
-            # Remove None values
-            neighbor = {key: value for key, value in neighbor.items() if value is not None}
-
-            neighbors.append({"ip_address": get_ip_from_ip_prefix(p2p_link_data["peer_ip"]), **neighbor})
-
-        router_bgp = {}
-        if neighbors:
-            router_bgp["neighbors"] = neighbors
-
-        if neighbor_interfaces:
-            router_bgp["neighbor_interfaces"] = neighbor_interfaces
-
-        if router_bgp:
-            return router_bgp
-
-        return None
+            neighbors.ip_address = get_ip_from_ip_prefix(p2p_link_data["peer_ip"])
+            self.structured_config.router_bgp.neighbors.append(neighbors)
