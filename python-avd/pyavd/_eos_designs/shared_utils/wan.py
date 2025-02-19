@@ -1,21 +1,22 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
 from re import findall
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
-from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import default, get, get_ip_from_ip_prefix, get_item, strip_empties_from_dict
+from pyavd._eos_designs.schema import EosDesigns
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
+from pyavd._utils import default, get, get_ip_from_ip_prefix, strip_empties_from_dict
 from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class WanMixin:
+class WanMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -24,83 +25,81 @@ class WanMixin:
     """
 
     @cached_property
-    def wan_mode(self: SharedUtils) -> str:
-        return get(self.hostvars, "wan_mode", default="cv-pathfinder")
-
-    @cached_property
-    def wan_role(self: SharedUtils) -> str | None:
+    def wan_role(self: SharedUtilsProtocol) -> str | None:
         if self.underlay_router is False:
             return None
 
-        default_wan_role = get(self.node_type_key_data, "default_wan_role", default=None)
-        wan_role = get(self.switch_data_combined, "wan_role", default=default_wan_role)
-        if wan_role is not None and self.overlay_routing_protocol != "ibgp":
-            msg = "Only 'ibgp' is supported as 'overlay_routing_protocol' for WAN nodes."
-            raise AristaAvdError(msg)
-        if wan_role == "server" and self.evpn_role != "server":
-            msg = "'wan_role' server requires 'evpn_role' server."
-            raise AristaAvdError(msg)
-        if wan_role == "client" and self.evpn_role != "client":
-            msg = "'wan_role' client requires 'evpn_role' client."
-            raise AristaAvdError(msg)
-        return wan_role
+        default_wan_role = self.node_type_key_data.default_wan_role
+        return self.node_config.wan_role or default_wan_role
 
     @cached_property
-    def is_wan_router(self: SharedUtils) -> bool:
+    def is_wan_router(self: SharedUtilsProtocol) -> bool:
         return bool(self.wan_role)
 
     @cached_property
-    def is_wan_server(self: SharedUtils) -> bool:
+    def is_wan_server(self: SharedUtilsProtocol) -> bool:
         return self.wan_role == "server"
 
     @cached_property
-    def is_wan_client(self: SharedUtils) -> bool:
+    def is_wan_client(self: SharedUtilsProtocol) -> bool:
         return self.wan_role == "client"
 
     @cached_property
-    def wan_listen_ranges(self: SharedUtils) -> list:
-        return get(
-            self.bgp_peer_groups["wan_overlay_peers"],
-            "listen_range_prefixes",
-            required=True,
-            org_key="bgp_peer_groups.wan_overlay_peers.listen_range_prefixes",
-        )
+    def wan_listen_ranges(self: SharedUtilsProtocol) -> EosDesigns.BgpPeerGroups.WanOverlayPeers.ListenRangePrefixes:
+        if not self.inputs.bgp_peer_groups.wan_overlay_peers.listen_range_prefixes:
+            msg = "bgp_peer_groups.wan_overlay_peers.listen_range_prefixes"
+            raise AristaAvdMissingVariableError(msg)
+        return self.inputs.bgp_peer_groups.wan_overlay_peers.listen_range_prefixes
 
     @cached_property
-    def cv_pathfinder_transit_mode(self: SharedUtils) -> Literal["region", "zone"] | None:
+    def cv_pathfinder_transit_mode(self: SharedUtilsProtocol) -> Literal["region", "zone"] | None:
         """When wan_mode is CV Pathfinder, return the transit mode "region", "zone" or None."""
         if not self.is_cv_pathfinder_client:
             return None
 
-        return get(self.switch_data_combined, "cv_pathfinder_transit_mode")
+        return self.node_config.cv_pathfinder_transit_mode
 
     @cached_property
-    def wan_interfaces(self: SharedUtils) -> list:
+    def wan_interfaces(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces:
         """
-        As a first approach, only interfaces under node config l3_interfaces can be considered as WAN interfaces.
+        Returns the list of the device L3 interfaces (not including port-channels) which are WAN interfaces.
 
-        This may need to be made wider.
-        This also may require a different format for the dictionaries inside the list.
+        Interfaces under node config l3_interfaces where wan_carrier is set are considered as WAN interfaces.
         """
         if not self.is_wan_router:
-            return []
+            return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces()
 
-        wan_interfaces = [interface for interface in self.l3_interfaces if get(interface, "wan_carrier") is not None]
-        if not wan_interfaces:
-            msg = "At least one WAN interface must be configured on a WAN router. Add WAN interfaces under `l3_interfaces` node setting with `wan_carrier` set."
-            raise AristaAvdError(
-                msg,
-            )
-        return wan_interfaces
+        return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces(
+            [interface for interface in self.l3_interfaces if interface.wan_carrier]
+        )
 
     @cached_property
-    def wan_carriers(self: SharedUtils) -> list:
-        return get(self.hostvars, "wan_carriers", required=True)
-
-    @cached_property
-    def wan_local_carriers(self: SharedUtils) -> list:
+    def wan_port_channels(self: SharedUtilsProtocol) -> EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels:
         """
-        List of carriers present on this router based on the wan_interfaces with the associated WAN interfaces.
+        Returns the list of the device Port-Channels which are WAN interfaces.
+
+        Interfaces under node config l3_port_channels where wan_carrier is set are considered as WAN interfaces.
+        """
+        if not self.is_wan_router:
+            return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels()
+
+        return EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels(
+            [port_channel for port_channel in self.node_config.l3_port_channels if port_channel.wan_carrier]
+        )
+
+    @cached_property
+    def _wan_port_channel_member_interfaces(self: SharedUtilsProtocol) -> dict:
+        """Dictionary with mapping of member ethernet interface to wan port_channel for a device."""
+        member_intfs = {}
+        for port_channel_intf in self.wan_port_channels:
+            for member_eth_intf in port_channel_intf.member_interfaces:
+                member_intfs[member_eth_intf.name] = port_channel_intf.name
+        return member_intfs
+
+    @cached_property
+    def wan_local_carriers(self: SharedUtilsProtocol) -> list:
+        """
+        List of carriers present on this router based on the wan_interfaces and wan_port_channels with the associated WAN interfaces.
 
             interfaces:
               - name: ...
@@ -109,46 +108,61 @@ class WanMixin:
         if not self.is_wan_router:
             return []
 
-        local_carriers_dict = {}
-        for interface in self.wan_interfaces:
-            interface_carrier = interface["wan_carrier"]
-            if interface_carrier not in local_carriers_dict:
-                local_carriers_dict[interface_carrier] = get_item(
-                    self.wan_carriers,
-                    "name",
-                    interface["wan_carrier"],
-                    required=True,
-                    custom_error_msg=f"WAN carrier {interface['wan_carrier']} is not in the available carriers defined in `wan_carriers`",
-                ).copy()
-                local_carriers_dict[interface_carrier]["interfaces"] = []
+        # Combining WAN carrier information from both L3 Interfaces and L3 Port-Channels configured as WAN interfaces.
+        if not self.wan_interfaces and not self.wan_port_channels:
+            msg = (
+                "At least one WAN interface must be configured on a WAN router. "
+                "Add WAN interfaces under 'l3_interfaces' or 'l3_port_channels' node setting with 'wan_carrier' set."
+            )
+            raise AristaAvdError(msg)
 
-            local_carriers_dict[interface_carrier]["interfaces"].append(
+        wan_carriers_dict = {}
+        # Collect WAN carriers information for WAN l3_interfaces
+        self.update_wan_local_carriers(wan_carriers_dict, self.wan_interfaces)
+        # Collect WAN carriers information for WAN l3_port_channels
+        self.update_wan_local_carriers(wan_carriers_dict, self.wan_port_channels)
+
+        return list(wan_carriers_dict.values())
+
+    def update_wan_local_carriers(
+        self: SharedUtilsProtocol,
+        local_carriers_dict: dict,
+        l3_generic_interfaces: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
+        ),
+    ) -> None:
+        """
+        In-place update the dictionary of carriers relevant to this router.
+
+        Such update is done for either `wan_interfaces` or `wan_port_channels` representing WAN interfaces.
+        carrier:
+            interfaces:
+              - name: ...
+                public_ip: ... (for route-servers the IP may come from wan_route_servers) and so on.
+        """
+        for interface in l3_generic_interfaces:
+            if interface.wan_carrier not in local_carriers_dict:
+                if interface.wan_carrier not in self.inputs.wan_carriers:
+                    msg = f"WAN carrier {interface.wan_carrier} is not in the available carriers defined in `wan_carriers`"
+                    raise AristaAvdInvalidInputsError(msg)
+
+                local_carriers_dict[interface.wan_carrier] = self.inputs.wan_carriers[interface.wan_carrier]._as_dict(include_default_values=True)
+                local_carriers_dict[interface.wan_carrier]["interfaces"] = []
+
+            local_carriers_dict[interface.wan_carrier]["interfaces"].append(
                 strip_empties_from_dict(
                     {
-                        "name": get(interface, "name", required=True),
+                        "name": interface.name,
                         "public_ip": self.get_public_ip_for_wan_interface(interface),
-                        "connected_to_pathfinder": get(interface, "connected_to_pathfinder", default=True),
-                        "wan_circuit_id": get(interface, "wan_circuit_id"),
+                        "connected_to_pathfinder": interface.connected_to_pathfinder,
+                        "wan_circuit_id": interface.wan_circuit_id,
                     },
                 ),
             )
 
-        return list(local_carriers_dict.values())
-
     @cached_property
-    def wan_path_groups(self: SharedUtils) -> list:
-        """
-        List of path-groups defined in the top level key `wan_path_groups`.
-
-        Updating default preference for each path-group to 'preferred' if not set.
-        """
-        path_groups = get(self.hostvars, "wan_path_groups", required=True)
-        for path_group in path_groups:
-            path_group["default_preference"] = get(path_group, "default_preference", default="preferred")
-        return path_groups
-
-    @cached_property
-    def wan_local_path_groups(self: SharedUtils) -> list:
+    def wan_local_path_groups(self: SharedUtilsProtocol) -> EosDesigns.WanPathGroups:
         """
         List of path-groups present on this router based on the local carriers.
 
@@ -157,36 +171,32 @@ class WanMixin:
               - name: ...
                 public_ip: ...
         """
-        if not self.is_wan_router:
-            return []
+        local_path_groups = EosDesigns.WanPathGroups()
 
-        local_path_groups_dict = {}
+        if not self.is_wan_router:
+            return local_path_groups
 
         for carrier in self.wan_local_carriers:
-            path_group_name = get(carrier, "path_group", required=True)
-            if path_group_name not in local_path_groups_dict:
-                local_path_groups_dict[path_group_name] = get_item(
-                    self.wan_path_groups,
-                    "name",
-                    path_group_name,
-                    required=True,
-                    custom_error_msg=(
-                        f"WAN path_group {path_group_name} defined for a WAN carrier is not in the available path_groups defined in `wan_path_groups`"
-                    ),
-                ).copy()
-                local_path_groups_dict[path_group_name]["interfaces"] = []
+            path_group_name: str = get(carrier, "path_group", required=True)
+            if path_group_name not in local_path_groups:
+                if path_group_name not in self.inputs.wan_path_groups:
+                    msg = f"WAN path_group {path_group_name} defined for a WAN carrier is not in the available path_groups defined in `wan_path_groups`"
+                    raise AristaAvdInvalidInputsError(msg)
 
-            local_path_groups_dict[path_group_name]["interfaces"].extend(carrier["interfaces"])
+                local_path_groups[path_group_name] = self.inputs.wan_path_groups[path_group_name]._deepcopy()
+                local_path_groups[path_group_name]._internal_data.interfaces = []
 
-        return list(local_path_groups_dict.values())
+            local_path_groups[path_group_name]._internal_data.interfaces.extend(carrier["interfaces"])
+
+        return local_path_groups
 
     @cached_property
-    def wan_local_path_group_names(self: SharedUtils) -> list:
+    def wan_local_path_group_names(self: SharedUtilsProtocol) -> list:
         """Return a list of wan_local_path_group names."""
-        return [path_group["name"] for path_group in self.wan_local_path_groups]
+        return list(self.wan_local_path_groups.keys())
 
     @cached_property
-    def wan_ha_peer_path_groups(self: SharedUtils) -> list:
+    def wan_ha_peer_path_groups(self: SharedUtilsProtocol) -> list:
         """List of WAN HA peer path-groups coming from facts."""
         if not self.is_wan_router or not self.wan_ha:
             return []
@@ -194,24 +204,18 @@ class WanMixin:
         return get(peer_facts, "wan_path_groups", required=True)
 
     @cached_property
-    def wan_ha_peer_path_group_names(self: SharedUtils) -> list:
+    def wan_ha_peer_path_group_names(self: SharedUtilsProtocol) -> list:
         """Return a list of wan_ha_peer_path_group names."""
         return [path_group["name"] for path_group in self.wan_ha_peer_path_groups]
 
-    @cached_property
-    def this_wan_route_server(self: SharedUtils) -> dict:
+    def get_public_ip_for_wan_interface(
+        self: SharedUtilsProtocol,
+        interface: (
+            EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
+            | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
+        ),
+    ) -> str:
         """
-        Returns the instance for this wan_rs found under wan_route_servers.
-
-        Should only be called when the device is actually a wan_rs.
-        """
-        wan_route_servers = get(self.hostvars, "wan_route_servers", default=[])
-        return get_item(wan_route_servers, "hostname", self.hostname, default={})
-
-    def get_public_ip_for_wan_interface(self: SharedUtils, interface: dict) -> str:
-        """
-        Takes a dict which looks like `l3_interface` from node config.
-
         If not a WAN route-server this returns public IP and if not found then the interface IP without a mask.
 
         For WAN route-servers we try to find the IP under wan_route_servers.path_groups.interfaces.
@@ -219,113 +223,97 @@ class WanMixin:
         If there is no public_ip and if ip_address is "dhcp" we raise an error.
         """
         if not self.is_wan_server:
-            return default(interface.get("public_ip"), get_ip_from_ip_prefix(interface["ip_address"]))
+            return default(interface.public_ip, get_ip_from_ip_prefix(interface.ip_address))
 
-        for path_group in self.this_wan_route_server.get("path_groups", []):
-            if (found_interface := get_item(path_group["interfaces"], "name", interface["name"])) is None:
-                continue
+        if self.hostname in self.inputs.wan_route_servers:
+            for path_group in self.inputs.wan_route_servers[self.hostname].path_groups:
+                if interface.name not in path_group.interfaces:
+                    continue
 
-            if found_interface.get("public_ip") is not None:
-                return found_interface["public_ip"]
+                if public_ip := path_group.interfaces[interface.name].public_ip:
+                    return public_ip
 
-        if interface.get("public_ip") is not None:
-            return interface["public_ip"]
+        if interface.public_ip:
+            return interface.public_ip
 
-        if interface["ip_address"] == "dhcp":
+        if interface.ip_address == "dhcp":
             msg = (
-                f"The IP address for WAN interface '{interface['name']}' on Route Server '{self.hostname}' is set to 'dhcp'. "
+                f"The IP address for WAN interface '{interface.name}' on Route Server '{self.hostname}' is set to 'dhcp'. "
                 "Clients need to peer with a static IP which must be set under the 'wan_route_servers.path_groups.interfaces' key."
             )
-            raise AristaAvdError(
-                msg,
-            )
+            raise AristaAvdError(msg)
 
-        return get_ip_from_ip_prefix(interface["ip_address"])
+        return get_ip_from_ip_prefix(interface.ip_address)
 
     @cached_property
-    def wan_site(self: SharedUtils) -> dict | None:
+    def wan_site(self: SharedUtilsProtocol) -> EosDesigns.CvPathfinderRegionsItem.SitesItem | EosDesigns.CvPathfinderGlobalSitesItem | None:
         """
         WAN site for CV Pathfinder.
 
         The site is required for edges, but optional for pathfinders
         """
-        node_defined_site = get(
-            self.switch_data_combined,
-            "cv_pathfinder_site",
-            required=self.is_cv_pathfinder_client,
-            custom_error_msg="A node variable 'cv_pathfinder_site' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'.",
-        )
-        if node_defined_site is None:
+        node_defined_site = self.node_config.cv_pathfinder_site
+        if not node_defined_site and self.is_cv_pathfinder_client:
+            msg = "A node variable 'cv_pathfinder_site' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'."
+            raise AristaAvdInvalidInputsError(msg)
+
+        if not node_defined_site:
             return None
 
         # Special case for cv_pathfinders without a region, we find the site details under `cv_pathfinder_global_sites` instead.
         if self.is_cv_pathfinder_server and self.wan_region is None:
-            sites = get(self.hostvars, "cv_pathfinder_global_sites", required=True)
-            site_not_found_error_msg = (
-                f"The 'cv_pathfinder_site '{node_defined_site}' defined at the node level could not be found under the 'cv_pathfinder_global_sites' list"
-            )
-        else:
-            sites = get(
-                self.wan_region, "sites", required=True, custom_error_msg=f"The CV Pathfinder region '{self.wan_region['name']}' is missing a list of sites."
-            )
-            site_not_found_error_msg = (
-                (
-                    f"The 'cv_pathfinder_site '{node_defined_site}' defined at the node level could not be found under the 'sites' list for the region"
-                    f" '{self.wan_region['name']}'."
-                ),
-            )
+            if node_defined_site not in self.inputs.cv_pathfinder_global_sites:
+                msg = f"The 'cv_pathfinder_site '{node_defined_site}' defined at the node level could not be found under the 'cv_pathfinder_global_sites' list"
+                raise AristaAvdInvalidInputsError(msg)
+            return self.inputs.cv_pathfinder_global_sites[node_defined_site]
 
-        return get_item(
-            sites,
-            "name",
-            node_defined_site,
-            required=True,
-            custom_error_msg=site_not_found_error_msg,
-        )
+        if self.wan_region is None or node_defined_site not in self.wan_region.sites:
+            msg = (
+                f"The 'cv_pathfinder_site '{node_defined_site}' defined at the node level could not be found under the 'sites' list for the region"
+                f" '{self.wan_region.name if self.wan_region is not None else '.'}'."
+            )
+            raise AristaAvdInvalidInputsError(msg)
+
+        return self.wan_region.sites[node_defined_site]
 
     @cached_property
-    def wan_region(self: SharedUtils) -> dict | None:
+    def wan_region(self: SharedUtilsProtocol) -> EosDesigns.CvPathfinderRegionsItem | None:
         """
         WAN region for CV Pathfinder.
 
         The region is required for edges, but optional for pathfinders
         """
-        node_defined_region = get(
-            self.switch_data_combined,
-            "cv_pathfinder_region",
-            required=self.is_cv_pathfinder_client,
-            custom_error_msg="A node variable 'cv_pathfinder_region' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'.",
-        )
+        node_defined_region = self.node_config.cv_pathfinder_region
+        if not node_defined_region and self.is_cv_pathfinder_client:
+            msg = "A node variable 'cv_pathfinder_region' must be defined when 'wan_role' is 'client' and 'wan_mode' is 'cv-pathfinder'."
+            raise AristaAvdInvalidInputsError(msg)
+
         if node_defined_region is None:
             return None
 
-        regions = get(
-            self.hostvars,
-            "cv_pathfinder_regions",
-            required=True,
-            custom_error_msg="'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'.",
-        )
+        if node_defined_region not in self.inputs.cv_pathfinder_regions:
+            msg = "The 'cv_pathfinder_region' defined at the node level could not be found under the 'cv_pathfinder_regions' key."
+            raise AristaAvdInvalidInputsError(msg)
 
-        return get_item(
-            regions,
-            "name",
-            node_defined_region,
-            required=True,
-            custom_error_msg="The 'cv_pathfinder_region' defined at the node level could not be found under the 'cv_pathfinder_regions' key.",
-        )
+        return self.inputs.cv_pathfinder_regions[node_defined_region]
 
     @property
-    def wan_zone(self: SharedUtils) -> dict:
+    def wan_zone(self: SharedUtilsProtocol) -> dict:
         """
         WAN zone for Pathfinder.
 
         Currently, only one default zone with ID 1 is supported.
         """
         # Injecting default zone with id 1.
-        return {"name": f"{self.wan_region['name']}-ZONE", "id": 1}
+        if self.wan_region is None:
+            # Should never happen but just in case.
+            msg = "Could not find 'cv_pathfinder_region' so it is not possible to auto-generate the zone."
+            raise AristaAvdInvalidInputsError(msg)
+
+        return {"name": f"{self.wan_region.name}-ZONE", "id": 1}
 
     @cached_property
-    def filtered_wan_route_servers(self: SharedUtils) -> dict:
+    def filtered_wan_route_servers(self: SharedUtilsProtocol) -> EosDesigns.WanRouteServers:
         """
         Return a dict keyed by Wan RR based on the the wan_mode type with only the path_groups the router should connect to.
 
@@ -334,18 +322,17 @@ class WanMixin:
 
         If no peer_fact is found the variables are required in the inventory.
         """
-        wan_route_servers = {}
+        filtered_wan_route_servers = EosDesigns.WanRouteServers()
 
-        wan_route_servers_list = get(self.hostvars, "wan_route_servers", default=[])
-
-        for wan_rs_dict in natural_sort(wan_route_servers_list, sort_key="hostname"):
-            # These remote gw can be outside of the inventory
-            wan_rs = wan_rs_dict["hostname"]
-
-            if wan_rs == self.hostname:
+        for org_wan_rs in self.inputs.wan_route_servers._natural_sorted():
+            if org_wan_rs.hostname == self.hostname:
                 # Don't add yourself
                 continue
-            if (peer_facts := self.get_peer_facts(wan_rs, required=False)) is not None:
+
+            wan_rs = org_wan_rs._deepcopy()
+
+            # These remote gw can be outside of the inventory
+            if (peer_facts := self.get_peer_facts(wan_rs.hostname, required=False)) is not None:
                 # Found a matching server in inventory
                 bgp_as = peer_facts.get("bgp_as")
 
@@ -355,48 +342,70 @@ class WanMixin:
                     raise AristaAvdError(msg)
 
                 # Prefer values coming from the input variables over peer facts
-                vtep_ip = get(wan_rs_dict, "vtep_ip", default=peer_facts.get("vtep_ip"))
-                wan_path_groups = get(wan_rs_dict, "path_groups", default=peer_facts.get("wan_path_groups"))
+                if not wan_rs.vtep_ip:
+                    if not (peer_vtep_ip := peer_facts.get("vtep_ip")):
+                        msg = (
+                            f"'vtep_ip' is missing for peering with {wan_rs}, either set it in under 'wan_route_servers' or something is wrong with the peer"
+                            " facts."
+                        )
+                        raise AristaAvdInvalidInputsError(msg)
+                    wan_rs.vtep_ip = peer_vtep_ip
 
-                if vtep_ip is None:
-                    msg = (
-                        f"'vtep_ip' is missing for peering with {wan_rs}, either set it in under 'wan_route_servers' or something is wrong with the peer"
-                        " facts."
+                if not wan_rs.path_groups:
+                    if not (peer_path_groups := peer_facts.get("wan_path_groups")):
+                        msg = (
+                            f"'wan_path_groups' is missing for peering with {wan_rs}, either set it in under 'wan_route_servers'"
+                            " or something is wrong with the peer facts."
+                        )
+                        raise AristaAvdInvalidInputsError(msg)
+
+                    # We cannot coerce or load with _from_list() since the data models are not compatible.
+                    wan_rs.path_groups = EosDesigns.WanRouteServersItem.PathGroups(
+                        [
+                            EosDesigns.WanRouteServersItem.PathGroupsItem(
+                                name=peer_path_group["name"],
+                                interfaces=EosDesigns.WanRouteServersItem.PathGroupsItem.Interfaces(
+                                    [
+                                        EosDesigns.WanRouteServersItem.PathGroupsItem.InterfacesItem(
+                                            name=interface["name"], public_ip=interface.get("public_ip")
+                                        )
+                                        for interface in peer_path_group.get("_interfaces", [])
+                                    ]
+                                ),
+                            )
+                            for peer_path_group in peer_path_groups
+                        ]
                     )
-                    raise AristaAvdInvalidInputsError(msg)
-                if wan_path_groups is None:
-                    msg = (
-                        f"'wan_path_groups' is missing for peering with {wan_rs}, either set it in under 'wan_route_servers'"
-                        " or something is wrong with the peer facts."
-                    )
-                    raise AristaAvdInvalidInputsError(msg)
+
             else:
                 # Retrieve the values from the dictionary, making them required if the peer_facts were not found
-                vtep_ip = get(wan_rs_dict, "vtep_ip", required=True)
-                wan_path_groups = get(
-                    wan_rs_dict,
-                    "path_groups",
-                    required=True,
-                    custom_error_msg=(
-                        f"'path_groups' is missing for peering with {wan_rs} which was not found in the inventory, either set it in under 'wan_route_servers'"
+                if not wan_rs.vtep_ip:
+                    msg = (
+                        f"'vtep_ip' is missing for peering with {wan_rs} which was not found in the inventory. Either set it in under 'wan_route_servers'"
                         " or check your inventory."
-                    ),
-                )
+                    )
+                    raise AristaAvdInvalidInputsError(msg)
+
+                if not wan_rs.path_groups:
+                    msg = (
+                        f"'path_groups' is missing for peering with {wan_rs} which was not found in the inventory, Either set it in under 'wan_route_servers'"
+                        " or check your inventory."
+                    )
+                    raise AristaAvdInvalidInputsError(msg)
 
             # Filtering wan_path_groups to only take the ones this device uses to connect to pathfinders.
-            wan_rs_result_dict = {
-                "vtep_ip": vtep_ip,
-                "wan_path_groups": [path_group for path_group in wan_path_groups if self.should_connect_to_wan_rs([path_group["name"]])],
-            }
+            wan_rs.path_groups = EosDesigns.WanRouteServersItem.PathGroups(
+                [path_group for path_group in wan_rs.path_groups if self.should_connect_to_wan_rs([path_group.name])]
+            )
 
             # If no common path-group then skip
             # TODO: - this may need to change when `import` path-groups is available
-            if len(wan_rs_result_dict["wan_path_groups"]) > 0:
-                wan_route_servers[wan_rs] = strip_empties_from_dict(wan_rs_result_dict)
+            if wan_rs.path_groups:
+                filtered_wan_route_servers.append(wan_rs)
 
-        return wan_route_servers
+        return filtered_wan_route_servers
 
-    def should_connect_to_wan_rs(self: SharedUtils, path_groups: list) -> bool:
+    def should_connect_to_wan_rs(self: SharedUtilsProtocol, path_group_names: list[str]) -> bool:
         """
         This helper implements whether or not a connection to the wan_router_server should be made or not based on a list of path-groups.
 
@@ -405,27 +414,28 @@ class WanMixin:
           `connected_to_pathfinder` is not False.
         """
         return any(
-            local_path_group["name"] in path_groups and any(wan_interface["connected_to_pathfinder"] for wan_interface in local_path_group["interfaces"])
+            local_path_group.name in path_group_names
+            and any(wan_interface["connected_to_pathfinder"] for wan_interface in local_path_group._internal_data.interfaces)
             for local_path_group in self.wan_local_path_groups
         )
 
     @cached_property
-    def is_cv_pathfinder_router(self: SharedUtils) -> bool:
+    def is_cv_pathfinder_router(self: SharedUtilsProtocol) -> bool:
         """Return True is the current wan_mode is cv-pathfinder and the device is a wan router."""
-        return self.wan_mode == "cv-pathfinder" and self.is_wan_router
+        return self.inputs.wan_mode == "cv-pathfinder" and self.is_wan_router
 
     @cached_property
-    def is_cv_pathfinder_client(self: SharedUtils) -> bool:
+    def is_cv_pathfinder_client(self: SharedUtilsProtocol) -> bool:
         """Return True is the current wan_mode is cv-pathfinder and the device is either an edge or a transit device."""
         return self.is_cv_pathfinder_router and self.is_wan_client
 
     @cached_property
-    def is_cv_pathfinder_server(self: SharedUtils) -> bool:
+    def is_cv_pathfinder_server(self: SharedUtilsProtocol) -> bool:
         """Return True is the current wan_mode is cv-pathfinder and the device is a pathfinder device."""
         return self.is_cv_pathfinder_router and self.is_wan_server
 
     @cached_property
-    def cv_pathfinder_role(self: SharedUtils) -> str | None:
+    def cv_pathfinder_role(self: SharedUtilsProtocol) -> str | None:
         if not self.is_cv_pathfinder_router:
             return None
 
@@ -440,79 +450,58 @@ class WanMixin:
         return "edge"
 
     @cached_property
-    def wan_ha(self: SharedUtils) -> bool:
+    def wan_ha(self: SharedUtilsProtocol) -> bool:
         """Only trigger HA if 2 cv_pathfinder clients are in the same group and wan_ha.enabled is true."""
-        if not (self.is_cv_pathfinder_client and len(self.switch_data_node_group_nodes) == 2):
+        if not self.is_cv_pathfinder_client or self.node_group_is_primary_and_peer_hostname is None:
             return False
 
-        if (ha_enabled := get(self.switch_data_combined, "wan_ha.enabled")) is None:
+        if self.node_config.wan_ha.enabled is None:
             msg = (
                 "Placing two WAN routers in a common node group will trigger WAN HA in a future AVD release. "
                 "Currently WAN HA is in preview, so it will not be automatically enabled. "
                 "To avoid unplanned configuration changes once the feature is released, "
                 "it is currently required to set 'wan_ha.enabled' to 'true' or 'false'."
             )
-            raise AristaAvdError(
-                msg,
-            )
-        return ha_enabled
+            raise AristaAvdError(msg)
+        return self.node_config.wan_ha.enabled
 
     @cached_property
-    def wan_ha_ipsec(self: SharedUtils) -> bool:
-        return self.wan_ha and get(self.switch_data_combined, "wan_ha.ipsec", default=True)
+    def wan_ha_ipsec(self: SharedUtilsProtocol) -> bool:
+        return self.wan_ha and self.node_config.wan_ha.ipsec
 
     @cached_property
-    def wan_ha_path_group_name(self: SharedUtils) -> str:
-        """
-        Return HA path group name for the WAN design.
-
-        Used in both network services and overlay python modules.
-        """
-        return get(self.hostvars, "wan_ha.lan_ha_path_group_name", default="LAN_HA")
-
-    @cached_property
-    def is_first_ha_peer(self: SharedUtils) -> bool:
+    def is_first_ha_peer(self: SharedUtilsProtocol) -> bool:
         """
         Returns True if the device is the first device in the node_group, false otherwise.
 
         This should be called only from functions which have checked that HA is enabled.
         """
-        return self.switch_data_node_group_nodes[0]["name"] == self.hostname
+        return self.node_group_is_primary_and_peer_hostname is not None and self.node_group_is_primary_and_peer_hostname[0]
 
     @cached_property
-    def wan_ha_peer(self: SharedUtils) -> str | None:
+    def wan_ha_peer(self: SharedUtilsProtocol) -> str | None:
         """Return the name of the WAN HA peer."""
         if not self.wan_ha:
             return None
-        if self.is_first_ha_peer:
-            return self.switch_data_node_group_nodes[1]["name"]
-        if self.switch_data_node_group_nodes[1]["name"] == self.hostname:
-            return self.switch_data_node_group_nodes[0]["name"]
+
+        if self.node_group_is_primary_and_peer_hostname is not None:
+            return self.node_group_is_primary_and_peer_hostname[1]
+
         msg = "Unable to find WAN HA peer within same node group"
         raise AristaAvdError(msg)
 
     @cached_property
-    def configured_wan_ha_mtu(self: SharedUtils) -> int:
-        """Read the device wan_ha.mtu node settings."""
-        return get(self.switch_data_combined, "wan_ha.mtu", default=9194)
-
-    @cached_property
-    def configured_wan_ha_interfaces(self: SharedUtils) -> set:
-        """Read the device wan_ha.ha_interfaces node settings."""
-        return get(self.switch_data_combined, "wan_ha.ha_interfaces", default=[])
-
-    @cached_property
-    def vrf_default_uplinks(self: SharedUtils) -> list:
+    def vrf_default_uplinks(self: SharedUtilsProtocol) -> list:
         """Return the uplinkss in VRF default."""
         return [uplink for uplink in self.get_switch_fact("uplinks") if get(uplink, "vrf") is None]
 
     @cached_property
-    def vrf_default_uplink_interfaces(self: SharedUtils) -> list:
+    def vrf_default_uplink_interfaces(self: SharedUtilsProtocol) -> list:
         """Return the uplink interfaces in VRF default."""
         return [uplink["interface"] for uplink in self.vrf_default_uplinks]
 
     @cached_property
-    def use_uplinks_for_wan_ha(self: SharedUtils) -> bool:
+    def use_uplinks_for_wan_ha(self: SharedUtilsProtocol) -> bool:
         """
         Indicates whether the device is using its uplinks for WAN HA or direct HA.
 
@@ -522,7 +511,7 @@ class WanMixin:
         Raises:
             AristaAvdError: when the list of configured interfaces is a mix of uplinks and none uplinks.
         """
-        interfaces = set(self.configured_wan_ha_interfaces)
+        interfaces = set(self.node_config.wan_ha.ha_interfaces)
         uplink_interfaces = set(self.vrf_default_uplink_interfaces)
 
         if interfaces.issubset(uplink_interfaces):
@@ -533,29 +522,29 @@ class WanMixin:
         raise AristaAvdError(msg)
 
     @cached_property
-    def wan_ha_interfaces(self: SharedUtils) -> list:
+    def wan_ha_interfaces(self: SharedUtilsProtocol) -> list:
         """
         Return the list of interfaces for WAN HA.
 
-        If using uplinks for WAN HA, returns the filtered uplinks if self.configured_wan_ha_interfaces is not empty
+        If using uplinks for WAN HA, returns the filtered uplinks if self.node_config.wan_ha.ha_interfaces is not empty
         else returns all of them.
         """
         if self.use_uplinks_for_wan_ha:
-            return natural_sort(set(self.configured_wan_ha_interfaces)) or self.vrf_default_uplink_interfaces
+            return natural_sort(set(self.node_config.wan_ha.ha_interfaces)) or self.vrf_default_uplink_interfaces
         # Using node values
-        return natural_sort(set(self.configured_wan_ha_interfaces), "name")
+        return natural_sort(set(self.node_config.wan_ha.ha_interfaces))
 
     @cached_property
-    def wan_ha_port_channel_id(self: SharedUtils) -> int:
+    def wan_ha_port_channel_id(self: SharedUtilsProtocol) -> int:
         """
         Port-channel ID to use for direct WAN HA port-channel.
 
         If not provided, computed from the list of configured members.
         """
-        return get(self.switch_data_combined, "wan_ha.port_channel_id", default=int("".join(findall(r"\d", self.wan_ha_interfaces[0]))))
+        return default(self.node_config.wan_ha.port_channel_id, int("".join(findall(r"\d", self.wan_ha_interfaces[0]))))
 
     @cached_property
-    def use_port_channel_for_direct_ha(self: SharedUtils) -> bool:
+    def use_port_channel_for_direct_ha(self: SharedUtilsProtocol) -> bool:
         """
         Indicate if port-channel should be used for direct HA.
 
@@ -567,12 +556,12 @@ class WanMixin:
         if self.use_uplinks_for_wan_ha:
             return False
 
-        interfaces = set(self.configured_wan_ha_interfaces)
+        interfaces = set(self.node_config.wan_ha.ha_interfaces)
 
-        return len(interfaces) > 1 or get(self.switch_data_combined, "wan_ha.use_port_channel_for_direct_ha", True)
+        return len(interfaces) > 1 or self.node_config.wan_ha.use_port_channel_for_direct_ha
 
     @cached_property
-    def wan_ha_peer_ip_addresses(self: SharedUtils) -> list:
+    def wan_ha_peer_ip_addresses(self: SharedUtilsProtocol) -> list:
         """
         Read the IP addresses/prefix length from HA peer uplinks.
 
@@ -582,7 +571,7 @@ class WanMixin:
         if self.use_uplinks_for_wan_ha:
             peer_facts = self.get_peer_facts(self.wan_ha_peer, required=True)
             vrf_default_peer_uplinks = [uplink for uplink in get(peer_facts, "uplinks", required=True) if get(uplink, "vrf") is None]
-            interfaces = set(self.configured_wan_ha_interfaces)
+            interfaces = set(self.node_config.wan_ha.ha_interfaces)
             for uplink in vrf_default_peer_uplinks:
                 if not interfaces or uplink["interface"] in interfaces:
                     ip_address = get(
@@ -590,7 +579,7 @@ class WanMixin:
                         "ip_address",
                         required=True,
                         custom_error_msg=(
-                            f"The uplink interface {uplink['interface']} used as WAN LAN HA on the remote peer {self.wan_ha_peer} does not have an IP address.",
+                            f"The uplink interface {uplink['interface']} used as WAN LAN HA on the remote peer {self.wan_ha_peer} does not have an IP address."
                         ),
                     )
                     prefix_length = uplink["prefix_length"]
@@ -601,7 +590,7 @@ class WanMixin:
         return ip_addresses
 
     @cached_property
-    def wan_ha_ip_addresses(self: SharedUtils) -> list:
+    def wan_ha_ip_addresses(self: SharedUtilsProtocol) -> list:
         """
         Read the IP addresses/prefix length from this device uplinks used for HA.
 
@@ -610,7 +599,7 @@ class WanMixin:
         ip_addresses = []
 
         if self.use_uplinks_for_wan_ha:
-            interfaces = set(self.configured_wan_ha_interfaces)
+            interfaces = set(self.node_config.wan_ha.ha_interfaces)
             for uplink in self.vrf_default_uplinks:
                 if not interfaces or uplink["interface"] in interfaces:
                     ip_address = get(
@@ -628,27 +617,40 @@ class WanMixin:
         return ip_addresses
 
     @cached_property
-    def wan_ha_ipv4_pool(self: SharedUtils) -> str:
+    def wan_ha_ipv4_pool(self: SharedUtilsProtocol) -> str:
         """Return the configured wan_ha.ha_ipv4_pool."""
-        return get(
-            self.switch_data_combined,
-            "wan_ha.ha_ipv4_pool",
-            required=True,
-            custom_error_msg="Missing `wan_ha.ha_ipv4_pool` node settings to allocate an IP address to defined HA interface.",
-        )
+        if not self.node_config.wan_ha.ha_ipv4_pool:
+            msg = "Missing `wan_ha.ha_ipv4_pool` node settings to allocate an IP address to defined HA interface."
+            raise AristaAvdInvalidInputsError(msg)
+        return self.node_config.wan_ha.ha_ipv4_pool
 
-    def generate_lb_policy_name(self: SharedUtils, name: str) -> str:
+    def generate_lb_policy_name(self: SharedUtilsProtocol, name: str) -> str:
         """Returns LB-{name}."""
         return f"LB-{name}"
 
     @cached_property
-    def wan_stun_dtls_profile_name(self: SharedUtils) -> str | None:
+    def wan_stun_dtls_profile_name(self: SharedUtilsProtocol) -> str | None:
         """Return the DTLS profile name to use for STUN for WAN."""
-        if not self.is_wan_router or get(self.hostvars, "wan_stun_dtls_disable") is True:
+        if not self.is_wan_router or self.inputs.wan_stun_dtls_disable:
             return None
 
-        return get(self.hostvars, "wan_stun_dtls_profile_name", default="STUN-DTLS")
+        return self.inputs.wan_stun_dtls_profile_name
 
-    @cached_property
-    def wan_encapsulation(self: SharedUtils) -> str:
-        return get(self.hostvars, "wan_encapsulation", default="path-selection")
+    def is_wan_vrf(self: SharedUtilsProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem) -> bool:
+        """Returns True is the VRF is a WAN VRF."""
+        if not self.is_wan_router:
+            return False
+
+        configured_as_wan_vrf = vrf.name in self.inputs.wan_virtual_topologies.vrfs or vrf.name == "default"
+
+        # Old behavior where we rely on address_families.
+        if not self.inputs.wan_use_evpn_node_settings_for_lan and "evpn" in vrf.address_families and not configured_as_wan_vrf:
+            msg = (
+                f"The VRF '{vrf.name}' does not have a 'wan_vni' defined under 'wan_virtual_topologies'. "
+                "If this VRF was not intended to be extended over the WAN, but still required to be configured on the WAN router, "
+                "set 'address_families: []' under the VRF definition. If this VRF was not intended to be configured on the WAN router, "
+                "use the VRF filter 'deny_vrfs' under the node settings."
+            )
+            raise AristaAvdInvalidInputsError(msg)
+
+        return configured_as_wan_vrf

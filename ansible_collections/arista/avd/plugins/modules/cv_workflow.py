@@ -1,4 +1,4 @@
-# Copyright (c) 2024 Arista Networks, Inc.
+# Copyright (c) 2024-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
@@ -41,7 +41,7 @@ options:
       Path to directory containing files with AVD structured configurations.
       If found, the `serial_number` or `system_mac_address` will be used to identify the Device on CloudVision.
       Any tags found in the structured configuration metadata will be applied to the Device and/or Interfaces.
-    required: true
+    required: false
     type: str
   structured_config_suffix:
     description: File suffix for AVD structured configuration files.
@@ -138,10 +138,12 @@ notes:
   - |-
     When interacting with CVaaS the regional URL where the tenant is deployed should be used, e.g:
     `cv_servers: [ www.cv-prod-euwest-2.arista.io ]`
-    To see the full list of regional URLs, please visit the [cv_deploy](../../../roles/cv_deploy/README.md#overview)
+    To see the full list of regional URLs, please visit the
+    [cv_deploy](../../../ansible_collections/arista/avd/roles/cv_deploy/README.md#overview)
     role documentation.
   - |-
-    To generate service accounts check [cv_deploy](../../../roles/cv_deploy/README.md#steps-to-create-service-accounts-on-cloudvision)
+    To generate service accounts check
+    [cv_deploy](../../../ansible_collections/arista/avd/roles/cv_deploy/README.md#steps-to-create-service-accounts-on-cloudvision)
     role documentation or the CloudVision Help Center.
 """
 
@@ -158,7 +160,7 @@ EXAMPLES = r"""
       arista.avd.cv_workflow:
         cv_servers: [ "www.arista.io" ]
         cv_token: "<insert vaulted service account token here>"
-        # cv_verify_certs: True
+        # cv_verify_certs: true
         configuration_dir: "{{ inventory_dir }}/intended/configs"
         structured_config_dir: "{{ inventory_dir }}/intended/structured_configs"
         # structured_config_suffix: "yml"
@@ -171,7 +173,7 @@ EXAMPLES = r"""
         #   description:
         #   id: <uuid or similar>
           requested_state: submitted
-          force: True
+          force: true
         change_control:
         #   name:
         #   description:

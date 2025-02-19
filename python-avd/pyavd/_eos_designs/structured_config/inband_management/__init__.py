@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -6,12 +6,12 @@ from __future__ import annotations
 from functools import cached_property
 from ipaddress import ip_network
 
-from pyavd._eos_designs.avdfacts import AvdFacts
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import strip_empties_from_dict
 
 
-class AvdStructuredConfigInbandManagement(AvdFacts):
+class AvdStructuredConfigInbandManagement(StructuredConfigGenerator):
     @cached_property
     def vlans(self) -> list | None:
         if not self.shared_utils.inband_management_parent_vlans and not (
@@ -21,11 +21,11 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
 
         vlan_cfg = {
             "tenant": "system",
-            "name": self.shared_utils.inband_mgmt_vlan_name,
+            "name": self.shared_utils.node_config.inband_mgmt_vlan_name,
         }
 
         if self.shared_utils.configure_inband_mgmt or self.shared_utils.configure_inband_mgmt_ipv6:
-            return [{"id": self.shared_utils.inband_mgmt_vlan, **vlan_cfg}]
+            return [{"id": self.shared_utils.node_config.inband_mgmt_vlan, **vlan_cfg}]
 
         return [{"id": svi, **vlan_cfg} for svi in self.shared_utils.inband_management_parent_vlans]
 
@@ -58,55 +58,42 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
                     return True
         return False
 
-    @cached_property
-    def static_routes(self) -> list | None:
+    @structured_config_contributor
+    def static_routes(self) -> None:
         if not self.shared_utils.configure_inband_mgmt or self.shared_utils.inband_mgmt_gateway is None:
-            return None
+            return
 
-        return [
-            strip_empties_from_dict(
-                {
-                    "destination_address_prefix": "0.0.0.0/0",
-                    "gateway": self.shared_utils.inband_mgmt_gateway,
-                    "vrf": self.shared_utils.inband_mgmt_vrf,
-                },
-            ),
-        ]
+        self.structured_config.static_routes.append_new(
+            destination_address_prefix="0.0.0.0/0", gateway=self.shared_utils.inband_mgmt_gateway, vrf=self.shared_utils.inband_mgmt_vrf
+        )
 
-    @cached_property
-    def ipv6_static_routes(self) -> list | None:
+    @structured_config_contributor
+    def ipv6_static_routes(self) -> None:
         if not self.shared_utils.configure_inband_mgmt_ipv6 or self.shared_utils.inband_mgmt_ipv6_gateway is None:
-            return None
+            return
 
-        return [
-            strip_empties_from_dict(
-                {
-                    "destination_address_prefix": "::/0",
-                    "gateway": self.shared_utils.inband_mgmt_ipv6_gateway,
-                    "vrf": self.shared_utils.inband_mgmt_vrf,
-                },
-            ),
-        ]
+        self.structured_config.ipv6_static_routes.append_new(
+            destination_address_prefix="::/0", gateway=self.shared_utils.inband_mgmt_ipv6_gateway, vrf=self.shared_utils.inband_mgmt_vrf
+        )
 
-    @cached_property
-    def vrfs(self) -> list | None:
+    @structured_config_contributor
+    def vrfs(self) -> None:
         if self.shared_utils.inband_mgmt_vrf is None:
-            return None
+            return
 
         if not self.shared_utils.inband_management_parent_vlans and not self.shared_utils.configure_inband_mgmt:
-            return None
-
-        return [{"name": self.shared_utils.inband_mgmt_vrf}]
+            return
+        self.structured_config.vrfs.append_new(name=self.shared_utils.inband_mgmt_vrf)
 
     @cached_property
     def ip_virtual_router_mac_address(self) -> str | None:
         if not self.shared_utils.inband_management_parent_vlans:
             return None
 
-        if self.shared_utils.virtual_router_mac_address is None:
+        if self.shared_utils.node_config.virtual_router_mac_address is None:
             msg = "'virtual_router_mac_address' must be set for inband management parent."
             raise AristaAvdInvalidInputsError(msg)
-        return str(self.shared_utils.virtual_router_mac_address).lower()
+        return str(self.shared_utils.node_config.virtual_router_mac_address).lower()
 
     @cached_property
     def router_bgp(self) -> dict | None:
@@ -132,7 +119,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
         if not self.shared_utils.underlay_bgp:
             return None
 
-        if not self.shared_utils.underlay_filter_redistribute_connected:
+        if not self.inputs.underlay_filter_redistribute_connected:
             return None
 
         if self.shared_utils.overlay_routing_protocol == "none":
@@ -166,7 +153,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
         if not self.shared_utils.underlay_bgp:
             return None
 
-        if not self.shared_utils.underlay_filter_redistribute_connected:
+        if not self.inputs.underlay_filter_redistribute_connected:
             return None
 
         if not self._inband_mgmt_ipv6_parent:
@@ -197,7 +184,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
         if not self.shared_utils.underlay_bgp:
             return None
 
-        if not self.shared_utils.underlay_filter_redistribute_connected:
+        if not self.inputs.underlay_filter_redistribute_connected:
             return None
 
         if self.shared_utils.overlay_routing_protocol == "none":
@@ -217,7 +204,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
         return strip_empties_from_dict(
             {
                 "name": self.shared_utils.inband_mgmt_interface,
-                "description": self.shared_utils.inband_mgmt_description,
+                "description": self.shared_utils.node_config.inband_mgmt_description,
                 "shutdown": False,
                 "mtu": self.shared_utils.inband_mgmt_mtu,
                 "vrf": self.shared_utils.inband_mgmt_vrf,
@@ -231,7 +218,7 @@ class AvdStructuredConfigInbandManagement(AvdFacts):
     def get_parent_svi_cfg(self, vlan: int, subnet: str | None, ipv6_subnet: str | None) -> dict:
         svidict = {
             "name": f"Vlan{vlan}",
-            "description": self.shared_utils.inband_mgmt_description,
+            "description": self.shared_utils.node_config.inband_mgmt_description,
             "shutdown": False,
             "mtu": self.shared_utils.inband_mgmt_mtu,
             "vrf": self.shared_utils.inband_mgmt_vrf,

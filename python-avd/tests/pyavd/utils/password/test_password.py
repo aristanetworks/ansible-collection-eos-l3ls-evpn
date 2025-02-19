@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -21,16 +21,16 @@ from pyavd._utils.password_utils import (
 ##########
 
 BGP_INPUT_DICT_ENCRYPT_EXPECTED = [
-    ("42.42.42.42", "arista", "3QGcqpU2YTwKh2jVQ4Vj/A=="),
+    ("42.42.42.42", "arista", "3QGcqpU2YTwKh2jVQ4Vj/A=="),  # NOSONAR, IP is just test data
     ("AVD-TEST", "arista", "bM7t58t04qSqLHAfZR/Szg=="),
 ]
 # password used is "arista"
 BGP_VALID_INPUT_DICT_DECRYPT_EXPECTED = [
-    ("42.42.42.42", "3QGcqpU2YTwKh2jVQ4Vj/A==", "arista"),
+    ("42.42.42.42", "3QGcqpU2YTwKh2jVQ4Vj/A==", "arista"),  # NOSONAR, IP is just test data
     ("AVD-TEST", "bM7t58t04qSqLHAfZR/Szg==", "arista"),
 ]
 BGP_INVALID_INPUT_DICT_DECRYPT = [
-    ("10.42.42.43", "3QGcqpU2YTwKh2jVQ4Vj/A=="),
+    ("10.42.42.43", "3QGcqpU2YTwKh2jVQ4Vj/A=="),  # NOSONAR, IP is just test data
     ("AVD-TEST-DUMMY", "bM7t58t04qSqLHAfZR/Szg=="),
 ]
 # The following list uses all the molecule BGP passwords available
@@ -39,8 +39,8 @@ BGP_INVALID_INPUT_DICT_DECRYPT = [
 BGP_MOLECULE_PASSWORDS_TEST = [
     ("UNDERLAY-PEERS", "arista123", "0nsCUm70mvSTxVO0ldytrg=="),
     ("UNDERLAY_PEERS", "arista123", "af6F4WLl4wUrWRZcwbEwkQ=="),
-    ("123.1.1.10", "arista123", "oBztv71m2uhR7hh58/OCNA=="),
-    ("123.1.1.11", "arista123", "oBztv71m2uhR7hh58/OCNA=="),
+    ("123.1.1.10", "arista123", "oBztv71m2uhR7hh58/OCNA=="),  # NOSONAR, IP is just test data
+    ("123.1.1.11", "arista123", "oBztv71m2uhR7hh58/OCNA=="),  # NOSONAR, IP is just test data
     ("MPLS-IBGP-PEERS", "arista123", "mWV4B6WpLCfOTyKATLWuBg=="),
     ("EVPN-OVERLAY-RS-PEERS", "arista123", "dRx9sULvl+hzkCMYJLEQCw=="),
     ("EVPN-OVERLAY", "arista123", "MY+KbyJy4kSu+X/blnVwsg=="),
@@ -49,8 +49,8 @@ BGP_MOLECULE_PASSWORDS_TEST = [
     ("IPV6-UNDERLAY-MLAG", "arista123", "CXS0NveSYzQRmm6SRGp42w=="),
     ("IPV4-UNDERLAY-MLAG", "arista123", "46jF9S9T7v5RRceVzhrlBg=="),
     ("MPLS-OVERLAY-PEERS", "arista123", "SHsTgDgjVUU5a9blyxSt3Q=="),
-    ("192.168.48.1", "arista123", "toZKiUFLVUTU4hdS5V8F4Q=="),
-    ("192.168.48.3", "arista123", "OajzUG59/YF0NkgvOQyRnQ=="),
+    ("192.168.48.1", "arista123", "toZKiUFLVUTU4hdS5V8F4Q=="),  # NOSONAR, IP is just test data
+    ("192.168.48.3", "arista123", "OajzUG59/YF0NkgvOQyRnQ=="),  # NOSONAR, IP is just test data
     ("MLAG-PEERS", "arista123", "15AwQNBEJ1nyF/kBEtoAGw=="),
     ("OVERLAY-PEERS", "arista123", "64fqSH5CFUNLRHErezMrRg=="),
     ("RR-OVERLAY-PEERS", "arista123", "04FdfTXWrEfpDTUc3mlSjg=="),

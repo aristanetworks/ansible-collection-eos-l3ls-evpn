@@ -3,7 +3,7 @@
 title: Ansible Collection Role cv_deploy
 ---
 <!--
-  ~ Copyright (c) 2024 Arista Networks, Inc.
+  ~ Copyright (c) 2024-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -55,7 +55,7 @@ The API to CloudVision is using gRPC over encrypted HTTP/2.
   - Configuration deployment is based on the "Static Configuration Studio" which was a Beta feature on CloudVision 2024.1.0.
     Make sure to enable "Studios - End-to-End Provisioning" under Settings, Features.
 
-    ![Figure 1: Ansible Role arista.avd.cv_deploy](../../docs/_media/studios_end_to_end_provisioning.png)
+    ![Figure 1: Ansible Role arista.avd.cv_deploy](../../../../../docs/_media/studios_end_to_end_provisioning.png)
 - Currently only the first of the given cv_servers is being used.
 
 ## Roadmap
@@ -96,8 +96,8 @@ The workspace will be built and submitted, and a change control will be created 
 
 Figure 2 below provides a visualization of the role's inputs, outputs executed by the role.
 
-![Figure 2: Ansible Role arista.avd.cv_deploy](../../docs/_media/cv_deploy_dark.svg#only-dark)
-![Figure 2: Ansible Role arista.avd.cv_deploy](../../docs/_media/cv_deploy_light.svg#only-light)
+![Figure 2: Ansible Role arista.avd.cv_deploy](../../../../../docs/_media/cv_deploy_dark.svg#only-dark)
+![Figure 2: Ansible Role arista.avd.cv_deploy](../../../../../docs/_media/cv_deploy_light.svg#only-light)
 
 ### Inputs
 
@@ -253,7 +253,7 @@ The directories are configured with the same variables as for the other AVD role
 
 ```yaml
 --8<--
-roles/cv_deploy/defaults/main/directories.yml
+ansible_collections/arista/avd/roles/cv_deploy/defaults/main/directories.yml
 --8<--
 ```
 
@@ -270,9 +270,9 @@ Make sure to copy the generated password. You only get view it once.
 Click "Save" to exit the dialogue box.
 ```
 
-![Figure: 1](../../media/serviceaccount1.png)
-![Figure: 2](../../media/serviceaccount2.png)
-![Figure: 3](../../media/serviceaccount3.png)
+![Figure: 1](../../../../../docs/_media/serviceaccount1.png)
+![Figure: 2](../../../../../docs/_media/serviceaccount2.png)
+![Figure: 3](../../../../../docs/_media/serviceaccount3.png)
 
 !!! note
     The name of the service account must match a username configured to be authorized on
@@ -280,4 +280,4 @@ Click "Save" to exit the dialogue box.
 
 ## License
 
-Project is published under [Apache 2.0 License](../../LICENSE)
+Project is published under [Apache 2.0 License](https://github.com/aristanetworks/avd/blob/devel/LICENSE)

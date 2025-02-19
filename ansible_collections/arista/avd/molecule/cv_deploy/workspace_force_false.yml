@@ -4,8 +4,8 @@
   connection: local
   gather_facts: false
   vars:
-    cv_server: www.cv-staging.corp.arista.io
-    cv_token: "{{ lookup('env', 'CVAAS_AAWG_CI') }}"
+    cv_server: "{{ lookup('env', 'CV_SERVER') }}"
+    cv_token: "{{ lookup('env', 'CV_ACCESS_TOKEN') }}"
     cv_verify_certs: true
     cv_skip_missing_devices: true
     eos_config_dir: "{{ playbook_dir }}/intended/configs/test_configs"
@@ -51,17 +51,18 @@
             that:
               # errors and warnings
               - "'Failed to submit workspace' in cv_deploy_results.errors[0]"
+              - cv_deploy_results.workspace.state == "submit failed"
 
     - name: Cleanup orphan workspace
       run_once: true
       ansible.legacy.uri:
         url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
-        validate_certs: yes
-        return_content: yes
+        validate_certs: true
+        return_content: true
         headers:
           Accept: "application/json"
           Content-Type: "application/json"
-          Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+          Authorization: "Bearer {{ lookup('env', 'CV_ACCESS_TOKEN') }}"
         method: POST
         body_format: json
         body:
@@ -78,13 +79,13 @@
               }
             ]
           }
-        force_basic_auth: yes
+        force_basic_auth: true
         timeout: 10
       register: cvp_abandon_workspace_result
       until: cvp_abandon_workspace_result.status == 200
       retries: 3
       delay: 3
-      ignore_errors: True
+      ignore_errors: true
       when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
 
     - name: Cleanup

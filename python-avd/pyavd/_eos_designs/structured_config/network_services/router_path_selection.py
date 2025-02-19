@@ -1,20 +1,18 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate, get, strip_empties_from_dict
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class RouterPathSelectionMixin(UtilsMixin):
+class RouterPathSelectionMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouterPathSelectionMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_path_selection(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_path_selection(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Return structured config for router path-selection (DPS)."""
         if not self.shared_utils.is_wan_router:
             return None
@@ -33,8 +31,10 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         # When running CV Pathfinder, only load balance policies are configured
         # for AutoVPN, need also vrfs and policies.
-        if self.shared_utils.wan_mode == "autovpn":
-            vrfs = [{"name": vrf["name"], "path_selection_policy": vrf["policy"]} for vrf in self._filtered_wan_vrfs]
+        if self.inputs.wan_mode == "autovpn":
+            vrfs = [
+                {"name": vrf.name, "path_selection_policy": f"{vrf.policy}-WITH-CP" if vrf.name == "default" else vrf.policy} for vrf in self._filtered_wan_vrfs
+            ]
 
             router_path_selection.update(
                 {
@@ -45,7 +45,7 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return strip_empties_from_dict(router_path_selection)
 
-    def _wan_load_balance_policies(self: AvdStructuredConfigNetworkServices) -> list:
+    def _wan_load_balance_policies(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
         """Return a list of load balance policies."""
         load_balance_policies = []
         for policy in self._filtered_wan_policies:
@@ -68,7 +68,7 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return load_balance_policies
 
-    def _autovpn_policies(self: AvdStructuredConfigNetworkServices) -> list:
+    def _autovpn_policies(self: AvdStructuredConfigNetworkServicesProtocol) -> list:
         """Return a list of policies for AutoVPN."""
         policies = []
         for policy in self._filtered_wan_policies:

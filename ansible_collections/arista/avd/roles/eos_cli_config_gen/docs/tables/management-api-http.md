@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2024 Arista Networks, Inc.
+  ~ Copyright (c) 2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -10,6 +10,7 @@
     | [<samp>management_api_http</samp>](## "management_api_http") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;enable_http</samp>](## "management_api_http.enable_http") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;enable_https</samp>](## "management_api_http.enable_https") | Boolean |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;enable_unix</samp>](## "management_api_http.enable_unix") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;https_ssl_profile</samp>](## "management_api_http.https_ssl_profile") | String |  |  |  | SSL Profile Name. |
     | [<samp>&nbsp;&nbsp;default_services</samp>](## "management_api_http.default_services") | Boolean |  |  |  | Enable default services: capi-doc and tapagg. |
     | [<samp>&nbsp;&nbsp;enable_vrfs</samp>](## "management_api_http.enable_vrfs") | List, items: Dictionary |  |  |  |  |
@@ -26,6 +27,7 @@
     management_api_http:
       enable_http: <bool>
       enable_https: <bool>
+      enable_unix: <bool>
 
       # SSL Profile Name.
       https_ssl_profile: <str>

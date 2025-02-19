@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -56,6 +56,9 @@ logging synchronous level {{ logging.synchronous.level | arista.avd.default("cri
 {%             endif %}
 {%             if host.protocol is arista.avd.defined() and host.protocol is not arista.avd.defined("udp") %}
 {%                 set logging_host_cli = logging_host_cli ~ " protocol " ~ host.protocol | lower %}
+{%             endif %}
+{%             if host.protocol is arista.avd.defined("tls") and host.ssl_profile is arista.avd.defined() %}
+{%                 set logging_host_cli = logging_host_cli ~ " ssl-profile " ~ host.ssl_profile %}
 {%             endif %}
 {{ logging_host_cli }}
 {%         endfor %}

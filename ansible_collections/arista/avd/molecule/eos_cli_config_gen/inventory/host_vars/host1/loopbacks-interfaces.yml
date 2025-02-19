@@ -3,6 +3,9 @@ loopback_interfaces:
   - name: Loopback0
     description: EVPN_Overlay_Peering
     ip_address: 192.168.255.3/32
+    mpls:
+      ldp:
+        interface: true
     eos_cli: |
       comment
       Comment created from eos_cli under loopback_interfaces.Loopback0
@@ -11,6 +14,9 @@ loopback_interfaces:
   - name: Loopback1
     description: VTEP_VXLAN_Tunnel_Source
     ip_address: 192.168.254.3/32
+
+  - name: Loopback2
+    ospf_area: 0.0.0.2
 
   - name: Loopback100
     description: TENANT_A_PROJECT02_VTEP_DIAGNOSTICS

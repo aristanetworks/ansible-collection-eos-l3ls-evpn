@@ -1,25 +1,23 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol
 
 if TYPE_CHECKING:
-    from .shared_utils import SharedUtils
+    from pyavd._eos_designs.schema import EosDesigns
+    from pyavd._eos_designs.shared_utils import SharedUtilsProtocol
 
 
-class AvdFacts:
+class AvdFactsProtocol(Protocol):
     _hostvars: dict
-    shared_utils: SharedUtils
-
-    def __init__(self, hostvars: dict, shared_utils: SharedUtils) -> None:
-        self._hostvars = hostvars
-        self.shared_utils = shared_utils
+    inputs: EosDesigns
+    shared_utils: SharedUtilsProtocol
 
     @classmethod
-    def __keys(cls) -> list[str]:  # pylint: disable=bad-option-value, unused-private-member # CH Sep-22: Some pylint bug.
+    def _keys(cls) -> list[str]:
         """
         Get all class attributes including those of base Classes and Mixins.
 
@@ -40,12 +38,12 @@ class AvdFacts:
         Actually the returned list are the names of attributes not starting with "_" and using cached_property class.
         The "_" check is added to allow support for "internal" cached_properties storing temporary values.
         """
-        return [key for key in cls.__keys() if not key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
+        return [key for key in cls._keys() if not key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
 
     @classmethod
     def internal_keys(cls) -> list[str]:
         """Return a list containing the names of attributes starting with "_" and using cached_property class."""
-        return [key for key in cls.__keys() if key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
+        return [key for key in cls._keys() if key.startswith("_") and isinstance(getattr(cls, key), cached_property)]
 
     def get(self, key: str, default_value: Any = None) -> Any:
         """Emulate the builtin dict .get method."""
@@ -61,8 +59,15 @@ class AvdFacts:
         If the value is not cached, it will be resolved by the attribute function first.
         Empty values are removed from the returned data.
         """
-        return {key: getattr(self, key) for key in self.keys() if getattr(self, key) is not None}
+        return {key: value for key in self.keys() if (value := getattr(self, key)) is not None}
 
     def clear_cache(self) -> None:
         for key in self.keys() + self.internal_keys():
             self.__dict__.pop(key, None)
+
+
+class AvdFacts(AvdFactsProtocol):
+    def __init__(self, hostvars: dict, inputs: EosDesigns, shared_utils: SharedUtilsProtocol) -> None:
+        self._hostvars = hostvars
+        self.inputs = inputs
+        self.shared_utils = shared_utils

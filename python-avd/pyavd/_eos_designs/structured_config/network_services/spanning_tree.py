@@ -1,21 +1,18 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import get
 from pyavd.j2filters import list_compress
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class SpanningTreeMixin(UtilsMixin):
+class SpanningTreeMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,31 +20,31 @@ class SpanningTreeMixin(UtilsMixin):
     """
 
     @cached_property
-    def spanning_tree(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def spanning_tree(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """spanning_tree priorities set per VLAN if spanning_tree mode is "rapid-pvst"."""
         if not self.shared_utils.network_services_l2:
             return None
 
-        spanning_tree_mode = get(self.shared_utils.switch_data_combined, "spanning_tree_mode")
+        spanning_tree_mode = self.shared_utils.node_config.spanning_tree_mode
         if spanning_tree_mode != "rapid-pvst":
             return None
 
-        default_priority = int(get(self.shared_utils.switch_data_combined, "spanning_tree_priority", default=32768))
+        default_priority = self.shared_utils.node_config.spanning_tree_priority
 
         vlan_stp_priorities = {}
         non_default_vlans = set()
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
-                for svi in vrf["svis"]:
-                    if (priority := get(svi, "spanning_tree_priority")) is None:
+            for vrf in tenant.vrfs:
+                for svi in vrf.svis:
+                    if (priority := svi.spanning_tree_priority) is None:
                         continue
-                    vlan_stp_priorities.setdefault(priority, set()).add(svi["id"])
-                    non_default_vlans.add(svi["id"])
-            for l2vlan in tenant["l2vlans"]:
-                if (priority := get(l2vlan, "spanning_tree_priority")) is None:
+                    vlan_stp_priorities.setdefault(priority, set()).add(svi.id)
+                    non_default_vlans.add(svi.id)
+            for l2vlan in tenant.l2vlans:
+                if (priority := l2vlan.spanning_tree_priority) is None:
                     continue
-                vlan_stp_priorities.setdefault(priority, set()).add(l2vlan["id"])
-                non_default_vlans.add(l2vlan["id"])
+                vlan_stp_priorities.setdefault(priority, set()).add(l2vlan.id)
+                non_default_vlans.add(l2vlan.id)
 
         if not non_default_vlans:
             # Quick return with only default

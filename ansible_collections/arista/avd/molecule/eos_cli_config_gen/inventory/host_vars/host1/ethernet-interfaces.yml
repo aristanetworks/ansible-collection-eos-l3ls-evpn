@@ -6,6 +6,9 @@ ethernet_interfaces:
     peer_interface: Ethernet1
     peer_type: spine
     description: P2P_LINK_TO_DC1-SPINE1_Ethernet1
+    comment: |-
+      testing multi line comment with |-
+      connection to dc1-spine1
     speed: forced 100gfull
     mtu: 1500
     l2_mtu: 8000
@@ -130,6 +133,25 @@ ethernet_interfaces:
         - name: ACL1
         - name: ACL2
       version: 2
+    address_locking:
+      ipv4: true
+    l2_protocol:
+      forwarding_profile: TEST1
+    service_profile: test
+    service_policy:
+      qos:
+        input: pmap_test1
+    qos:
+      trust: dscp
+      dscp: 48
+    traffic_policy:
+      input: BLUE-C1-POLICY
+      output: BLUE-C2-POLICY
+    mpls:
+      ip: true
+      ldp:
+        interface: true
+        igp_sync: true
 
   - name: Ethernet2
     ip_address: 10.1.255.3/24
@@ -142,6 +164,9 @@ ethernet_interfaces:
     peer_interface: Eth1
     peer_type: server
     description: SRV-POD02_Eth1
+    comment: |
+      testing multi line comments with |
+      connection to server in pod02
     tcp_mss_ceiling:
       ipv4_segment_size: 70
       direction: ingress
@@ -189,12 +214,16 @@ ethernet_interfaces:
         in_required: false
       backup_link:
         prefer_vlan: 20
+    address_locking:
+      ipv4: true
+      ipv6: true
 
   - name: Ethernet3
     peer: DC1-SPINE2
     peer_interface: Ethernet2
     peer_type: spine
     description: P2P_LINK_TO_DC1-SPINE2_Ethernet2
+    comment: testing single line comment
     mtu: 1500
     ip_address: 172.31.128.1/31
     snmp_trap_link_change: false
@@ -244,6 +273,22 @@ ethernet_interfaces:
             dot1q_tunnel_to: 50
       backup_link:
         interface: Ethernet4
+    address_locking:
+      ipv4: false
+      ipv6: true
+    mac_security:
+      profile: A1
+    ptp:
+      enable: true
+      delay_mechanism: e2e
+      sync_message:
+        interval: 1
+      role: dynamic
+      vlan: 2
+      transport: layer2
+    sync_e:
+      enable: true
+      priority: 10
 
   - name: Ethernet4
     description: Molecule IPv6
@@ -279,6 +324,10 @@ ethernet_interfaces:
       port_security:
         violation:
           mode: protect
+    address_locking:
+      address_family:
+        ipv4: true
+        ipv6: true
 
   - name: Ethernet5
     description: Molecule Routing
@@ -315,6 +364,12 @@ ethernet_interfaces:
     switchport:
       enabled: false
       access_vlan: 220
+    sync_e:
+      enable: true
+    address_locking:
+      address_family:
+        ipv4: false
+        ipv6: false
 
   - name: Ethernet6
     logging:
@@ -335,6 +390,40 @@ ethernet_interfaces:
       mode: trunk
     spanning_tree_bpduguard: enabled
     spanning_tree_bpdufilter: enabled
+    lldp:
+      transmit: false
+      receive: true
+    ptp:
+      enable: true
+      announce:
+        interval: 3
+        timeout: 9
+      delay_req: -7
+      delay_mechanism: e2e
+      sync_message:
+        interval: 1
+      role: dynamic
+      transport: ipv4
+      profile:
+        g8275_1:
+          destination_mac_address: non-forwardable
+    service_profile: experiment
+    qos:
+      trust: cos
+      cos: 2
+    tx_queues:
+      - id: 2
+        random_detect:
+          ecn:
+            count: true
+    sync_e:
+      enable: true
+      priority: disabled
+    address_locking:
+      ipv4_enforcement_disabled: true
+      address_family:
+        ipv4: false
+        ipv6: true
 
   - name: Ethernet7
     description: Molecule L2
@@ -403,6 +492,13 @@ ethernet_interfaces:
         key: password
         mode: md5
         rx_disabled: true
+    service_profile: qprof_testwithpolicy
+    uc_tx_queues:
+      - id: 4
+        random_detect:
+          ecn:
+            count: true
+
   - name: Ethernet8.101
     description: to WAN-ISP-01 Ethernet2.101 - VRF-C1
     encapsulation_dot1q:
@@ -442,6 +538,9 @@ ethernet_interfaces:
         sha:
           key_id: 2
         rx_disabled: true
+    lldp:
+      transmit: true
+      receive: false
 
   - name: Ethernet10
     description: interface_with_mpls_disabled
@@ -959,6 +1058,9 @@ ethernet_interfaces:
       mac_based_authentication:
         enabled: true
         always: true
+    flow_tracker:
+      sampled: T2
+      hardware: T2
 
   - name: Ethernet41
     switchport:
@@ -969,6 +1071,9 @@ ethernet_interfaces:
         enabled: true
         always: true
         host_mode_common: true
+    flow_tracker:
+      sampled: T3
+      hardware: T3
 
   - name: Ethernet42
     switchport:
@@ -977,6 +1082,8 @@ ethernet_interfaces:
     dot1x:
       mac_based_authentication:
         enabled: true
+    flow_tracker:
+      sampled: T3
 
   - name: Ethernet43
     switchport:
@@ -1569,6 +1676,7 @@ ethernet_interfaces:
         inner_vlan: 11
       network:
         encapsulation: client inner
+
   - name: Ethernet70
     description: dot1x_aaa_unresponsive
     shutdown: false
@@ -1587,6 +1695,7 @@ ethernet_interfaces:
             traffic_allow: true
             apply_alternate: true
       mac_based_access_list: true
+
   - name: Ethernet71
     description: dot1x_aaa_unresponsive1
     shutdown: false
@@ -1603,6 +1712,7 @@ ethernet_interfaces:
               time_duration: 10
               time_duration_unit: hours
       mac_based_access_list: true
+
   - name: Ethernet72
     description: dot1x_aaa_unresponsive2
     shutdown: false
@@ -1758,3 +1868,150 @@ ethernet_interfaces:
     spanning_tree_portfast: edge
     lldp:
       ztp_vlan: 112
+
+  - name: Ethernet81/3
+    description: Traffic Engineering Interface
+    shutdown: false
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.0/31
+    traffic_engineering:
+      enabled: true
+      administrative_groups:
+        - 3
+        - 15-29
+        - testgrp
+      srlg: TEST-SRLG
+      metric: 4
+      bandwidth:
+        number: 10
+        unit: percent
+      min_delay_static:
+        number: 5
+        unit: microseconds
+
+  - name: Ethernet81/4
+    description: Traffic Engineering Interface
+    shutdown: false
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.0/31
+    traffic_engineering:
+      enabled: true
+      administrative_groups:
+        - 4
+        - 7-100
+        - testgrp
+      srlg: 16
+      metric: 2
+      bandwidth:
+        number: 100
+        unit: mbps
+      min_delay_dynamic:
+        twamp_light_fallback:
+          number: 2
+          unit: milliseconds
+
+  - name: Ethernet82
+    description: Switchport_tap_tool
+    switchport:
+      tap:
+        allowed_vlan: 25
+        default:
+          groups:
+            - g2
+            - g1
+            - g3
+          nexthop_groups:
+            - nexthop_g1
+            - nexthop_g3
+            - nexthop_g2
+          interfaces:
+            - port-channel10
+            - ethernet4
+        identity:
+          id: 3
+          inner_vlan: 5
+        mpls_pop_all: true
+        native_vlan: 10
+        truncation:
+          enabled: true
+          size: 150
+        mac_address:
+          destination: 01:00:00:00:00:00
+          source: 01:23:45:67:89:ab
+        encapsulation:
+          gre:
+            destinations:
+              - destination: 1.1.1.1
+                source: 1.1.1.2
+                protocols:
+                  - protocol: "0x0"
+                    strip: true
+                strip: true
+              - destination: 2.1.1.2
+                protocols:
+                  - protocol: "0x10"
+                    strip: true
+                  - protocol: "0x11"
+                    feature_header_length: 2
+                    re_encapsulation_ethernet_header: true
+                    strip: true
+                  - protocol: "0x12"
+                    re_encapsulation_ethernet_header: true
+                    strip: true
+              - destination: 2.1.1.3
+                source: 2.1.1.4
+                strip: true
+      tool:
+        mpls_pop_all: true
+        encapsulation:
+          dot1br_strip: true
+          vn_tag_strip: true
+        allowed_vlan: 23
+        identity:
+          tag: qinq
+          dot1q_dzgre_source: port
+        groups:
+          - group1
+          - group2
+          - group3
+        dot1q_remove_outer_vlan_tag: 1
+
+  - name: Ethernet83
+    description: Test_tap_tool
+    switchport:
+      tap:
+        identity:
+          id: 5
+        mac_address:
+          destination: 01:00:00:00:00:00
+        encapsulation:
+          vxlan_strip: true
+          gre:
+            strip: true
+        truncation:
+          enabled: true
+      tool:
+        identity:
+          tag: dot1q
+          qinq_dzgre_source: policy inner port
+
+  - name: Ethernet84
+    switchport:
+      tap:
+        encapsulation:
+          gre:
+            protocols:
+              - protocol: "0x1"
+                strip: true
+              - protocol: "0x2"
+                feature_header_length: 3
+                strip: true
+              - protocol: "0x3"
+                feature_header_length: 2
+                re_encapsulation_ethernet_header: true
+                strip: true
+              - protocol: "0x4"
+                re_encapsulation_ethernet_header: true
+                strip: true

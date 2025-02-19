@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from .get_avd_facts import get_avd_facts
@@ -18,9 +18,10 @@ PYAVD_PRERELEASE = ""  # Set this to aN or bN for alpha and beta releases of pya
 __author__ = "Arista Networks"
 __copyright__ = "Copyright 2023-2024 Arista Networks"
 __license__ = "Apache 2.0"
-__version__ = "5.1.0.dev2"
+__version__ = "5.3.0.dev0"
 
 __all__ = [
+    "ValidationResult",
     "get_avd_facts",
     "get_device_config",
     "get_device_doc",
@@ -28,5 +29,4 @@ __all__ = [
     "get_fabric_documentation",
     "validate_inputs",
     "validate_structured_config",
-    "ValidationResult",
 ]

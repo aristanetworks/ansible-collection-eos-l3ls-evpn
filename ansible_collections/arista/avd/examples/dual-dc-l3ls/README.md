@@ -3,7 +3,7 @@
 title: AVD example for a dual data center using L3LS
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -43,7 +43,7 @@ There are two playbooks included in this example to show the following:
 ## Installation
 
 --8<--
-examples/common/installation.md
+ansible_collections/arista/avd/examples/common/example-installation.md
 --8<--
 
 ```shell
@@ -162,7 +162,7 @@ In this example, we will consider that no DNS is available and define the IPs th
 
     ```yaml
     --8<--
-    examples/dual-dc-l3ls/inventory.yml
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/inventory.yml
     --8<--
     ```
 
@@ -174,7 +174,7 @@ As discussed in the single DC scenario, all device types must be explicitly defi
 
     ```yaml
     --8<--
-    examples/dual-dc-l3ls/group_vars/DC1_SPINES.yml
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/DC1_SPINES.yml
     --8<--
     ```
 
@@ -182,7 +182,7 @@ As discussed in the single DC scenario, all device types must be explicitly defi
 
     ```yaml
     --8<--
-    examples/dual-dc-l3ls/group_vars/DC1_L3_LEAVES.yml
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/DC1_L3_LEAVES.yml
     --8<--
     ```
 
@@ -190,7 +190,7 @@ As discussed in the single DC scenario, all device types must be explicitly defi
 
     ```yaml
     --8<--
-    examples/dual-dc-l3ls/group_vars/DC1_L2_LEAVES.yml
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/DC1_L2_LEAVES.yml
     --8<--
     ```
 
@@ -198,7 +198,7 @@ As discussed in the single DC scenario, all device types must be explicitly defi
 
     ```yaml
     --8<--
-    examples/dual-dc-l3ls/group_vars/DC2_SPINES.yml
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/DC2_SPINES.yml
     --8<--
     ```
 
@@ -206,7 +206,7 @@ As discussed in the single DC scenario, all device types must be explicitly defi
 
     ```yaml
     --8<--
-    examples/dual-dc-l3ls/group_vars/DC2_L3_LEAVES.yml
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/DC2_L3_LEAVES.yml
     --8<--
     ```
 
@@ -214,7 +214,7 @@ As discussed in the single DC scenario, all device types must be explicitly defi
 
     ```yaml
     --8<--
-    examples/dual-dc-l3ls/group_vars/DC2_L2_LEAVES.yml
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/DC2_L2_LEAVES.yml
     --8<--
     ```
 
@@ -226,7 +226,7 @@ In this section, only additions to the previous example will be discussed. The o
 
 ```yaml title="FABRIC.yml"
     --8<--
-    examples/dual-dc-l3ls/group_vars/FABRIC.yml:70:91
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/FABRIC.yml:70:91
     --8<--
 ```
 
@@ -342,7 +342,7 @@ l3leaf:
 7. `mlag_peer_ipv4_pool` defines the IP scope from which AVD assigns IPv4 addresses for the MLAG peer link interface VLAN4094.
 8. `mlag_peer_l3_ipv4_pool` defines the IP scope from which AVD assigns IPv4 addresses for the iBGP peering established between the two leaf switches via the SVI/IRB interface VLAN4093.
 9. `virtual_router_mac_address` defines the MAC address used for the anycast gateway on the various subnets. This is the MAC address connected endpoints will learn when ARPing for their default gateway.
-10. `spanning_tree_priority` sets the spanning tree priority. Since spanning tree in an L3LS network is effectively only running locally on the switch, the same priority across all L3 leaf switches can be re-used.
+10. `spanning_tree_priority` sets the spanning tree priority. Since spanning tree in an L3LS network is effectively only running locally on the switch, the same priority across all L3 leaf switches can be reused.
 11. `spanning_tree_mode` defines the spanning tree mode. In this case, we are using MSTP, which is the default. However, other modes are supported should they be required, for example, for connectivity to legacy or third-party vendor environments.
 12. `node_groups` defines settings common to more than one node. For example, when exactly two nodes are part of a node group for leaf switches, AVD will, by default, automatically generate MLAG configuration.
 13. `bgp_as` is defined once since an MLAG pair shares a single BGP AS number.
@@ -356,7 +356,7 @@ Since we are adding the EVPN DC GW functionality in DC2, we must also add it in 
 
 ```yaml title="DC1.yml"
     --8<--
-    examples/dual-dc-l3ls/group_vars/DC1.yml:82:111
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/DC1.yml:82:111
     --8<--
 ```
 
@@ -364,7 +364,7 @@ Finally, the definition in DC2 for the L2 leaf switches:
 
 ```yaml title="DC2.yml"
     --8<--
-    examples/dual-dc-l3ls/group_vars/DC2.yml:113:138
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/DC2.yml:113:138
     --8<--
 ```
 
@@ -376,7 +376,7 @@ It is important to consider adding the new leaves to the Inventory as described 
 
 ```yaml title="NETWORK_SERVICES.yml"
 --8<--
-examples/dual-dc-l3ls/group_vars/NETWORK_SERVICES.yml
+ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/NETWORK_SERVICES.yml
 --8<--
 ```
 
@@ -386,7 +386,7 @@ After the previous section, all VRFs and VLANs across the fabric are now defined
 
 ```yaml title="CONNECTED_ENDPOINTS.yml"
 --8<--
-examples/dual-dc-l3ls/group_vars/CONNECTED_ENDPOINTS.yml
+ansible_collections/arista/avd/examples/dual-dc-l3ls/group_vars/CONNECTED_ENDPOINTS.yml
 --8<--
 ```
 
@@ -404,7 +404,7 @@ Example of using this playbook without devices (local tasks):
 
     ```yaml
     --8<--
-    examples/dual-dc-l3ls/build.yml
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/build.yml
     --8<--
     ```
 
@@ -418,7 +418,7 @@ To build and deploy the configurations to your switches directly, using eAPI, ru
 
     ```yaml
     --8<--
-    examples/dual-dc-l3ls/deploy.yml
+    ansible_collections/arista/avd/examples/dual-dc-l3ls/deploy.yml
     --8<--
     ```
 
@@ -447,7 +447,7 @@ ok: [dc1-leaf1a -> localhost] => (item=/home/user/Documents/git_projects/ansible
 
 If similar output is not shown, make sure:
 
-1. The documented [requirements](../../docs/installation/collection-installation.md) are met.
+1. The documented [requirements](../../../../../docs/installation/collection-installation.md) are met.
 2. The latest `arista.avd` collection is installed.
 
 ## Troubleshooting

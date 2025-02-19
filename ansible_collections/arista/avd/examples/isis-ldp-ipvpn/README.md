@@ -3,7 +3,7 @@
 title: AVD example for a MPLS-VPN based WAN Network
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -12,7 +12,7 @@ title: AVD example for a MPLS-VPN based WAN Network
 
 ## Introduction
 
-This example is the logical second step in introducing AVD to new users, following the [Introduction to Ansible and AVD](../../docs/getting-started/intro-to-ansible-and-avd.md) section. New users with access to virtual routers (using Arista vEOS-lab or cEOS) can learn how to generate configuration and documentation for a complete fabric environment. Users with access to physical routers will have to adapt a few settings. This is all documented inline in the comments included in the YAML files. If a lab with virtual or physical routers is not accessible, this example can also be used to only generate the output from AVD if desired.
+This example is the logical second step in introducing AVD to new users, following the [Introduction to Ansible and AVD](../../../../../docs/getting-started/intro-to-ansible-and-avd.md) section. New users with access to virtual routers (using Arista vEOS-lab or cEOS) can learn how to generate configuration and documentation for a complete fabric environment. Users with access to physical routers will have to adapt a few settings. This is all documented inline in the comments included in the YAML files. If a lab with virtual or physical routers is not accessible, this example can also be used to only generate the output from AVD if desired.
 
 The example includes and describes all the AVD files and their content used to build a MPLS-VPN WAN network covering two sites using the following:
 
@@ -25,7 +25,7 @@ This example does not include Integration with CloudVision to keep everything as
 ## Installation
 
 --8<--
-examples/common/installation.md
+ansible_collections/arista/avd/examples/common/example-installation.md
 --8<--
 
 ```shell
@@ -98,7 +98,7 @@ Below is the basic configuration file for `p1`:
 
 ```eos title="p1-basic-configuration.txt"
 --8<--
-examples/isis-ldp-ipvpn/switch-basic-configurations/p1-basic-configuration.txt
+ansible_collections/arista/avd/examples/isis-ldp-ipvpn/switch-basic-configurations/p1-basic-configuration.txt
 --8<--
 ```
 
@@ -230,7 +230,7 @@ Since this example covers building a MPLS WAN network, AVD must know about the d
 
     ```yaml
     --8<--
-    examples/isis-ldp-ipvpn/group_vars/WAN1_P_ROUTERS.yml
+    ansible_collections/arista/avd/examples/isis-ldp-ipvpn/group_vars/WAN1_P_ROUTERS.yml
     --8<--
     ```
 
@@ -238,7 +238,7 @@ Since this example covers building a MPLS WAN network, AVD must know about the d
 
     ```yaml
     --8<--
-    examples/isis-ldp-ipvpn/group_vars/WAN1_PE_ROUTERS.yml
+    ansible_collections/arista/avd/examples/isis-ldp-ipvpn/group_vars/WAN1_PE_ROUTERS.yml
     --8<--
     ```
 
@@ -246,7 +246,7 @@ Since this example covers building a MPLS WAN network, AVD must know about the d
 
     ```yaml
     --8<--
-    examples/isis-ldp-ipvpn/group_vars/WAN1_RR_ROUTERS.yml
+    ansible_collections/arista/avd/examples/isis-ldp-ipvpn/group_vars/WAN1_RR_ROUTERS.yml
     --8<--
     ```
 
@@ -441,7 +441,7 @@ core_interfaces:
 
 ```yaml title="NETWORK_SERVICES.yml"
 --8<--
-examples/isis-ldp-ipvpn/group_vars/NETWORK_SERVICES.yml
+ansible_collections/arista/avd/examples/isis-ldp-ipvpn/group_vars/NETWORK_SERVICES.yml
 --8<--
 ```
 
@@ -480,7 +480,7 @@ In this example, the deploy playbook looks like the following:
 
 ```yaml title="deploy.yml"
 --8<--
-examples/isis-ldp-ipvpn/deploy.yml
+ansible_collections/arista/avd/examples/isis-ldp-ipvpn/deploy.yml
 --8<--
 ```
 
@@ -495,7 +495,7 @@ Example of using the build playbook without devices (local tasks):
 
 ```yaml title="build.yml"
 --8<--
-examples/isis-ldp-ipvpn/build.yml
+ansible_collections/arista/avd/examples/isis-ldp-ipvpn/build.yml
 --8<--
 ```
 
@@ -523,7 +523,7 @@ ok: [p1 -> localhost] => (item=/home/user/Documents/git_projects/ansible-avd-exa
 
 If similar output is not shown, make sure:
 
-1. The documented [requirements](../../docs/installation/collection-installation.md) are met.
+1. The documented [requirements](../../../../../docs/installation/collection-installation.md) are met.
 2. The latest `arista.avd` collection is installed.
 
 ## Troubleshooting

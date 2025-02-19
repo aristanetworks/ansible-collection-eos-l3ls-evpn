@@ -1,18 +1,18 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import get
+from pyavd._utils import default, strip_empties_from_list
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class LinkTrackingGroupsMixin:
+class LinkTrackingGroupsMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -21,19 +21,18 @@ class LinkTrackingGroupsMixin:
     """
 
     @cached_property
-    def link_tracking_groups(self: SharedUtils) -> list | None:
-        if get(self.switch_data_combined, "link_tracking.enabled") is True:
+    def link_tracking_groups(self: SharedUtilsProtocol) -> list | None:
+        if self.node_config.link_tracking.enabled:
             link_tracking_groups = []
-            default_recovery_delay = get(self.platform_settings, "reload_delay.mlag", 300)
-            lt_groups = get(self.switch_data_combined, "link_tracking.groups", default=[])
-
-            if len(lt_groups) > 0:
-                for lt_group in lt_groups:
-                    lt_group["recovery_delay"] = lt_group.get("recovery_delay", default_recovery_delay)
-                    link_tracking_groups.append(lt_group)
+            default_recovery_delay = default(self.platform_settings.reload_delay.mlag, 300)
+            if len(self.node_config.link_tracking.groups) > 0:
+                for lt_group in self.node_config.link_tracking.groups:
+                    lt_group_dict = lt_group._as_dict(include_default_values=True)
+                    lt_group_dict["recovery_delay"] = default(lt_group.recovery_delay, default_recovery_delay)
+                    link_tracking_groups.append(lt_group_dict)
             else:
                 link_tracking_groups.append({"name": "LT_GROUP1", "recovery_delay": default_recovery_delay})
 
-            return link_tracking_groups
+            return strip_empties_from_list(link_tracking_groups)
 
         return None

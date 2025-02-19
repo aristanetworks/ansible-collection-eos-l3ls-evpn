@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -19,7 +19,7 @@
 {%         elif cluster.cvauth.method is arista.avd.defined('token') and cluster.cvauth.token_file is arista.avd.defined %}
 {%             set auth = 'token,' ~ cluster.cvauth.token_file %}
 {%         elif cluster.cvauth.method is arista.avd.defined('token-secure') and cluster.cvauth.token_file is arista.avd.defined %}
-{%             set auth = 'token-secure,' ~ cluster.cvauth.token_file %}+
+{%             set auth = 'token-secure,' ~ cluster.cvauth.token_file %}
 {%         elif cluster.cvauth.method is arista.avd.defined('certs') and cluster.cvauth.cert_file is arista.avd.defined and cluster.cvauth.key_file is arista.avd.defined %}
 {%             set auth = 'certs,' ~ cluster.cvauth.cert_file ~ "," ~ cluster.cvauth.key_file %}
 {%             if  cluster.cvauth.ca_file is arista.avd.defined %}
@@ -36,7 +36,7 @@
 {%     if daemon_terminattr.cvaddrs is arista.avd.defined %}
 {%         set url = daemon_terminattr.cvaddrs | arista.avd.default([]) | join(',') %}
 {%         if daemon_terminattr.cvauth.method is arista.avd.defined('key') %}
-{%             set auth = 'key,' ~ daemon_terminattr.cvauth.key | arista.avd.default('') %}
+{%             set auth = 'key,' ~ daemon_terminattr.cvauth.key | arista.avd.default('') | arista.avd.hide_passwords(hide_passwords) %}
 {%         elif daemon_terminattr.cvauth.method is arista.avd.defined('token') and daemon_terminattr.cvauth.token_file is arista.avd.defined %}
 {%             set auth = 'token,' ~ daemon_terminattr.cvauth.token_file %}
 {%         elif daemon_terminattr.cvauth.method is arista.avd.defined('token-secure') and daemon_terminattr.cvauth.token_file is arista.avd.defined %}

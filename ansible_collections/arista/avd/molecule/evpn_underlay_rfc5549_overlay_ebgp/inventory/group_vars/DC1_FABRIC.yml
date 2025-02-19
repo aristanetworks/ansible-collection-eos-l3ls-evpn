@@ -11,7 +11,7 @@ fabric_name: DC1_FABRIC
 # Point to Point Underlay with IPv6 Unnumbered
 underlay_rfc5549: true
 
-# Test if overlay_mlag_rfc5549 is True
+# Test if overlay_mlag_rfc5549 is true
 # Results to the following EOS config:
 #   ipv6 unicast-routing vrf <vrf_name>
 overlay_mlag_rfc5549: true
@@ -36,6 +36,8 @@ bgp_peer_groups:
   mlag_ipv4_underlay_peer:
     name: "MLAG_PEER"
     password: "arwUnrq9ydqIhjfTwRhAlg=="
+  mlag_ipv4_vrfs_peer:
+    name: "MLAG_VRFS_PEER"
 
 # Spine Switches
 spine:
@@ -66,7 +68,8 @@ spine:
       id: 5
       mgmt_ip: 192.168.200.105/24
       mac_address: '0c:1d:c0:1d:62:01'
-      loopback_ipv6_pool: 2001:1::/64
+      # Testing using multiple prefixes and ranges to represent 2001:1::-2001:1::1000. This will break into multiple entries in the EVPN overlay prefix-list.
+      loopback_ipv6_pool: 2001:1::/127, 2001:1::2-2001:1::1000
     - name: DC1-SPINE6
       # Testing underlay IPv6 peers
       id: 6
@@ -165,6 +168,8 @@ l3leaf:
       uplink_switches: ['DC1-SPINE5', 'DC1-SPINE5']
       loopback_ipv6_pool: 2001:1::/64
       loopback_ipv6_offset: 4
+      # since this device is not using rfc5549 for overlay, we need mlag_peer_l3_ipv4_pool set specifically.
+      mlag_peer_l3_ipv4_pool: 10.255.251.0/24
       nodes:
         - name: DC1-LEAF3A
           id: 8
@@ -268,4 +273,4 @@ l3_edge:
       as: [ "65105", "64900" ]
       subnet: 10.23.23.4/30
       profile: IPV4-UNDERLAY-EXTERNAL
-      ipv6_enable: True
+      ipv6_enable: true

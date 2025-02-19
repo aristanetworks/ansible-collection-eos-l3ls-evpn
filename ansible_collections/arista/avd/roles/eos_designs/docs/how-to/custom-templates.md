@@ -3,7 +3,7 @@
 title: Custom Templates for eos_designs
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -55,7 +55,7 @@ eos_designs_custom_templates:
       strip_empty_keys: false
 ```
 
-For more details, see [Custom Templates](https://avd.arista.com/4.3/roles/eos_designs/docs/role-configuration.html#custom-templates).
+For more details, see [Custom Templates](https://avd.arista.com/stable/roles/eos_designs/docs/role-configuration.html#custom-templates).
 
 ## Adding the Custom Template to the `eos-designs` Role
 

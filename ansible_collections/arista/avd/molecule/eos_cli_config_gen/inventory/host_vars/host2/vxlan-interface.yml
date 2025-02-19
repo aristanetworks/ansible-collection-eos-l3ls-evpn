@@ -9,3 +9,15 @@ vxlan_interface:
         dscp_propagation_encapsulation: false
         map_dscp_to_traffic_class_decapsulation: false
         ecn_propagation: false
+      vlans:
+        - id: 110
+          vni: 10110
+          multicast_group: 239.9.1.4
+        - id: 111
+          vni: 10111  # Ignored since the VNI is also part of a range.
+          flood_vteps:
+            - 10.1.1.10
+            - 10.1.1.11
+      vlan_range:
+        vlans: 111,113,115-118
+        vnis: 10111,10113,10115-10118

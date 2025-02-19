@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from json import JSONDecodeError
@@ -6,7 +6,8 @@ from json import loads as json_loads
 from pathlib import Path
 from sys import stdin
 
-from yaml import unsafe_load as yaml_load
+from yaml import CSafeLoader
+from yaml import load as yaml_load
 
 
 def read_file(filename: str) -> str:
@@ -24,7 +25,7 @@ def read_vars(filename: str) -> dict:
     except JSONDecodeError:
         pass
 
-    return yaml_load(data) or {}
+    return yaml_load(data, Loader=CSafeLoader) or {}
 
 
 def write_result(filename: str, result: str) -> None:

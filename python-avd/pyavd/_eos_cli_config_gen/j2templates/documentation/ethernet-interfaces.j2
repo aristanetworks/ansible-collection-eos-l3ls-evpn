@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -793,6 +793,38 @@
 | --------- | -------- |
 {%         for sync_e_interface in sync_e_interfaces %}
 | {{ sync_e_interface.name }} | {{ sync_e_interface.sync_e.priority | arista.avd.default('127') }} |
+{%         endfor %}
+{%     endif %}
+{%     set te_interfaces = [] %}
+{%     for ethernet_interface in ethernet_interfaces | arista.avd.natural_sort('name') %}
+{%         if ethernet_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
+{%             do te_interfaces.append(ethernet_interface) %}
+{%         endif %}
+{%     endfor %}
+{%     if te_interfaces | length > 0 %}
+
+#### Traffic Engineering
+
+| Interface | Enabled | Administrative Groups | Metric | Max Reservable Bandwidth | Min-delay | SRLG |
+| --------- | ------- | --------------------- | ------ | ------------------------ | --------- | ---- |
+{%         for te_interface in te_interfaces %}
+{%             set admin_groups = te_interface.traffic_engineering.administrative_groups | arista.avd.default (["-"]) | join(",") %}
+{%             set te_enabled = te_interface.traffic_engineering.enabled | arista.avd.default("-") %}
+{%             set te_srlg = te_interface.traffic_engineering.srlg | arista.avd.default("-") %}
+{%             set te_metric = te_interface.traffic_engineering.metric | arista.avd.default("-") %}
+{%             if te_interface.traffic_engineering.bandwidth is arista.avd.defined %}
+{%                 set te_bandwidth = te_interface.traffic_engineering.bandwidth.number ~ " " ~ te_interface.traffic_engineering.bandwidth.unit %}
+{%             else %}
+{%                 set te_bandwidth = "-" %}
+{%             endif %}
+{%             if te_interface.traffic_engineering.min_delay_static is arista.avd.defined %}
+{%                 set te_min_del = te_interface.traffic_engineering.min_delay_static.number ~ " " ~ te_interface.traffic_engineering.min_delay_static.unit %}
+{%             elif te_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback is arista.avd.defined %}
+{%                 set te_min_del = "twamp-light, fallback " ~ te_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback.number ~ " " ~ te_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback.unit %}
+{%             else %}
+{%                 set te_min_del = "-" %}
+{%             endif %}
+| {{ te_interface.name }} | {{ te_enabled }} | {{ admin_groups }} | {{ te_metric }} | {{ te_bandwidth }} | {{ te_min_del }} | {{ te_srlg }} |
 {%         endfor %}
 {%     endif %}
 

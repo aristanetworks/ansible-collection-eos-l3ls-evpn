@@ -1,20 +1,18 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate, strip_empties_from_list
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class RouteMapsMixin(UtilsMixin):
+class RouteMapsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,7 +20,7 @@ class RouteMapsMixin(UtilsMixin):
     """
 
     @cached_property
-    def route_maps(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def route_maps(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Return structured config for route_maps.
 
@@ -37,16 +35,16 @@ class RouteMapsMixin(UtilsMixin):
         route_maps = []
 
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
+            for vrf in tenant.vrfs:
                 # BGP Peers are already filtered in filtered_tenants
                 #  so we only have entries with our hostname in them.
-                for bgp_peer in vrf["bgp_peers"]:
-                    ipv4_next_hop = bgp_peer.get("set_ipv4_next_hop")
-                    ipv6_next_hop = bgp_peer.get("set_ipv6_next_hop")
+                for bgp_peer in vrf.bgp_peers:
+                    ipv4_next_hop = bgp_peer.set_ipv4_next_hop
+                    ipv6_next_hop = bgp_peer.set_ipv6_next_hop
                     if ipv4_next_hop is None and ipv6_next_hop is None:
                         continue
 
-                    route_map_name = f"RM-{vrf['name']}-{bgp_peer['ip_address']}-SET-NEXT-HOP-OUT"
+                    route_map_name = f"RM-{vrf.name}-{bgp_peer.ip_address}-SET-NEXT-HOP-OUT"
                     set_action = f"ip next-hop {ipv4_next_hop}" if ipv4_next_hop is not None else f"ipv6 next-hop {ipv6_next_hop}"
 
                     route_map = {
@@ -70,7 +68,9 @@ class RouteMapsMixin(UtilsMixin):
         if (route_maps_vrf_default := self._route_maps_vrf_default) is not None:
             route_maps.extend(route_maps_vrf_default)
 
-        if self._configure_bgp_mlag_peer_group and self.shared_utils.mlag_ibgp_origin_incomplete:
+        # Note we check the 'flag need_mlag_peer_group' here which is being set by router_bgp logic. So this must run after.
+        # TODO: Move this logic to a single place instead.
+        if self.need_mlag_peer_group and self.shared_utils.node_config.mlag_ibgp_origin_incomplete:
             route_maps.append(self._bgp_mlag_peer_group_route_map())
 
         if self._mlag_ibgp_peering_subnets_without_redistribution:
@@ -82,7 +82,7 @@ class RouteMapsMixin(UtilsMixin):
         return None
 
     @cached_property
-    def _route_maps_vrf_default(self: AvdStructuredConfigNetworkServices) -> list | None:
+    def _route_maps_vrf_default(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
         """
         Route-maps for EVPN services in VRF "default".
 
@@ -107,7 +107,7 @@ class RouteMapsMixin(UtilsMixin):
 
         return route_maps or None
 
-    def _bgp_mlag_peer_group_route_map(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _bgp_mlag_peer_group_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         """
         Return dict with one route-map.
 
@@ -127,7 +127,7 @@ class RouteMapsMixin(UtilsMixin):
             ],
         }
 
-    def _connected_to_bgp_vrfs_route_map(self: AvdStructuredConfigNetworkServices) -> dict:
+    def _connected_to_bgp_vrfs_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict:
         """
         Return dict with one route-map.
 
@@ -148,7 +148,7 @@ class RouteMapsMixin(UtilsMixin):
             ],
         }
 
-    def _evpn_export_vrf_default_route_map(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _evpn_export_vrf_default_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Match the following prefixes to be exported in EVPN for VRF default.
 
@@ -191,7 +191,7 @@ class RouteMapsMixin(UtilsMixin):
 
         return {"name": "RM-EVPN-EXPORT-VRF-DEFAULT", "sequence_numbers": sequence_numbers}
 
-    def _bgp_underlay_peers_route_map(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _bgp_underlay_peers_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         For non WAN routers filter EVPN routes away from underlay.
 
@@ -233,13 +233,13 @@ class RouteMapsMixin(UtilsMixin):
 
         return {"name": "RM-BGP-UNDERLAY-PEERS-OUT", "sequence_numbers": sequence_numbers}
 
-    def _redistribute_connected_to_bgp_route_map(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _redistribute_connected_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
         Append network services relevant entries to the route-map used to redistribute connected subnets in BGP.
 
         sequence 10 is set in underlay and sequence 20 in inband management, so avoid setting those here
         """
-        if not self.shared_utils.underlay_filter_redistribute_connected:
+        if not self.inputs.underlay_filter_redistribute_connected:
             return None
 
         sequence_numbers = []
@@ -261,7 +261,7 @@ class RouteMapsMixin(UtilsMixin):
 
         return {"name": "RM-CONN-2-BGP", "sequence_numbers": sequence_numbers}
 
-    def _redistribute_static_to_bgp_route_map(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def _redistribute_static_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Append network services relevant entries to the route-map used to redistribute static routes to BGP."""
         if not (self.shared_utils.wan_role and self._vrf_default_ipv4_static_routes["redistribute_in_overlay"]):
             return None

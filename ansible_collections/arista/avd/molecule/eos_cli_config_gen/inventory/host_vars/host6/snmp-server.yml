@@ -1,0 +1,11 @@
+---
+snmp_server:
+  hosts:
+    - host: 10.6.75.121
+      vrf: MGMT
+      version: 1
+      community: SNMP-COMMUNITY-1
+    - host: 10.6.75.121
+      vrf: MGMT
+      version: 2c
+      community: SNMP-COMMUNITY-2

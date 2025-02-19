@@ -3,6 +3,9 @@
 port_channel_interfaces:
   - name: Port-Channel5
     description: DC1_L2LEAF1_Po1
+    comment: |-
+      testing multi line comments with |-
+      applied to port-channel 5
     link_tracking_groups:
       - name: EVPN_MH_ES1
         direction: downstream
@@ -56,7 +59,23 @@ port_channel_interfaces:
         - name: ACL1
         - name: ACL2
       version: 2
+    ptp:
+      enable: true
+      mpass: true
+      delay_mechanism: e2e
+      sync_message:
+        interval: 1
+      role: dynamic
+      vlan: 2
+      transport: layer2
+      profile:
+        g8275_1:
+          destination_mac_address: forwardable
+
   - name: Port-Channel15
+    comment: |
+      testing multi line comments with |
+      applied to port-channel 15
     description: DC1_L2LEAF3_Po1
     link_tracking_groups:
       - name: EVPN_MH_ES2
@@ -86,8 +105,19 @@ port_channel_interfaces:
         key: password
         mode: text
         rx_disabled: true
+    service_profile: experiment
+    service_policy:
+      qos:
+        input: pmap_test1
+    qos:
+      trust: cos
+      cos: 2
+    traffic_policy:
+      input: BLUE-C1-POLICY
+      output: BLUE-C2-POLICY
 
   - name: Port-Channel16
+    comment: testing single line comment
     description: DC1_L2LEAF4_Po1
     snmp_trap_link_change: true
     mlag: 16
@@ -118,7 +148,7 @@ port_channel_interfaces:
           - from: 23
             dot1q_tunnel_to: 22
       backup_link:
-        interface: Port-Channel100.102
+        interface: Port-Channel100
         prefer_vlan: 20
 
   - name: Port-Channel3
@@ -311,7 +341,8 @@ port_channel_interfaces:
         link_status: true
     description: IFL for TENANT01
     mtu: 1500
-    ip_address: 10.1.1.3/31
+    ipv6_address: "cafe::b4"
+    ipv6_nd_managed_config_flag: true
     encapsulation_dot1q:
       vlan: 101
 
@@ -350,7 +381,7 @@ port_channel_interfaces:
 
   - name: Port-Channel8.101
     description: to Dev02 Port-Channel8.101 - VRF-C1
-    ip_address: 10.1.2.3/31
+    ipv6_address: "cafe::b4"
     encapsulation_dot1q:
       vlan: 101
 
@@ -491,6 +522,18 @@ port_channel_interfaces:
         tunnel_flood_filter_time: 100
       route_target: "00:00:01:02:03:05"
 
+  - name: Port-Channel18
+    switchport:
+      enabled: false
+    ospf_network_point_to_point: true
+    ospf_area: 0.0.0.12
+    ospf_cost: 99
+    ospf_authentication: message-digest
+    ospf_message_digest_keys:
+      - id: 55
+        hash_algorithm: md5
+        key: dRx9sULvl+hzkCMYJLEQCw==
+
   - name: Port-Channel17
     description: PBR Description
     switchport:
@@ -556,6 +599,7 @@ port_channel_interfaces:
         allowed_vlan: 112
     lacp_fallback_timeout: 300
     lacp_fallback_mode: individual
+    min_links: 3
 
   - name: Port-Channel105
     switchport:
@@ -614,6 +658,7 @@ port_channel_interfaces:
     description: Flexencap Port-Channel
     switchport:
       enabled: false
+    isis_passive: true
 
   - name: Port-Channel111.1
     description: TENANT_A pseudowire 1 interface
@@ -649,6 +694,7 @@ port_channel_interfaces:
 
   - name: Port-Channel111.400
     description: TENANT_A pseudowire 3 interface
+    ip_address: dhcp
     encapsulation_vlan:
       client:
         encapsulation: dot1q
@@ -682,12 +728,20 @@ port_channel_interfaces:
         allowed_vlan: 112
     lacp_fallback_timeout: 5
     lacp_fallback_mode: individual
+    ip_address: dhcp
+    dhcp_client_accept_default_route: true
+    dhcp_server_ipv4: true
+    dhcp_server_ipv6: true
 
   - name: Port-Channel113
     description: interface_with_mpls_enabled
     switchport:
       enabled: false
     ip_address: 172.31.128.9/31
+    # This won't be rendered because IP address is not DHCP
+    dhcp_client_accept_default_route: true
+    dhcp_server_ipv4: false
+    dhcp_server_ipv6: false
     mpls:
       ip: true
       ldp:
@@ -712,6 +766,11 @@ port_channel_interfaces:
         native_vlan_tag: true
         native_vlan: 100
       mode: trunk
+    flow_tracker:
+      sampled: T3
+      hardware: T3
+    l2_protocol:
+      forwarding_profile: TEST2
 
   - name: Port-Channel117
     description: interface_with_sflow_ingress_egress_enabled
@@ -781,6 +840,7 @@ port_channel_interfaces:
         static:
           - original_ip: 3.0.0.1
             translated_ip: 4.0.0.1
+      service_profile: TEST-NAT-PROFILE
 
   - name: Port-Channel131
     description: dot1q-tunnel mode
@@ -901,3 +961,136 @@ port_channel_interfaces:
   - name: Port-Channel132
     description: Test_port-channel_interface-profile
     profile: test-interface-profile
+
+  - name: Port-Channel133
+    description: Test1_switchport_tap_tool
+    switchport:
+      tap:
+        allowed_vlan: 25
+        default:
+          groups:
+            - g2
+            - g1
+            - g3
+          nexthop_groups:
+            - nexthop_g1
+            - nexthop_g3
+            - nexthop_g2
+          interfaces:
+            - port-channel10
+            - ethernet4
+        identity:
+          id: 3
+        mpls_pop_all: true
+        native_vlan: 10
+        truncation:
+          enabled: true
+        mac_address:
+          destination: 01:00:00:00:00:00
+          source: 01:23:45:67:89:ab
+        encapsulation:
+          gre:
+            destinations:
+              - destination: 1.1.1.1
+                source: 1.1.1.2
+                protocols:
+                  # the protocol value must be enclosed in quotes
+                  - protocol: "0x0"
+                    strip: true
+                strip: true
+              - destination: 2.1.1.2
+                protocols:
+                  - protocol: "0x1"
+                    strip: true
+                  - protocol: "0x2"
+                    feature_header_length: 2
+                    re_encapsulation_ethernet_header: true
+                    strip: true
+              - destination: 1.1.1.3
+                source: 1.1.1.4
+                strip: true
+      tool:
+        mpls_pop_all: true
+        encapsulation:
+          dot1br_strip: true
+          vn_tag_strip: true
+        allowed_vlan: 23
+        identity:
+          tag: qinq
+          qinq_dzgre_source: port inner policy
+        groups:
+          - group1
+          - group2
+          - group3
+        dot1q_remove_outer_vlan_tag: 1-2
+
+  - name: Port-Channel134
+    description: Test2_switchport_tap_tool
+    switchport:
+      tap:
+        identity:
+          id: 3
+          inner_vlan: 10
+        mac_address:
+          destination: 01:00:00:00:00:00
+        encapsulation:
+          vxlan_strip: true
+          gre:
+            strip: true
+        truncation:
+          enabled: true
+          size: 120
+      tool:
+        identity:
+          tag: dot1q
+          dot1q_dzgre_source: policy
+
+  - name: Port-Channel135
+    switchport:
+      tap:
+        encapsulation:
+          gre:
+            protocols:
+              - protocol: "0x10"
+                strip: true
+              - protocol: "0x2"
+                feature_header_length: 3
+                strip: true
+              - protocol: "0x3"
+                feature_header_length: 2
+                re_encapsulation_ethernet_header: true
+                strip: true
+
+  - name: Port-Channel136
+    description: Test_te_admin_groups
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.2/31
+    traffic_engineering:
+      enabled: true
+      administrative_groups:
+        - 7
+      min_delay_dynamic:
+        twamp_light_fallback:
+          number: 123
+          unit: microseconds
+
+  - name: Port-Channel137
+    description: Traffic Engineering Interface
+    switchport:
+      enabled: false
+    ip_address: 100.64.127.4/31
+    traffic_engineering:
+      enabled: false
+      administrative_groups:
+        - 4
+        - 7-100
+        - testgrp
+      srlg: 16
+      metric: 2
+      bandwidth:
+        number: 100
+        unit: mbps
+      min_delay_static:
+        number: 2
+        unit: milliseconds

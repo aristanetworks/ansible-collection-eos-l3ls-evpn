@@ -1,26 +1,25 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._errors import AristaAvdError
-from pyavd._utils import get, get_all, get_item, strip_empties_from_list
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
+from pyavd._utils import default, strip_empties_from_list
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigMetadata
+    from . import AvdStructuredConfigMetadataProtocol
 
 
-class CvPathfinderMixin:
+class CvPathfinderMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    def _cv_pathfinder(self: AvdStructuredConfigMetadata) -> dict | None:
+    def _cv_pathfinder(self: AvdStructuredConfigMetadataProtocol) -> dict | None:
         """
         Generate metadata for CV Pathfinder feature.
 
@@ -32,15 +31,18 @@ class CvPathfinderMixin:
         if not self.shared_utils.is_cv_pathfinder_router:
             return None
 
+        region_name = self.shared_utils.wan_region.name if self.shared_utils.wan_region is not None else None
+        site_name = self.shared_utils.wan_site.name if self.shared_utils.wan_site is not None else None
+
         # Pathfinder
         if self.shared_utils.is_cv_pathfinder_server:
             return {
                 "role": self.shared_utils.cv_pathfinder_role,
                 "ssl_profile": self.shared_utils.wan_stun_dtls_profile_name,
                 "vtep_ip": self.shared_utils.vtep_ip,
-                "region": get(self.shared_utils.wan_region or {}, "name"),
-                "site": get(self.shared_utils.wan_site or {}, "name"),
-                "address": get(self.shared_utils.wan_site or {}, "location"),
+                "region": region_name,
+                "site": site_name,
+                "address": self.shared_utils.wan_site.location if self.shared_utils.wan_site is not None else None,
                 "interfaces": self._metadata_interfaces(),
                 "pathgroups": self._metadata_pathgroups(),
                 "regions": self._metadata_regions(),
@@ -52,14 +54,14 @@ class CvPathfinderMixin:
             "role": self.shared_utils.cv_pathfinder_role,
             "ssl_profile": self.shared_utils.wan_stun_dtls_profile_name,
             "vtep_ip": self.shared_utils.vtep_ip,
-            "region": self.shared_utils.wan_region["name"],
+            "region": region_name,
             "zone": self.shared_utils.wan_zone["name"],
-            "site": self.shared_utils.wan_site["name"],
+            "site": site_name,
             "interfaces": self._metadata_interfaces(),
             "pathfinders": self._metadata_pathfinder_vtep_ips(),
         }
 
-    def _metadata_interfaces(self: AvdStructuredConfigMetadata) -> list:
+    def _metadata_interfaces(self: AvdStructuredConfigMetadataProtocol) -> list:
         return [
             {
                 "name": interface["name"],
@@ -72,57 +74,50 @@ class CvPathfinderMixin:
             for interface in carrier["interfaces"]
         ]
 
-    def _metadata_pathgroups(self: AvdStructuredConfigMetadata) -> list:
+    def _metadata_pathgroups(self: AvdStructuredConfigMetadataProtocol) -> list:
         return [
             {
-                "name": pathgroup["name"],
+                "name": pathgroup.name,
                 "carriers": [
                     {
-                        "name": carrier["name"],
+                        "name": carrier.name,
                     }
-                    for carrier in self.shared_utils.wan_carriers
-                    if carrier["path_group"] == pathgroup["name"]
+                    for carrier in self.inputs.wan_carriers
+                    if carrier.path_group == pathgroup.name
                 ],
                 "imported_carriers": [
                     {
-                        "name": carrier["name"],
+                        "name": carrier.name,
                     }
-                    for carrier in self.shared_utils.wan_carriers
-                    if carrier["path_group"] in [imported_pathgroup["remote"] for imported_pathgroup in pathgroup.get("import_path_groups", [])]
+                    for carrier in self.inputs.wan_carriers
+                    if carrier.path_group in [imported_pathgroup.remote for imported_pathgroup in pathgroup.import_path_groups]
                 ],
             }
-            for pathgroup in self.shared_utils.wan_path_groups
+            for pathgroup in self.inputs.wan_path_groups
         ]
 
-    def _metadata_regions(self: AvdStructuredConfigMetadata) -> list:
-        regions = get(
-            self._hostvars,
-            "cv_pathfinder_regions",
-            required=True,
-            custom_error_msg="'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'.",
-        )
+    def _metadata_regions(self: AvdStructuredConfigMetadataProtocol) -> list:
+        if not self.inputs.cv_pathfinder_regions:
+            msg = "'cv_pathfinder_regions' key must be set when 'wan_mode' is 'cv-pathfinder'."
+            raise AristaAvdInvalidInputsError(msg)
+
+        regions = self.inputs.cv_pathfinder_regions
         return [
             {
-                "name": region["name"],
-                "id": region["id"],
+                "name": region.name,
+                "id": region.id,
                 "zones": [
                     {
                         # TODO: Once we give configurable zones this should be updated
-                        "name": f"{region['name']}-ZONE",
+                        "name": f"{region.name}-ZONE",
                         "id": 1,
                         "sites": [
                             {
-                                "name": site["name"],
-                                "id": site["id"],
-                                "location": (
-                                    {
-                                        "address": site.get("location"),
-                                    }
-                                    if site.get("location")
-                                    else None
-                                ),
+                                "name": site.name,
+                                "id": site.id,
+                                "location": ({"address": site.location} if site.location else None),
                             }
-                            for site in region["sites"]
+                            for site in region.sites
                         ],
                     },
                 ],
@@ -130,91 +125,86 @@ class CvPathfinderMixin:
             for region in regions
         ]
 
-    def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadata) -> list:
+    def _metadata_pathfinder_vtep_ips(self: AvdStructuredConfigMetadataProtocol) -> list:
         return [
             {
-                "vtep_ip": wan_route_server["vtep_ip"],
+                "vtep_ip": wan_route_server.vtep_ip,
             }
-            for wan_route_server in self.shared_utils.filtered_wan_route_servers.values()
+            for wan_route_server in self.shared_utils.filtered_wan_route_servers
         ]
 
-    def _metadata_vrfs(self: AvdStructuredConfigMetadata) -> list:
+    def _metadata_vrfs(self: AvdStructuredConfigMetadataProtocol) -> list:
         """Extracting metadata for VRFs by parsing the generated structured config and flatten it a bit (like hiding load-balance policies)."""
-        if (avt_vrfs := get(self._hostvars, "router_adaptive_virtual_topology.vrfs")) is None:
+        if not (avt_vrfs := self.structured_config.router_adaptive_virtual_topology.vrfs):
             return []
 
-        if (load_balance_policies := get(self._hostvars, "router_path_selection.load_balance_policies")) is None:
+        if not (load_balance_policies := self.structured_config.router_path_selection.load_balance_policies):
             return []
 
-        avt_policies = get(self._hostvars, "router_adaptive_virtual_topology.policies", required=True)
+        avt_policies = self.structured_config.router_adaptive_virtual_topology.policies
 
         if self.shared_utils.is_wan_server:
             # On pathfinders, verify that the Load Balance policies have at least one priority one except for the HA path-group
             for lb_policy in load_balance_policies:
                 if not any(
-                    path_group.get("priority", 1) == 1
-                    for path_group in lb_policy["path_groups"]
-                    if path_group["name"] != self.shared_utils.wan_ha_path_group_name
+                    default(path_group.priority, 1) == 1 for path_group in lb_policy.path_groups if path_group.name != self.inputs.wan_ha.lan_ha_path_group_name
                 ):
                     msg = (
                         "At least one path-group must be configured with preference '1' or 'preferred' for "
-                        f"load-balance policy {lb_policy['name']}' to use CloudVision integration. "
+                        f"load-balance policy {lb_policy.name}' to use CloudVision integration. "
                         "If this is an auto-generated policy, ensure that at least one default_preference "
                         "for a non excluded path-group is set to 'preferred' (or unset as this is the default)."
                     )
-                    raise AristaAvdError(
-                        msg,
-                    )
+                    raise AristaAvdError(msg)
 
-        return strip_empties_from_list(
-            [
-                {
-                    "name": vrf["name"],
-                    "vni": self._get_vni_for_vrf_name(vrf["name"]),
-                    "avts": [
-                        {
-                            "constraints": {
-                                "jitter": lb_policy.get("jitter"),
-                                "latency": lb_policy.get("latency"),
-                                "lossrate": float(lb_policy["loss_rate"]) if "loss_rate" in lb_policy else None,
-                                "hop_count": "lowest" if lb_policy.get("lowest_hop_count") else None,
-                            },
-                            "description": "",  # TODO: Not sure we have this field anywhere
-                            "id": profile["id"],
-                            "name": profile["name"],
-                            "pathgroups": [
-                                {
-                                    "name": pathgroup["name"],
-                                    "preference": "alternate" if pathgroup.get("priority", 1) > 1 else "preferred",
-                                }
-                                for pathgroup in lb_policy["path_groups"]
-                            ],
-                            "application_profiles": [
-                                profile
-                                for profile in get_all(get_item(avt_policy["matches"], "avt_profile", profile["name"], default={}), "application_profile")
-                                if profile != "default"
-                            ],
-                        }
-                        for profile in vrf["profiles"]
-                        for lb_policy in [get_item(load_balance_policies, "name", self.shared_utils.generate_lb_policy_name(profile["name"]), required=True)]
-                    ],
-                }
-                for vrf in avt_vrfs
-                for avt_policy in [get_item(avt_policies, "name", vrf["policy"], required=True)]
-            ],
-        )
+        metadata_vrfs = []
+        for vrf in avt_vrfs:
+            if not vrf.policy:
+                continue
 
-    @cached_property
-    def _wan_virtual_topologies_vrfs(self: AvdStructuredConfigMetadata) -> list[dict]:
-        """
-        Unfiltered list of VRFs found under wan_virtual_topologies.
+            avt_policy = avt_policies[vrf.policy]
+            metadata_vrf = {
+                "name": vrf.name,
+                "vni": self._get_vni_for_vrf_name(vrf.name),
+                "avts": [],
+            }
+            for profile in vrf.profiles:
+                if not profile.name:
+                    continue
+                lb_policy = load_balance_policies[self.shared_utils.generate_lb_policy_name(profile.name)]
+                application_profiles = [
+                    match.application_profile
+                    for match in avt_policy.matches
+                    if match.avt_profile == profile.name and match.application_profile and match.application_profile != "default"
+                ]
+                metadata_vrf["avts"].append(
+                    {
+                        "constraints": {
+                            "jitter": lb_policy.jitter,
+                            "latency": lb_policy.latency,
+                            "lossrate": float(lb_policy.loss_rate) if lb_policy.loss_rate is not None else None,
+                            "hop_count": "lowest" if lb_policy.lowest_hop_count else None,
+                        },
+                        "description": "",  # TODO: Not sure we have this field anywhere
+                        "id": profile.id,
+                        "name": profile.name,
+                        "pathgroups": [
+                            {
+                                "name": pathgroup.name,
+                                "preference": "alternate" if default(pathgroup.priority, 1) > 1 else "preferred",
+                            }
+                            for pathgroup in lb_policy.path_groups
+                        ],
+                        "application_profiles": application_profiles,
+                    }
+                )
 
-        Used to find VNI for each VRF used in cv_pathfinder.
-        """
-        return get(self._hostvars, "wan_virtual_topologies.vrfs", default=[])
+            metadata_vrfs.append(metadata_vrf)
 
-    def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadata, vrf_name: str) -> int:
-        if (vrf := get_item(self._wan_virtual_topologies_vrfs, "name", vrf_name)) is None or (wan_vni := vrf.get("wan_vni")) is None:
+        return strip_empties_from_list(metadata_vrfs)
+
+    def _get_vni_for_vrf_name(self: AvdStructuredConfigMetadataProtocol, vrf_name: str) -> int:
+        if vrf_name not in self.inputs.wan_virtual_topologies.vrfs or (wan_vni := self.inputs.wan_virtual_topologies.vrfs[vrf_name].wan_vni) is None:
             if vrf_name == "default":
                 return 1
 

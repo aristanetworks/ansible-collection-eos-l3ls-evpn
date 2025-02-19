@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -20,11 +20,21 @@
 {%         set mpls_configured.port_channel_interfaces = true %}
 {%     endif %}
 {% endfor %}
-{% if mpls is arista.avd.defined or mpls_configured.ethernet_interfaces or mpls_configured.loopback_interfaces or mpls_configured.port_channel_interfaces %}
+{% if mpls is arista.avd.defined or mpls_configured.ethernet_interfaces or mpls_configured.loopback_interfaces or mpls_configured.port_channel_interfaces or mpls.rsvp is arista.avd.defined %}
 
 ## MPLS
 {## MPLS and LDP #}
 {%     include 'documentation/mpls-and-ldp.j2' %}
 {## MPLS Interfaces #}
 {%     include 'documentation/mpls-interfaces.j2' %}
+{## MPLS Rsvp #}
+{%     include 'documentation/mpls-rsvp.j2' %}
+{% endif %}
+{% if mpls is arista.avd.defined or mpls.rsvp is arista.avd.defined %}
+
+### MPLS Device Configuration
+
+```eos
+{%     include 'eos/mpls.j2' %}
+```
 {% endif %}

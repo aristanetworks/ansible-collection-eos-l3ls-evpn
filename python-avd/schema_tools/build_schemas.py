@@ -1,7 +1,8 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 import logging
+import subprocess
 from pathlib import Path
 from textwrap import indent
 
@@ -10,7 +11,9 @@ from yaml import CSafeDumper, CSafeLoader
 from yaml import dump as yaml_dump
 from yaml import load as yaml_load
 
-from .constants import DOCS_PATHS, LICENSE_HEADER, SCHEMA_FRAGMENTS_PATHS, SCHEMA_PATHS
+from .constants import LICENSE_HEADER, SCHEMAS
+from .generate_classes.src_generators import FileSrc
+from .generate_classes.utils import generate_class_name
 from .generate_docs.mdtabsgen import get_md_tabs
 from .metaschema.meta_schema_model import AristaAvdSchema
 from .store import create_store
@@ -29,18 +32,18 @@ LOGGER = logging.getLogger(__name__)
 
 def combine_schemas() -> None:
     """Combine all schema fragments into a single YAML file."""
-    for schema_name, fragments_path in SCHEMA_FRAGMENTS_PATHS.items():
+    for schema_paths in SCHEMAS.values():
+        if not (fragments_path := schema_paths.fragments_dir):
+            continue
+
         LOGGER.info("Combining fragments %s", fragments_path)
-        if schema_name not in SCHEMA_PATHS:
-            msg = f"Invalid schema name '{schema_name}'"
-            raise KeyError(msg)
 
         schema = {}
         for fragment_filename in sorted(fragments_path.glob(FRAGMENTS_PATTERN)):
             with fragment_filename.open(mode="r", encoding="UTF-8") as fragment_stream:
                 schema = always_merger.merge(schema, yaml_load(fragment_stream, Loader=CSafeLoader))
 
-        with SCHEMA_PATHS[schema_name].open(mode="w", encoding="UTF-8") as schema_stream:
+        with schema_paths.yaml_file.open(mode="w", encoding="UTF-8") as schema_stream:
             schema_stream.write(indent(LICENSE_HEADER, prefix="# ") + "\n")
             schema_stream.write(
                 "# yaml-language-server: $schema=../../_schema/avd_meta_schema.json\n"
@@ -59,20 +62,24 @@ def validate_schemas(schema_store: dict) -> None:
         )
         return
     schema_validator = jsonschema_rs.Draft7Validator(schema_store["avd_meta_schema"])
-    for schema_name in SCHEMA_FRAGMENTS_PATHS:
+    for schema_name, schema in schema_store.items():
+        if schema_name == "avd_meta_schema":
+            continue
+
         LOGGER.info("Validating schema '%s'", schema_name)
-        schema_validator.validate(schema_store[schema_name])
+        schema_validator.validate(schema)
 
 
 def build_schema_tables(schema_store: dict) -> None:
     """Build schema tables."""
-    for schema_name in SCHEMA_PATHS:
-        if schema_name not in SCHEMA_FRAGMENTS_PATHS:
+    LOGGER.info("Rebuilding schema documentation tables...")
+    for schema_name, schema_paths in SCHEMAS.items():
+        if not schema_paths.docs_path:
             continue
 
         schema = AristaAvdSchema(**schema_store[schema_name])
         table_names = sorted(schema._descendant_tables)
-        output_dir = DOCS_PATHS[schema_name].joinpath("tables")
+        output_dir = schema_paths.docs_path.joinpath("tables")
         for table_name in table_names:
             LOGGER.debug("Building table: %s from schema %s", table_name, schema_name)
             table_file = output_dir.joinpath(f"{table_name}.md")
@@ -86,11 +93,32 @@ def build_schema_tables(schema_store: dict) -> None:
             file.unlink()
 
 
+def build_schema_classes() -> None:
+    """Build Python Classes from schema."""
+    LOGGER.info("Rebuilding schema Python Classes...")
+    # We use a special schema store since we only wish to resolve a subset of the $defs. This is to have more reuse of the generated classes
+    raw_yaml_schema_store = create_store(load_from_yaml=True)
+    for schema_name, schema_paths in SCHEMAS.items():
+        if not schema_paths.python_class:
+            continue
+
+        schema = AristaAvdSchema(_resolve_schema=schema_name, **raw_yaml_schema_store[schema_name])
+        LOGGER.info("Building Python Classes from schema: %s", schema_name)
+        schemasrc = schema._generate_class_src(class_name=generate_class_name(schema_name))
+        src_file_contents = FileSrc(classes=[schemasrc.cls])
+        with schema_paths.python_class.open(mode="w", encoding="UTF-8") as file:
+            file.write(str(src_file_contents))
+
+        LOGGER.info("Running 'ruff' for Python class file: %s", schema_paths.python_class)
+        subprocess.run(["ruff", "check", "--fix", str(schema_paths.python_class)], check=False)  # noqa: S603, S607
+        subprocess.run(["ruff", "format", str(schema_paths.python_class)], check=False)  # noqa: S603, S607
+
+
 def build_schemas() -> None:
     """Combines the schema fragments, and rebuild the pickled schemas."""
     combine_schemas()
     LOGGER.info("Rebuilding pickled schemas")
     schema_store = create_store(force_rebuild=True)
     validate_schemas(schema_store)
-    LOGGER.info("Rebuilding schemas documentation tables...")
     build_schema_tables(schema_store)
+    build_schema_classes()

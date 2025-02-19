@@ -3,7 +3,7 @@
 title: Custom Templates for eos_cli_config_gen
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -41,7 +41,7 @@ custom_templates:
   - custom_template_name.j2
 ```
 
-For more details, see [Extensibility with Custom Templates](https://avd.sh/en/stable/roles/eos_cli_config_gen/docs/role-configuration.html#extensibility-with-custom-templates)
+For more details, see [Extensibility with Custom Templates](https://avd.arista.com/stable/roles/eos_cli_config_gen/docs/role-configuration.html#extensibility-with-custom-templates)
 
 ## Adding the Custom Template to the `eos_cli_config_gen` Role
 

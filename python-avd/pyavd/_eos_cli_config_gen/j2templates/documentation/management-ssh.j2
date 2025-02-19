@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -75,7 +75,7 @@
 | VRF | Status |
 | --- | ------ |
 {%         for vrf in management_ssh.vrfs | arista.avd.natural_sort('name') %}
-{%             if vrf.enable %}
+{%             if vrf.enable is arista.avd.defined(true) %}
 {%                 set status = 'Enabled' %}
 {%             else %}
 {%                 set status = 'Disabled' %}

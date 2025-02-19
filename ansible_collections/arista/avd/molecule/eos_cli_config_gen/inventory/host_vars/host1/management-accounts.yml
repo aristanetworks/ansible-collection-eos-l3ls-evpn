@@ -1,0 +1,4 @@
+---
+management_accounts:
+  password:
+    policy: "AVD_POLICY"

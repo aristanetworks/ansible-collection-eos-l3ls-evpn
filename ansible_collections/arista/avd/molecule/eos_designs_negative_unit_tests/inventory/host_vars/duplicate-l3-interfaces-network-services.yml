@@ -11,7 +11,7 @@ node_type_keys:
       l2: true
       l3: true
     default_overlay_routing_protocol: ibgp
-    default_overlay_address_families: [ evpn ]
+    default_overlay_address_families: [evpn]
     default_evpn_encapsulation: mpls
 
 pe:
@@ -49,6 +49,8 @@ tenants:
               - duplicate-l3-interfaces-network-services
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined under l3_interfaces.
-  {'name': 'Ethernet6.101', 'vrf': 'TENANT_B_WAN', 'description': 'TENANT_B_SITE_5', 'ip_address': '192.168.48.2/31'} conflicts with
-  {'name': 'Ethernet6.101', 'vrf': 'TENANT_B_WAN', 'description': 'TENANT_B_SITE_3_OSPF', 'ip_address': '192.168.48.4/31'}.
+  Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
+  {'name': 'Ethernet6.101', 'description': 'TENANT_B_SITE_5', 'shutdown': False, 'vrf': 'TENANT_B_WAN', 'encapsulation_dot1q': {'vlan': 101},
+  'ip_address': '192.168.48.2/31', 'peer_type': 'l3_interface'}
+  conflicts with {'name': 'Ethernet6.101', 'description': 'TENANT_B_SITE_3_OSPF', 'shutdown': False, 'vrf': 'TENANT_B_WAN',
+  'encapsulation_dot1q': {'vlan': 101}, 'ip_address': '192.168.48.4/31', 'peer_type': 'l3_interface'}.

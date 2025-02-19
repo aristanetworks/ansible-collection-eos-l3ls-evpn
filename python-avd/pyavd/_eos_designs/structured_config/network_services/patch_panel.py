@@ -1,109 +1,87 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 import re
-from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import append_if_not_duplicate, get
-from pyavd.j2filters import natural_sort
-
-from .utils import UtilsMixin
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class PatchPanelMixin(UtilsMixin):
+class PatchPanelMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def patch_panel(self: AvdStructuredConfigNetworkServices) -> dict | None:
-        """Return structured config for patch_panel."""
+    @structured_config_contributor
+    def patch_panel(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
+        """Set structured config for patch_panel."""
         if not self.shared_utils.network_services_l1:
-            return None
+            return
 
-        patches = []
         for tenant in self.shared_utils.filtered_tenants:
-            if "point_to_point_services" not in tenant:
+            if not tenant.point_to_point_services:
                 continue
 
-            for point_to_point_service in natural_sort(tenant["point_to_point_services"], "name"):
-                if subifs := point_to_point_service.get("subinterfaces", []):
-                    subifs = [subif for subif in subifs if subif.get("number") is not None]
-                for endpoint in point_to_point_service.get("endpoints", []):
-                    if self.shared_utils.hostname not in endpoint.get("nodes", []):
+            for point_to_point_service in tenant.point_to_point_services._natural_sorted():
+                for endpoint in point_to_point_service.endpoints:
+                    if self.shared_utils.hostname not in endpoint.nodes:
                         continue
 
-                    node_index = list(endpoint["nodes"]).index(self.shared_utils.hostname)
-                    interface = endpoint["interfaces"][node_index]
-                    if get(endpoint, "port_channel.mode") in ["active", "on"]:
+                    node_index = endpoint.nodes.index(self.shared_utils.hostname)
+                    interface = endpoint.interfaces[node_index]
+                    if endpoint.port_channel.mode in ["active", "on"]:
                         channel_group_id = "".join(re.findall(r"\d", interface))
                         interface = f"Port-Channel{channel_group_id}"
 
-                    if subifs:
-                        for subif in subifs:
-                            patch = {
-                                "name": f"{point_to_point_service['name']}_{subif['number']}",
-                                "enabled": True,
-                                "connectors": [
-                                    {
-                                        "id": "1",
-                                        "type": "interface",
-                                        "endpoint": f"{interface}.{subif['number']}",
-                                    },
-                                ],
-                            }
-                            if point_to_point_service.get("type") == "vpws-pseudowire":
-                                patch["connectors"].append(
-                                    {
-                                        "id": "2",
-                                        "type": "pseudowire",
-                                        "endpoint": f"bgp vpws {tenant['name']} pseudowire {point_to_point_service['name']}_{subif['number']}",
-                                    },
+                    # TODO: refactor this by inverting if and else condition and using continue at the end of the if
+                    if point_to_point_service.subinterfaces:
+                        for subif in point_to_point_service.subinterfaces:
+                            patch = EosCliConfigGen.PatchPanel.PatchesItem(
+                                name=f"{point_to_point_service.name}_{subif.number}",
+                                enabled=True,
+                                connectors=EosCliConfigGen.PatchPanel.PatchesItem.Connectors(
+                                    [
+                                        EosCliConfigGen.PatchPanel.PatchesItem.ConnectorsItem(
+                                            id="1",
+                                            type="interface",
+                                            endpoint=f"{interface}.{subif.number}",
+                                        )
+                                    ]
+                                ),
+                            )
+                            if point_to_point_service.type == "vpws-pseudowire":
+                                patch.connectors.append_new(
+                                    id="2",
+                                    type="pseudowire",
+                                    endpoint=f"bgp vpws {tenant.name} pseudowire {point_to_point_service.name}_{subif.number}",
                                 )
-                            append_if_not_duplicate(
-                                list_of_dicts=patches,
-                                primary_key="name",
-                                new_dict=patch,
-                                context="Patches defined under point_to_point_services",
-                                context_keys=["name"],
-                            )
+                            self.structured_config.patch_panel.patches.append(patch)
                     else:
-                        patch = {
-                            "name": f"{point_to_point_service['name']}",
-                            "enabled": True,
-                            "connectors": [
-                                {
-                                    "id": "1",
-                                    "type": "interface",
-                                    "endpoint": f"{interface}",
-                                },
-                            ],
-                        }
-                        if point_to_point_service.get("type") == "vpws-pseudowire":
-                            patch["connectors"].append(
-                                {
-                                    "id": "2",
-                                    "type": "pseudowire",
-                                    "endpoint": f"bgp vpws {tenant['name']} pseudowire {point_to_point_service['name']}",
-                                },
-                            )
-                        append_if_not_duplicate(
-                            list_of_dicts=patches,
-                            primary_key="name",
-                            new_dict=patch,
-                            context="Patches defined under point_to_point_services",
-                            context_keys=["name"],
+                        patch = EosCliConfigGen.PatchPanel.PatchesItem(
+                            name=f"{point_to_point_service.name}",
+                            enabled=True,
+                            connectors=EosCliConfigGen.PatchPanel.PatchesItem.Connectors(
+                                [
+                                    EosCliConfigGen.PatchPanel.PatchesItem.ConnectorsItem(
+                                        id="1",
+                                        type="interface",
+                                        endpoint=f"{interface}",
+                                    ),
+                                ],
+                            ),
                         )
-
-        if patches:
-            return {"patches": patches}
-
-        return None
+                        if point_to_point_service.type == "vpws-pseudowire":
+                            patch.connectors.append_new(
+                                id="2",
+                                type="pseudowire",
+                                endpoint=f"bgp vpws {tenant.name} pseudowire {point_to_point_service.name}",
+                            )
+                        self.structured_config.patch_panel.patches.append(patch)

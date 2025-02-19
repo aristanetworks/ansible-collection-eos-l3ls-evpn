@@ -1,20 +1,18 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import get, get_item
-
-from .utils import UtilsMixin
+from pyavd._utils import get
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class RouterPimSparseModeMixin(UtilsMixin):
+class RouterPimSparseModeMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,46 +20,42 @@ class RouterPimSparseModeMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_pim_sparse_mode(self: AvdStructuredConfigUnderlay) -> dict | None:
+    def router_pim_sparse_mode(self: AvdStructuredConfigUnderlayProtocol) -> dict | None:
         """
-        return structured config for router_pim_sparse_mode.
+        Return structured config for router_pim_sparse_mode.
 
         Used for to configure multicast RPs for the underlay
         """
-        if self.shared_utils.underlay_multicast_rps is None:
+        if not self.shared_utils.underlay_multicast or not self.inputs.underlay_multicast_rps:
             return None
 
         rp_addresses = []
         anycast_rps = []
-        for rp_entry in self.shared_utils.underlay_multicast_rps:
-            rp_address = {"address": rp_entry["rp"]}
-            if rp_entry.get("groups") is not None:
-                if (acl := rp_entry.get("access_list_name")) is not None:
-                    rp_address["access_lists"] = [acl]
+        for rp_entry in self.inputs.underlay_multicast_rps:
+            rp_address = {"address": rp_entry.rp}
+            if rp_entry.groups:
+                if rp_entry.access_list_name:
+                    rp_address["access_lists"] = [rp_entry.access_list_name]
                 else:
-                    rp_address["groups"] = rp_entry["groups"]
+                    rp_address["groups"] = rp_entry.groups._as_list()
 
             rp_addresses.append(rp_address)
 
-            if (nodes := get(rp_entry, "nodes")) is None or len(nodes) < 2:
+            if len(rp_entry.nodes) < 2 or self.shared_utils.hostname not in rp_entry.nodes or self.inputs.underlay_multicast_anycast_rp.mode != "pim":
                 continue
 
-            if get_item(nodes, "name", self.shared_utils.hostname) is None:
-                continue
-
-            if self.shared_utils.underlay_multicast_anycast_rp_mode == "pim":
-                # Anycast-RP using PIM (default)
-                anycast_rps.append(
-                    {
-                        "address": rp_entry["rp"],
-                        "other_anycast_rp_addresses": [
-                            {
-                                "address": get(self.shared_utils.get_peer_facts(node["name"]), "router_id", required=True),
-                            }
-                            for node in nodes
-                        ],
-                    },
-                )
+            # Anycast-RP using PIM (default)
+            anycast_rps.append(
+                {
+                    "address": rp_entry.rp,
+                    "other_anycast_rp_addresses": [
+                        {
+                            "address": get(self.shared_utils.get_peer_facts(node.name), "router_id", required=True),
+                        }
+                        for node in rp_entry.nodes
+                    ],
+                },
+            )
 
         if rp_addresses:
             router_pim_sparse_mode = {

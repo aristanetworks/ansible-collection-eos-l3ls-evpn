@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from ansible_collections.arista.avd.plugins.plugin_utils.pyavd_wrappers import RaiseOnUse
@@ -21,18 +21,18 @@ except ImportError as e:
     default = get = RaiseOnUse(ImportError(f"The 'arista.avd' collection requires the 'pyavd' Python library. Got import error {e}"))
 
 __all__ = [
-    "compile_searchpath",
-    "get_templar",
-    "log_message",
+    "NoAliasDumper",
     "PythonToAnsibleContextFilter",
     "PythonToAnsibleHandler",
-    "NoAliasDumper",
-    "get_validated_path",
-    "get_validated_value",
-    "cprofile",
     "YamlDumper",
     "YamlLoader",
+    "compile_searchpath",
+    "cprofile",
     "default",
     "get",
+    "get_templar",
+    "get_validated_path",
+    "get_validated_value",
+    "log_message",
     "write_file",
 ]

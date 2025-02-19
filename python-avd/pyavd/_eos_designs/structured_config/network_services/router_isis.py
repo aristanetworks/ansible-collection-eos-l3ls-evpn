@@ -1,18 +1,16 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
-
-from .utils import UtilsMixin
+from typing import TYPE_CHECKING, Protocol
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class RouterIsisMixin(UtilsMixin):
+class RouterIsisMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -20,9 +18,9 @@ class RouterIsisMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_isis(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def router_isis(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
-        return structured config for router_isis.
+        Return structured config for router_isis.
 
         Used for non-EVPN where underlay_routing_protocol is ISIS,
         static routes in VRF "default" should be redistributed into ISIS

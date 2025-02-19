@@ -9,7 +9,7 @@ env:
   # The devcontainers/ci@v0.3 build will fail if this env variable is not set.
   BUILDX_NO_DEFAULT_ATTESTATIONS: 1
 
-on:
+"on":
   workflow_call:
     inputs:
       # Container name, e.g. "base", "dev", etc.
@@ -153,6 +153,7 @@ jobs:
         uses: docker/setup-qemu-action@v3
         with:
           platforms: ${{ inputs.platform }}
+          image: tonistiigi/binfmt:qemu-v7.0.0-28
 
       - name: Setup Docker buildX for multi-arch builds 🏗️
         # if: ${{ steps.check-image-presence.outputs.not_present == '1' }}

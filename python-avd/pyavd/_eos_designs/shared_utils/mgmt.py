@@ -1,19 +1,19 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import default, get
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class MgmtMixin:
+class MgmtMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -22,7 +22,7 @@ class MgmtMixin:
     """
 
     @cached_property
-    def mgmt_interface(self: SharedUtils) -> str | None:
+    def mgmt_interface(self: SharedUtilsProtocol) -> str:
         """
         mgmt_interface.
 
@@ -32,44 +32,34 @@ class MgmtMixin:
             Fabric Topology data model mgmt_interface.
         """
         return default(
-            get(self.switch_data_combined, "mgmt_interface"),
-            self.platform_settings.get("management_interface"),
-            get(self.hostvars, "mgmt_interface"),
+            self.node_config.mgmt_interface,
+            # Notice that we actually have a default value for the next two, but the precedence order would break if we use it.
+            # TODO: Evaluate if we should remove the default values from either or both.
+            self.platform_settings._get("management_interface", None),
+            self.inputs._get("mgmt_interface", None),
             get(self.cv_topology_config, "mgmt_interface"),
             "Management1",
         )
 
     @cached_property
-    def ipv6_mgmt_ip(self: SharedUtils) -> str | None:
-        return get(self.switch_data_combined, "ipv6_mgmt_ip")
+    def mgmt_gateway(self: SharedUtilsProtocol) -> str | None:
+        return default(self.node_config.mgmt_gateway, self.inputs.mgmt_gateway)
 
     @cached_property
-    def mgmt_ip(self: SharedUtils) -> str | None:
-        return get(self.switch_data_combined, "mgmt_ip")
+    def ipv6_mgmt_gateway(self: SharedUtilsProtocol) -> str | None:
+        return default(self.node_config.ipv6_mgmt_gateway, self.inputs.ipv6_mgmt_gateway)
 
     @cached_property
-    def mgmt_interface_vrf(self: SharedUtils) -> str:
-        return get(self.hostvars, "mgmt_interface_vrf", default="MGMT")
-
-    @cached_property
-    def mgmt_gateway(self: SharedUtils) -> str | None:
-        return get(self.switch_data_combined, "mgmt_gateway", default=get(self.hostvars, "mgmt_gateway"))
-
-    @cached_property
-    def ipv6_mgmt_gateway(self: SharedUtils) -> str | None:
-        return get(self.switch_data_combined, "ipv6_mgmt_gateway", default=get(self.hostvars, "ipv6_mgmt_gateway"))
-
-    @cached_property
-    def default_mgmt_method(self: SharedUtils) -> str | None:
+    def default_mgmt_method(self: SharedUtilsProtocol) -> str | None:
         """
         This is only executed if some protocol looks for the default value, so we can raise here to ensure a working config.
 
         The check for 'inband_mgmt_interface' relies on other indirect checks done in that code.
         """
-        default_mgmt_method = get(self.hostvars, "default_mgmt_method", default="oob")
+        default_mgmt_method = self.inputs.default_mgmt_method
         if default_mgmt_method == "oob":
-            if (self.mgmt_ip is None) and (self.ipv6_mgmt_ip is None):
-                msg = "'default_mgmt_method: oob' requires either 'mgmt_ip' or 'ipv6_mgmt_ip' to bet set."
+            if self.node_config.mgmt_ip is None and self.node_config.ipv6_mgmt_ip is None:
+                msg = "'default_mgmt_method: oob' requires either 'mgmt_ip' or 'ipv6_mgmt_ip' to be set."
                 raise AristaAvdInvalidInputsError(msg)
 
             return default_mgmt_method
@@ -85,9 +75,9 @@ class MgmtMixin:
         return None
 
     @cached_property
-    def default_mgmt_protocol_vrf(self: SharedUtils) -> str | None:
+    def default_mgmt_protocol_vrf(self: SharedUtilsProtocol) -> str | None:
         if self.default_mgmt_method == "oob":
-            return self.mgmt_interface_vrf
+            return self.inputs.mgmt_interface_vrf
         if self.default_mgmt_method == "inband":
             # inband_mgmt_vrf returns None for vrf default.
             return self.inband_mgmt_vrf or "default"
@@ -95,7 +85,7 @@ class MgmtMixin:
         return None
 
     @cached_property
-    def default_mgmt_protocol_interface(self: SharedUtils) -> str | None:
+    def default_mgmt_protocol_interface(self: SharedUtilsProtocol) -> str | None:
         if self.default_mgmt_method == "oob":
             return self.mgmt_interface
         if self.default_mgmt_method == "inband":

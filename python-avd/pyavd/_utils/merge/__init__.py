@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -46,7 +46,7 @@ MAP_ANSIBLE_LIST_MERGE_TO_DEEPMERGE_LIST_STRATEGY = {
 
 def merge(
     base: Any,
-    *nxt_list: list[Any],
+    *nxt_list: Any,
     recursive: bool = True,
     list_merge: str = "append",
     same_key_strategy: str = "override",

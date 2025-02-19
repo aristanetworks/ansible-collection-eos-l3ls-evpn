@@ -114,13 +114,7 @@ $defs:
         valid_values: ["enabled", "disabled", "True", "False", "true", "false"]
       flowcontrol:
         type: dict
-        keys:
-          received:
-            type: str
-            valid_values:
-              - "received"
-              - "send"
-              - "on"
+        $ref: eos_cli_config_gen#/keys/ethernet_interfaces/items/keys/flowcontrol
       qos_profile:
         type: str
         description: QOS profile name.
@@ -135,11 +129,18 @@ $defs:
             default: false
           endpoint_role:
             type: str
+            description: |-
+              PTP role of the endpoint.
+              `follower` will configure the switch port as `ptp role master`.
+              `dynamic` will use BMCA.
+              `default` is deprecated in favor of `follower`.
+              `bmca` is deprecated in favor of `dynamic`.
             default: "follower"
             valid_values:
+              - "follower"
+              - "dynamic"
               - "bmca"
               - "default"
-              - "follower"
           profile:
             type: str
             default: "aes67-r16-2016"
@@ -421,7 +422,8 @@ $defs:
                 type: int
                 convert_types:
                   - str
-                description: Timeout in seconds. EOS default is 90 seconds.
+                description: Timeout in seconds.
+                default: 90
           lacp_timer:
             type: dict
             description: LACP timer configuration. Applies only when Port-channel mode is not "on".
@@ -483,6 +485,7 @@ $defs:
             description: EOS CLI rendered directly on the port-channel interface in the final EOS configuration.
           structured_config:
             type: dict
+            relaxed_validation: true
             description: Custom structured config added under port_channel_interfaces.[name=<interface>] for eos_cli_config_gen.
             documentation_options:
               hide_keys: true
@@ -506,6 +509,7 @@ $defs:
         description: EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
       structured_config:
         type: dict
+        relaxed_validation: true
         description: Custom structured config added under ethernet_interfaces.[name=<interface>] for eos_cli_config_gen.
         documentation_options:
           hide_keys: true

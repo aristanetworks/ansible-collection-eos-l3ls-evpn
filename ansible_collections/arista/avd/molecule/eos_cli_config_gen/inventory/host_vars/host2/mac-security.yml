@@ -1,0 +1,3 @@
+---
+mac_security:
+  fips_restrictions: true

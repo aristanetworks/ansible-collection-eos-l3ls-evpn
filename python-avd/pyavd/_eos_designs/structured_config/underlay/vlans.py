@@ -1,21 +1,19 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import get, get_item
 from pyavd.j2filters import natural_sort, range_expand
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class VlansMixin(UtilsMixin):
+class VlansMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class VlansMixin(UtilsMixin):
     """
 
     @cached_property
-    def vlans(self: AvdStructuredConfigUnderlay) -> list | None:
+    def vlans(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
         """
         Return structured config for vlans.
 

@@ -1,21 +1,19 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError
-from pyavd._utils import get, get_ip_from_ip_prefix, get_item, strip_empties_from_dict
-
-from .utils import UtilsMixin
+from pyavd._utils import get, get_ip_from_ip_prefix, strip_empties_from_dict
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
+    from . import AvdStructuredConfigOverlayProtocol
 
 
-class RouterPathSelectionMixin(UtilsMixin):
+class RouterPathSelectionMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,13 +21,13 @@ class RouterPathSelectionMixin(UtilsMixin):
     """
 
     @cached_property
-    def router_path_selection(self: AvdStructuredConfigOverlay) -> dict | None:
+    def router_path_selection(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
         """Return structured config for router path-selection (DPS)."""
         if not self.shared_utils.is_wan_router:
             return None
 
         router_path_selection = {
-            "tcp_mss_ceiling": {"ipv4_segment_size": get(self.shared_utils.switch_data_combined, "dps_mss_ipv4", default="auto")},
+            "tcp_mss_ceiling": {"ipv4_segment_size": self.shared_utils.node_config.dps_mss_ipv4},
             "path_groups": self._get_path_groups(),
         }
 
@@ -39,38 +37,30 @@ class RouterPathSelectionMixin(UtilsMixin):
         return strip_empties_from_dict(router_path_selection)
 
     @cached_property
-    def _cp_ipsec_profile_name(self: AvdStructuredConfigOverlay) -> str:
-        """Returns the IPsec profile name to use for Control-Plane."""
-        return get(self._hostvars, "wan_ipsec_profiles.control_plane.profile_name", default="CP-PROFILE")
-
-    @cached_property
-    def _dp_ipsec_profile_name(self: AvdStructuredConfigOverlay) -> str:
+    def _dp_ipsec_profile_name(self: AvdStructuredConfigOverlayProtocol) -> str:
         """Returns the IPsec profile name to use for Data-Plane.
 
-        If no data-plane config is present for IPsec, default to _cp_ipsec_profile_name
+        If no data-plane config is present for IPsec, default to the control-plane profile-name.
         """
-        if (data_plane := get(self._hostvars, "wan_ipsec_profiles.data_plane")) is not None:
-            return get(data_plane, "profile_name", default="DP-PROFILE")
-        return self._cp_ipsec_profile_name
+        if self.inputs.wan_ipsec_profiles.data_plane:
+            return self.inputs.wan_ipsec_profiles.data_plane.profile_name
+        return self.inputs.wan_ipsec_profiles.control_plane.profile_name
 
-    def _get_path_groups(self: AvdStructuredConfigOverlay) -> list:
+    def _get_path_groups(self: AvdStructuredConfigOverlayProtocol) -> list:
         """Generate the required path-groups locally."""
         path_groups = []
 
         # Configure all path-groups on Pathfinders and AutoVPN RRs. Otherwise only configure the local path-groups
-        path_groups_to_configure = self.shared_utils.wan_path_groups if self.shared_utils.is_wan_server else self.shared_utils.wan_local_path_groups
-
-        local_path_groups_names = [path_group["name"] for path_group in self.shared_utils.wan_local_path_groups]
+        path_groups_to_configure = self.inputs.wan_path_groups if self.shared_utils.is_wan_server else self.shared_utils.wan_local_path_groups
 
         for path_group in path_groups_to_configure:
-            pg_name = path_group.get("name")
-            ipsec = path_group.get("ipsec", {})
-            is_local_pg = pg_name in local_path_groups_names
-            disable_dynamic_peer_ipsec = is_local_pg and not ipsec.get("dynamic_peers", True)
+            pg_name = path_group.name
+            is_local_pg = pg_name in self.shared_utils.wan_local_path_group_names
+            disable_dynamic_peer_ipsec = is_local_pg and not path_group.ipsec.dynamic_peers
 
             path_group_data = {
                 "name": pg_name,
-                "id": self._get_path_group_id(pg_name, path_group.get("id")),
+                "id": self._get_path_group_id(pg_name, path_group.id),
                 "local_interfaces": self._get_local_interfaces_for_path_group(pg_name),
                 "dynamic_peers": self._get_dynamic_peers(disable_dynamic_peer_ipsec),
                 "static_peers": self._get_static_peers_for_path_group(pg_name),
@@ -78,12 +68,11 @@ class RouterPathSelectionMixin(UtilsMixin):
 
             if is_local_pg:
                 # On pathfinder IPsec profile is not required for non local path_groups
-                if ipsec.get("static_peers", True):
-                    path_group_data["ipsec_profile"] = self._cp_ipsec_profile_name
+                if path_group.ipsec.static_peers:
+                    path_group_data["ipsec_profile"] = self.inputs.wan_ipsec_profiles.control_plane.profile_name
 
                 # KeepAlive config is not required for non local path_groups
-                keepalive = path_group.get("dps_keepalive", {})
-                if (interval := keepalive.get("interval")) is not None:
+                if interval := path_group.dps_keepalive.interval:
                     if interval == "auto":
                         path_group_data["keepalive"] = {"auto": True}
                     else:
@@ -95,7 +84,7 @@ class RouterPathSelectionMixin(UtilsMixin):
                             raise AristaAvdError(msg)
                         path_group_data["keepalive"] = {
                             "interval": int(interval),
-                            "failure_threshold": get(keepalive, "failure_threshold", default=5),
+                            "failure_threshold": path_group.dps_keepalive.failure_threshold,
                         }
 
             path_groups.append(path_group_data)
@@ -105,11 +94,11 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return path_groups
 
-    def _generate_ha_path_group(self: AvdStructuredConfigOverlay) -> dict:
+    def _generate_ha_path_group(self: AvdStructuredConfigOverlayProtocol) -> dict:
         """Called only when self.shared_utils.wan_ha is True or on Pathfinders."""
         ha_path_group = {
-            "name": self.shared_utils.wan_ha_path_group_name,
-            "id": self._get_path_group_id(self.shared_utils.wan_ha_path_group_name),
+            "name": self.inputs.wan_ha.lan_ha_path_group_name,
+            "id": self._get_path_group_id(self.inputs.wan_ha.lan_ha_path_group_name),
             "flow_assignment": "lan",
         }
         if self.shared_utils.is_cv_pathfinder_server:
@@ -139,36 +128,38 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return ha_path_group
 
-    def _wan_ha_interfaces(self: AvdStructuredConfigOverlay) -> list:
+    def _wan_ha_interfaces(self: AvdStructuredConfigOverlayProtocol) -> list:
         """Return list of interfaces for HA."""
         return [uplink for uplink in self.shared_utils.get_switch_fact("uplinks") if get(uplink, "vrf") is None]
 
-    def _wan_ha_peer_vtep_ip(self: AvdStructuredConfigOverlay) -> str:
+    def _wan_ha_peer_vtep_ip(self: AvdStructuredConfigOverlayProtocol) -> str:
         peer_facts = self.shared_utils.get_peer_facts(self.shared_utils.wan_ha_peer, required=True)
         return get(peer_facts, "vtep_ip", required=True)
 
-    def _get_path_group_id(self: AvdStructuredConfigOverlay, path_group_name: str, config_id: int | None = None) -> int:
+    def _get_path_group_id(self: AvdStructuredConfigOverlayProtocol, path_group_name: str, config_id: int | None = None) -> int:
         """
         Get path group id.
 
         TODO: - implement algorithm to auto assign IDs - cf internal documentation
         TODO: - also implement algorithm for cross connects on public path_groups.
         """
-        if path_group_name == self.shared_utils.wan_ha_path_group_name:
+        if path_group_name == self.inputs.wan_ha.lan_ha_path_group_name:
             return 65535
         if config_id is not None:
             return config_id
         return 500
 
-    def _get_local_interfaces_for_path_group(self: AvdStructuredConfigOverlay, path_group_name: str) -> list | None:
+    def _get_local_interfaces_for_path_group(self: AvdStructuredConfigOverlayProtocol, path_group_name: str) -> list:
         """
         Generate the router_path_selection.local_interfaces list.
 
         For AUTOVPN clients, configure the stun server profiles as appropriate
         """
         local_interfaces = []
-        path_group = get_item(self.shared_utils.wan_local_path_groups, "name", path_group_name, default={})
-        for interface in path_group.get("interfaces", []):
+        if path_group_name not in self.shared_utils.wan_local_path_groups:
+            return local_interfaces
+
+        for interface in self.shared_utils.wan_local_path_groups[path_group_name]._internal_data.interfaces:
             local_interface = {"name": get(interface, "name", required=True)}
 
             if self.shared_utils.is_wan_client and self.shared_utils.should_connect_to_wan_rs([path_group_name]):
@@ -180,7 +171,7 @@ class RouterPathSelectionMixin(UtilsMixin):
 
         return local_interfaces
 
-    def _get_dynamic_peers(self: AvdStructuredConfigOverlay, disable_ipsec: bool) -> dict | None:
+    def _get_dynamic_peers(self: AvdStructuredConfigOverlayProtocol, disable_ipsec: bool) -> dict | None:
         """TODO: support ip_local ?"""
         if not self.shared_utils.is_wan_client:
             return None
@@ -190,26 +181,26 @@ class RouterPathSelectionMixin(UtilsMixin):
             dynamic_peers["ipsec"] = False
         return dynamic_peers
 
-    def _get_static_peers_for_path_group(self: AvdStructuredConfigOverlay, path_group_name: str) -> list | None:
+    def _get_static_peers_for_path_group(self: AvdStructuredConfigOverlayProtocol, path_group_name: str) -> list | None:
         """Retrieves the static peers to configure for a given path-group based on the connected nodes."""
         if not self.shared_utils.is_wan_router:
             return None
 
         static_peers = []
-        for wan_route_server_name, wan_route_server in self.shared_utils.filtered_wan_route_servers.items():
-            if (path_group := get_item(get(wan_route_server, "wan_path_groups", default=[]), "name", path_group_name)) is not None:
-                ipv4_addresses = [
-                    get_ip_from_ip_prefix(public_ip)
-                    for interface_dict in get(path_group, "interfaces", required=True)
-                    if (public_ip := interface_dict.get("public_ip")) is not None
-                ]
+        for wan_route_server in self.shared_utils.filtered_wan_route_servers:
+            if path_group_name not in wan_route_server.path_groups:
+                continue
 
-                static_peers.append(
-                    {
-                        "router_ip": get(wan_route_server, "vtep_ip", required=True),
-                        "name": wan_route_server_name,
-                        "ipv4_addresses": ipv4_addresses,
-                    },
-                )
+            ipv4_addresses = [
+                get_ip_from_ip_prefix(interface.public_ip) for interface in wan_route_server.path_groups[path_group_name].interfaces if interface.public_ip
+            ]
+
+            static_peers.append(
+                {
+                    "router_ip": wan_route_server.vtep_ip,
+                    "name": wan_route_server.hostname,
+                    "ipv4_addresses": ipv4_addresses,
+                },
+            )
 
         return static_peers

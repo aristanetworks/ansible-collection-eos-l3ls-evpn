@@ -385,6 +385,13 @@ anta.tests.interfaces:
       custom_field: Interface Ethernet5 - SERVER_dc1-leaf1-server1_PCI1 = 'up'
 - VerifyInterfacesStatus:
     interfaces:
+    - name: Ethernet33
+      status: up
+    result_overwrite:
+      custom_field: Interface Ethernet33 - WORKSTATION_dc1-leaf1-workstationNoLLDP_e1
+        = 'up'
+- VerifyInterfacesStatus:
+    interfaces:
     - name: Port-Channel3
       status: up
     result_overwrite:

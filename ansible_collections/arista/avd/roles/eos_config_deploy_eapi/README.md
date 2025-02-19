@@ -3,7 +3,7 @@
 title: Ansible Collection Role eos_config_deploy_eapi
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -23,8 +23,8 @@ The **eos_config_deploy_eapi** role:
 
 Figure 1 below provides a visualization of the role's inputs, outputs, and tasks in order executed by the role.
 
-![Figure 1: Ansible Role eos_config_deploy_eapi](../../docs/_media/eos_config_deploy_eapi_dark.svg#only-dark)
-![Figure 1: Ansible Role eos_config_deploy_eapi](../../docs/_media/eos_config_deploy_eapi_light.svg#only-light)
+![Figure 1: Ansible Role eos_config_deploy_eapi](../../../../../docs/_media/eos_config_deploy_eapi_dark.svg#only-dark)
+![Figure 1: Ansible Role eos_config_deploy_eapi](../../../../../docs/_media/eos_config_deploy_eapi_light.svg#only-light)
 
 **Inputs:**
 
@@ -47,14 +47,14 @@ Figure 1 below provides a visualization of the role's inputs, outputs, and tasks
 
 ``` yaml
 --8<--
-roles/eos_config_deploy_eapi/defaults/main.yml
+ansible_collections/arista/avd/roles/eos_config_deploy_eapi/defaults/main.yml
 --8<--
 ```
 
 ## Requirements
 
-Requirements are located here: [avd-requirements](../../docs/installation/collection-installation.md#python-requirements-installation)
+Requirements are located here: [avd-requirements](../../../../../docs/installation/collection-installation.md#python-requirements-installation)
 
 ## License
 
-Project is published under [Apache 2.0 License](../../LICENSE)
+Project is published under [Apache 2.0 License](https://github.com/aristanetworks/avd/blob/devel/LICENSE)

@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -10,9 +10,9 @@
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| {{ management_api_http.enable_http | arista.avd.default(false) }} | {{ management_api_http.enable_https | arista.avd.default(true) }} | {{ management_api_http.default_services | arista.avd.default('-') }} |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| {{ management_api_http.enable_http | arista.avd.default(false) }} | {{ management_api_http.enable_https | arista.avd.default(true) }} | {{ management_api_http.enable_unix | arista.avd.default('-') }} | {{ management_api_http.default_services | arista.avd.default('-') }} |
 {%     if management_api_http.enable_https is arista.avd.defined(true) and management_api_http.https_ssl_profile is arista.avd.defined %}
 
 Management HTTPS is using the SSL profile {{ management_api_http.https_ssl_profile }}

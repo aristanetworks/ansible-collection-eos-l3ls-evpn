@@ -168,6 +168,9 @@
                                 "ipv6_cidr",
                                 "ip",
                                 "cidr",
+                                "ip_pool",
+                                "ipv4_pool",
+                                "ipv6_pool",
                                 "mac"
                             ]
                         },
@@ -336,6 +339,11 @@
                         },
                         "required": {
                             "$ref": "#/$defs/required"
+                        },
+                        "relaxed_validation": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Disable required key validation."
                         },
                         "deprecation": {
                             "$ref": "#/$defs/deprecation"

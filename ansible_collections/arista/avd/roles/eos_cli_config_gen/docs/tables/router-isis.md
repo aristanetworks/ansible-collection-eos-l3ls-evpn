@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2024 Arista Networks, Inc.
+  ~ Copyright (c) 2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -11,6 +11,7 @@
     | [<samp>&nbsp;&nbsp;instance</samp>](## "router_isis.instance") | String | Required |  |  | ISIS Instance Name. |
     | [<samp>&nbsp;&nbsp;net</samp>](## "router_isis.net") | String |  |  |  | CLNS Address like "49.0001.0001.0000.0001.00". |
     | [<samp>&nbsp;&nbsp;router_id</samp>](## "router_isis.router_id") | String |  |  |  | IPv4 Address. |
+    | [<samp>&nbsp;&nbsp;is_hostname</samp>](## "router_isis.is_hostname") | String |  |  |  | Hostname of Intermediate System. |
     | [<samp>&nbsp;&nbsp;is_type</samp>](## "router_isis.is_type") | String |  |  | Valid Values:<br>- <code>level-1</code><br>- <code>level-1-2</code><br>- <code>level-2</code> |  |
     | [<samp>&nbsp;&nbsp;log_adjacency_changes</samp>](## "router_isis.log_adjacency_changes") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;mpls_ldp_sync_default</samp>](## "router_isis.mpls_ldp_sync_default") | Boolean |  |  |  |  |
@@ -150,6 +151,9 @@
 
       # IPv4 Address.
       router_id: <str>
+
+      # Hostname of Intermediate System.
+      is_hostname: <str>
       is_type: <str; "level-1" | "level-1-2" | "level-2">
       log_adjacency_changes: <bool>
       mpls_ldp_sync_default: <bool>

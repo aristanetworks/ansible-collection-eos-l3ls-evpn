@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 """AVD eos_designs base module to generate interface descriptions."""
@@ -12,7 +12,7 @@ from pyavd._eos_designs.avdfacts import AvdFacts
 from pyavd._utils import AvdStringFormatter, default, strip_null_from_data
 
 if TYPE_CHECKING:
-    from pyavd._eos_designs.shared_utils import SharedUtils
+    from pyavd._eos_designs.shared_utils import SharedUtilsProtocol
 
 
 class AvdInterfaceDescriptions(AvdFacts):
@@ -57,7 +57,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             - wan_carrier
             - wan_circuit_id.
         """
-        if template_path := self.shared_utils.interface_descriptions_templates.get("underlay_ethernet_interfaces"):
+        if template_path := self.shared_utils.node_type_key_data.interface_descriptions.underlay_ethernet_interfaces:
             return self._template(
                 template_path,
                 link={
@@ -70,9 +70,9 @@ class AvdInterfaceDescriptions(AvdFacts):
         if data.description is not None:
             description = data.description
         elif data.link_type in ("underlay_p2p", "l3_edge", "core_interfaces"):
-            description = self.shared_utils.default_underlay_p2p_ethernet_description
+            description = self.inputs.default_underlay_p2p_ethernet_description
         elif data.link_type == "underlay_l2":
-            description = self.shared_utils.underlay_l2_ethernet_description
+            description = self.inputs.underlay_l2_ethernet_description
         else:
             elems = [data.wan_carrier, data.wan_circuit_id, data.peer, data.peer_interface]
             description = "_".join([elem for elem in elems if elem])
@@ -105,9 +105,11 @@ class AvdInterfaceDescriptions(AvdFacts):
             - mpls_overlay_role
             - mpls_lsr
             - overlay_routing_protocol
-            - type.
+            - type
+            - wan_carrier
+            - wan_circuit_id.
         """
-        if template_path := self.shared_utils.interface_descriptions_templates.get("underlay_port_channel_interfaces"):
+        if template_path := self.shared_utils.node_type_key_data.interface_descriptions.underlay_port_channel_interfaces:
             return self._template(
                 template_path,
                 link={
@@ -122,10 +124,14 @@ class AvdInterfaceDescriptions(AvdFacts):
         if data.port_channel_description is not None:
             description = data.port_channel_description
         elif data.link_type in ("l3_edge", "core_interfaces"):
-            description = self.shared_utils.default_underlay_p2p_port_channel_description
-        else:
+            description = self.inputs.default_underlay_p2p_port_channel_description
+        elif data.link_type == "underlay_l2":
             # This is for L2 port-channels
-            description = self.shared_utils.underlay_l2_port_channel_description
+            description = self.inputs.underlay_l2_port_channel_description
+        else:
+            # This is for L3 port-channels
+            elems = [data.wan_carrier, data.wan_circuit_id, data.peer, data.peer_interface]
+            return "_".join([elem for elem in elems if elem])
 
         return AvdStringFormatter().format(
             description,
@@ -161,7 +167,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             - overlay_routing_protocol
             - type.
         """
-        if template_path := self.shared_utils.interface_descriptions_templates.get("mlag_ethernet_interfaces"):
+        if template_path := self.shared_utils.node_type_key_data.interface_descriptions.mlag_ethernet_interfaces:
             return self._template(
                 template_path,
                 mlag_interface=data.interface,
@@ -169,7 +175,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             )
 
         return AvdStringFormatter().format(
-            self.shared_utils.mlag_member_description,
+            self.inputs.mlag_member_description,
             **strip_null_from_data(
                 {
                     "mlag_peer": data.mlag_peer,
@@ -199,7 +205,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             - overlay_routing_protocol
             - type.
         """
-        if template_path := self.shared_utils.interface_descriptions_templates.get("mlag_port_channel_interfaces"):
+        if template_path := self.shared_utils.node_type_key_data.interface_descriptions.mlag_port_channel_interfaces:
             return self._template(
                 template_path,
                 mlag_interfaces=data.mlag_interfaces,
@@ -208,7 +214,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             )
 
         return AvdStringFormatter().format(
-            self.shared_utils.mlag_port_channel_description,
+            self.inputs.mlag_port_channel_description,
             **strip_null_from_data(
                 {
                     "mlag_peer": data.mlag_peer,
@@ -234,7 +240,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             - type.
         """
         return AvdStringFormatter().format(
-            self.shared_utils.mlag_peer_svi_description,
+            self.inputs.mlag_peer_svi_description,
             **strip_null_from_data(
                 {
                     "mlag_peer": data.mlag_peer,
@@ -258,7 +264,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             - type.
         """
         return AvdStringFormatter().format(
-            self.shared_utils.mlag_peer_l3_svi_description,
+            self.inputs.mlag_peer_l3_svi_description,
             **strip_null_from_data(
                 {
                     "mlag_peer": data.mlag_peer,
@@ -283,7 +289,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             - type.
         """
         return AvdStringFormatter().format(
-            self.shared_utils.mlag_peer_l3_vrf_svi_description,
+            self.inputs.mlag_peer_l3_vrf_svi_description,
             **strip_null_from_data(
                 {
                     "mlag_peer": data.mlag_peer,
@@ -312,7 +318,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             - overlay_routing_protocol
             - type.
         """
-        if template_path := self.shared_utils.interface_descriptions_templates.get("connected_endpoints_ethernet_interfaces"):
+        if template_path := self.shared_utils.node_type_key_data.interface_descriptions.connected_endpoints_ethernet_interfaces:
             return self._template(
                 template_path,
                 peer=data.peer,
@@ -324,9 +330,9 @@ class AvdInterfaceDescriptions(AvdFacts):
         if data.description:
             description = data.description
         elif data.peer_type == "network_port":
-            description = self.shared_utils.default_network_ports_description
+            description = self.inputs.default_network_ports_description
         else:
-            description = self.shared_utils.default_connected_endpoints_description
+            description = self.inputs.default_connected_endpoints_description
 
         return AvdStringFormatter().format(
             description,
@@ -360,7 +366,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             - overlay_routing_protocol
             - type.
         """
-        if template_path := self.shared_utils.interface_descriptions_templates.get("connected_endpoints_port_channel_interfaces"):
+        if template_path := self.shared_utils.node_type_key_data.interface_descriptions.connected_endpoints_port_channel_interfaces:
             return self._template(
                 template_path,
                 peer=data.peer,
@@ -372,9 +378,9 @@ class AvdInterfaceDescriptions(AvdFacts):
         if data.port_channel_description:
             port_channel_description = data.port_channel_description
         elif data.peer_type == "network_port":
-            port_channel_description = self.shared_utils.default_network_ports_port_channel_description
+            port_channel_description = self.inputs.default_network_ports_port_channel_description
         else:
-            port_channel_description = self.shared_utils.default_connected_endpoints_port_channel_description
+            port_channel_description = self.inputs.default_connected_endpoints_port_channel_description
 
         # Template the adapter description in case it is being referenced in the port_channel_description
         adapter_description = (
@@ -418,8 +424,8 @@ class AvdInterfaceDescriptions(AvdFacts):
             - type.
         """
         if template_path := default(
-            self.shared_utils.interface_descriptions_templates.get("router_id_loopback_interface"),
-            self.shared_utils.interface_descriptions_templates.get("overlay_loopback_interface"),
+            self.shared_utils.node_type_key_data.interface_descriptions.router_id_loopback_interface,
+            self.shared_utils.node_type_key_data.interface_descriptions.overlay_loopback_interface,
         ):
             return self._template(template_path, overlay_loopback_description=data.description, router_id_loopback_description=data.description)
 
@@ -436,7 +442,7 @@ class AvdInterfaceDescriptions(AvdFacts):
             - overlay_routing_protocol
             - type
         """
-        if template_path := self.shared_utils.interface_descriptions_templates.get("vtep_loopback_interface"):
+        if template_path := self.shared_utils.node_type_key_data.interface_descriptions.vtep_loopback_interface:
             return self._template(template_path, vtep_loopback_description=data.description)
 
         return data.description
@@ -485,7 +491,7 @@ class InterfaceDescriptionData:
     - Breaking changes may happen between major releases.
     """
 
-    _shared_utils: SharedUtils
+    _shared_utils: SharedUtilsProtocol
     description: str | None
     """Set description for interface"""
     interface: str | None
@@ -517,7 +523,7 @@ class InterfaceDescriptionData:
 
     def __init__(
         self,
-        shared_utils: SharedUtils,
+        shared_utils: SharedUtilsProtocol,
         description: str | None = None,
         interface: str | None = None,
         link_type: str | None = None,
@@ -575,7 +581,7 @@ class InterfaceDescriptionData:
 
     @property
     def mlag_peer_vlan(self) -> int:
-        return self._shared_utils.mlag_peer_vlan
+        return self._shared_utils.node_config.mlag_peer_vlan
 
     @property
     def mlag_peer_l3_vlan(self) -> int | None:

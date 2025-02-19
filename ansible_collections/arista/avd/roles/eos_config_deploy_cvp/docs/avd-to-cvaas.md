@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -36,9 +36,9 @@ Make sure to copy the generated password. You only get view it once.
 Click "Save" to exit the dialogue box.
 ```
 
-![Figure: 1](../../../media/serviceaccount1.png)
-![Figure: 2](../../../media/serviceaccount2.png)
-![Figure: 3](../../../media/serviceaccount3.png)
+![Figure: 1](../../../../../../docs/_media/serviceaccount1.png)
+![Figure: 2](../../../../../../docs/_media/serviceaccount2.png)
+![Figure: 3](../../../../../../docs/_media/serviceaccount3.png)
 
 !!! note
     The name of the service account must match a username configured to be authorized on
@@ -69,8 +69,8 @@ ansible_user: cvaas
 ansible_password: <service account token> (generated in CVP when AVD service account was created)
 ansible_connection: httpapi
 ansible_network_os: eos
-ansible_httpapi_use_ssl: True
-ansible_httpapi_validate_certs: True
+ansible_httpapi_use_ssl: true
+ansible_httpapi_validate_certs: true
 ansible_httpapi_port: 443
 ```
 
@@ -111,7 +111,7 @@ Now that AVD is talking to the CVaaS service you can run the "cvaas_deploy.yml" 
 - name: Configlet upload management
   hosts: cvaas
   connection: local
-  gather_facts: no
+  gather_facts: false
   tasks:
 
   - name: "Deploying configurations to CVaaS"

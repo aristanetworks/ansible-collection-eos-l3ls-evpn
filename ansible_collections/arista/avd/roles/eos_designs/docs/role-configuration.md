@@ -3,7 +3,7 @@
 title: Role configuration for eos_designs
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -18,7 +18,7 @@ Default output directories can be updated by modifying the default role variable
 
 ``` yaml
 --8<--
-roles/eos_designs/defaults/main/output_directories.yml
+ansible_collections/arista/avd/roles/eos_designs/defaults/main/output_directories.yml
 --8<--
 ```
 
@@ -40,7 +40,7 @@ This behavior can be adjusted by setting the variable described below.
     If the validation mode is set to `warning`, execution will continue with invalid data, which can lead to hard-to-read errors or incorrect behavior.
 
 --8<--
-roles/eos_designs/docs/tables/role-input-validation.md
+ansible_collections/arista/avd/roles/eos_designs/docs/tables/role-input-validation.md
 --8<--
 
 ## Generation of facts, structured configuration and documentation
@@ -48,11 +48,11 @@ roles/eos_designs/docs/tables/role-input-validation.md
 The following settings can be leveraged to control generation of facts, structured configuration and fabric documentation.
 
 --8<--
-roles/eos_designs/docs/tables/role-settings.md
+ansible_collections/arista/avd/roles/eos_designs/docs/tables/role-settings.md
 --8<--
 
 ## Custom Templates
 
 --8<--
-roles/eos_designs/docs/tables/role-custom-templates.md
+ansible_collections/arista/avd/roles/eos_designs/docs/tables/role-custom-templates.md
 --8<--

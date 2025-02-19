@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -59,12 +59,12 @@
 {%             endif %}
 {%         endfor %}
 
-| VRF | Hosts | Ports | Protocol |
-| --- | ----- | ----- | -------- |
+| VRF | Hosts | Ports | Protocol | SSL-profile |
+| --- | ----- | ----- | -------- | ----------- |
 {%         for vrf in logging.vrfs | arista.avd.natural_sort('name') %}
 {%             if vrf.hosts is arista.avd.defined %}
 {%                 for host in vrf.hosts | arista.avd.natural_sort('name') %}
-| {{ vrf.name }} | {{ host.name }} | {{ host.ports | arista.avd.default(['Default']) | join(', ') }} | {{ host.protocol | arista.avd.default('UDP') | upper }} |
+| {{ vrf.name }} | {{ host.name }} | {{ host.ports | arista.avd.default(['Default']) | join(', ') }} | {{ host.protocol | arista.avd.default('UDP') | upper }} | {{ host.ssl_profile | arista.avd.default("-") }} |
 {%                 endfor %}
 {%             endif %}
 {%         endfor %}

@@ -61,7 +61,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP EVPN Peer: dc2-spine1 (IP: 10.255.128.11)"
   },
   {
@@ -70,7 +70,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP EVPN Peer: dc2-spine2 (IP: 10.255.128.12)"
   },
   {
@@ -79,7 +79,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP IPv4 Unicast Peer: dc2-leaf2a (IP: 10.255.129.120)"
   },
   {
@@ -88,7 +88,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP IPv4 Unicast Peer: dc2-spine1 (IP: 10.255.255.116)"
   },
   {
@@ -97,7 +97,7 @@
     "categories": [
       "bgp"
     ],
-    "description": "Verifies the health of specific BGP peer(s).",
+    "description": "Verifies the health of specific BGP peer(s) for given address families.",
     "custom_field": "BGP IPv4 Unicast Peer: dc2-spine2 (IP: 10.255.255.118)"
   },
   {
@@ -106,7 +106,7 @@
     "categories": [
       "configuration"
     ],
-    "description": "Verifies there is no difference between the running-config and the startup-config"
+    "description": "Verifies there is no difference between the running-config and the startup-config."
   },
   {
     "name": "dc2-leaf2b",
@@ -114,7 +114,7 @@
     "categories": [
       "configuration"
     ],
-    "description": "Verifies ZeroTouch is disabled"
+    "description": "Verifies ZeroTouch is disabled."
   },
   {
     "name": "dc2-leaf2b",
@@ -122,7 +122,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "description": "Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.",
     "custom_field": "Local: Ethernet1 - Remote: dc2-spine1 Ethernet4"
   },
   {
@@ -131,7 +131,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "description": "Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.",
     "custom_field": "Local: Ethernet2 - Remote: dc2-spine2 Ethernet4"
   },
   {
@@ -140,7 +140,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "description": "Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.",
     "custom_field": "Local: Ethernet3 - Remote: dc2-leaf2a Ethernet3"
   },
   {
@@ -149,7 +149,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "description": "Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.",
     "custom_field": "Local: Ethernet4 - Remote: dc2-leaf2a Ethernet4"
   },
   {
@@ -158,7 +158,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Verifies that the provided LLDP neighbors are connected properly.",
+    "description": "Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.",
     "custom_field": "Local: Ethernet8 - Remote: dc2-leaf2c Ethernet2"
   },
   {
@@ -167,7 +167,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc1-leaf1a Loopback0 (IP: 10.255.0.3)"
   },
   {
@@ -176,7 +176,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc1-leaf1b Loopback0 (IP: 10.255.0.4)"
   },
   {
@@ -185,7 +185,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc1-leaf2a Loopback0 (IP: 10.255.0.5)"
   },
   {
@@ -194,7 +194,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc1-spine1 Loopback0 (IP: 10.255.0.1)"
   },
   {
@@ -203,7 +203,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc1-spine2 Loopback0 (IP: 10.255.0.2)"
   },
   {
@@ -212,7 +212,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc1-svc-leaf1a Loopback0 (IP: 10.33.0.5)"
   },
   {
@@ -221,7 +221,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc1-svc-leaf1b Loopback0 (IP: 10.33.0.6)"
   },
   {
@@ -230,7 +230,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc1-wan1 Loopback0 (IP: 10.255.2.1)"
   },
   {
@@ -239,7 +239,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc1-wan2 Loopback0 (IP: 10.255.2.2)"
   },
   {
@@ -248,7 +248,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc2-leaf1a Loopback0 (IP: 10.255.128.13)"
   },
   {
@@ -257,7 +257,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc2-leaf1b Loopback0 (IP: 10.255.128.14)"
   },
   {
@@ -266,7 +266,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc2-leaf2a Loopback0 (IP: 10.255.128.15)"
   },
   {
@@ -275,7 +275,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc2-leaf2b Loopback0 (IP: 10.255.128.16)"
   },
   {
@@ -284,7 +284,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc2-leaf3a.arista.com Loopback0 (IP: 10.255.128.17)"
   },
   {
@@ -293,7 +293,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc2-leaf3b.arista.com Loopback0 (IP: 10.255.128.18)"
   },
   {
@@ -302,7 +302,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc2-spine1 Loopback0 (IP: 10.255.128.11)"
   },
   {
@@ -311,7 +311,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: Loopback0 (IP: 10.255.128.16) - Destination: dc2-spine2 Loopback0 (IP: 10.255.128.12)"
   },
   {
@@ -320,7 +320,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: P2P Interface Ethernet1 (IP: 10.255.255.117) - Destination: dc2-spine1 Ethernet4 (IP: 10.255.255.116)"
   },
   {
@@ -329,7 +329,7 @@
     "categories": [
       "connectivity"
     ],
-    "description": "Test the network reachability to one or many destination IP(s).",
+    "description": "Test network reachability to one or many destination IP(s).",
     "custom_field": "Source: P2P Interface Ethernet2 (IP: 10.255.255.119) - Destination: dc2-spine2 Ethernet4 (IP: 10.255.255.118)"
   },
   {
@@ -354,7 +354,7 @@
     "categories": [
       "greent"
     ],
-    "description": "Verifies if a GreenT policy is created."
+    "description": "Verifies if a GreenT policy other than the default is created."
   },
   {
     "name": "dc2-leaf2b",
@@ -412,7 +412,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the system cooling status."
+    "description": "Verifies the device's system cooling status."
   },
   {
     "name": "dc2-leaf2b",
@@ -420,7 +420,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the device temperature."
+    "description": "Verifies if the device temperature is within acceptable limits."
   },
   {
     "name": "dc2-leaf2b",
@@ -428,7 +428,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the device temperature."
+    "description": "Verifies if the device temperature is within acceptable limits."
   },
   {
     "name": "dc2-leaf2b",
@@ -436,7 +436,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies if all transceivers come from approved manufacturers."
+    "description": "Verifies if all the transceivers come from approved manufacturers."
   },
   {
     "name": "dc2-leaf2b",
@@ -444,7 +444,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies if all transceivers come from approved manufacturers.",
+    "description": "Verifies if all the transceivers come from approved manufacturers.",
     "custom_field": "Accepted Manufacturers: 'Arista Networks', 'Arastra, Inc.', 'Not Present'"
   },
   {
@@ -453,7 +453,7 @@
     "categories": [
       "hardware"
     ],
-    "description": "Verifies the transceivers temperature."
+    "description": "Verifies if all the transceivers are operating at an acceptable temperature."
   },
   {
     "name": "dc2-leaf2b",
@@ -461,7 +461,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet1 - P2P_dc2-spine1_Ethernet4 = 'up'"
   },
   {
@@ -470,7 +470,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet2 - P2P_dc2-spine2_Ethernet4 = 'up'"
   },
   {
@@ -479,7 +479,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet3 - MLAG_dc2-leaf2a_Ethernet3 = 'up'"
   },
   {
@@ -488,7 +488,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet4 - MLAG_dc2-leaf2a_Ethernet4 = 'up'"
   },
   {
@@ -497,7 +497,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet5 - SERVER_dc2-leaf2-server1_PCI2 = 'up'"
   },
   {
@@ -506,7 +506,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet6 - P2P_dc1-leaf2b_Ethernet6 = 'up'"
   },
   {
@@ -515,7 +515,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Ethernet8 - L2_dc2-leaf2c_Ethernet2 = 'up'"
   },
   {
@@ -524,7 +524,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Loopback0 - ROUTER_ID = 'up'"
   },
   {
@@ -533,7 +533,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Loopback1 - VXLAN_TUNNEL_SOURCE = 'up'"
   },
   {
@@ -542,7 +542,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Loopback10 - DIAG_VRF_VRF10 = 'up'"
   },
   {
@@ -551,7 +551,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Loopback11 - DIAG_VRF_VRF11 = 'up'"
   },
   {
@@ -560,7 +560,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Port-Channel3 - MLAG_dc2-leaf2a_Port-Channel3 = 'up'"
   },
   {
@@ -569,7 +569,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Port-Channel5 - SERVER_dc2-leaf2-server1_PortChannel dc2-leaf2-server1 = 'up'"
   },
   {
@@ -578,7 +578,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Port-Channel8 - L2_dc2-leaf2c_Port-Channel1 = 'up'"
   },
   {
@@ -587,7 +587,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vlan11 - VRF10_VLAN11 = 'up'"
   },
   {
@@ -596,7 +596,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vlan12 - VRF10_VLAN12 = 'up'"
   },
   {
@@ -605,7 +605,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vlan21 - VRF11_VLAN21 = 'up'"
   },
   {
@@ -614,7 +614,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vlan22 - VRF11_VLAN22 = 'up'"
   },
   {
@@ -623,7 +623,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vlan3009 - MLAG_L3_VRF_VRF10 = 'up'"
   },
   {
@@ -632,7 +632,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vlan3010 - MLAG_L3_VRF_VRF11 = 'up'"
   },
   {
@@ -641,7 +641,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vlan4093 - MLAG_L3 = 'up'"
   },
   {
@@ -650,7 +650,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vlan4094 - MLAG = 'up'"
   },
   {
@@ -659,7 +659,7 @@
     "categories": [
       "interfaces"
     ],
-    "description": "Verifies the status of the provided interfaces.",
+    "description": "Verifies the operational states of specified interfaces to ensure they match expected configurations.",
     "custom_field": "Interface Vxlan1 = 'up'"
   },
   {
@@ -764,7 +764,7 @@
     "categories": [
       "mlag"
     ],
-    "description": "Verifies the MLAG reload-delay parameters."
+    "description": "Verifies the reload-delay parameters of the MLAG configuration."
   },
   {
     "name": "dc2-leaf2b",
@@ -788,7 +788,7 @@
     "categories": [
       "multicast"
     ],
-    "description": "Verifies the IGMP snooping global configuration."
+    "description": "Verifies the IGMP snooping global status."
   },
   {
     "name": "dc2-leaf2b",
@@ -1141,7 +1141,7 @@
     "categories": [
       "security"
     ],
-    "description": "Verifies IPv4 security connections for a peer."
+    "description": "Verifies the IPv4 security connections."
   },
   {
     "name": "dc2-leaf2b",
@@ -1189,7 +1189,7 @@
     "categories": [
       "services"
     ],
-    "description": "Verifies if the DNS servers are correctly configured."
+    "description": "Verifies if the DNS (Domain Name Service) servers are correctly configured."
   },
   {
     "name": "dc2-leaf2b",
@@ -1293,7 +1293,7 @@
     "categories": [
       "stun"
     ],
-    "description": "Verifies the STUN client is configured with the specified IPv4 source address and port. Validate the public IP and port if provided."
+    "description": "(Deprecated) Verifies the translation for a source address on a STUN client."
   },
   {
     "name": "dc2-leaf2b",

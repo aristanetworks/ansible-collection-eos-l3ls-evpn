@@ -166,9 +166,9 @@ ntp server vrf MGMT 0.pool.ntp.org prefer
 
 #### Management API HTTP Summary
 
-| HTTP | HTTPS | Default Services |
-| ---- | ----- | ---------------- |
-| False | True | - |
+| HTTP | HTTPS | UNIX-Socket | Default Services |
+| ---- | ----- | ----------- | ---------------- |
+| False | True | - | - |
 
 #### Management API VRF Access
 
@@ -239,9 +239,9 @@ aaa authorization exec default local
 
 ### Management Security SSL Profiles
 
-| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Cipher List | CRLs |
-| ---------------- | --------------------- | -------------------- | ------------ | ----------- | ---- |
-| STUN-DTLS | 1.2 | STUN-DTLS.crt | STUN-DTLS.key | - | - |
+| SSL Profile Name | TLS protocol accepted | Certificate filename | Key filename | Ciphers | CRLs | FIPS restrictions enabled |
+| ---------------- | --------------------- | -------------------- | ------------ | ------- | ---- | ------------------------- |
+| STUN-DTLS | 1.2 | STUN-DTLS.crt | STUN-DTLS.key | - | - | - |
 
 ### SSL profile STUN-DTLS Certificates Summary
 
@@ -647,16 +647,16 @@ Topology role: transit region
 
 #### AVT Profiles
 
-| Profile name | Load balance policy | Internet exit policy |
-| ------------ | ------------------- | -------------------- |
-| BLUE-POLICY-DEFAULT | LB-BLUE-POLICY-DEFAULT | - |
-| BLUE-POLICY-VIDEO | LB-BLUE-POLICY-VIDEO | - |
-| BLUE-POLICY-VOICE | LB-BLUE-POLICY-VOICE | - |
-| DEFAULT-POLICY-CONTROL-PLANE | LB-DEFAULT-POLICY-CONTROL-PLANE | - |
-| DEFAULT-POLICY-DEFAULT | LB-DEFAULT-POLICY-DEFAULT | - |
-| RED-POLICY-CRITICAL-SECRET-DATA | LB-RED-POLICY-CRITICAL-SECRET-DATA | - |
-| RED-POLICY-NORMAL-DATA | LB-RED-POLICY-NORMAL-DATA | - |
-| RED-POLICY-NOT-SO-IMPORTANT-DATA | LB-RED-POLICY-NOT-SO-IMPORTANT-DATA | - |
+| Profile name | Load balance policy | Internet exit policy | Metric Order | Jitter Threshold (ms) | Latency Threshold (ms) | Load (%) | Loss Rate (%) |
+| ------------ | ------------------- | -------------------- | ------------ | --------------------- | ---------------------- | -------- | ------------- |
+| BLUE-POLICY-DEFAULT | LB-BLUE-POLICY-DEFAULT | - | - | - | - | - | - |
+| BLUE-POLICY-VIDEO | LB-BLUE-POLICY-VIDEO | - | - | - | - | - | - |
+| BLUE-POLICY-VOICE | LB-BLUE-POLICY-VOICE | - | - | - | - | - | - |
+| DEFAULT-POLICY-CONTROL-PLANE | LB-DEFAULT-POLICY-CONTROL-PLANE | - | - | - | - | - | - |
+| DEFAULT-POLICY-DEFAULT | LB-DEFAULT-POLICY-DEFAULT | - | - | - | - | - | - |
+| RED-POLICY-CRITICAL-SECRET-DATA | LB-RED-POLICY-CRITICAL-SECRET-DATA | - | - | - | - | - | - |
+| RED-POLICY-NORMAL-DATA | LB-RED-POLICY-NORMAL-DATA | - | - | - | - | - | - |
+| RED-POLICY-NOT-SO-IMPORTANT-DATA | LB-RED-POLICY-NOT-SO-IMPORTANT-DATA | - | - | - | - | - | - |
 
 #### AVT Policies
 
@@ -871,15 +871,15 @@ ASN Notation: asplain
 
 ##### EVPN Peer Groups
 
-| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation |
-| ---------- | -------- | ------------ | ------------- | ------------- |
-| WAN-OVERLAY-PEERS | True |  RM-EVPN-SOO-IN | RM-EVPN-SOO-OUT | path-selection |
+| Peer Group | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| ---------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| WAN-OVERLAY-PEERS | True |  RM-EVPN-SOO-IN | RM-EVPN-SOO-OUT | path-selection | - |
 
 ##### EVPN Neighbors
 
-| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation |
-| -------- | -------- | ------------ | ------------- | ------------- |
-| 192.168.42.4 | True | - | - | path-selection |
+| Neighbor | Activate | Route-map In | Route-map Out | Encapsulation | Next-hop-self Source Interface |
+| -------- | -------- | ------------ | ------------- | ------------- | ------------------------------ |
+| 192.168.42.4 | True | - | - | path-selection | - |
 
 ##### EVPN DCI Gateway Summary
 

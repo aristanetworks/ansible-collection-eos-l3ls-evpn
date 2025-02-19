@@ -1,19 +1,44 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from collections import defaultdict
 from functools import cached_property
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
-from pyavd._utils import get
+from pyavd._eos_designs.schema import EosDesigns
+from pyavd._utils import Undefined, UndefinedType, default
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from typing import TypeVar
+
+    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+
+    from . import SharedUtilsProtocol
+
+    FlowTracking = (
+        EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.FlowTracking
+        | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.L3InterfacesItem.FlowTracking
+        | EosDesigns.CoreInterfaces.P2pLinksItem.FlowTracking
+        | EosDesigns.L3Edge.P2pLinksItem.FlowTracking
+        | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.WanHa.FlowTracking
+        | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem.FlowTracking
+        | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem.FlowTracking
+        | EosDesigns.FabricFlowTracking.MlagInterfaces
+        | EosDesigns.FabricFlowTracking.DpsInterfaces
+        | EosDesigns.FabricFlowTracking.Uplinks
+        | EosDesigns.FabricFlowTracking.Downlinks
+    )
+
+    T_FlowTracker = TypeVar(
+        "T_FlowTracker",
+        EosCliConfigGen.EthernetInterfacesItem.FlowTracker,
+        EosCliConfigGen.PortChannelInterfacesItem.FlowTracker,
+        EosCliConfigGen.DpsInterfacesItem.FlowTracker,
+    )
 
 
-class FlowTrackingMixin:
+class FlowTrackingMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -22,68 +47,89 @@ class FlowTrackingMixin:
     """
 
     @cached_property
-    def flow_tracking_type(self: SharedUtils) -> str:
-        default_flow_tracker_type = get(self.node_type_key_data, "default_flow_tracker_type", "sampled")
-        return get(self.switch_data_combined, "flow_tracker_type", default=default_flow_tracker_type)
+    def flow_tracking_type(self: SharedUtilsProtocol) -> Literal["sampled", "hardware"]:
+        default_flow_tracker_type = self.node_type_key_data.default_flow_tracker_type
+        return self.node_config.flow_tracker_type or default_flow_tracker_type
 
-    @cached_property
-    def default_flow_tracker_name(self: SharedUtils) -> str:
-        return "FLOW-TRACKER"
-
-    @cached_property
-    def fabric_flow_tracking(self: SharedUtils) -> defaultdict:
-        """Return fabric level flow tracking settings for all data models."""
-        configured_values = get(self.hostvars, "fabric_flow_tracking", default={})
-
-        # By default, flow tracker is `hardware` type named `FLOW-TRACKER`
-        output_settings = defaultdict(
-            lambda: {
-                "enabled": None,
-                "name": self.default_flow_tracker_name,
-            },
-        )
-
-        # By default, flow tracking is enabled only on DPS interfaces
-        output_settings["dps_interfaces"]["enabled"] = True
-
-        for data_model, settings in configured_values.items():
-            tracker_enabled = settings.get("enabled")
-            tracker_name = settings.get("name")
-
-            if tracker_enabled is not None:
-                output_settings[data_model]["enabled"] = tracker_enabled
-
-            if tracker_name:
-                output_settings[data_model]["name"] = tracker_name
-        return output_settings
-
-    def get_flow_tracker(
-        self: SharedUtils,
-        link_settings: dict | None,
-        data_model: Literal[
-            "uplinks",
-            "downlinks",
-            "endpoints",
-            "l3_edge",
-            "core_interfaces",
-            "mlag_interfaces",
-            "l3_interfaces",
-            "dps_interfaces",
-            "direct_wan_ha_links",
-        ],
-    ) -> dict:
+    def get_flow_tracker(self: SharedUtilsProtocol, flow_tracking: FlowTracking) -> dict[str, str] | None:
         """Return flow_tracking settings for a link, falling back to the fabric flow_tracking_settings if not defined."""
-        link_tracker_enabled, link_tracker_name = None, None
-        if link_settings is not None:
-            link_tracker_enabled = get(link_settings, "flow_tracking.enabled")
-            link_tracker_name = get(link_settings, "flow_tracking.name")
+        match flow_tracking:
+            case EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.endpoints.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.endpoints.name)
+            case EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.L3InterfacesItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.l3_interfaces.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.l3_interfaces.name)
+            case EosDesigns.CoreInterfaces.P2pLinksItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.core_interfaces.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.core_interfaces.name)
+            case EosDesigns.L3Edge.P2pLinksItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.l3_edge.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.l3_edge.name)
+            case EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.WanHa.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.direct_wan_ha_links.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.direct_wan_ha_links.name)
+            case EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.l3_interfaces.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.l3_interfaces.name)
+            case EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.l3_port_channels.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.l3_port_channels.name)
+            case (
+                EosDesigns.FabricFlowTracking.MlagInterfaces()
+                | EosDesigns.FabricFlowTracking.DpsInterfaces()
+                | EosDesigns.FabricFlowTracking.Uplinks()
+                | EosDesigns.FabricFlowTracking.Downlinks()
+            ):
+                enabled: bool = flow_tracking.enabled
+                name: str = flow_tracking.name
 
-        fabric_flow = self.fabric_flow_tracking[data_model]
-
-        tracking_enabled = link_tracker_enabled if link_tracker_enabled is not None else fabric_flow["enabled"]
-        if not tracking_enabled:
+        if not enabled:
             return None
 
-        tracker_name = link_tracker_name or fabric_flow["name"]
+        return {self.flow_tracking_type: name}
 
-        return {self.flow_tracking_type: tracker_name}
+    def new_get_flow_tracker(
+        self: SharedUtilsProtocol,
+        flow_tracking: FlowTracking,
+        output_type: type[T_FlowTracker],
+    ) -> T_FlowTracker | UndefinedType:
+        """Return flow_tracking settings for a link, falling back to the fabric flow_tracking_settings if not defined."""
+        match flow_tracking:
+            case EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.endpoints.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.endpoints.name)
+            case EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.L3InterfacesItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.l3_interfaces.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.l3_interfaces.name)
+            case EosDesigns.CoreInterfaces.P2pLinksItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.core_interfaces.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.core_interfaces.name)
+            case EosDesigns.L3Edge.P2pLinksItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.l3_edge.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.l3_edge.name)
+            case EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.WanHa.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.direct_wan_ha_links.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.direct_wan_ha_links.name)
+            case EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.l3_interfaces.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.l3_interfaces.name)
+            case (
+                EosDesigns.FabricFlowTracking.MlagInterfaces()
+                | EosDesigns.FabricFlowTracking.DpsInterfaces()
+                | EosDesigns.FabricFlowTracking.Uplinks()
+                | EosDesigns.FabricFlowTracking.Downlinks()
+            ):
+                enabled: bool = flow_tracking.enabled
+                name: str = flow_tracking.name
+
+        if not enabled:
+            return Undefined
+
+        match self.flow_tracking_type:
+            case "hardware":
+                return output_type(hardware=name)
+            case "sampled":
+                return output_type(sampled=name)
+
+        return Undefined

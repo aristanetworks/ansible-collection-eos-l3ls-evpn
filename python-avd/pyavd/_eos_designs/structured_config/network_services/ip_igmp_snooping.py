@@ -1,20 +1,20 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import append_if_not_duplicate, default, get
-
-from .utils import UtilsMixin
+from pyavd._utils import append_if_not_duplicate, default, strip_empties_from_dict
 
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigNetworkServices
+    from pyavd._eos_designs.schema import EosDesigns
+
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class IpIgmpSnoopingMixin(UtilsMixin):
+class IpIgmpSnoopingMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -22,31 +22,30 @@ class IpIgmpSnoopingMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_igmp_snooping(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def ip_igmp_snooping(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Return structured config for ip_igmp_snooping."""
         if not self.shared_utils.network_services_l2:
             return None
 
-        ip_igmp_snooping = {}
         igmp_snooping_enabled = self.shared_utils.igmp_snooping_enabled
-        ip_igmp_snooping["globally_enabled"] = igmp_snooping_enabled
-        if igmp_snooping_enabled is not True:
+        ip_igmp_snooping = {"globally_enabled": igmp_snooping_enabled}
+        if not igmp_snooping_enabled:
             return ip_igmp_snooping
 
         vlans = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
-                for svi in vrf["svis"]:
+            for vrf in tenant.vrfs:
+                for svi in vrf.svis:
                     if vlan := self._ip_igmp_snooping_vlan(svi, tenant):
                         append_if_not_duplicate(
                             list_of_dicts=vlans,
                             primary_key="id",
                             new_dict=vlan,
-                            context=f"IGMP snooping for SVIs in VRF '{vrf['name']}'",
+                            context=f"IGMP snooping for SVIs in VRF '{vrf.name}'",
                             context_keys=["id"],
                         )
 
-            for l2vlan in tenant["l2vlans"]:
+            for l2vlan in tenant.l2vlans:
                 if vlan := self._ip_igmp_snooping_vlan(l2vlan, tenant):
                     append_if_not_duplicate(
                         list_of_dicts=vlans,
@@ -61,24 +60,21 @@ class IpIgmpSnoopingMixin(UtilsMixin):
 
         return ip_igmp_snooping
 
-    def _ip_igmp_snooping_vlan(self: AvdStructuredConfigNetworkServices, vlan: dict, tenant: dict) -> dict:
+    def _ip_igmp_snooping_vlan(
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
+        | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+    ) -> dict:
         """
         ip_igmp_snooping logic for one vlan.
 
         Can be used for both svis and l2vlans
         """
-        tenant_igmp_snooping_querier = tenant.get("igmp_snooping_querier", {})
-        igmp_snooping_querier = vlan.get("igmp_snooping_querier", {})
         igmp_snooping_enabled = None
         igmp_snooping_querier_enabled = None
-        evpn_l2_multicast_enabled = (
-            default(
-                get(vlan, "evpn_l2_multicast.enabled"),
-                get(tenant, "evpn_l2_multicast.enabled"),
-            )
-            and self.shared_utils.evpn_multicast is True
-        )
-        if self.shared_utils.overlay_vtep and evpn_l2_multicast_enabled is True:
+        evpn_l2_multicast_enabled = bool(default(vlan.evpn_l2_multicast.enabled, tenant.evpn_l2_multicast.enabled)) and self.shared_utils.evpn_multicast
+        if self.shared_utils.overlay_vtep and evpn_l2_multicast_enabled:
             # Leaving igmp_snooping_enabled unset, to avoid extra line of config as we already check
             # that global igmp snooping is enabled and igmp snooping is required for evpn_l2_multicast.
 
@@ -87,41 +83,28 @@ class IpIgmpSnoopingMixin(UtilsMixin):
             igmp_snooping_querier_enabled = True
 
         else:
-            igmp_snooping_enabled = vlan.get("igmp_snooping_enabled")
+            igmp_snooping_enabled = vlan.igmp_snooping_enabled
             if self.shared_utils.network_services_l3 and self.shared_utils.uplink_type in ["p2p", "p2p-vrfs"]:
-                igmp_snooping_querier_enabled = default(
-                    igmp_snooping_querier.get("enabled"),
-                    tenant_igmp_snooping_querier.get("enabled"),
-                )
+                igmp_snooping_querier_enabled = default(vlan.igmp_snooping_querier.enabled, tenant.igmp_snooping_querier.enabled)
 
-        ip_igmp_snooping_vlan = {}
-        if igmp_snooping_enabled is not None:
-            ip_igmp_snooping_vlan["enabled"] = igmp_snooping_enabled
-
-        if igmp_snooping_querier_enabled is not None:
-            ip_igmp_snooping_vlan["querier"] = {"enabled": igmp_snooping_querier_enabled}
-            if igmp_snooping_querier_enabled is True:
-                address = default(igmp_snooping_querier.get("source_address"), tenant_igmp_snooping_querier.get("source_address"), self.shared_utils.router_id)
-                if address is not None:
-                    ip_igmp_snooping_vlan["querier"]["address"] = address
-
-                version = default(
-                    igmp_snooping_querier.get("version"),
-                    tenant_igmp_snooping_querier.get("version"),
-                )
-                if version is not None:
-                    ip_igmp_snooping_vlan["querier"]["version"] = version
-
-        # IGMP snooping fast-leave feature is enabled only when evpn_l2_multicast is enabled
-        if evpn_l2_multicast_enabled is True:
-            fast_leave = default(
-                igmp_snooping_querier.get("fast_leave"),
-                get(tenant, "evpn_l2_multicast.fast_leave"),
-            )
-            if fast_leave is not None:
-                ip_igmp_snooping_vlan["fast_leave"] = fast_leave
+        ip_igmp_snooping_vlan = strip_empties_from_dict(
+            {
+                "enabled": igmp_snooping_enabled,
+                "querier": {
+                    "enabled": igmp_snooping_querier_enabled,
+                    "address": (
+                        default(vlan.igmp_snooping_querier.source_address, tenant.igmp_snooping_querier.source_address, self.shared_utils.router_id)
+                        if igmp_snooping_querier_enabled
+                        else None
+                    ),
+                    "version": default(vlan.igmp_snooping_querier.version, tenant.igmp_snooping_querier.version) if igmp_snooping_querier_enabled else None,
+                },
+                # IGMP snooping fast-leave feature is enabled only when evpn_l2_multicast is enabled
+                "fast_leave": default(vlan.igmp_snooping_querier.fast_leave, tenant.evpn_l2_multicast.fast_leave) if evpn_l2_multicast_enabled else None,
+            }
+        )
 
         if ip_igmp_snooping_vlan:
-            return {"id": int(vlan["id"]), **ip_igmp_snooping_vlan}
+            return {"id": vlan.id, **ip_igmp_snooping_vlan}
 
         return ip_igmp_snooping_vlan

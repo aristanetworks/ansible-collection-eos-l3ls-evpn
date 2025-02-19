@@ -1,0 +1,155 @@
+### Routing - ISIS ###
+router_isis:
+  instance: EVPN_UNDERLAY
+  is_hostname: MYROUTER
+  log_adjacency_changes: false
+  mpls_ldp_sync_default: true
+  spf_interval:
+    interval: 250
+    interval_unit: seconds
+    wait_interval: 10
+    hold_interval: 20
+  graceful_restart:
+    enabled: true
+    restart_hold_time: 10
+    t2:
+      level_1_wait_time: 10
+      level_2_wait_time: 20
+  timers:
+    local_convergence:
+      protected_prefixes: true
+      delay: 15000
+    csnp:
+      generation:
+        interval: 10
+        p2p_disabled: true
+    lsp:
+      out_delay: 20
+      refresh_interval: 56
+      generation:
+        interval: 30
+        initial_wait_time: 40
+        wait_time: 50
+      min_remaining_lifetime: 78
+  advertise:
+    passive_only: true
+  redistribute_routes:
+    - source_protocol: static
+      include_leaked: true
+      route_map: RM-STATIC-TO-ISIS
+    - source_protocol: connected
+    - source_protocol: isis
+      route_map: RM-REDIS-ISIS-INSTANCE
+    - source_protocol: ospf
+      ospf_route_type: internal
+    - source_protocol: ospf
+      ospf_route_type: external
+      route_map: RM-OSPF-EXTERNAL-TO-ISIS
+    - source_protocol: ospf
+      include_leaked: true
+      ospf_route_type: nssa-external
+      route_map: RM-OSPF-NSSA_EXT-TO-ISIS
+    - source_protocol: ospf
+    - source_protocol: ospfv3
+      ospf_route_type: external
+    - source_protocol: ospfv3
+    - source_protocol: bgp
+      route_map: RM-BGP
+  address_family_ipv4:
+    enabled: true
+    maximum_paths: 4
+    bfd_all_interfaces: true
+    fast_reroute_ti_lfa:
+      mode: link-protection
+      level: level-2
+      srlg:
+        enable: true
+        strict: true
+    tunnel_source_labeled_unicast:
+      enabled: true
+      rcf: lu_2_sr_pfx()
+  address_family_ipv6:
+    enabled: true
+    fast_reroute_ti_lfa:
+      mode: node-protection
+      level: level-1
+      srlg:
+        enable: true
+        strict: true
+  segment_routing_mpls:
+    enabled: true
+    prefix_segments:
+      - prefix: 155.2.1.1/32
+        index: 211
+      - prefix: 2001:cafe:155::/64
+        index: 6211
+      - prefix: 155.2.1.11/32
+  set_overload_bit:
+    enabled: true
+    on_startup:
+      wait_for_bgp:
+        enabled: true
+        timeout: 10
+  authentication:
+    both:
+      key_ids:
+        - id: 2
+          algorithm: sha-512
+          key_type: 0
+          key: password
+          rfc_5310: false
+        - id: 3
+          algorithm: sha-512
+          key_type: 0
+          key: password1
+          rfc_5310: true
+      rx_disabled: true
+    level_1:
+      key_type: 0
+      key: password
+      mode: shared-secret
+      shared_secret:
+        profile: test1
+        algorithm: md5
+      key_ids:
+        - id: 1
+          algorithm: sha-1
+          key_type: 0
+          key: password
+          rfc_5310: false
+        - id: 4
+          algorithm: sha-1
+          key_type: 0
+          key: password
+          rfc_5310: true
+        - id: 3
+          algorithm: sha-1
+          key_type: 0
+          key: password3
+    level_2:
+      key_type: 0
+      key: password
+      mode: sha
+      sha:
+        key_id: 2
+      key_ids:
+        - id: 1
+          algorithm: sha-1
+          key_type: 0
+          key: password
+          rfc_5310: false
+        - id: 5
+          algorithm: sha-1
+          key_type: 0
+          key: password
+          rfc_5310: true
+        - id: 3
+          algorithm: sha-1
+          key_type: 0
+          key: password2
+  eos_cli: |-
+    address-family ipv6 unicast
+      multi-topology
+    traffic-engineering
+      no shutdown
+      is-type level-2

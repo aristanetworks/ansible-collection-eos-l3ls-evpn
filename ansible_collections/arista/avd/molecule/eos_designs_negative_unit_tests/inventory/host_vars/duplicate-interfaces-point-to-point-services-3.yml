@@ -11,7 +11,7 @@ node_type_keys:
       l2: true
       l3: true
     default_overlay_routing_protocol: ibgp
-    default_overlay_address_families: [ evpn ]
+    default_overlay_address_families: [evpn]
     default_evpn_encapsulation: mpls
 
 pe:
@@ -33,11 +33,11 @@ tenants:
           - number: 1000
         endpoints:
           - id: 26
-            nodes: [ "duplicate-interfaces-point-to-point-services-3" ]
-            interfaces: [ "Ethernet6" ]
+            nodes: ["duplicate-interfaces-point-to-point-services-3"]
+            interfaces: ["Ethernet6"]
           - id: 25
-            nodes: [ "duplicate-interfaces-point-to-point-services-1" ]
-            interfaces: [ "Ethernet6" ]
+            nodes: ["duplicate-interfaces-point-to-point-services-1"]
+            interfaces: ["Ethernet6"]
 
   - name: TENANT_B
     point_to_point_services:
@@ -46,12 +46,14 @@ tenants:
           - number: 1000
         endpoints:
           - id: 57
-            nodes: [ "duplicate-interfaces-point-to-point-services-3" ]
-            interfaces: [ "Ethernet6" ]
+            nodes: ["duplicate-interfaces-point-to-point-services-3"]
+            interfaces: ["Ethernet6"]
           - id: 58
-            nodes: [ "duplicate-interfaces-point-to-point-services-2" ]
-            interfaces: [ "Ethernet6" ]
+            nodes: ["duplicate-interfaces-point-to-point-services-2"]
+            interfaces: ["Ethernet6"]
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined under point_to_point_services.
-  {'name': 'Ethernet6.1000'} conflicts with {'name': 'Ethernet6.1000'}.
+  Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
+  {'name': 'Ethernet6.1000', 'shutdown': False, 'peer_type': 'point_to_point_service'} conflicts with
+  {'name': 'Ethernet6.1000', 'shutdown': False, 'encapsulation_vlan': {'client': {'encapsulation': 'dot1q', 'vlan': 1000},
+  'network': {'encapsulation': 'client'}}, 'peer_type': 'point_to_point_service'}.

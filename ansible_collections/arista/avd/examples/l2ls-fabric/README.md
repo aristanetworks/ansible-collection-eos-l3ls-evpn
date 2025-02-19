@@ -3,7 +3,7 @@
 title: Example for L2LS Fabric
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -28,7 +28,7 @@ The example is meant as a starting foundation. You may build more advanced fabri
 ## Installation & Requirements
 
 --8<--
-examples/common/installation.md
+ansible_collections/arista/avd/examples/common/example-installation.md
 --8<--
 
 ``` shell
@@ -75,7 +75,7 @@ Below is the basic configuration file for SPINE1:
 
 ``` shell
 --8<--
-examples/l2ls-fabric/switch-basic-configurations/SPINE1.cfg
+ansible_collections/arista/avd/examples/l2ls-fabric/switch-basic-configurations/SPINE1.cfg
 --8<--
 ```
 
@@ -112,7 +112,7 @@ Alternatively, if DNS is unavailable, define the ansible_host variable as an IP 
 
 ``` yaml
 --8<--
-examples/l2ls-fabric/inventory.yml
+ansible_collections/arista/avd/examples/l2ls-fabric/inventory.yml
 --8<--
 ```
 
@@ -138,7 +138,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/l2ls-fabric/group_vars/DC1.yml
+    ansible_collections/arista/avd/examples/l2ls-fabric/group_vars/DC1.yml
     --8<--
     ```
 
@@ -151,7 +151,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/l2ls-fabric/group_vars/DC1_FABRIC.yml
+    ansible_collections/arista/avd/examples/l2ls-fabric/group_vars/DC1_FABRIC.yml
     --8<--
     ```
 
@@ -160,7 +160,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/l2ls-fabric/group_vars/DC1_SPINES.yml
+    ansible_collections/arista/avd/examples/l2ls-fabric/group_vars/DC1_SPINES.yml
     --8<--
     ```
 
@@ -169,7 +169,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/l2ls-fabric/group_vars/DC1_LEAFS.yml
+    ansible_collections/arista/avd/examples/l2ls-fabric/group_vars/DC1_LEAFS.yml
     --8<--
     ```
 
@@ -178,7 +178,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/l2ls-fabric/group_vars/DC1_NETWORK_SERVICES.yml
+    ansible_collections/arista/avd/examples/l2ls-fabric/group_vars/DC1_NETWORK_SERVICES.yml
     --8<--
     ```
 
@@ -187,7 +187,7 @@ The tabs below show the Ansible **group_vars** used in this example.
 
     ``` yaml
     --8<--
-    examples/l2ls-fabric/group_vars/DC1_NETWORK_PORTS.yml
+    ansible_collections/arista/avd/examples/l2ls-fabric/group_vars/DC1_NETWORK_PORTS.yml
     --8<--
     ```
 
@@ -199,7 +199,7 @@ Now that we have defined all of our Ansible variables (AVD inputs), it is time t
 
     ``` yaml
     --8<--
-    examples/l2ls-fabric/build.yml
+    ansible_collections/arista/avd/examples/l2ls-fabric/build.yml
     --8<--
     ```
 
@@ -207,7 +207,7 @@ Now that we have defined all of our Ansible variables (AVD inputs), it is time t
 
     ``` yaml
     --8<--
-    examples/l2ls-fabric/deploy.yml
+    ansible_collections/arista/avd/examples/l2ls-fabric/deploy.yml
     --8<--
     ```
 
@@ -237,7 +237,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/l2ls-fabric/intended/configs/SPINE1.cfg
+    ansible_collections/arista/avd/examples/l2ls-fabric/intended/configs/SPINE1.cfg
     --8<--
     ```
 
@@ -245,7 +245,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/l2ls-fabric/intended/configs/SPINE2.cfg
+    ansible_collections/arista/avd/examples/l2ls-fabric/intended/configs/SPINE2.cfg
     --8<--
     ```
 
@@ -253,7 +253,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/l2ls-fabric/intended/configs/LEAF1.cfg
+    ansible_collections/arista/avd/examples/l2ls-fabric/intended/configs/LEAF1.cfg
     --8<--
     ```
 
@@ -261,7 +261,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/l2ls-fabric/intended/configs/LEAF2.cfg
+    ansible_collections/arista/avd/examples/l2ls-fabric/intended/configs/LEAF2.cfg
     --8<--
     ```
 
@@ -269,7 +269,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/l2ls-fabric/intended/configs/LEAF3.cfg
+    ansible_collections/arista/avd/examples/l2ls-fabric/intended/configs/LEAF3.cfg
     --8<--
     ```
 
@@ -277,7 +277,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/l2ls-fabric/intended/configs/LEAF4.cfg
+    ansible_collections/arista/avd/examples/l2ls-fabric/intended/configs/LEAF4.cfg
     --8<--
     ```
 

@@ -3,7 +3,7 @@
 title: AVD example for a single data center using L3LS
 ---
 <!--
-  ~ Copyright (c) 2023-2024 Arista Networks, Inc.
+  ~ Copyright (c) 2023-2025 Arista Networks, Inc.
   ~ Use of this source code is governed by the Apache License 2.0
   ~ that can be found in the LICENSE file.
   -->
@@ -12,7 +12,7 @@ title: AVD example for a single data center using L3LS
 
 ## Introduction
 
-This example is meant to be used as the logical second step in introducing AVD to new users, directly following the [Introduction to Ansible and AVD](../../docs/getting-started/intro-to-ansible-and-avd.md) section. New users with access to virtual switches (using Arista vEOS-lab or cEOS) can learn how to generate configuration and documentation for a complete fabric environment. Users with access to physical switches will have to adapt a few settings. This is all documented inline in the comments included in the YAML files. If a lab with virtual or physical switches is not accessible, this example can be used only to generate the output from AVD if required.
+This example is meant to be used as the logical second step in introducing AVD to new users, directly following the [Introduction to Ansible and AVD](../../../../../docs/getting-started/intro-to-ansible-and-avd.md) section. New users with access to virtual switches (using Arista vEOS-lab or cEOS) can learn how to generate configuration and documentation for a complete fabric environment. Users with access to physical switches will have to adapt a few settings. This is all documented inline in the comments included in the YAML files. If a lab with virtual or physical switches is not accessible, this example can be used only to generate the output from AVD if required.
 
 The example includes and describes all the AVD files and their content used to build an L3LS EVPN/VXLAN Symmetric IRB network covering a single DC using the following:
 
@@ -29,7 +29,7 @@ Ansible playbooks are included to show the following:
 ## Installation
 
 --8<--
-examples/common/installation.md
+ansible_collections/arista/avd/examples/common/example-installation.md
 --8<--
 
 ```shell
@@ -108,7 +108,7 @@ Below is the basic configuration file for `dc1-leaf1a`:
 
 ```eos title="dc1-leaf1a-basic-configuration.txt"
 --8<--
-examples/single-dc-l3ls/switch-basic-configurations/dc1-leaf1a-basic-configuration.txt
+ansible_collections/arista/avd/examples/single-dc-l3ls/switch-basic-configurations/dc1-leaf1a-basic-configuration.txt
 --8<--
 ```
 
@@ -161,7 +161,7 @@ Alternatively, if there is no DNS available, or if devices need to be reached us
 
 ```yaml title="inventory.yml"
 --8<--
-examples/single-dc-l3ls/inventory.yml
+ansible_collections/arista/avd/examples/single-dc-l3ls/inventory.yml
 --8<--
 ```
 
@@ -222,7 +222,7 @@ all:
 
    - Please note that the username (`ansible`) and password (`ansible`) defined here must exist in CloudVision.
 
-   - More information is available [here](https://avd.sh/en/stable/roles/eos_config_deploy_cvp/index.html?h=is_deployed#inputs)
+   - More information is available [here](https://avd.arista.com/stable/roles/eos_config_deploy_cvp/index.html?h=is_deployed#inputs)
 
 2. `NETWORK_SERVICES`
 
@@ -244,7 +244,7 @@ Since this example covers building an L3LS network, AVD must know about the devi
 
     ```yaml
     --8<--
-    examples/single-dc-l3ls/group_vars/DC1_SPINES.yml
+    ansible_collections/arista/avd/examples/single-dc-l3ls/group_vars/DC1_SPINES.yml
     --8<--
     ```
 
@@ -252,7 +252,7 @@ Since this example covers building an L3LS network, AVD must know about the devi
 
     ```yaml
     --8<--
-    examples/single-dc-l3ls/group_vars/DC1_L3_LEAVES.yml
+    ansible_collections/arista/avd/examples/single-dc-l3ls/group_vars/DC1_L3_LEAVES.yml
     --8<--
     ```
 
@@ -260,7 +260,7 @@ Since this example covers building an L3LS network, AVD must know about the devi
 
     ```yaml
     --8<--
-    examples/single-dc-l3ls/group_vars/DC1_L2_LEAVES.yml
+    ansible_collections/arista/avd/examples/single-dc-l3ls/group_vars/DC1_L2_LEAVES.yml
     --8<--
     ```
 
@@ -455,7 +455,7 @@ l3leaf:
 9. `mlag_peer_ipv4_pool` defines the IP scope from which AVD assigns IPv4 addresses for the MLAG peer link interface VLAN4094.
 10. `mlag_peer_l3_ipv4_pool` defines the IP scope from which AVD assigns IPv4 addresses for the iBGP peering established between the two leaf switches via the SVI/IRB interface VLAN4093.
 11. `virtual_router_mac_address` defines the MAC address used for the anycast gateway on the various subnets. This is the MAC address connected endpoints will learn when ARPing for their default gateway.
-12. `spanning_tree_priority` sets the spanning tree priority. Since spanning tree in an L3LS network is effectively only running locally on the switch, the same priority across all L3 leaf switches can be re-used.
+12. `spanning_tree_priority` sets the spanning tree priority. Since spanning tree in an L3LS network is effectively only running locally on the switch, the same priority across all L3 leaf switches can be reused.
 13. `spanning_tree_mode` defines the spanning tree mode. In this case, we are using MSTP, which is the default. However, other modes are supported should they be required, for example, for connectivity to legacy or third-party vendor environments.
 14. `node_groups` defines settings common to more than one node. For example, when exactly two nodes are part of a node group for leaf switches, AVD will, by default, automatically generate MLAG configuration.
 15. `bgp_as` is defined once since an MLAG pair shares a single BGP AS number.
@@ -569,7 +569,7 @@ After the previous section, all VRFs and VLANs across the fabric are now defined
 
 ```yaml title="CONNECTED_ENDPOINTS.yml"
 --8<--
-examples/single-dc-l3ls/group_vars/CONNECTED_ENDPOINTS.yml
+ansible_collections/arista/avd/examples/single-dc-l3ls/group_vars/CONNECTED_ENDPOINTS.yml
 --8<--
 ```
 
@@ -622,7 +622,7 @@ The `build.yml` playbook looks like the following:
 
 ```yaml title="build.yml"
 --8<--
-examples/single-dc-l3ls/build.yml
+ansible_collections/arista/avd/examples/single-dc-l3ls/build.yml
 --8<--
 ```
 
@@ -634,7 +634,7 @@ The `deploy.yml` playbook looks like the following:
 
 ```yaml title="deploy.yml"
 --8<--
-examples/single-dc-l3ls/deploy.yml
+ansible_collections/arista/avd/examples/single-dc-l3ls/deploy.yml
 --8<--
 ```
 
@@ -645,7 +645,7 @@ The `deploy-cvp.yml` playbook looks like the following:
 
 ```yaml title="deploy-cvp.yml"
 --8<--
-examples/single-dc-l3ls/deploy-cvp.yml
+ansible_collections/arista/avd/examples/single-dc-l3ls/deploy-cvp.yml
 --8<--
 ```
 
@@ -704,7 +704,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/single-dc-l3ls/intended/configs/dc1-spine1.cfg
+    ansible_collections/arista/avd/examples/single-dc-l3ls/intended/configs/dc1-spine1.cfg
     --8<--
     ```
 
@@ -712,7 +712,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/single-dc-l3ls/intended/configs/dc1-spine2.cfg
+    ansible_collections/arista/avd/examples/single-dc-l3ls/intended/configs/dc1-spine2.cfg
     --8<--
     ```
 
@@ -720,7 +720,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/single-dc-l3ls/intended/configs/dc1-leaf1a.cfg
+    ansible_collections/arista/avd/examples/single-dc-l3ls/intended/configs/dc1-leaf1a.cfg
     --8<--
     ```
 
@@ -728,7 +728,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/single-dc-l3ls/intended/configs/dc1-leaf1b.cfg
+    ansible_collections/arista/avd/examples/single-dc-l3ls/intended/configs/dc1-leaf1b.cfg
     --8<--
     ```
 
@@ -736,7 +736,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/single-dc-l3ls/intended/configs/dc1-leaf1c.cfg
+    ansible_collections/arista/avd/examples/single-dc-l3ls/intended/configs/dc1-leaf1c.cfg
     --8<--
     ```
 
@@ -744,7 +744,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/single-dc-l3ls/intended/configs/dc1-leaf2a.cfg
+    ansible_collections/arista/avd/examples/single-dc-l3ls/intended/configs/dc1-leaf2a.cfg
     --8<--
     ```
 
@@ -752,7 +752,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/single-dc-l3ls/intended/configs/dc1-leaf2b.cfg
+    ansible_collections/arista/avd/examples/single-dc-l3ls/intended/configs/dc1-leaf2b.cfg
     --8<--
     ```
 
@@ -760,7 +760,7 @@ Your configuration files should be similar to these.
 
     ``` shell
     --8<--
-    examples/single-dc-l3ls/intended/configs/dc1-leaf2c.cfg
+    ansible_collections/arista/avd/examples/single-dc-l3ls/intended/configs/dc1-leaf2c.cfg
     --8<--
     ```
 
@@ -782,7 +782,7 @@ ok: [dc1-leaf1a -> localhost] => (item=/home/user/Documents/git_projects/ansible
 
 If similar output is not shown, make sure:
 
-1. The documented [requirements](../../docs/installation/collection-installation.md) are met.
+1. The documented [requirements](../../../../../docs/installation/collection-installation.md) are met.
 2. The latest `arista.avd` collection is installed.
 
 ## Troubleshooting

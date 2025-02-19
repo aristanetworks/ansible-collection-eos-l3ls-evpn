@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -179,14 +179,14 @@ class ActionModule(ActionBase):
             task_vars.update(read_vars(structured_config_filename))
 
         # Read ansible variables and perform templating to support inline jinja2
-        for var in task_vars:
+        for var, value in task_vars.items():
             # TODO: - reevaluate these variables
             if str(var).startswith(("ansible", "molecule", "hostvars", "vars", "avd_switch_facts")):
                 continue
-            if self._templar.is_template(task_vars[var]):
+            if self._templar.is_template(value):
                 # Var contains a jinja2 template.
                 try:
-                    task_vars[var] = self._templar.template(task_vars[var], fail_on_undefined=False)
+                    task_vars[var] = self._templar.template(value, fail_on_undefined=False)
                 except Exception as e:
                     msg = f"Exception during templating of task_var '{var}': '{e}'"
                     raise AnsibleActionFail(msg) from e

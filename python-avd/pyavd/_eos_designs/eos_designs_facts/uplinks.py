@@ -1,21 +1,21 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
 import re
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdError
-from pyavd._utils import append_if_not_duplicate, get
+from pyavd._utils import append_if_not_duplicate
 from pyavd.j2filters import list_compress, natural_sort, range_expand
 
 if TYPE_CHECKING:
-    from . import EosDesignsFacts
+    from . import EosDesignsFacts, EosDesignsFactsProtocol
 
 
-class UplinksMixin:
+class UplinksMixin(Protocol):
     """
     Mixin Class used to generate some of the EosDesignsFacts.
 
@@ -24,17 +24,17 @@ class UplinksMixin:
     """
 
     @cached_property
-    def max_parallel_uplinks(self: EosDesignsFacts) -> int:
+    def max_parallel_uplinks(self: EosDesignsFactsProtocol) -> int:
         """Exposed in avd_switch_facts."""
-        return self.shared_utils.max_parallel_uplinks
+        return self.shared_utils.node_config.max_parallel_uplinks
 
     @cached_property
-    def max_uplink_switches(self: EosDesignsFacts) -> int:
+    def max_uplink_switches(self: EosDesignsFactsProtocol) -> int:
         """Exposed in avd_switch_facts."""
         return self.shared_utils.max_uplink_switches
 
     @cached_property
-    def _uplink_port_channel_id(self: EosDesignsFacts) -> int:
+    def _uplink_port_channel_id(self: EosDesignsFactsProtocol) -> int:
         """
         For MLAG secondary get the uplink_port_channel_id from the peer's facts.
 
@@ -45,7 +45,7 @@ class UplinksMixin:
 
         For MLAG primary validate that the port-channel id falls within 1-2000 since we also use this ID as MLAG ID.
         """
-        uplink_port_channel_id = get(self.shared_utils.switch_data_combined, "uplink_port_channel_id")
+        uplink_port_channel_id = self.shared_utils.node_config.uplink_port_channel_id
 
         if self.shared_utils.mlag_role == "secondary":
             # MLAG Secondary
@@ -72,7 +72,7 @@ class UplinksMixin:
         return uplink_port_channel_id
 
     @cached_property
-    def _uplink_switch_port_channel_id(self: EosDesignsFacts) -> int:
+    def _uplink_switch_port_channel_id(self: EosDesignsFactsProtocol) -> int:
         """
         For MLAG secondary get the uplink_switch_port_channel_id from the peer's facts.
 
@@ -84,7 +84,7 @@ class UplinksMixin:
         If the *uplink_switch* is in MLAG,  validate that the port-channel id falls within 1-2000
         since we also use this ID as MLAG ID on the *uplink switch*.
         """
-        uplink_switch_port_channel_id = get(self.shared_utils.switch_data_combined, "uplink_switch_port_channel_id")
+        uplink_switch_port_channel_id = self.shared_utils.node_config.uplink_switch_port_channel_id
 
         if self.shared_utils.mlag_role == "secondary":
             # MLAG Secondary
@@ -105,7 +105,6 @@ class UplinksMixin:
 
         # produce an error if the uplink switch is MLAG and port-channel ID is above 2000
         uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(self.shared_utils.uplink_switches[0], required=True)
-
         if uplink_switch_facts.shared_utils.mlag and not 1 <= uplink_switch_port_channel_id <= 2000:
             msg = f"'uplink_switch_port_channel_id' must be between 1 and 2000 for MLAG switches. Got '{uplink_switch_port_channel_id}'."
             raise AristaAvdError(msg)
@@ -113,7 +112,7 @@ class UplinksMixin:
         return uplink_switch_port_channel_id
 
     @cached_property
-    def uplinks(self: EosDesignsFacts) -> list:
+    def uplinks(self: EosDesignsFactsProtocol) -> list:
         """
         Exposed in avd_switch_facts.
 
@@ -165,7 +164,7 @@ class UplinksMixin:
 
         return uplinks
 
-    def _get_p2p_uplink(self: EosDesignsFacts, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
+    def _get_p2p_uplink(self: EosDesignsFactsProtocol, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
         """Return a single uplink dictionary for uplink_type p2p."""
         uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
         uplink = {
@@ -180,38 +179,40 @@ class UplinksMixin:
         if self.shared_utils.uplink_interface_speed is not None:
             uplink["speed"] = self.shared_utils.uplink_interface_speed
 
-        if self.shared_utils.uplink_bfd:
+        if self.shared_utils.node_config.uplink_bfd:
             uplink["bfd"] = True
 
         if self.shared_utils.uplink_switch_interface_speed is not None:
             uplink["peer_speed"] = self.shared_utils.uplink_switch_interface_speed
 
-        if self.shared_utils.uplink_ptp is not None:
-            uplink["ptp"] = self.shared_utils.uplink_ptp
-        elif self.shared_utils.ptp_enabled:
+        if uplink_ptp := self.shared_utils.node_config.uplink_ptp:
+            uplink["ptp"] = uplink_ptp._as_dict()
+        elif self.shared_utils.ptp_enabled and (not (ptp_uplinks := self.shared_utils.node_config.ptp.uplinks) or (uplink_interface in ptp_uplinks)):
             uplink["ptp"] = {"enable": True}
 
-        if self.shared_utils.uplink_macsec is not None:
-            uplink["mac_security"] = self.shared_utils.uplink_macsec
+        if self.shared_utils.node_config.uplink_macsec.profile:
+            uplink["mac_security"] = {"profile": self.shared_utils.node_config.uplink_macsec.profile}
 
         if self.shared_utils.underlay_multicast is True and uplink_switch_facts.shared_utils.underlay_multicast is True:
             uplink["underlay_multicast"] = True
 
-        if self.shared_utils.underlay_rfc5549:
+        if self.inputs.underlay_rfc5549:
             uplink["ipv6_enable"] = True
         else:
-            uplink["prefix_length"] = self.shared_utils.fabric_ip_addressing_p2p_uplinks_ipv4_prefix_length
+            uplink["prefix_length"] = self.inputs.fabric_ip_addressing.p2p_uplinks.ipv4_prefix_length
             uplink["ip_address"] = self.shared_utils.ip_addressing.p2p_uplinks_ip(uplink_index)
             uplink["peer_ip_address"] = self.shared_utils.ip_addressing.p2p_uplinks_peer_ip(uplink_index)
 
         if self.shared_utils.link_tracking_groups is not None:
             uplink["link_tracking_groups"] = [{"name": lt_group["name"], "direction": "upstream"} for lt_group in self.shared_utils.link_tracking_groups]
-        if self.shared_utils.uplink_structured_config is not None:
-            uplink["structured_config"] = self.shared_utils.uplink_structured_config
+        if self.shared_utils.node_config.uplink_structured_config is not None:
+            uplink["structured_config"] = self.shared_utils.node_config.uplink_structured_config
 
         return uplink
 
-    def _get_port_channel_uplink(self: EosDesignsFacts, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
+    def _get_port_channel_uplink(
+        self: EosDesignsFactsProtocol, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str
+    ) -> dict:
         """Return a single uplink dictionary for uplink_type port-channel."""
         uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
 
@@ -240,7 +241,7 @@ class UplinksMixin:
         return uplink
 
     def _get_l2_uplink(
-        self: EosDesignsFacts,
+        self: EosDesignsFactsProtocol,
         uplink_index: int,  # pylint: disable=unused-argument # noqa: ARG002
         uplink_interface: str,
         uplink_switch: str,
@@ -262,13 +263,13 @@ class UplinksMixin:
         if self.shared_utils.uplink_switch_interface_speed is not None:
             uplink["peer_speed"] = self.shared_utils.uplink_switch_interface_speed
 
-        if self.shared_utils.uplink_ptp is not None:
-            uplink["ptp"] = self.shared_utils.uplink_ptp
+        if self.shared_utils.node_config.uplink_ptp:
+            uplink["ptp"] = {"enable": self.shared_utils.node_config.uplink_ptp.enable}
         elif self.shared_utils.ptp_enabled:
             uplink["ptp"] = {"enable": True}
 
         # Remove vlans if upstream switch does not have them #}
-        if self.shared_utils.enable_trunk_groups:
+        if self.inputs.enable_trunk_groups:
             uplink["trunk_groups"] = ["UPLINK"]
             if self.shared_utils.mlag is True:
                 uplink["peer_trunk_groups"] = [self.shared_utils.group]
@@ -280,11 +281,11 @@ class UplinksMixin:
 
         if self.shared_utils.configure_inband_mgmt or self.shared_utils.configure_inband_mgmt_ipv6:
             # Always add inband_mgmt_vlan even if the uplink switch does not have this vlan defined
-            uplink_vlans.add(self.shared_utils.inband_mgmt_vlan)
+            uplink_vlans.add(self.shared_utils.node_config.inband_mgmt_vlan)
 
         uplink["vlans"] = list_compress(list(uplink_vlans)) if uplink_vlans else "none"
 
-        if uplink_native_vlan := get(self.shared_utils.switch_data_combined, "uplink_native_vlan"):
+        if uplink_native_vlan := self.shared_utils.node_config.uplink_native_vlan:
             uplink["native_vlan"] = uplink_native_vlan
 
         if self._short_esi is not None:
@@ -297,12 +298,12 @@ class UplinksMixin:
             # This child device does not support VLANs, so we tell the peer to enable portfast
             uplink["peer_spanning_tree_portfast"] = "edge"
 
-        if self.shared_utils.uplink_structured_config is not None:
-            uplink["structured_config"] = self.shared_utils.uplink_structured_config
+        if self.shared_utils.node_config.uplink_structured_config is not None:
+            uplink["structured_config"] = self.shared_utils.node_config.uplink_structured_config
 
         return uplink
 
-    def _get_p2p_vrfs_uplink(self: EosDesignsFacts, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
+    def _get_p2p_vrfs_uplink(self: EosDesignsFactsProtocol, uplink_index: int, uplink_interface: str, uplink_switch: str, uplink_switch_interface: str) -> dict:
         """Return a single uplink dictionary for uplink_type p2p-vrfs."""
         uplink_switch_facts: EosDesignsFacts = self.shared_utils.get_peer_facts(uplink_switch, required=True)
 
@@ -310,31 +311,31 @@ class UplinksMixin:
         uplink = self._get_p2p_uplink(uplink_index, uplink_interface, uplink_switch, uplink_switch_interface)
         uplink["subinterfaces"] = []
         for tenant in self.shared_utils.filtered_tenants:
-            for vrf in tenant["vrfs"]:
+            for vrf in tenant.vrfs:
                 # Only keep VRFs present on the uplink switch as well.
                 # Also skip VRF default since it is covered on the parent interface.
                 # ok to use like this because this is only ever called inside EosDesignsFacts
                 uplink_switch_vrfs = uplink_switch_facts.shared_utils.vrfs
-                if vrf["name"] == "default" or vrf["name"] not in uplink_switch_vrfs:
+                if vrf.name == "default" or vrf.name not in uplink_switch_vrfs:
                     continue
 
                 vrf_id = self.shared_utils.get_vrf_id(vrf)
                 subinterface = {
                     "interface": f"{uplink_interface}.{vrf_id}",
                     "peer_interface": f"{uplink_switch_interface}.{vrf_id}",
-                    "vrf": vrf["name"],
+                    "vrf": vrf.name,
                     "encapsulation_dot1q_vlan": vrf_id,
                 }
 
-                if self.shared_utils.underlay_rfc5549:
+                if self.inputs.underlay_rfc5549:
                     subinterface["ipv6_enable"] = True
                 else:
-                    subinterface["prefix_length"] = self.shared_utils.fabric_ip_addressing_p2p_uplinks_ipv4_prefix_length
-                    subinterface["ip_address"] = self.shared_utils.ip_addressing.p2p_vrfs_uplinks_ip(uplink_index, vrf["name"])
-                    subinterface["peer_ip_address"] = self.shared_utils.ip_addressing.p2p_vrfs_uplinks_peer_ip(uplink_index, vrf["name"])
+                    subinterface["prefix_length"] = self.inputs.fabric_ip_addressing.p2p_uplinks.ipv4_prefix_length
+                    subinterface["ip_address"] = self.shared_utils.ip_addressing.p2p_vrfs_uplinks_ip(uplink_index, vrf.name)
+                    subinterface["peer_ip_address"] = self.shared_utils.ip_addressing.p2p_vrfs_uplinks_peer_ip(uplink_index, vrf.name)
 
-                if self.shared_utils.uplink_structured_config is not None:
-                    subinterface["structured_config"] = self.shared_utils.uplink_structured_config
+                if self.shared_utils.node_config.uplink_structured_config is not None:
+                    subinterface["structured_config"] = self.shared_utils.node_config.uplink_structured_config
 
                 append_if_not_duplicate(
                     uplink["subinterfaces"],
@@ -348,7 +349,7 @@ class UplinksMixin:
         return uplink
 
     @cached_property
-    def uplink_peers(self: EosDesignsFacts) -> list:
+    def uplink_peers(self: EosDesignsFactsProtocol) -> list:
         """
         Exposed in avd_switch_facts.
 
@@ -363,16 +364,16 @@ class UplinksMixin:
         return natural_sort(unique_uplink_switches)
 
     @cached_property
-    def _default_downlink_interfaces(self: EosDesignsFacts) -> list:
+    def _default_downlink_interfaces(self: EosDesignsFactsProtocol) -> list:
         """
-        internal _default_downlink_interfaces set based on default_interfaces.
+        Internal _default_downlink_interfaces set based on default_interfaces.
 
         Parsed by downstream switches during eos_designs_facts phase.
         """
-        return range_expand(get(self.shared_utils.default_interfaces, "downlink_interfaces", default=[]))
+        return range_expand(self.shared_utils.default_interfaces.downlink_interfaces)
 
     @cached_property
-    def uplink_switch_vrfs(self: EosDesignsFacts) -> list[str] | None:
+    def uplink_switch_vrfs(self: EosDesignsFactsProtocol) -> list[str] | None:
         """
         Exposed in avd_switch_facts.
 

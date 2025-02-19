@@ -1,5 +1,5 @@
 {#
- Copyright (c) 2023-2024 Arista Networks, Inc.
+ Copyright (c) 2023-2025 Arista Networks, Inc.
  Use of this source code is governed by the Apache License 2.0
  that can be found in the LICENSE file.
 #}
@@ -12,6 +12,10 @@
 {%     if router_pim_sparse_mode.ipv4 is arista.avd.defined %}
 
 BFD enabled: {{ router_pim_sparse_mode.ipv4.bfd | arista.avd.default(false) }}
+{%         if router_pim_sparse_mode.ipv4.make_before_break is arista.avd.defined %}
+
+Make-before-break: {{ router_pim_sparse_mode.ipv4.make_before_break }}
+{%         endif %}
 {%         if router_pim_sparse_mode.ipv4.rp_addresses is arista.avd.defined %}
 
 ##### IP Rendezvous Information
@@ -45,26 +49,30 @@ BFD enabled: {{ router_pim_sparse_mode.ipv4.bfd | arista.avd.default(false) }}
 
 ##### IP Sparse Mode VRFs
 
-| VRF Name | BFD Enabled |
-| -------- | ----------- |
+{%         set any_ipv4_ip_addresses = namespace(present=false) %}
+| VRF Name | BFD Enabled | Make-before-break |
+| -------- | ----------- | ----------------- |
 {%         for vrf in router_pim_sparse_mode.vrfs | arista.avd.natural_sort('name') %}
-| {{ vrf.name }} | {{ vrf.ipv4.bfd | arista.avd.default(false) }} |
+{%             set any_ipv4_ip_addresses.present =  any_ipv4_ip_addresses.present or (vrf.ipv4.rp_addresses is arista.avd.defined and (vrf.ipv4.rp_addresses | length) > 0) %}
+| {{ vrf.name }} | {{ vrf.ipv4.bfd | arista.avd.default(false) }} | {{ vrf.ipv4.make_before_break | default("-") }} |
 {%         endfor %}
+{%         if any_ipv4_ip_addresses.present %}
 
 | VRF Name | Rendezvous Point Address | Group Address | Access Lists | Priority | Hashmask | Override |
 | -------- | ------------------------ | ------------- | ------------ | -------- | -------- | -------- |
-{%         for vrf in router_pim_sparse_mode.vrfs | arista.avd.natural_sort('name') %}
-{%             if vrf.ipv4.rp_addresses is arista.avd.defined %}
-{%                 for rp_address in vrf.ipv4.rp_addresses | arista.avd.natural_sort('address') %}
-{%                     set rp_groups = rp_address.groups | arista.avd.default(['-']) | join(', ') %}
-{%                     set access_lists = rp_address.access_lists | arista.avd.default(['-']) | join(', ') %}
-{%                     set priority = rp_address.priority | arista.avd.default('-') %}
-{%                     set hashmask = rp_address.hashmask | arista.avd.default('-') %}
-{%                     set override = rp_address.override | arista.avd.default('-') %}
+{%             for vrf in router_pim_sparse_mode.vrfs | arista.avd.natural_sort('name') %}
+{%                 if vrf.ipv4.rp_addresses is arista.avd.defined %}
+{%                     for rp_address in vrf.ipv4.rp_addresses | arista.avd.natural_sort('address') %}
+{%                         set rp_groups = rp_address.groups | arista.avd.default(['-']) | join(', ') %}
+{%                         set access_lists = rp_address.access_lists | arista.avd.default(['-']) | join(', ') %}
+{%                         set priority = rp_address.priority | arista.avd.default('-') %}
+{%                         set hashmask = rp_address.hashmask | arista.avd.default('-') %}
+{%                         set override = rp_address.override | arista.avd.default('-') %}
 | {{ vrf.name }} | {{ rp_address.address }} | {{ rp_groups }} | {{ access_lists }} | {{ priority }} | {{ hashmask }} | {{ override }} |
-{%                 endfor %}
-{%             endif %}
-{%         endfor %}
+{%                     endfor %}
+{%                 endif %}
+{%             endfor %}
+{%         endif %}
 {%     endif %}
 
 ##### Router Multicast Device Configuration

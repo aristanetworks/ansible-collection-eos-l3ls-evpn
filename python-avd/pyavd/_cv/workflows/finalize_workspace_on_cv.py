@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 from __future__ import annotations
@@ -43,6 +43,10 @@ async def finalize_workspace_on_cv(workspace: CVWorkspace, cv_client: CVClient) 
     if build_result.status != ResponseStatus.SUCCESS:
         workspace.state = "build failed"
         LOGGER.info("finalize_workspace_on_cv: %s", workspace)
+        if workspace.requested_state == "abandoned":
+            await cv_client.abandon_workspace(workspace_id=workspace.id)
+            workspace.state = "abandoned"
+            LOGGER.info("finalize_workspace_on_cv: Workspace %s has been successfully abandoned.", workspace.id)
         msg = (
             f"Failed to build workspace {workspace.id}: {build_result}. "
             f"See details: https://{cv_client._servers[0]}/cv/provisioning/workspaces?ws={workspace.id}"

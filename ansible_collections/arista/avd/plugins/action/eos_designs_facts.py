@@ -1,4 +1,4 @@
-# Copyright (c) 2023-2024 Arista Networks, Inc.
+# Copyright (c) 2023-2025 Arista Networks, Inc.
 # Use of this source code is governed by the Apache License 2.0
 # that can be found in the LICENSE file.
 
@@ -18,10 +18,11 @@ PLUGIN_NAME = "arista.avd.eos_designs_facts"
 
 try:
     from pyavd._eos_designs.eos_designs_facts import EosDesignsFacts
+    from pyavd._eos_designs.schema import EosDesigns
     from pyavd._eos_designs.shared_utils import SharedUtils
     from pyavd._errors import AristaAvdError
 except ImportError as e:
-    EosDesignsFacts = SharedUtils = RaiseOnUse(
+    EosDesignsFacts = EosDesigns = SharedUtils = RaiseOnUse(
         AnsibleActionFail(
             f"The '{PLUGIN_NAME}' plugin requires the 'pyavd' Python library. Got import error",
             orig_exc=e,
@@ -159,11 +160,14 @@ class ActionModule(ActionBase):
             # This is used to access EosDesignsFacts objects of other switches during rendering of one switch.
             host_hostvars["avd_switch_facts"] = avd_switch_facts
 
+            # Load input vars into the EosDesigns data class.
+            inputs = EosDesigns._from_dict(host_hostvars, load_custom_structured_config=False)
+
             # Initialize SharedUtils class to be passed to EosDesignsFacts below.
-            shared_utils = SharedUtils(hostvars=host_hostvars, templar=self.templar, schema=avdschematools.avdschema)
+            shared_utils = SharedUtils(hostvars=host_hostvars, inputs=inputs, templar=self.templar, schema=avdschematools.avdschema)
 
             # Create an instance of EosDesignsFacts and insert into common avd_switch_facts dict
-            avd_switch_facts[host] = {"switch": EosDesignsFacts(hostvars=host_hostvars, shared_utils=shared_utils)}
+            avd_switch_facts[host] = {"switch": EosDesignsFacts(hostvars=host_hostvars, inputs=inputs, shared_utils=shared_utils)}
 
             # Add "switch" as a reference to the newly created EosDesignsFacts instance directly in the hostvars
             # to allow `shared_utils` to work the same when they are called from `EosDesignsFacts` or from `AvdStructuredConfig`.
