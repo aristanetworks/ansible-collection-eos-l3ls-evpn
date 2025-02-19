@@ -26,17 +26,17 @@ title: Ansible Collection Role eos_designs - WAN
 
 Please familiarize yourself with the Arista WAN terminology before proceeding:
 
-- https://www.arista.com/en/solutions/enterprise-wan
-- https://tech-library.arista.com/wan/ (Tech Library access requires an Arista account)
+- <https://www.arista.com/en/solutions/enterprise-wan>
+- <https://tech-library.arista.com/wan/> (Tech Library access requires an Arista account)
 
 ### Design points
 
 - When deploying CV Pathfinder, the assumption is that the deployment is using CVaaS.
 - The intent is to be able to support having the different WAN participating devices in different inventories.
-- Only iBGP is supported as an overlay_routing_protocol.
 - On the AutoVPN Route Reflectors and Pathfinders, a listen range statement is used for BGP to allow for distributed Ansible inventories.
 - VRF `default` is being configured by default on all WAN devices with a `wan_vni` of 1. To override this, it is necessary to configure VRF `default` in a tenant in `network_services`.
 - Path-group ID `65535` is reserved for the path-group called `LAN_HA`.
+- iBGP is configured over the WAN for the overlay. The `overlay_routing_protocol` key is considered only on the LAN side.
 
 !!! info "CV Pathfinder & CloudVision"
 
@@ -116,8 +116,8 @@ The following table list the `eos_designs` top level keys used for WAN and how t
 | `wan_stun_dtls_disable` | ✅ | disable dTLS for STUN for instance for lab. (**NOT** recommended in production). |
 | `application_classification` | ✅ | to define the specific traffic classification required for the WAN if any. |
 | `cv_pathfinder_internet_exit_policies` | ✅ | to define the internet-exit policies. |
-| `wan_route_servers` | ✘| Indicate to which WAN route servers the WAN router should connect to. This key is also used to tell every WAN Route Reflectors with which other RRs it should peer with. |
-| `ipv4_acls` | ✘| List of IPv4 access-lists to be assigned to WAN interfaces. |
+| `wan_route_servers` | ✘ | Indicate to which WAN route servers the WAN router should connect to. This key is also used to tell every WAN Route Reflectors with which other RRs it should peer with. |
+| `ipv4_acls` | ✘ | List of IPv4 access-lists to be assigned to WAN interfaces. |
 
 Additionally, following keys must be set for the WAN route servers for the connectivity to work:
 
@@ -194,7 +194,7 @@ However, if the WAN route servers are in a different inventory, it is then neces
 
 #### WAN STUN handling
 
-WAN STUN connections are configured by default authenticated and secured with DTLS by default. A security profile is configured with an hardcoded root certificate and matching a certificate `<profile_name>.crt` and  key `<profile_name>.key`:
+WAN STUN connections are configured by default authenticated and secured with DTLS by default. A security profile is configured with an hardcoded root certificate and matching a certificate `<profile_name>.crt` and key `<profile_name>.key`:
 
 ```eos
 management security
@@ -208,7 +208,7 @@ These values can be overwritten using `custom_structured_configuration`.
 
 This configuration requires certificates to be distributed on the WAN devices to be able to authenticate themselves:
 
-- For CV Pathinder deployments,  CloudVision will automatically generate and deploy the certificates on the devices once AVD configs and metadata have been pushed.
+- For CV Pathinder deployments, CloudVision will automatically generate and deploy the certificates on the devices once AVD configs and metadata have been pushed.
 - For AutoVPN, the certificates must be generated and deployed to the devices for the STUN connections to work.
 
 !!! Danger "Disabling STUN"
@@ -253,6 +253,7 @@ cv_pathfinder_regions:
 ```
 
 !!! Note
+
     Site IDs and names must be unique per region.
 
 And then for each `wan_router`:
@@ -399,7 +400,7 @@ wan_router:
             # Configure BGP peering with peer
             bgp:
               peer_as: 65042
-              ipv4_prefix_list_in: ALLOW-DEFAULT  # (4)!
+              ipv4_prefix_list_in: ALLOW-DEFAULT # (4)!
           # This is NOT a WAN interface
           - name: Ethernet3
             ip_address: 172.20.20.20/31
@@ -427,8 +428,7 @@ ipv4_prefix_list_catalog:
 
 1. `peer` and `peer_interface` are optionals and used for description.
 2. `wan_circuit_id` is optional and used for description.
-3. Configure IPv4 ACLs in and out for the L3 interface. The access lists must
-    be defined under `ipv4_acls` top level key.
+3. Configure IPv4 ACLs in and out for the L3 interface. The access lists must be defined under `ipv4_acls` top level key.
 4. For BGP peering for WAN interfaces, the `ipv4_prefix_list_in` is mandatory for security reaasons. It is defined in the `ipv4_prefix_list_catalog`.
 
 ### WAN policies
@@ -438,7 +438,7 @@ The policies definition works as follow:
 - The policies are defined under `wan_virtual_topologies.policies`. For AutoVPN mode, the policies are configured under `router path-selection`, for CV Pathfinder, they are configured under `router adaptive-virtual-topology`.
 - A policy is composed of a list of `application_virtual_topologies` and one `default_virtual_topology`.
 - The `application_virtual_topologies` entries and the `default_virtual_topology` key are used to create the policy match statement, the AVT profile (when `wan_mode` is CV Pathfinder) and the load balancing policy.
-- The `default_virtual_topology` is used as the default match in the policy.  To prevent configuring it, the `drop_unmatched` boolean must be set to `true` otherwise, at least one `path-group` must be configured or AVD will raise an error.
+- The `default_virtual_topology` is used as the default match in the policy. To prevent configuring it, the `drop_unmatched` boolean must be set to `true` otherwise, at least one `path-group` must be configured or AVD will raise an error.
 - Policies are assigned to VRFs using the list `wan_virtual_topologies.vrfs`. A policy can be reused in multiple VRFs.
 - If no policy is assigned for the `default` VRF policy, AVD auto generates one with one `default_virtual_topology` entry configured to use all available local path-groups.
 - For the policy defined for VRF `default` (or the auto-generared one), an extra match statement is injected in the policy to match the traffic towards the Pathfinders or AutoVPN RRs, the name of the application-profile is hardcoded as `APP-PROFILE-CONTROL-PLANE`. A special policy is created by appending `-WITH-CP` at the end of the targeted policy name.
@@ -447,13 +447,13 @@ The policies definition works as follow:
 ```yaml
 wan_virtual_topologies:
   vrfs:
-    - name: PROD  # (1)!
+    - name: PROD # (1)!
       policy: PROD-AVT-POLICY
       wan_vni: 42
     - name: default # (2)!
       wan_vni: 1
   policies:
-    - name: PROD-AVT-POLICY  # (3)!
+    - name: PROD-AVT-POLICY # (3)!
       default_virtual_topology: # (4)!
         path_groups:
           - names: [INET]
@@ -493,8 +493,7 @@ wan_virtual_topologies:
 1. Assign the `PROD-AVT-POLICY` to the `PROD` VRF, multiple VRFs can use the same policy.
 2. VRF `default` will use the AVD auto-generated `DEFAULT-POLICY` as no policy is set.
 3. Define the `PROD-AVT-POLICY`
-4. `default_virtual_topology` is used to configure the default match in the policy.
-    In this case, default traffic will use INET path-group first and MPLS as backup.
+4. `default_virtual_topology` is used to configure the default match in the policy. In this case, default traffic will use INET path-group first and MPLS as backup.
 5. This list element configures the policy to apply to traffic the `VOICE` application profile.
    This block of configuration will configure the Load Balance policy, the match statement in the policy (in `router path-selection` for AutoVPN or `router adaptive-virtual-topology` for CV-Pathfinder) and for CV-Pathfinder, the AVT profile.
    The application profile must be defined under `application_classification.application_profiles`.
@@ -546,7 +545,7 @@ cv_pathfinder_internet_exit_policies:
     # [...] type specific options
 ```
 
-An Application Virtual Topology policy is composed of multiple profiles.  An AVT profile can be assigned an Internet-policy as follow:
+An Application Virtual Topology policy is composed of multiple profiles. An AVT profile can be assigned an Internet-policy as follow:
 
 ```yaml
 wan_virtual_topologies:
@@ -649,7 +648,7 @@ AVD `eos_designs` will fetch Zscaler integration information from Cloudvision.
 
 ```yaml
 # Variables used by eos_designs to connect to Cloudvision
-cv_server:  <hostname or IP address of CloudVision host. Ex. "www.arista.io" for CVaaS>
+cv_server: <hostname or IP address of CloudVision host. Ex. "www.arista.io" for CVaaS>
 cv_token: <service account token as defined on CloudVision. This value should be using Ansible Vault>
 ```
 
@@ -658,21 +657,21 @@ For each `zscaler` type Internet-policies, AVD uses the `cv_pathinfder_internet_
 The `cv_pathinfder_internet_exit_policies[name=<POLICY-NAME>].zscaler` dictionary has additonnal options to configure the policy parameters shared with Zscaler through Cloudvision.
 
 ```yaml
-    # PREVIEW: These keys are in preview mode.
-    cv_pathfinder_internet_exit_policies:
-      - name: <str; required; unique>
-        type: <str; "zscaler"; required>
-        fallback_to_system_default: <bool; default=True>
-        zscaler:
-          ipsec_key_salt: <str; required>
-          domain_name: <str; required>
-          encrypt_traffic: <bool; default=True>
-          download_bandwidth: <int>
-          upload_bandwidth: <int>
-          firewall:
-            enabled: <bool; default=False>
-            ips: <bool; default=False>
-          acceptable_use_policy: <bool; default=False>
+# PREVIEW: These keys are in preview mode.
+cv_pathfinder_internet_exit_policies:
+  - name: <str; required; unique>
+    type: <str; "zscaler"; required>
+    fallback_to_system_default: <bool; default=True>
+    zscaler:
+      ipsec_key_salt: <str; required>
+      domain_name: <str; required>
+      encrypt_traffic: <bool; default=True>
+      download_bandwidth: <int>
+      upload_bandwidth: <int>
+      firewall:
+        enabled: <bool; default=False>
+        ips: <bool; default=False>
+      acceptable_use_policy: <bool; default=False>
 ```
 
 !!! tip "IPsec"
@@ -698,24 +697,20 @@ The following LAN scenarios are supported:
 Some design points:
 
 - The Site of Origin (SOO) extended community is configured as `<router_id>:<site_id>`
-    note: site id is unique per zone (only a default zone supported today).
-    for HA site, the SOO is set as `<router1_id>:<site_id>` where `router1` is
-    the first router defined in the group.
+  - site id is unique per zone (only a default zone supported today).
+  - for HA site, the SOO is set as `<router1_id>:<site_id>` where `router1` is the first router defined in the group.
 - HA is not supported for more than two routers for CV Pathfinders.
 - The routes to be advertised towards the WAN must be marked with the site SOO.
   - The connected routes and static routes are marked with the SOO when
     redistributed in BGP
     - the routes redistributed into BGP via the route-map `RM-CONN-2-BGP` are tagged with the SOO.
     - the routes redistributed into BGP via the route-map `RM-STATIC-2-BGP` are tagged with the SOO.
-  - the routes received from LAN are marked with the SOO when received from
-        the LAN over BGP or when redistributed into BGP from the LAN protocol.
-        note: For other connection (e.g. L3 interface with a BGP peering, the
-        user must mark them with the SOO)
+  - the routes received from LAN are marked with the SOO when received from the LAN over BGP or when redistributed into BGP from the LAN protocol.
+    - For other connection (e.g. L3 interface with a BGP peering, the user must mark them with the SOO).
 - For VRF default, there is a requirement to explicitly redistribute the routes for EVPN. The `RM-EVPN-EXPORT-VRF-DEFAULT` is configured to export the routes tagged with the SOO.
 - Routes received from the WAN with the local SOO are dropped.
 - Routes received from the WAN are redistributed / advertised towards the LAN.
-- For HA, an iBGP session using EVPN Gateway is used to share the routes from
-    one peer to the other.
+- For HA, an iBGP session using EVPN Gateway is used to share the routes from one peer to the other.
   - WAN, LAN and local static routes are sent to the HA peer to cater for various failure scenarii.
   - The routes received from the HA peer are made less preferred than routes received from the LAN or from the WAN.
 
@@ -811,6 +806,7 @@ The following diagram represents this scenario:
     - accept routes coming from the LAN and set the SoO extended community on them.
 
 !!! warning
+
     - the Underlay peer group (towards the LAN) is not configured with any outbound route-map.
     - For VRF default, there is a requirement to explicitly redistribute the routes for EVPN. The `RM-EVPN-EXPORT-VRF-DEFAULT` is configured to export the routes tagged with the SoO.
 
@@ -879,7 +875,7 @@ In the situation where the LAN is EBGP but HA is configured over a direct link, 
 
 The HA tunnel will come up properly today but route redistribution will be missing so it is not usable.
 
-- the HA interface(s) is(are) the uplink interface(s) which are automatically included in  OSPF.
+- the HA interface(s) is(are) the uplink interface(s) which are automatically included in OSPF.
 
 #### L2 LAN
 
@@ -1070,5 +1066,6 @@ wan_virtual_topologies:
 | AvdTestAvtRole | VerifyAVTRole | Validate the Adaptive Virtual Topology (AVT) role of a device. |
 
 !!! note
+
     More WAN-related tests are available directly in ANTA and can be added using custom catalogs.
     They will be progressively added to `eos_validate_state`.

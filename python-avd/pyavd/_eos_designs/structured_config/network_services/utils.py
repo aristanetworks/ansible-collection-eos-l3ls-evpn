@@ -32,7 +32,9 @@ class UtilsMixin(Protocol):
     @cached_property
     def _vrf_default_evpn(self: AvdStructuredConfigNetworkServicesProtocol) -> bool:
         """Return boolean telling if VRF "default" is running EVPN or not."""
-        if not (self.shared_utils.network_services_l3 and self.shared_utils.overlay_vtep and self.shared_utils.overlay_evpn):
+        if not (
+            self.shared_utils.network_services_l3 and ((self.shared_utils.overlay_vtep and self.shared_utils.overlay_evpn) or self.shared_utils.is_wan_router)
+        ):
             return False
 
         for tenant in self.shared_utils.filtered_tenants:
@@ -99,7 +101,7 @@ class UtilsMixin(Protocol):
 
             vrf_default_redistribute_static = default(tenant.vrfs["default"].redistribute_static, vrf_default_redistribute_static)
 
-        if self.shared_utils.overlay_evpn and self.shared_utils.overlay_vtep:
+        if (self.shared_utils.overlay_evpn and self.shared_utils.overlay_vtep) or self.shared_utils.is_wan_router:
             # This is an EVPN VTEP
             redistribute_in_underlay = False
             redistribute_in_overlay = vrf_default_redistribute_static and vrf_default_ipv4_static_routes
@@ -402,7 +404,7 @@ class UtilsMixin(Protocol):
         # Handle "vtep_diagnostic" router ID case
         if router_id == "diagnostic_loopback":
             # Validate required configuration
-            if (interface_data := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is None:
+            if (interface_data := self._get_vtep_diagnostic_loopback_for_vrf(vrf, tenant)) is None or not interface_data.ip_address:
                 msg = (
                     f"Invalid configuration on VRF '{vrf.name}' in Tenant '{tenant.name}'. "
                     "'vtep_diagnostic.loopback' along with either 'vtep_diagnostic.loopback_ip_pools' or 'vtep_diagnostic.loopback_ip_range' must be defined "
@@ -410,7 +412,7 @@ class UtilsMixin(Protocol):
                 )
                 raise AristaAvdInvalidInputsError(msg)
             # Resolve router ID from loopback interface
-            return get_ip_from_ip_prefix(interface_data["ip_address"])
+            return get_ip_from_ip_prefix(interface_data.ip_address)
         if router_id == "main_router_id":
             return self.shared_utils.router_id if not self.inputs.use_router_general_for_router_id else None
         # Handle "none" router ID

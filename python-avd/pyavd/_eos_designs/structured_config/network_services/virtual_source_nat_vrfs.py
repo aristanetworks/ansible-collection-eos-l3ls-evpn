@@ -6,7 +6,6 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
-from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._utils import get_ip_from_ip_prefix
 
 if TYPE_CHECKING:
@@ -20,32 +19,29 @@ class VirtualSourceNatVrfsMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @structured_config_contributor
-    def virtual_source_nat_vrfs(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
+    def _set_virtual_source_nat_for_vrf_loopback(
+        self: AvdStructuredConfigNetworkServicesProtocol, loopback_interface: EosCliConfigGen.LoopbackInterfacesItem
+    ) -> None:
         """
         Set the structured config for virtual_source_nat_vrfs.
 
-        Only used by VTEPs with L2 and L3 services
-        Using data from loopback_interfaces to avoid duplicating logic
+        Only used by VTEPs with L2 and L3 services.
+        Called from loopback_interfaces while creating each loopback.
         """
         if not (self.shared_utils.overlay_vtep and self.shared_utils.network_services_l2 and self.shared_utils.network_services_l3):
             return
 
-        if (loopback_interfaces := self.loopback_interfaces) is None:
+        if (vrf := loopback_interface.vrf) is None:
             return
 
-        for loopback_interface in loopback_interfaces:
-            if (vrf := loopback_interface.get("vrf", "default")) is None:
-                continue
-
-            # Using append with ignore_fields.
-            # It will append the VirtualSourceNatVrfsItem unless the same "name" is already in the list.
-            # It will never raise since we only have these two keys.
-            self.structured_config.virtual_source_nat_vrfs.append(
-                EosCliConfigGen.VirtualSourceNatVrfsItem(
-                    name=vrf,
-                    ip_address=get_ip_from_ip_prefix(loopback_interface["ip_address"]) if "ip_address" in loopback_interface else None,
-                    ipv6_address=get_ip_from_ip_prefix(loopback_interface["ipv6_address"]) if "ipv6_address" in loopback_interface else None,
-                ),
-                ignore_fields=("ip_address", "ipv6_address"),
-            )
+        # Using append with ignore_fields.
+        # It will append the VirtualSourceNatVrfsItem unless the same "name" is already in the list.
+        # It will never raise since we only have these two keys.
+        self.structured_config.virtual_source_nat_vrfs.append(
+            EosCliConfigGen.VirtualSourceNatVrfsItem(
+                name=vrf,
+                ip_address=get_ip_from_ip_prefix(loopback_interface.ip_address) if loopback_interface.ip_address else None,
+                ipv6_address=get_ip_from_ip_prefix(loopback_interface.ipv6_address) if loopback_interface.ipv6_address else None,
+            ),
+            ignore_fields=("ip_address", "ipv6_address"),
+        )
