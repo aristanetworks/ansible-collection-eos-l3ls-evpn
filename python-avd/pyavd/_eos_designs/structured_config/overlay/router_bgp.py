@@ -684,7 +684,7 @@ class RouterBgpMixin(Protocol):
         ):
             return {
                 "bestpath": {
-                    "d_path": self.shared_utils.node_config.evpn_gateway.active_active_multihoming.enable_d_path,
+                    "d_path": True,
                 },
             }
         return None
