@@ -18,7 +18,7 @@ name: Build universal container
 
 jobs:
   build_universal_container:
-    if: github.repository == 'aristanetworks/avd' || {{ env.DEBUG_CONTAINER_ACTIONS }} == "true"
+    if: github.repository == 'aristanetworks/avd' || ${{ env.DEBUG_CONTAINER_ACTIONS }} == "true"
     uses: ./.github/workflows/container_build_template.yml
     strategy:
       matrix:
