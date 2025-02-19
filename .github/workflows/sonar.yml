@@ -8,7 +8,6 @@ name: Analysis with Sonarlint and publish to SonarCloud
 jobs:
   sonarcloud:
     name: Run Sonarlint analysis and upload to SonarCloud.
-    needs: [ansible_test_units, ansible_test_integration]
     if: github.repository == 'aristanetworks/avd'
     runs-on: ubuntu-latest
     steps:
