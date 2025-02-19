@@ -478,7 +478,8 @@ jobs:
           tox
       - name: Upload coverage from pytest
         # Coverage only runs as part of 3.11.
-        if: matrix.python == '3.11'
+        if: |
+          matrix.python == "3.11"
         uses: actions/upload-artifact@v4
         with:
           name: ansible-test-integration-coverage
