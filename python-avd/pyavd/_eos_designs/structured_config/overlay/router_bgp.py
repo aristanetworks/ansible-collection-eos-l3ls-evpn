@@ -250,6 +250,21 @@ class RouterBgpMixin(Protocol):
                         "activate": True,
                     },
                 )
+                if self.shared_utils.node_config.evpn_gateway.active_active_multihoming.enabled is True:
+                    if self.shared_utils.node_config.mlag is True:
+                        msg = "The Active Active Multihoming resiliency model does not support MLAG, ensure the mlag key is set to false for the node"
+                        raise AristaAvdError(msg)
+                    address_family_evpn["domain_identifier"] = self.shared_utils.node_config.evpn_gateway.active_active_multihoming.domain_identifier
+                    address_family_evpn["domain_identifier_remote"] = (
+                        self.shared_utils.node_config.evpn_gateway.active_active_multihoming.domain_identifier_remote
+                    )
+                    address_family_evpn["evpn_ethernet_segment"] = [
+                        {
+                            "domain": "all",
+                            "identifier": self.shared_utils.node_config.evpn_gateway.active_active_multihoming.evpn_ethernet_segment.identifier,
+                            "route_target_import": self.shared_utils.node_config.evpn_gateway.active_active_multihoming.evpn_ethernet_segment.rt_import,
+                        }
+                    ]
 
             if self.shared_utils.node_config.evpn_gateway.evpn_l3.enabled:
                 address_family_evpn["neighbor_default"] = {
@@ -258,10 +273,6 @@ class RouterBgpMixin(Protocol):
                         "inter_domain": self.shared_utils.node_config.evpn_gateway.evpn_l3.inter_domain,
                     },
                 }
-            if self.shared_utils.node_config.evpn_gateway.active_active_multihoming:
-                address_family_evpn["domain_identifier"] = self.shared_utils.node_config.evpn_gateway.active_active_multihoming.domain_identifier
-                address_family_evpn["domain_identifier_remote"] = self.shared_utils.node_config.evpn_gateway.active_active_multihoming.domain_identifier_remote
-                address_family_evpn["evpn_ethernet_segment"] = self.shared_utils.node_config.evpn_gateway.active_active_multihoming.evpn_ethernet_segment
 
         if self.shared_utils.overlay_routing_protocol == "ibgp":
             # TODO: - assess this condition - both can't be true at the same time.
@@ -667,10 +678,13 @@ class RouterBgpMixin(Protocol):
         return any(ip in ipaddress.ip_network(prefix) for prefix in listen_range_prefixes)
 
     def _bgp_overlay_dpath(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
-        if self.shared_utils.overlay_dpath is True or self.shared_utils.node_config.evpn_gateway.active_active_multihoming.enable_d_path is True:
+        if self.shared_utils.overlay_dpath is True or (
+            self.shared_utils.node_config.evpn_gateway.active_active_multihoming.enabled
+            and self.shared_utils.node_config.evpn_gateway.active_active_multihoming.enable_d_path is True
+        ):
             return {
                 "bestpath": {
-                    "d_path": True,
+                    "d_path": self.shared_utils.node_config.evpn_gateway.active_active_multihoming.enable_d_path,
                 },
             }
         return None

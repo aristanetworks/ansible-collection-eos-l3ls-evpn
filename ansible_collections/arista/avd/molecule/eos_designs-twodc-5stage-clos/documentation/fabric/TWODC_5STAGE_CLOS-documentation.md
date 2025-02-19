@@ -75,8 +75,6 @@
 | l3leaf | DC1-POD1-LEAF1A | Ethernet4 | overlay-controller | DC1-RS1 | Ethernet3 |
 | l3leaf | DC1-POD1-LEAF2B | Ethernet1 | spine | DC1-POD1-SPINE1 | Ethernet5 |
 | l3leaf | DC1-POD1-LEAF2B | Ethernet2 | spine | DC1-POD1-SPINE2 | Ethernet5 |
-| l3leaf | DC1-POD1-LEAF2B | Ethernet5 | mlag_peer | DC1.POD1.LEAF2A | Ethernet5 |
-| l3leaf | DC1-POD1-LEAF2B | Ethernet6 | mlag_peer | DC1.POD1.LEAF2A | Ethernet6 |
 | l3leaf | DC1-POD1-LEAF2B | Ethernet7 | l3leaf | DC2-POD1-LEAF1A | Ethernet7 |
 | l3leaf | DC1-POD1-LEAF2B | Ethernet11 | spine | DC1-POD1-SPINE1 | Ethernet8 |
 | l3leaf | DC1-POD1-LEAF2B | Ethernet12 | spine | DC1-POD1-SPINE2 | Ethernet8 |
@@ -233,7 +231,7 @@
 | POD | Node | Loopback1 |
 | --- | ---- | --------- |
 | DC1_POD1 | DC1-POD1-LEAF1A | 172.18.110.3/32 |
-| DC1_POD1 | DC1-POD1-LEAF2B | 172.18.110.4/32 |
+| DC1_POD1 | DC1-POD1-LEAF2B | 172.18.110.5/32 |
 | DC1_POD2 | DC1-POD2-LEAF1A | 172.18.120.3/32 |
 | DC1_POD1 | DC1.POD1.LEAF2A | 172.18.110.4/32 |
 | DC2_POD1 | DC2-POD1-LEAF1A | 172.18.210.3/32 |

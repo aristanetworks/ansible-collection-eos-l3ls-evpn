@@ -8567,18 +8567,40 @@ $defs:
                     default: true
               active_active_multihoming:
                 description: Enable Active Active Multihoming architecture for EVPN
-                  Gateways.
+                  Gateways. Not supported with MLAG.
                 type: dict
                 keys:
-                  enable_d_path:
+                  enabled:
+                    description: Enable Active Active Multihoming resiliency model.
                     type: bool
+                    default: false
+                  enable_d_path:
+                    description: Enable D-path for use with BGP bestpath selection
+                      algorithm.
+                    type: bool
+                    default: true
                   domain_identifier:
+                    description: ASN(asplain):local_admin or ASN(asdot):local_admin
+                      notation
                     type: str
+                    required: true
                   domain_identifier_remote:
+                    description: ASN(asplain):local_admin or ASN(asdot):local_admin
+                      notation
                     type: str
+                    required: true
                   evpn_ethernet_segment:
-                    type: list
-                    $ref: eos_cli_config_gen#/keys/router_bgp/keys/address_family_evpn/keys/evpn_ethernet_segment
+                    type: dict
+                    required: true
+                    keys:
+                      identifier:
+                        description: EVPN Ethernet Segment Identifier (Type 1 format)
+                        type: str
+                        required: true
+                      rt_import:
+                        description: Low-order 6 bytes of ES-Import Route Target.
+                        type: str
+                        required: true
           ipvpn_gateway:
             documentation_options:
               table: node-type-evpn-ipvpn-gateway-configuration
