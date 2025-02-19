@@ -1,24 +1,27 @@
 ---
-name: Build universal container
+# This workflow is required to experiment with container images on forks
+# it will NEVER run on aristanetworks/avd and requires following env variables:
+#     DEBUG_CONTAINER_ACTIONS = true
+# The workflow supposed to be the exact replica of container_build_universal.yml in a stable state
+# but diff is allowed to support a longer experimental setup across different forks
+name: Build universal on forks
 
 "on":
   push:
-    branches:
-      - devel
+    branches: [ '**' ]
     paths:
       - containers/universal/**
       - .github/workflows/container_build_template.yml
-      - .github/workflows/container_build_universal.yml
+      - .github/workflows/build_universal_on_forks.yml
       - ansible_collections/arista/avd/**
   workflow_dispatch:
-    branches:
-      - devel
+    branches: [ '**' ]
   release:
     types: [published]
 
 jobs:
   build_universal_container:
-    if: github.repository == 'aristanetworks/avd'
+    if: github.repository != 'aristanetworks/avd' && ${{ vars.DEBUG_CONTAINER_ACTIONS }} == "true"
     uses: ./.github/workflows/container_build_template.yml
     strategy:
       matrix:

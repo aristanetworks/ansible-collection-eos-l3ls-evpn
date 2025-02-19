@@ -15,7 +15,7 @@ name: Build base container
 
 jobs:
   build_base:
-    if: github.repository == 'aristanetworks/avd' || ${{ vars.DEBUG_CONTAINER_ACTIONS }} == "true"
+    if: github.repository == 'aristanetworks/avd'
     uses: ./.github/workflows/container_build_template.yml
     strategy:
       matrix:

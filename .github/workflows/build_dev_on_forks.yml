@@ -2,27 +2,27 @@
 # This workflow is required to experiment with container images on forks
 # it will NEVER run on aristanetworks/avd and requires following env variables:
 #     DEBUG_CONTAINER_ACTIONS = true
-# The workflow supposed to be the exact replica of container_build_base.yml in a stable state
+# The workflow supposed to be the exact replica of container_build_dev.yml in a stable state
 # but diff is allowed to support a longer experimental setup across different forks
-name: Build base on forks
+name: Build dev on forks
 
 "on":
   push:
     branches: [ '**' ]
     paths:
-      - containers/base/**
+      - containers/dev/**
       - .github/workflows/container_build_template.yml
-      - .github/workflows/build_base_on_forks.yml
+      - .github/workflows/build_dev_on_forks.yml
   workflow_dispatch:
     branches: [ '**' ]
 
 jobs:
-  build_base:
+  build_dev_container:
     if: github.repository != 'aristanetworks/avd' && ${{ vars.DEBUG_CONTAINER_ACTIONS }} == "true"
     uses: ./.github/workflows/container_build_template.yml
     strategy:
       matrix:
-        container_name: [base]
+        container_name: [dev]
         python_version: ["3.10", "3.11", "3.12", "3.13"]
         include:
           - python_version: "3.11"
