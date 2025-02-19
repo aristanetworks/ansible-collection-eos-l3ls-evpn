@@ -3,7 +3,7 @@ name: Analysis with Sonarlint and publish to SonarCloud
 on:
   push:
     branches:
-      - main
+      - devel
   # Need to do this to be able to have coverage on PR across forks.
   pull_request_target:
 
