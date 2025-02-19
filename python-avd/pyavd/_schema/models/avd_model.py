@@ -103,15 +103,14 @@ class AvdModel(AvdBase):
         field_name = cls._key_to_field_map.get(key, key)
         return field_name if field_name in cls._fields else None
 
-    @classmethod
-    def get_field_source(cls, key: str) -> str | None:
-        """Returns the field source for the given key. Returns None if the key is not matching a valid field."""
+    def get_field_source(self, key: str) -> str:
+        """Returns the field source for the given key."""
         # TODO: discuss if we should include the item path in error messages so that if the field come from a profile we
         # get both info
-        field_name = cls._key_to_field_map.get(key, key)
-        if (source := cls._field_source.get(field_name, None)) is not None:
+        field_name = self._key_to_field_map.get(key, key)
+        if (source := self._field_source.get(field_name, None)) is not None:
             return str(source)
-        return None
+        return self._source.create_descendant(field_name)
 
     @classmethod
     def _get_field_default_value(cls, name: str) -> Any:
