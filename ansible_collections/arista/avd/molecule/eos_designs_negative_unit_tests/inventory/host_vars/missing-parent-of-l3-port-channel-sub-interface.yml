@@ -8,6 +8,8 @@ wan_router:
       id: 1
       loopback_ipv4_pool: 192.168.0.0/24
       vtep_loopback_ipv4_pool: 192.168.1.0/24
+      cv_pathfinder_site: Site411
+      cv_pathfinder_region: AVD_Land_West
       l3_port_channels:
         - name: Port-Channel5.108
           encapsulation_dot1q_vlan: 108
@@ -23,5 +25,15 @@ wan_carriers:
 wan_path_groups:
   - id: 100
     name: INTERNET
+
+cv_pathfinder_regions:
+  - name: AVD_Land_West
+    id: 42
+    description: AVD Region
+    sites:
+      - name: Site411
+        id: 411
+        location: Atlantis
+
 expected_error_message: >-
   One or more L3 Port-Channels 'Port-Channel5' need to be specified as they have sub-interfaces referencing them.
