@@ -2,6 +2,9 @@ ARG FROM_IMAGE
 ARG FROM_VARIANT
 FROM ${FROM_IMAGE}:${FROM_VARIANT}
 
+# set labels
+LABEL org.opencontainers.image.documentation="https://avd.arista.com/"
+
 # Install essential tools.
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
