@@ -10,7 +10,7 @@ name: Build base on forks
     paths:
       - containers/base/**
       - .github/workflows/container_build_template.yml
-      - .github/workflows/container_build_base.yml
+      - .github/workflows/build_base_on_forks.yml
   workflow_dispatch:
     branches: [ '**' ]
 
