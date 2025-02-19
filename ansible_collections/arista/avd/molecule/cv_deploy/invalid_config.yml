@@ -1,0 +1,101 @@
+---
+- name: "{{ test_id | upper }} Converge - cv_deploy with invalid Designed Config"
+  hosts: SITE1_FABRIC
+  connection: local
+  gather_facts: false
+  vars:
+    cv_server: "{{ lookup('env', 'CV_SERVER') }}"
+    cv_token: "{{ lookup('env', 'CV_ACCESS_TOKEN') }}"
+    cv_verify_certs: true
+    cv_skip_missing_devices: true
+    eos_config_dir: "{{ playbook_dir }}/intended/configs/test_invalid_configs"
+    structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_invalid_configs"
+    intended_tag_device: avd-ci-leaf1
+    intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
+    test_id: "workspace-invalid-configs"
+    cv_common_pattern: "avd-cv-deploy-{{ test_id }}"
+
+  tasks:
+    - name: "{{ test_id | upper }} Banner"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      ansible.builtin.debug:
+        msg:
+          - "######################################################################"
+          - "### STARTING MOLECULE TEST {{ '{:<38}'.format(test_id[:38]) | upper }} ####"
+          - "######################################################################"
+
+    - name: "{{ test_id | upper }} Generate random string"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      ansible.builtin.set_fact:
+        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+
+    - name: "{{ test_id | upper }} Natively engage arista.avd.cv_workflow module to test abandoned Workspace"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+
+      block:
+
+        - name: "{{ test_id | upper }} engage arista.avd.cv_workflow module to test failing build when workspace.requested_state == abandoned"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          delegate_to: localhost
+          arista.avd.cv_workflow:
+            cv_servers: [ "{{ cv_server }}" ]
+            cv_token: "{{ cv_token }}"
+            cv_verify_certs: "{{ cv_verify_certs }}"
+            configuration_dir: "{{ eos_config_dir }}"
+            structured_config_dir: "{{ structured_dir }}"
+            device_list: "{{ ansible_play_hosts_all }}"
+            workspace:
+              name: "{{ cv_common_pattern }}-{{ r }}-converge"
+              description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+              requested_state: "abandoned"
+            return_details: true
+          register: cv_deploy_results
+
+      rescue:
+
+        - name: "{{ test_id | upper }} Display CVP result for basic invalid configuration"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Assert CVP returns for basic invalid configuration"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              - cv_deploy_results.workspace.requested_state == "abandoned"
+              - cv_deploy_results.workspace.state == "abandoned"
+              - cv_deploy_results.failed is true
+              - cv_deploy_results.warnings == []
+              - cv_deploy_results.errors | length == 1
+              - "'Failed to build workspace' in cv_deploy_results.errors[0]"
+              - "'device build error' in cv_deploy_results.errors[0]"
+
+    - name: "{{ test_id | upper }} Cleanup"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      ansible.builtin.import_role:
+        name: arista.avd.cv_deploy
+      vars:
+        cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+        cv_workspace_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+        cv_change_control_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+        cv_register_detailed_results: true
+        cv_devices: "{{ ansible_play_hosts_all }}"
+        eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
+        structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
+        cv_submit_workspace_force: true
+        cv_run_change_control: true
+
+    # Clear failed state of failed hosts for next engaged playbook (no impact within running playbook)
+    - name: Reset ansible_play_hosts for next playbook (no impact within running playbook)
+      tags: ["{{ test_id }}"]
+      ansible.builtin.meta: clear_host_errors
