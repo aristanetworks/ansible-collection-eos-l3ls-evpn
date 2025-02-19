@@ -173,10 +173,10 @@ router_bgp:
       route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
-    - name: WAN-RR-OVERLAY-PEERS
+    - name: WAN-OVERLAY-PEERS
       activate: true
       encapsulation: path-selection
-    - name: WAN-OVERLAY-PEERS
+    - name: WAN-RR-OVERLAY-PEERS
       activate: true
       encapsulation: path-selection
     next_hop:
@@ -271,6 +271,8 @@ router_path_selection:
     path_selection_policy: DEFAULT-AUTOVPN-POLICY-WITH-CP
   - name: PROD
     path_selection_policy: PROD-AUTOVPN-POLICY
+  - name: WAN-VRF-NO-AF
+    path_selection_policy: PROD-AUTOVPN-POLICY
   tcp_mss_ceiling:
     ipv4_segment_size: auto
 service_routing_protocols_model: multi-agent
@@ -295,3 +297,5 @@ vxlan_interface:
         vni: 1
       - name: PROD
         vni: 42
+      - name: WAN-VRF-NO-AF
+        vni: 200
