@@ -28,19 +28,6 @@ dps_interfaces:
 enable_password:
   disabled: true
 ethernet_interfaces:
-- name: Ethernet2
-  description: L2_uplink_lan_l2leaf_Ethernet1
-  shutdown: false
-  mtu: 9218
-  vrf: VRF1
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  ip_address: 10.0.10.1/24
-  peer: uplink_lan_l2leaf
-  peer_interface: Ethernet1 VLAN 10
-  peer_type: l2leaf
-  switchport:
-    enabled: false
 - name: Ethernet2.100
   description: My vlan 100
   shutdown: false
@@ -57,6 +44,19 @@ ethernet_interfaces:
   peer_type: l2leaf
   eos_cli: comment yo
   _custom_key: custom_value
+- name: Ethernet2
+  description: L2_uplink_lan_l2leaf_Ethernet1
+  shutdown: false
+  mtu: 9218
+  vrf: VRF1
+  flow_tracker:
+    hardware: FLOW-TRACKER
+  ip_address: 10.0.10.1/24
+  peer: uplink_lan_l2leaf
+  peer_interface: Ethernet1 VLAN 10
+  peer_type: l2leaf
+  switchport:
+    enabled: false
 - name: Ethernet1
   description: Comcast_999
   shutdown: false
@@ -140,11 +140,11 @@ metadata:
     - name: Site
       value: site1
     interface_tags:
-    - interface: Ethernet2
+    - interface: Ethernet2.100
       tags:
       - name: Type
         value: lan
-    - interface: Ethernet2.100
+    - interface: Ethernet2
       tags:
       - name: Type
         value: lan
