@@ -1,6 +1,6 @@
 ---
 name: Analysis with Sonarlint and publish to SonarCloud
-on:
+"on":
   push:
     branches:
       - devel

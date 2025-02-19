@@ -12,4 +12,3 @@ __pycache__/
 coverage.xml
 # Ignoring auto-generated file
 /tests/pyavd/schema/data_merging_schema_class.py
-
