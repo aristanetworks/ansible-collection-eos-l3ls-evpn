@@ -44,7 +44,7 @@ class MonitorSessionsMixin(Protocol):
                     if session.source_settings.access_group:
                         msg = (
                             f"Cannot set an ACL for both `session_settings` and `source_settings`"
-                            f" under the monitor session '{session.name}' for {session.source}."
+                            f" under the monitor session '{session.name}' for {session._source}."
                         )
                         raise AristaAvdInvalidInputsError(msg)
 
@@ -82,7 +82,6 @@ class MonitorSessionsMixin(Protocol):
         self: AvdStructuredConfigConnectedEndpointsProtocol,
     ) -> list[EosDesigns._DynamicKeys.DynamicConnectedEndpointsItem.ConnectedEndpointsItem.AdaptersItem.MonitorSessionsItem]:
         """Return list of monitor session configs extracted from every interface."""
-        # TODO: See if we can get rid of per_interface_monitor_session.source
         monitor_session_configs = []
         for connected_endpoint in self._filtered_connected_endpoints:
             for adapter in connected_endpoint.adapters:
@@ -98,7 +97,7 @@ class MonitorSessionsMixin(Protocol):
                     for monitor_session in adapter.monitor_sessions:
                         per_interface_monitor_session = monitor_session._deepcopy()
                         per_interface_monitor_session._internal_data.interface = port_channel_interface_name
-                        per_interface_monitor_session._internal_data.source = adapter._source
+                        per_interface_monitor_session._source = adapter._source
                         monitor_session_configs.append(per_interface_monitor_session)
                     continue
 
@@ -111,7 +110,7 @@ class MonitorSessionsMixin(Protocol):
                     for monitor_session in adapter.monitor_sessions:
                         per_interface_monitor_session = monitor_session._deepcopy()
                         per_interface_monitor_session._internal_data.interface = ethernet_interface_name
-                        per_interface_monitor_session._internal_data.source = adapter._source
+                        per_interface_monitor_session._source = adapter._source
                         monitor_session_configs.append(per_interface_monitor_session)
 
         for network_port in self._filtered_network_ports:
@@ -128,7 +127,7 @@ class MonitorSessionsMixin(Protocol):
                     for monitor_session in network_port.monitor_sessions:
                         per_interface_monitor_session = monitor_session._deepcopy()
                         per_interface_monitor_session._internal_data.interface = port_channel_interface_name
-                        per_interface_monitor_session._internal_data.source = network_port._source
+                        per_interface_monitor_session._source = network_port._source
                         monitor_session_configs.append(per_interface_monitor_session)
                     continue
 
@@ -136,7 +135,7 @@ class MonitorSessionsMixin(Protocol):
                 for monitor_session in network_port.monitor_sessions:
                     per_interface_monitor_session = monitor_session._deepcopy()
                     per_interface_monitor_session._internal_data.interface = ethernet_interface_name
-                    per_interface_monitor_session._internal_data.source = network_port._source
+                    per_interface_monitor_session._source = network_port._source
                     monitor_session_configs.append(per_interface_monitor_session)
 
         return monitor_session_configs

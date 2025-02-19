@@ -26,7 +26,6 @@ class InternalData:
         "interface",
         "interfaces",
         "pim_rp_addresses",
-        "source",
         "type",
     )
 
@@ -38,7 +37,6 @@ class InternalData:
     interfaces: list
     pim_rp_addresses: list[dict]
     type: str | None
-    source: str
 
 
 class AvdBase(ABC):
