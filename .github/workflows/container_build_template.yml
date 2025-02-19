@@ -154,6 +154,7 @@ jobs:
         with:
           platforms: ${{ inputs.platform }}
           image: tonistiigi/binfmt:qemu-v7.0.0-28
+          cache-image: false
 
       - name: Setup Docker buildX for multi-arch builds 🏗️
         # if: ${{ steps.check-image-presence.outputs.not_present == '1' }}
