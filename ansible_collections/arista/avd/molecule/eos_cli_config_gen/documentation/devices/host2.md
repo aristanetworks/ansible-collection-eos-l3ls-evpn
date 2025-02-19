@@ -417,6 +417,7 @@ no aaa authorization config-commands
 | Commands - Console | 0 | none | - | - | - |
 | Exec - Default | - | none | - | - | - |
 | System - Default | - | none | - | - | - |
+| Dot1x - Default | - | start-stop | - | True | - |
 | Commands - Default | all | none | - | - | - |
 | Commands - Default | 0 | none | - | - | - |
 
@@ -428,6 +429,7 @@ aaa accounting commands all console none
 aaa accounting commands 0 console none
 aaa accounting exec default none
 aaa accounting system default none
+aaa accounting dot1x default start-stop logging
 aaa accounting commands all default none
 aaa accounting commands 0 default none
 ```

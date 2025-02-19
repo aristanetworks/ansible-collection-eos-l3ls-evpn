@@ -1442,7 +1442,7 @@ aaa authorization commands 10,15 default group tacacs+ local
 | Commands - Console | 2 | none | - | - | - |
 | Exec - Default | - | start-stop | TACACS, RADIUS | True | - |
 | System - Default | - | start-stop | TACACS, RADIUS | True | - |
-| Dot1x - Default | - | start-stop | RADIUS, TACACS | True | True |
+| Dot1x - Default | - | start-stop | RADIUS, TACACS | True | True, - |
 | Commands - Default | all | start-stop | TACACS, RADIUS | True | - |
 | Commands - Default | 0 | start-stop | - | True | - |
 | Commands - Default | 1 | start-stop | TACACS, RADIUS | False | - |
@@ -1459,7 +1459,7 @@ aaa accounting commands 1 console start-stop group TACACS1 group RADIUS
 aaa accounting commands 2 console none
 aaa accounting exec default start-stop group TACACS group RADIUS logging
 aaa accounting system default start-stop group TACACS group RADIUS logging
-aaa accounting dot1x default start-stop group RADIUS multicast group TACACS multicast logging
+aaa accounting dot1x default start-stop group RADIUS multicast group TACACS logging
 aaa accounting commands all default start-stop group TACACS group RADIUS logging
 aaa accounting commands 0 default start-stop logging
 aaa accounting commands 1 default start-stop group TACACS group RADIUS

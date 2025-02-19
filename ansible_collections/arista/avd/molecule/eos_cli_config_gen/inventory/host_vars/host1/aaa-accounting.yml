@@ -36,7 +36,6 @@ aaa_accounting:
           multicast: true
         - method: group
           group: TACACS
-          multicast: true
         - method: logging
   commands:
     console:

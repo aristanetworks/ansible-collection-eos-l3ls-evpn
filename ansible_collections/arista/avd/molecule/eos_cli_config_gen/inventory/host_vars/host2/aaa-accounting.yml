@@ -11,6 +11,11 @@ aaa_accounting:
   system:
     default:
       type: none
+  dot1x:
+    default:
+      type: start-stop
+      methods:
+        - method: logging
   commands:
     console:
       - commands: all
