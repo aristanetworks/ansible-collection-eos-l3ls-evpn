@@ -214,17 +214,14 @@ class WanMixin(Protocol):
             EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
             | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem
         ),
-    ) -> str:
+    ) -> str | None:
         """
-        If not a WAN route-server this returns public IP and if not found then the interface IP without a mask.
+        If not a WAN route-server this returns public IP and if not found then the interface IP without a mask or None if no ip is set.
 
         For WAN route-servers we try to find the IP under wan_route_servers.path_groups.interfaces.
         If not found we look for the public_ip and then the ip_address under the interface.
         If there is no public_ip and if ip_address is "dhcp" we raise an error.
         """
-        if not self.is_wan_server:
-            return default(interface.public_ip, get_ip_from_ip_prefix(interface.ip_address))
-
         if self.hostname in self.inputs.wan_route_servers:
             for path_group in self.inputs.wan_route_servers[self.hostname].path_groups:
                 if interface.name not in path_group.interfaces:
@@ -236,12 +233,24 @@ class WanMixin(Protocol):
         if interface.public_ip:
             return interface.public_ip
 
+        if not interface.ip_address:
+            if self.is_wan_server:
+                msg = (
+                    f"The IP address for WAN interface '{interface.name}' on Route Server '{self.hostname}' is not defined'. "
+                    "Clients need to peer with a static IP which must be set under the 'wan_route_servers.path_groups.interfaces' key."
+                )
+                raise AristaAvdError(msg)
+            # Returning None for WAN client is not important as it is not used in AVD
+            return None
+
         if interface.ip_address == "dhcp":
-            msg = (
-                f"The IP address for WAN interface '{interface.name}' on Route Server '{self.hostname}' is set to 'dhcp'. "
-                "Clients need to peer with a static IP which must be set under the 'wan_route_servers.path_groups.interfaces' key."
-            )
-            raise AristaAvdError(msg)
+            if self.is_wan_server:
+                msg = (
+                    f"The IP address for WAN interface '{interface.name}' on Route Server '{self.hostname}' is set to 'dhcp'. "
+                    "Clients need to peer with a static IP which must be set under the 'wan_route_servers.path_groups.interfaces' key."
+                )
+                raise AristaAvdError(msg)
+            return "dhcp"
 
         return get_ip_from_ip_prefix(interface.ip_address)
 
