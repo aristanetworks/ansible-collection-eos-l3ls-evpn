@@ -10,6 +10,7 @@ name: Analysis with Sonarlint and publish to SonarCloud
 jobs:
   sonarcloud:
     name: Run Sonarlint analysis and upload to SonarCloud.
+    needs: [ansible_test_units, ansible_test_integration]
     if: github.repository == 'aristanetworks/avd'
     runs-on: ubuntu-latest
     steps:
@@ -17,6 +18,14 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+      - name: Download coverage from ansible-test units
+        uses: actions/download-artifact@v4
+        with:
+          name: ansible-test-units-coverage
+      - name: Download coverage from ansible-test integration
+        uses: actions/download-artifact@v4
+        with:
+          name: ansible-test-units-integration
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
