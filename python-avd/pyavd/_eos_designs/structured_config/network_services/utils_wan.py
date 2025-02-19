@@ -13,6 +13,8 @@ from pyavd._utils.password_utils.password import simple_7_encrypt
 from pyavd.j2filters import natural_sort, range_expand
 
 if TYPE_CHECKING:
+    from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+
     from . import AvdStructuredConfigNetworkServicesProtocol
 
 
@@ -419,7 +421,7 @@ class UtilsWanMixin(Protocol):
         ]
 
     @cached_property
-    def _svi_acls(self: AvdStructuredConfigNetworkServicesProtocol) -> dict[str, dict[str, dict]] | None:
+    def _svi_acls(self: AvdStructuredConfigNetworkServicesProtocol) -> dict[str, dict[str, EosCliConfigGen.IpAccessListsItem]] | None:
         """
         Returns a dict of SVI ACLs.
 
@@ -453,13 +455,13 @@ class UtilsWanMixin(Protocol):
                             name=ipv4_acl_in,
                             interface_name=interface_name,
                             interface_ip=interface_ip,
-                        )._as_dict()
+                        )
                     if ipv4_acl_out is not None:
                         svi_acls.setdefault(interface_name, {})["ipv4_acl_out"] = self.shared_utils.get_ipv4_acl(
                             name=ipv4_acl_out,
                             interface_name=interface_name,
                             interface_ip=interface_ip,
-                        )._as_dict()
+                        )
 
         return svi_acls
 
@@ -476,7 +478,7 @@ class UtilsWanMixin(Protocol):
         return sorted({internet_exit_policy.type for internet_exit_policy, _connections in self._filtered_internet_exit_policies_and_connections})
 
     @cached_property
-    def _l3_interface_acls(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
+    def _l3_interface_acls(self: AvdStructuredConfigNetworkServicesProtocol) -> dict[str, dict[str, EosCliConfigGen.IpAccessListsItem]] | None:
         """
         Returns a dict of interfaces and ACLs set on the interfaces.
 
@@ -513,13 +515,13 @@ class UtilsWanMixin(Protocol):
                                 name=ipv4_acl_in,
                                 interface_name=interface_name,
                                 interface_ip=interface_ip,
-                            )._as_dict()
+                            )
                         if ipv4_acl_out is not None:
                             l3_interface_acls.setdefault(interface_name, {})["ipv4_acl_out"] = self.shared_utils.get_ipv4_acl(
                                 name=ipv4_acl_out,
                                 interface_name=interface_name,
                                 interface_ip=interface_ip,
-                            )._as_dict()
+                            )
         return l3_interface_acls
 
     @cached_property

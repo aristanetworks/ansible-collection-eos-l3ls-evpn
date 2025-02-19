@@ -180,32 +180,32 @@ hostname: DC1-BL1A
 ip_access_lists:
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet12
   entries:
-  - sequence: 15
+  - source: any
+    destination: 10.10.40.10
+    sequence: 15
     action: deny
     protocol: ip
-    source: any
-    destination: 10.10.40.10
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet13.10
   entries:
-  - sequence: 15
+  - source: any
+    destination: 10.10.40.20
+    sequence: 15
     action: deny
     protocol: ip
-    source: any
-    destination: 10.10.40.20
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet12
   entries:
   - remark: Some remark will not require source and destination fields.
-  - action: permit
-    protocol: ip
-    source: 10.10.40.10
+  - source: 10.10.40.10
     destination: any
+    action: permit
+    protocol: ip
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT_Ethernet13.10
   entries:
   - remark: Some remark will not require source and destination fields.
-  - action: permit
-    protocol: ip
-    source: 10.10.40.20
+  - source: 10.10.40.20
     destination: any
+    action: permit
+    protocol: ip
 ip_igmp_snooping:
   globally_enabled: true
 ip_name_servers:

@@ -70,11 +70,13 @@ class VlanInterfacesMixin(Protocol):
             ip_address=svi.ip_address,
             ipv6_address=svi.ipv6_address,
             ipv6_enable=svi.ipv6_enable,
-            access_group_in=get(self._svi_acls, f"{interface_name}.ipv4_acl_in.name"),
-            access_group_out=get(self._svi_acls, f"{interface_name}.ipv4_acl_out.name"),
             mtu=svi.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
             eos_cli=svi.raw_eos_cli,
         )
+
+        for direction in ["in", "out"]:
+            if access_group := get(self._svi_acls, f"{interface_name}..ipv4_acl_{direction}", separator=".."):
+                setattr(vlan_interface_config, f"access_group_{direction}", access_group.name)
 
         if svi.structured_config:
             self.custom_structured_configs.nested.vlan_interfaces.obtain(interface_name)._deepmerge(

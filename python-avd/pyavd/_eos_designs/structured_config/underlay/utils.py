@@ -176,13 +176,15 @@ class UtilsMixin(Protocol):
             )
         if self.inputs.fabric_sflow.l3_interfaces is not None:
             interface["sflow"] = {"enable": self.inputs.fabric_sflow.l3_interfaces}
-        interface["access_group_in"] = get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_in..name", separator="..")
-        interface["access_group_out"] = get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_out..name", separator="..")
+
+        for direction in ["in", "out"]:
+            if acl := get(self._l3_interface_acls, f"{l3_interface.name}..ipv4_acl_{direction}", separator=".."):
+                interface[f"access_group_{direction}"] = acl.name
 
         if (
             self.shared_utils.is_wan_router
             and (wan_carrier_name := l3_interface.wan_carrier) is not None
-            and interface["access_group_in"] is None
+            and interface.get("access_group_in") is None
             and (wan_carrier_name not in self.inputs.wan_carriers or not self.inputs.wan_carriers[wan_carrier_name].trusted)
         ):
             msg = (
@@ -220,13 +222,15 @@ class UtilsMixin(Protocol):
             self.custom_structured_configs.nested.port_channel_interfaces.obtain(l3_port_channel.name)._deepmerge(
                 l3_port_channel.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
             )
-        interface["access_group_in"] = get(self._l3_port_channel_acls, f"{l3_port_channel.name}..ipv4_acl_in..name", separator="..")
-        interface["access_group_out"] = get(self._l3_port_channel_acls, f"{l3_port_channel.name}..ipv4_acl_out..name", separator="..")
+
+        for direction in ["in", "out"]:
+            if acl := get(self._l3_port_channel_acls, f"{l3_port_channel.name}..ipv4_acl_{direction}", separator=".."):
+                interface[f"access_group_{direction}"] = acl.name
 
         if (
             self.shared_utils.is_wan_router
             and (wan_carrier_name := l3_port_channel.wan_carrier) is not None
-            and interface["access_group_in"] is None
+            and interface.get("access_group_in") is None
             and (wan_carrier_name not in self.inputs.wan_carriers or not self.inputs.wan_carriers[wan_carrier_name].trusted)
         ):
             msg = (
@@ -414,7 +418,7 @@ class UtilsMixin(Protocol):
         return subinterface
 
     @cached_property
-    def _l3_interface_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, dict]]:
+    def _l3_interface_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, EosCliConfigGen.IpAccessLists]]:
         """
         Return dict of l3 interface ACLs.
 
@@ -428,7 +432,7 @@ class UtilsMixin(Protocol):
         return self._get_l3_generic_interface_acls(self.shared_utils.l3_interfaces)
 
     @cached_property
-    def _l3_port_channel_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, dict]]:
+    def _l3_port_channel_acls(self: AvdStructuredConfigUnderlayProtocol) -> dict[str, dict[str, EosCliConfigGen.IpAccessLists]]:
         """
         Return dict of l3 Port-Channel ACLs.
 
@@ -447,7 +451,7 @@ class UtilsMixin(Protocol):
             EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3Interfaces
             | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannels
         ),
-    ) -> dict[str, dict[str, dict]]:
+    ) -> dict[str, dict[str, EosCliConfigGen.IpAccessLists]]:
         """
         Return dict of l3 interface ACLs referenced by either L3 interfaces or L3 Port-Channels.
 
@@ -477,13 +481,13 @@ class UtilsMixin(Protocol):
                     interface_name=l3_generic_interface.name,
                     interface_ip=interface_ip,
                     peer_ip=l3_generic_interface.peer_ip,
-                )._as_dict()
+                )
             if ipv4_acl_out is not None:
                 l3_interface_acls.setdefault(l3_generic_interface.name, {})["ipv4_acl_out"] = self.shared_utils.get_ipv4_acl(
                     name=ipv4_acl_out,
                     interface_name=l3_generic_interface.name,
                     interface_ip=interface_ip,
                     peer_ip=l3_generic_interface.peer_ip,
-                )._as_dict()
+                )
 
         return l3_interface_acls
