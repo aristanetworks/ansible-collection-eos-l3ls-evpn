@@ -55,7 +55,7 @@ class RouterPathSelectionMixin(Protocol):
                     )
                     for group in get(match["load_balance_policy"], "path_groups", None):
                         path_group_item = EosCliConfigGen.RouterPathSelection.LoadBalancePoliciesItem.PathGroupsItem(
-                            name=get(group, "name", None), priority=get(group, "priority", None)
+                            name=group["name"], priority=get(group, "priority", None)
                         )
                         lb_policy.path_groups.append(path_group_item)
                     self.structured_config.router_path_selection.load_balance_policies.append(lb_policy)

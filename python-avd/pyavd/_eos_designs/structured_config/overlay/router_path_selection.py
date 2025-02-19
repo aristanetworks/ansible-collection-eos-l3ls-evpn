@@ -30,10 +30,6 @@ class RouterPathSelectionMixin(Protocol):
         router_path_selection = EosCliConfigGen.RouterPathSelection()
         router_path_selection.tcp_mss_ceiling.ipv4_segment_size = self.shared_utils.node_config.dps_mss_ipv4
         self._get_path_groups(router_path_selection)
-        # router_path_selection = {
-        #     "tcp_mss_ceiling": {"ipv4_segment_size": self.shared_utils.node_config.dps_mss_ipv4},
-        #     "path_groups": self._get_path_groups(),
-        # }
 
         if self.shared_utils.is_wan_server:
             router_path_selection.peer_dynamic_source = "stun"
