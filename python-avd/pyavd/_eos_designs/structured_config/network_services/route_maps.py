@@ -129,7 +129,7 @@ class RouteMapsMixin(Protocol):
         )
         self.structured_config.route_maps.append(route_maps_item)
 
-    def _evpn_export_vrf_default_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
+    def _evpn_export_vrf_default_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
         Match the following prefixes to be exported in EVPN for VRF default.
 
@@ -161,10 +161,10 @@ class RouteMapsMixin(Protocol):
                     match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["ip address prefix-list PL-STATIC-VRF-DEFAULT"]),
                 )
         if not sequence_numbers:
-            return None
+            return
         self.structured_config.route_maps.append_new(name="RM-EVPN-EXPORT-VRF-DEFAULT", sequence_numbers=sequence_numbers)
 
-    def _bgp_underlay_peers_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
+    def _bgp_underlay_peers_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
         For non WAN routers filter EVPN routes away from underlay.
 
@@ -172,7 +172,7 @@ class RouteMapsMixin(Protocol):
         so routes should not be filtered.
         """
         if self.shared_utils.is_wan_router:
-            return None
+            return
 
         sequence_numbers = EosCliConfigGen.RouteMapsItem.SequenceNumbers()
 
@@ -191,7 +191,7 @@ class RouteMapsMixin(Protocol):
             )
 
         if not sequence_numbers:
-            return None
+            return
 
         sequence_numbers.append_new(
             sequence=20,
@@ -199,14 +199,14 @@ class RouteMapsMixin(Protocol):
         )
         self.structured_config.route_maps.append_new(name="RM-BGP-UNDERLAY-PEERS-OUT", sequence_numbers=sequence_numbers)
 
-    def _redistribute_connected_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
+    def _redistribute_connected_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
         Append network services relevant entries to the route-map used to redistribute connected subnets in BGP.
 
         sequence 10 is set in underlay and sequence 20 in inband management, so avoid setting those here
         """
         if not self.inputs.underlay_filter_redistribute_connected:
-            return None
+            return
 
         sequence_numbers = EosCliConfigGen.RouteMapsItem.SequenceNumbers()  # (name="RM-CONN-2-BGP")
 
@@ -221,13 +221,13 @@ class RouteMapsMixin(Protocol):
             sequence_numbers.append(sequence_30)
 
         if not sequence_numbers:
-            return None
+            return
         self.structured_config.route_maps.append_new(name="RM-CONN-2-BGP", sequence_numbers=sequence_numbers)
 
-    def _redistribute_static_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
+    def _redistribute_static_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """Append network services relevant entries to the route-map used to redistribute static routes to BGP."""
         if not (self.shared_utils.wan_role and self._vrf_default_ipv4_static_routes["redistribute_in_overlay"]):
-            return None
+            return
 
         sequence_numbers = EosCliConfigGen.RouteMapsItem.SequenceNumbers()
         sequence_numbers.append_new(
