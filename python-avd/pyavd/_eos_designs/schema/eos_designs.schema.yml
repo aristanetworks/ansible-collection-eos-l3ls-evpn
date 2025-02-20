@@ -2584,9 +2584,6 @@ keys:
 
             `server` indicates that the router is a route-reflector.
 
-
-            Only supported if `overlay_routing_protocol` is set to `ibgp`.
-
             '
         default_flow_tracker_type:
           type: str
@@ -4951,6 +4948,21 @@ keys:
 
       When using automatic ceritficate deployment via CloudVision this name must be
       the same on all WAN routers.'
+  wan_use_evpn_node_settings_for_lan:
+    type: bool
+    documentation_options:
+      table: wan-settings
+    default: false
+    description: 'PREVIEW: This key is currently not supported and may produce invalid
+      configuration.
+
+      When true, `eos_designs` will use `overlay_routing_protocol`, `evpn_role` and
+      `vtep`
+
+      node settings for LAN side on WAN devices. Otherwise these will be ignored for
+      WAN.
+
+      This will be the default in AVD version 6.0.0 and this option will be removed.'
   wan_virtual_topologies:
     type: dict
     description: 'Configure Virtual Topologies for CV Pathfinder and AutoVPN.
@@ -9327,10 +9339,7 @@ $defs:
 
               That means if `wan_mode` root key is set to `autovpn` or `cv-pathfinder`.
 
-              `server` indicates that the router is a route-reflector.
-
-
-              Only supported if `overlay_routing_protocol` is set to `ibgp`.'
+              `server` indicates that the router is a route-reflector.'
           cv_pathfinder_transit_mode:
             documentation_options:
               table: node-type-wan-configuration

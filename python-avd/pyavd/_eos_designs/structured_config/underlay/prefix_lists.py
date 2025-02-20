@@ -27,7 +27,7 @@ class PrefixListsMixin(Protocol):
         if self.shared_utils.underlay_bgp is not True and not self.shared_utils.is_wan_router:
             return None
 
-        if self.shared_utils.overlay_routing_protocol == "none":
+        if self.shared_utils.overlay_routing_protocol == "none" and not self.shared_utils.is_wan_router:
             return None
 
         if not self.inputs.underlay_filter_redistribute_connected:
@@ -55,7 +55,7 @@ class PrefixListsMixin(Protocol):
 
         if self.shared_utils.underlay_multicast_rp_interfaces is not None:
             sequence_numbers = [
-                {"sequence": (index + 1) * 10, "action": f"permit {interface['ip_address']}"}
+                {"sequence": (index + 1) * 10, "action": f"permit {interface.ip_address}"}
                 for index, interface in enumerate(self.shared_utils.underlay_multicast_rp_interfaces)
             ]
             prefix_lists.append({"name": "PL-LOOPBACKS-PIM-RP", "sequence_numbers": sequence_numbers})
