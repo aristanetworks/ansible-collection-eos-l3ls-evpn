@@ -116,6 +116,7 @@ class ActionModule(ActionBase):
         path = Path(structured_config_dir, f"{device}.{structured_config_suffix}")
         if not path.exists():
             logging.warning("Could not find structured config file for '%s'. The documentation may be incomplete.", device)
+            return {}
 
         with path.open(encoding="UTF-8") as stream:
             if structured_config_suffix in ["yml", "yaml"]:
