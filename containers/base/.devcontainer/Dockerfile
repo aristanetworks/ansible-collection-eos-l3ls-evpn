@@ -2,8 +2,19 @@ ARG FROM_IMAGE
 ARG FROM_VARIANT
 FROM ${FROM_IMAGE}:${FROM_VARIANT}
 
+# RFC3339 time to set label
+ARG RFC3339_TIMESTAMP
 # set labels
+LABEL org.opencontainers.image.description="AVD base image. This image MUST NOT be used directly and only required to optimize build process for other images."
+LABEL com.arista.license_terms="https://github.com/aristanetworks/avd/blob/devel/LICENSE"
+LABEL org.opencontainers.image.licenses="Apache-2.0"
+LABEL org.opencontainers.image.authors="Arista AVD Team <ansible@arista.com>"
+LABEL org.opencontainers.image.url="https://github.com/orgs/aristanetworks/packages?repo_name=avd"
 LABEL org.opencontainers.image.documentation="https://avd.arista.com/"
+LABEL org.opencontainers.image.source="https://github.com/aristanetworks/avd/tree/devel/containers"
+LABEL org.opencontainers.image.created=${RFC3339_TIMESTAMP}
+LABEL org.opencontainers.image.version=""
+LABEL org.opencontainers.image.vendor="Arista Networks"
 
 # Install essential tools.
 RUN apt-get update \
