@@ -56,7 +56,6 @@ class UtilsMixin(Protocol):
             for connected_endpoint in connected_endpoints_key.value:
                 filtered_adapters = []
                 for adapter_index, adapter in enumerate(connected_endpoint.adapters):
-                    adapter._internal_data.context = f"{connected_endpoints_key.key}[name={connected_endpoint.name}].adapters[{adapter_index}]"
                     adapter_settings = self.shared_utils.get_merged_adapter_settings(adapter)
                     if not adapter_settings.switches or self.shared_utils.hostname not in adapter_settings.switches:
                         continue
@@ -87,8 +86,7 @@ class UtilsMixin(Protocol):
     def _filtered_network_ports(self: AvdStructuredConfigConnectedEndpointsProtocol) -> list[EosDesigns.NetworkPortsItem]:
         """Return list of endpoints defined under "network_ports" which are connected to this switch."""
         filtered_network_ports = []
-        for index, network_port in enumerate(self.inputs.network_ports):
-            network_port._internal_data.context = f"network_ports[{index}]"
+        for network_port in self.inputs.network_ports:
             network_port_settings = self.shared_utils.get_merged_adapter_settings(network_port)
 
             if not network_port_settings.switches and not network_port_settings.platforms:
@@ -243,7 +241,7 @@ class UtilsMixin(Protocol):
         # Apply PTP profile config
         if (ptp_profile_name := adapter.ptp.profile or self.shared_utils.ptp_profile_name) is not None:
             if ptp_profile_name not in self.inputs.ptp_profiles:
-                msg = f"PTP Profile '{ptp_profile_name}' referenced under {adapter._internal_data.context} does not exist in `ptp_profiles`."
+                msg = f"PTP Profile '{ptp_profile_name}' referenced under '{adapter._source}' does not exist in 'ptp_profiles'."
                 raise AristaAvdInvalidInputsError(msg)
 
             # Create a copy and removes the .profile attribute since the target model has a .profile key with a different schema.

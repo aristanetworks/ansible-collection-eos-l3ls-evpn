@@ -193,16 +193,13 @@ class MiscMixin(Protocol):
             if entry._get("remark"):
                 continue
 
-            err_context = f"ipv4_acls[name={name}].entries[{index}]"
             if not entry.source:
-                msg = f"{err_context}.source"
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdMissingVariableError(entry.get_field_source("source"))
             if not entry.destination:
-                msg = f"{err_context}.destination"
-                raise AristaAvdMissingVariableError(msg)
+                raise AristaAvdMissingVariableError(entry.get_field_source("destination"))
 
-            entry.source = self._get_ipv4_acl_field_with_substitution(entry.source, ip_replacements, f"{err_context}.source", interface_name)
-            entry.destination = self._get_ipv4_acl_field_with_substitution(entry.destination, ip_replacements, f"{err_context}.destination", interface_name)
+            entry.source = self._get_ipv4_acl_field_with_substitution(entry, "source", ip_replacements, interface_name)
+            entry.destination = self._get_ipv4_acl_field_with_substitution(entry, "destination", ip_replacements, interface_name)
             if entry.source != org_ipv4_acl.entries[index].source or entry.destination != org_ipv4_acl.entries[index].destination:
                 changed = True
 
@@ -211,7 +208,9 @@ class MiscMixin(Protocol):
         return ipv4_acl
 
     @staticmethod
-    def _get_ipv4_acl_field_with_substitution(field_value: str, replacements: dict[str, str | None], field_context: str, interface_name: str) -> str:
+    def _get_ipv4_acl_field_with_substitution(
+        entry: EosDesigns.Ipv4AclsItem.EntriesItem, field_name: str, replacements: dict[str, str | None], interface_name: str
+    ) -> str:
         """
         Checks one field if the value can be substituted.
 
@@ -221,12 +220,13 @@ class MiscMixin(Protocol):
 
         If a replacement is done, but the value is None, an error will be raised.
         """
+        field_value = getattr(entry, field_name)
         if field_value not in replacements:
             return field_value
 
         if (replacement_value := replacements[field_value]) is None:
             msg = (
-                f"Unable to perform substitution of the value '{field_value}' defined under '{field_context}', "
+                f"Unable to perform substitution of the value '{field_value}' defined under '{entry.get_field_source(field_name)}', "
                 f"since no substitution value was found for interface '{interface_name}'. "
                 "Make sure to set the appropriate fields on the interface."
             )

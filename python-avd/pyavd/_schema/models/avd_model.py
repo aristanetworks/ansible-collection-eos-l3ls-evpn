@@ -13,6 +13,7 @@ from pyavd._utils import Undefined, UndefinedType, merge
 
 from .avd_base import AvdBase
 from .avd_indexed_list import AvdIndexedList
+from .input_path import InputPath
 
 if TYPE_CHECKING:
     from collections.abc import ItemsView
@@ -40,6 +41,8 @@ class AvdModel(AvdBase):
     """Map of field name to original dict key. Used when fields have the field_ prefix to get the original key."""
     _key_to_field_map: ClassVar[dict[str, str]] = {}
     """Map of dict key to field name. Used when the key is names with a reserved keyword or mixed case. E.g. `Vxlan1` or `as`."""
+    _field_source: ClassVar[dict[str, InputPath]] = {}
+    """Map of field name to field source."""
 
     _custom_data: dict[str, Any]
     """
@@ -48,12 +51,12 @@ class AvdModel(AvdBase):
     """
 
     @classmethod
-    def _load(cls, data: Mapping) -> Self:
+    def _load(cls, data: Mapping[Any, Any], data_source: InputPath | None = None) -> Self:
         """Returns a new instance loaded with the data from the given dict."""
-        return cls._from_dict(data)
+        return cls._from_dict(data, data_source=data_source)
 
     @classmethod
-    def _from_dict(cls: type[T_AvdModel], data: Mapping, keep_extra_keys: bool = False) -> T_AvdModel:
+    def _from_dict(cls: type[T_AvdModel], data: Mapping, data_source: InputPath | None = None, *, keep_extra_keys: bool = False) -> T_AvdModel:
         """
         Returns a new instance loaded with the data from the given dict.
 
@@ -65,6 +68,8 @@ class AvdModel(AvdBase):
 
         cls_args = {}
         custom_data = {}
+
+        data_source = data_source or InputPath()
 
         for key in data:
             if not (field := cls._get_field_name(key)):
@@ -79,18 +84,33 @@ class AvdModel(AvdBase):
                 msg = f"Invalid key '{key}'. Not available on '{cls.__name__}'."
                 raise KeyError(msg)
 
-            cls_args[field] = coerce_type(data[key], cls._fields[field]["type"])
+            # Handle Dynamic Keys slightly differently
+            child_data_source = data_source if cls.__name__.startswith("Dynamic") and key == "value" else data_source.create_descendant(key)
+
+            cls_args[field] = coerce_type(data[key], cls._fields[field]["type"], data_source=child_data_source)
+            cls._field_source[field] = child_data_source
 
         if custom_data:
             cls_args["_custom_data"] = custom_data
 
-        return cls(**cls_args)
+        cls_instance = cls(**cls_args)
+        cls_instance._source = data_source
+        return cls_instance
 
     @classmethod
     def _get_field_name(cls, key: str) -> str | None:
         """Returns the field name for the given key. Returns None if the key is not matching a valid field."""
         field_name = cls._key_to_field_map.get(key, key)
         return field_name if field_name in cls._fields else None
+
+    def get_field_source(self, key: str) -> str:
+        """Returns the field source for the given key."""
+        # TODO: discuss if we should include the item path in error messages so that if the field come from a profile we
+        # get both info
+        field_name = self._key_to_field_map.get(key, key)
+        if (source := self._field_source.get(field_name, None)) is not None:
+            return str(source)
+        return self._source.create_descendant(field_name)
 
     @classmethod
     def _get_field_default_value(cls, name: str) -> Any:
@@ -422,6 +442,8 @@ class AvdModel(AvdBase):
         # Pass along the internal flags
         new_instance._created_from_null = self._created_from_null
         new_instance._block_inheritance = self._block_inheritance
+        # Copy the source
+        new_instance._source = self._source
 
         if self._custom_data:
             new_instance._custom_data = self._custom_data

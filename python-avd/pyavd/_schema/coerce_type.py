@@ -12,10 +12,12 @@ from .constants import ACCEPTED_COERCION_MAP
 if TYPE_CHECKING:
     from typing import NoReturn, TypeVar
 
+    from pyavd._schema.models.input_path import InputPath
+
     T = TypeVar("T")
 
 
-def coerce_type(value: Any, target_type: type[T]) -> T:
+def coerce_type(value: Any, target_type: type[T], data_source: InputPath | None = None) -> T:
     """
     Return a coerced variant of the given value to the target_type.
 
@@ -26,7 +28,7 @@ def coerce_type(value: Any, target_type: type[T]) -> T:
     if value is None:
         if issubclass(target_type, AvdBase):
             # None values are sometimes used to overwrite inherited profiles.
-            return target_type._from_null()
+            return target_type._from_null(data_source=data_source)
 
         # Other None values are left untouched.
     elif target_type is Any or isinstance(value, target_type):
@@ -42,7 +44,7 @@ def coerce_type(value: Any, target_type: type[T]) -> T:
     # Identify subclass of AvdModel without importing AvdModel (circular import)
     elif issubclass(target_type, AvdBase):
         try:
-            return target_type._load(data=value)
+            return target_type._load(data=value, data_source=data_source)
         except TypeError as exception:
             raise_coerce_error(value, target_type, exception)
 

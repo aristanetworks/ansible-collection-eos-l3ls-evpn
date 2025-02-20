@@ -7,7 +7,7 @@ l3leaf:
   defaults:
     loopback_ipv4_pool: 10.254.1.0/27
     vtep_loopback_ipv4_pool: 10.254.11.0/27
-    mlag_interfaces: ['Ethernet9', 'Ethernet10']
+    mlag_interfaces: ["Ethernet9", "Ethernet10"]
     mlag_peer_ipv4_pool: 10.254.1.64/27
     mlag_peer_l3_ipv4_pool: 10.254.1.96/27
     ptp:
@@ -26,4 +26,4 @@ network_ports:
       profile: THIS-PROFILE-DOES-NOT-EXIST
 
 expected_error_message: >-
-  PTP Profile 'THIS-PROFILE-DOES-NOT-EXIST' referenced under network_ports[0] does not exist in `ptp_profiles`.
+  PTP Profile 'THIS-PROFILE-DOES-NOT-EXIST' referenced under 'network_ports[0]' does not exist in 'ptp_profiles'.

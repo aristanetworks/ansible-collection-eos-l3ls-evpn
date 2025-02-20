@@ -27,5 +27,5 @@ l3_edge:
         enabled: true
 
 expected_error_message: >-
-  PTP Profile 'THIS-PROFILE-DOES-NOT-EXIST' referenced under `ptp.profile` node variables
-  does not exist in `ptp_profiles`.
+  PTP Profile 'THIS-PROFILE-DOES-NOT-EXIST' referenced under 'ptp.profile' node variables
+  does not exist in 'ptp_profiles'.
