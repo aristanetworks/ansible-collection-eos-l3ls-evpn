@@ -366,8 +366,8 @@ jobs:
         run: |
           cd ansible_collections/arista/avd/
           ansible-test units --coverage -vv
-          coverage combine tests/output/coverage/*
-          coverage xml -o units-coverage.xml
+          ansible-test coverage xml
+          mv ansible_collections/arista/avd/tests/output/reports/coverage.xml ansible_collections/arista/avd/units-coverage.xml
       - name: Upload coverage from ansible-test units
         uses: actions/upload-artifact@v4
         with:
@@ -393,8 +393,8 @@ jobs:
         run: |
           cd ansible_collections/arista/avd/
           ansible-test integration --coverage -vv
-          coverage combine tests/output/coverage/*
-          coverage xml -o integration-coverage.xml
+          ansible-test coverage xml
+          mv ansible_collections/arista/avd/tests/output/reports/coverage.xml ansible_collections/arista/avd/integration-coverage.xml
       - name: Upload coverage from ansible-test integration
         uses: actions/upload-artifact@v4
         with:
