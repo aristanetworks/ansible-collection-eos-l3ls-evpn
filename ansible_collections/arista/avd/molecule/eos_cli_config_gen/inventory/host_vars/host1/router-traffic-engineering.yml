@@ -6,6 +6,7 @@ router_traffic_engineering:
   router_id:
     ipv4: 10.0.0.1
     ipv6: 2001:beef:cafe::1
+  twamp_light_sender_profile: test-profile
   segment_routing:
     colored_tunnel_rib: true
     policy_endpoints:

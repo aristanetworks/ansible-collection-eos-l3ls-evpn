@@ -91,3 +91,6 @@ keys:
                                     type: int
                                     convert_types:
                                     - "str"
+      twamp_light_sender_profile:
+        type: str
+        description: Apply a twamp-light sender profile, defined under monitor_twamp.twamp_light.sender_profiles.

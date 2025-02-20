@@ -9,6 +9,10 @@
 ### Router Traffic-Engineering
 
 - Traffic Engineering is enabled.
+{%     if router_traffic_engineering.twamp_light_sender_profile is arista.avd.defined %}
+
+- TWAMP-light sender profile is {{ router_traffic_engineering.twamp_light_sender_profile }}
+{%     endif %}
 {%     if router_traffic_engineering.segment_routing is arista.avd.defined %}
 
 #### Segment Routing Summary

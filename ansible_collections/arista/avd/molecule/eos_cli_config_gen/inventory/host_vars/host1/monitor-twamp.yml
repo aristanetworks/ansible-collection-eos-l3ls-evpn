@@ -1,0 +1,16 @@
+---
+monitor_twamp:
+  twamp_light:
+    reflector_defaults:
+      listen_port: 12345
+    sender_defaults:
+      destination_port: 123
+      source_port: 45678
+    sender_profiles:
+      - name: test-profile
+        measurement_interval: 5
+        measurement_samples: 10
+        significance:
+          value: 50
+          offset: 5
+      - name: test-profile2
