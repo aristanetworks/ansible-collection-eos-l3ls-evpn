@@ -299,19 +299,33 @@ class UtilsMixin(Protocol):
 
         return None
 
+    def get_vrf_rd_admin_subfield(
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
+    ) -> str:
+        """Return a string with the route-destinguisher admin subfield for one VRF."""
+        if (vrf_rd_admin_subfield := self.shared_utils.overlay_rd_type_vrf_admin_subfield) == "vrf_router_id":
+            return self.get_vrf_router_id(vrf, tenant, vrf.bgp.router_id) or self.shared_utils.router_id
+
+        return vrf_rd_admin_subfield
+
     def get_vrf_rd(
-        self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem,
+        tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> str:
         """Return a string with the route-destinguisher for one VRF."""
         rd_override = vrf.rd_override
+        admin_subfield = self.get_vrf_rd_admin_subfield(vrf, tenant)
 
         if rd_override is not None:
             if ":" in rd_override:
                 return rd_override
 
-            return f"{self.shared_utils.overlay_rd_type_vrf_admin_subfield}:{rd_override}"
+            return f"{admin_subfield}:{rd_override}"
 
-        return f"{self.shared_utils.overlay_rd_type_vrf_admin_subfield}:{self.shared_utils.get_vrf_id(vrf)}"
+        return f"{admin_subfield}:{self.shared_utils.get_vrf_id(vrf)}"
 
     def get_vrf_rt(
         self: AvdStructuredConfigNetworkServicesProtocol, vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem
@@ -338,12 +352,12 @@ class UtilsMixin(Protocol):
     def get_vlan_aware_bundle_rd(
         self: AvdStructuredConfigNetworkServicesProtocol,
         id: int,  # noqa: A002
+        vrf: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem | None,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
-        is_vrf: bool,
         rd_override: str | None = None,
     ) -> str:
         """Return a string with the route-destinguisher for one VLAN Aware Bundle."""
-        admin_subfield = self.shared_utils.overlay_rd_type_vrf_admin_subfield if is_vrf else self.shared_utils.overlay_rd_type_admin_subfield
+        admin_subfield = self.get_vrf_rd_admin_subfield(vrf, tenant) if vrf is not None else self.shared_utils.overlay_rd_type_admin_subfield
 
         if rd_override is not None:
             if ":" in rd_override or rd_override == "auto":

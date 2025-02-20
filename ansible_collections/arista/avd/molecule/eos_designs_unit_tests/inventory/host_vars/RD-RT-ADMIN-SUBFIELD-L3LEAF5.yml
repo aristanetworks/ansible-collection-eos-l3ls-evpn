@@ -1,8 +1,10 @@
 ---
 
-# Expected result: rd 1.1.1.1:<mac_vrf_id>
+# Expected result: rd 1.1.1.1:<mac_vrf_id> for vlans
+# Expected result: rd <router_id>:<vrf_id> for VRF TEST1 and 10.12.12.12:<vrf_id> for VRF TEST2
 overlay_rd_type:
   admin_subfield: 1.1.1.1
+  vrf_admin_subfield: vrf_router_id
 
 # Expected result:
 # VLAN rd 8<vlanid>:<vlan_id>

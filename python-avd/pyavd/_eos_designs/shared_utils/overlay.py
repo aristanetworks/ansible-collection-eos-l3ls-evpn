@@ -68,6 +68,9 @@ class OverlayMixin(Protocol):
         if admin_subfield == "bgp_as":
             return self.bgp_as
 
+        if admin_subfield == "vrf_router_id":
+            return "vrf_router_id"
+
         if admin_subfield == "switch_id":
             if self.id is None:
                 msg = f"'id' is not set on '{self.hostname}' and 'overlay_rd_type_admin_subfield' is set to 'switch_id'"
