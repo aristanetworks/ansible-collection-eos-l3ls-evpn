@@ -29,7 +29,8 @@ class IpIgmpSnoopingMixin(Protocol):
             return
 
         igmp_snooping_enabled = self.shared_utils.igmp_snooping_enabled
-            self.structured_config.ip_igmp_snooping.globally_enabled = igmp_snooping_enabled
+        self.structured_config.ip_igmp_snooping.globally_enabled = igmp_snooping_enabled
+        if not igmp_snooping_enabled:
             return
 
         for tenant in self.shared_utils.filtered_tenants:
