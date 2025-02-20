@@ -46,7 +46,6 @@ keys:
               keys:
                 name:
                   type: str
-                  required: true
                 measurement_interval:
                   type: int
                   min: 1
