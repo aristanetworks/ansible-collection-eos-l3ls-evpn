@@ -313,7 +313,7 @@ class RouterBgpMixin(Protocol):
                     "import_match_failure_action": "discard",
                 }
 
-        if self.shared_utils.overlay_dpath is True:
+        if self.shared_utils.overlay_dpath is True and self.shared_utils.overlay_ipvpn_gateway is True:
             address_family_evpn["domain_identifier"] = self.shared_utils.node_config.ipvpn_gateway.evpn_domain_id
 
         if self.shared_utils.is_wan_server:
@@ -486,7 +486,7 @@ class RouterBgpMixin(Protocol):
         if peer_groups:
             address_family_vpn_ipvx["peer_groups"] = peer_groups
 
-        if self.shared_utils.overlay_dpath is True:
+        if self.shared_utils.overlay_dpath is True and self.shared_utils.overlay_ipvpn_gateway is True:
             address_family_vpn_ipvx["domain_identifier"] = self.shared_utils.node_config.ipvpn_gateway.ipvpn_domain_id
 
         return address_family_vpn_ipvx
@@ -678,10 +678,7 @@ class RouterBgpMixin(Protocol):
         return any(ip in ipaddress.ip_network(prefix) for prefix in listen_range_prefixes)
 
     def _bgp_overlay_dpath(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
-        if self.shared_utils.overlay_dpath is True or (
-            self.shared_utils.node_config.evpn_gateway.active_active_multihoming.enabled
-            and self.shared_utils.node_config.evpn_gateway.active_active_multihoming.enable_d_path is True
-        ):
+        if self.shared_utils.overlay_dpath is True:
             return {
                 "bestpath": {
                     "d_path": True,
