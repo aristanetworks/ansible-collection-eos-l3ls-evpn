@@ -25,7 +25,7 @@
           - "### STARTING MOLECULE TEST {{ test_id[:69] | upper }} ###"
           - "{{ ('#' * (31 + test_id | length))[:100] }}"
 
-    - name: "{{ test_id | upper }} Generate random string"
+    - name: "{{ test_id | upper }} {{ 'Read' if lookup('env', 'MOLECULE_EXECUTION_ID') else 'Generate' }} molecule execution ID"
       tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:

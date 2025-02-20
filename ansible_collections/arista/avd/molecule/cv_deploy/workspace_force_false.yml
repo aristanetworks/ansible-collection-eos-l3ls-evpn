@@ -25,7 +25,7 @@
           - "### STARTING MOLECULE TEST {{ test_id[:69] | upper }} ###"
           - "{{ ('#' * (31 + test_id | length))[:100] }}"
 
-    - name: "{{ test_id | upper }} Generate random string"
+    - name: "{{ test_id | upper }} {{ 'Read' if lookup('env', 'MOLECULE_EXECUTION_ID') else 'Generate' }} molecule execution ID"
       tags: ["{{ test_id }}"]
       ansible.builtin.set_fact:
         r: "{{ lookup('env', 'MOLECULE_EXECUTION_ID') or lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
@@ -44,7 +44,7 @@
       delegate_to: localhost
 
       block:
-        - name: Trigger errors
+        - name: "{{ test_id | upper }} Trigger errors"
           tags: ["{{ test_id }}"]
           ansible.builtin.import_role:
             name: arista.avd.cv_deploy
@@ -129,6 +129,6 @@
         cv_run_change_control: true
 
     # Clear failed state of failed hosts for next engaged playbook (no impact within running playbook)
-    - name: Reset ansible_play_hosts for next playbook (no impact within running playbook)
+    - name: "{{ test_id | upper }} Reset ansible_play_hosts for next playbook (no impact within running playbook)"
       tags: ["{{ test_id }}"]
       ansible.builtin.meta: clear_host_errors

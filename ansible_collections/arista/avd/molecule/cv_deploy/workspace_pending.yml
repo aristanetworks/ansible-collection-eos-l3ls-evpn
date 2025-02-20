@@ -1,5 +1,5 @@
 ---
-- name: Converge - cv_deploy with Workspace Pending
+- name: "{{ test_id | upper }} Converge - cv_deploy with Workspace Pending"
   hosts: SITE1_FABRIC
   connection: local
   gather_facts: false
@@ -13,7 +13,7 @@
     intended_tag_device: avd-ci-leaf1
     intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
     test_id: "submit-ws-false"
-    cv_common_pattern: "avd-cv-deploy_{{ test_id }}"
+    cv_common_pattern: "avd_cv-deploy_{{ test_id }}"
 
   tasks:
     - name: "{{ test_id | upper }} Banner"
@@ -25,7 +25,7 @@
           - "### STARTING MOLECULE TEST {{ test_id[:69] | upper }} ###"
           - "{{ ('#' * (31 + test_id | length))[:100] }}"
 
-    - name: "{{ test_id | upper }} Generate random string"
+    - name: "{{ test_id | upper }} {{ 'Read' if lookup('env', 'MOLECULE_EXECUTION_ID') else 'Generate' }} molecule execution ID"
       tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:

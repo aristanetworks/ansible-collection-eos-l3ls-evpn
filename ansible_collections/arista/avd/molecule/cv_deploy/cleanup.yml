@@ -24,7 +24,7 @@
           - "### STARTING {{ test_id[:83] | upper }} ###"
           - "{{ ('#' * (17 + test_id | length))[:100] }}"
 
-    - name: "{{ test_id | upper }} Generate random string"
+    - name: "{{ test_id | upper }} {{ 'Read' if lookup('env', 'MOLECULE_EXECUTION_ID') else 'Generate' }} molecule execution ID"
       # Force task to run even if we used tags matching specific tests
       tags: ["always"]
       run_once: true
