@@ -77,9 +77,28 @@ keys:
                       Enable copying the ECN marking to/from encapsulated packets.
                   map_dscp_to_traffic_class_decapsulation:
                     type: bool
+              vlan_range:
+                type: dict
+                description: |-
+                  Set VNI on range of VLANs. Number of VLANs must equal number of VNIs.
+                  If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
+                keys:
+                  vlans:
+                    type: str
+                    required: true
+                    description: e.g. "94,96,100-110".
+                  vnis:
+                    type: str
+                    required: true
+                    description: |-
+                      Set `vnis` in the correct sequence as `vlans`.
+                      e.g. "10094,10096,10100-10110".
               vlans:
                 type: list
                 primary_key: id
+                description: |-
+                  Set VNI/multicast group/remote vtep on a vlan.
+                  If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans` is ignored for that VLAN.
                 items:
                   type: dict
                   keys:
