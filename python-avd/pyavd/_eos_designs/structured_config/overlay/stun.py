@@ -5,17 +5,15 @@ from __future__ import annotations
 
 import itertools
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import strip_empties_from_dict
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigOverlay
+    from . import AvdStructuredConfigOverlayProtocol
 
 
-class StunMixin(UtilsMixin):
+class StunMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -23,7 +21,7 @@ class StunMixin(UtilsMixin):
     """
 
     @cached_property
-    def stun(self: AvdStructuredConfigOverlay) -> dict | None:
+    def stun(self: AvdStructuredConfigOverlayProtocol) -> dict | None:
         """Return structured config for stun."""
         if not self.shared_utils.is_wan_router:
             return None
@@ -31,6 +29,8 @@ class StunMixin(UtilsMixin):
         stun = {}
         if self.shared_utils.is_wan_server:
             local_interfaces = [wan_interface.name for wan_interface in self.shared_utils.wan_interfaces]
+            local_wan_port_channels = [wan_port_channel.name for wan_port_channel in self.shared_utils.wan_port_channels]
+            local_interfaces.extend(local_wan_port_channels)
             stun["server"] = {
                 "local_interfaces": local_interfaces,
                 "ssl_profile": self.shared_utils.wan_stun_dtls_profile_name,

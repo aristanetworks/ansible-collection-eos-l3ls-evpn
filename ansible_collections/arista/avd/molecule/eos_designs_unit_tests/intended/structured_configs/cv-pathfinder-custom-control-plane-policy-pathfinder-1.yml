@@ -255,6 +255,10 @@ metadata:
           name: Site423
           location:
             address: Somewhere-warm
+        - id: 12
+          name: Site12
+          location:
+            address: 12 Downing Street, London
     - id: 43
       name: AVD_Land_East
       zones:
@@ -510,10 +514,10 @@ router_bgp:
       route_map: RM-CONN-2-BGP
   address_family_evpn:
     peer_groups:
-    - name: WAN-RR-OVERLAY-PEERS
+    - name: WAN-OVERLAY-PEERS
       activate: true
       encapsulation: path-selection
-    - name: WAN-OVERLAY-PEERS
+    - name: WAN-RR-OVERLAY-PEERS
       activate: true
       encapsulation: path-selection
     next_hop:

@@ -159,7 +159,7 @@ ethernet_interfaces:
     access_vlan: 11
 hostname: ptp-tests-leaf1
 ip_igmp_snooping:
-  globally_enabled: true
+  globally_enabled: false
 ip_routing: true
 is_deployed: true
 loopback_interfaces:

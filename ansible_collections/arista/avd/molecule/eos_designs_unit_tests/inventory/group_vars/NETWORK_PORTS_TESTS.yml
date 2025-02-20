@@ -172,6 +172,57 @@ network_ports:
       - Ethernet25
     description: No criteria, no config
 
+  # Test overwrite network ports structured_config
+  - switches:
+      - network-ports-tests.1
+    switch_ports:
+      - Ethernet20-21
+    description: Range
+    structured_config:
+      switchport:
+        access_vlan: 666
+  - switches:
+      - network-ports-tests.1
+    switch_ports:
+      - Ethernet20
+    description: Single overwrite
+    structured_config:
+      switchport:
+        access_vlan: 42
+  # Test overwrite network ports structured_config with port-channel
+  - switches:
+      - network-ports-tests.1
+    switch_ports:
+      - Ethernet22-23
+    description: Range
+    port_channel:
+      channel_id: 222
+      mode: "active"
+      structured_config:
+        description: Range
+        switchport:
+          access_vlan: 666
+  - switches:
+      - network-ports-tests.1
+    switch_ports:
+      - Ethernet22
+    description: Single overwrite
+    port_channel:
+      channel_id: 222
+      mode: "active"
+      structured_config:
+        # TODO: Make this error out since we have conflicting structured_config
+        # Ethernet22 was inserted before 23, so even though we overwrite 22 here,
+        # it is still rendered first, so the 23 variant of structured config "wins"
+        description: This will not be rendered since it is overwritten by "Range" coming from the Eth22-23 range.
+
+# Overwriting one interface from a range to ensure that we don't reuse objects in memory across multiple interfaces.
+# We should only see updates for this interface.
+custom_structured_configuration_ethernet_interfaces:
+  - name: Ethernet51
+    switchport:
+      access_vlan: 123
+
 servers:
   - name: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
     adapters:

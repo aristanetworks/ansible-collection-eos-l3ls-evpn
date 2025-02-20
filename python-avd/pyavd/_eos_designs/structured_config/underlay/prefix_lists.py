@@ -6,17 +6,15 @@ from __future__ import annotations
 import ipaddress
 from functools import cached_property
 from ipaddress import collapse_addresses, ip_network
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import get, get_ipv4_networks_from_pool, get_ipv6_networks_from_pool
 
-from .utils import UtilsMixin
-
 if TYPE_CHECKING:
-    from . import AvdStructuredConfigUnderlay
+    from . import AvdStructuredConfigUnderlayProtocol
 
 
-class PrefixListsMixin(UtilsMixin):
+class PrefixListsMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -24,12 +22,12 @@ class PrefixListsMixin(UtilsMixin):
     """
 
     @cached_property
-    def prefix_lists(self: AvdStructuredConfigUnderlay) -> list | None:
+    def prefix_lists(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
         """Return structured config for prefix_lists."""
         if self.shared_utils.underlay_bgp is not True and not self.shared_utils.is_wan_router:
             return None
 
-        if self.shared_utils.overlay_routing_protocol == "none":
+        if self.shared_utils.overlay_routing_protocol == "none" and not self.shared_utils.is_wan_router:
             return None
 
         if not self.inputs.underlay_filter_redistribute_connected:
@@ -57,7 +55,7 @@ class PrefixListsMixin(UtilsMixin):
 
         if self.shared_utils.underlay_multicast_rp_interfaces is not None:
             sequence_numbers = [
-                {"sequence": (index + 1) * 10, "action": f"permit {interface['ip_address']}"}
+                {"sequence": (index + 1) * 10, "action": f"permit {interface.ip_address}"}
                 for index, interface in enumerate(self.shared_utils.underlay_multicast_rp_interfaces)
             ]
             prefix_lists.append({"name": "PL-LOOPBACKS-PIM-RP", "sequence_numbers": sequence_numbers})
@@ -102,7 +100,7 @@ class PrefixListsMixin(UtilsMixin):
         return prefix_lists
 
     @cached_property
-    def ipv6_prefix_lists(self: AvdStructuredConfigUnderlay) -> list | None:
+    def ipv6_prefix_lists(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
         """Return structured config for IPv6 prefix_lists."""
         if self.shared_utils.underlay_bgp is not True:
             return None
