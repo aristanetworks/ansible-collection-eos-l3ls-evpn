@@ -79,4 +79,4 @@ keys:
                       max: 999999
                       convert_types:
                         - str
-                      description: Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be smaller than significance value.
+                      description: Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be lower than the significance value.
