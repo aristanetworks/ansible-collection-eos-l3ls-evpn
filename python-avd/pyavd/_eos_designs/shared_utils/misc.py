@@ -10,6 +10,7 @@ from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
 from pyavd._utils import default, get
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
+from pyavd.api.pool_manager import PoolManager
 from pyavd.j2filters import range_expand
 
 if TYPE_CHECKING:
@@ -38,7 +39,48 @@ class MiscMixin(Protocol):
 
     @cached_property
     def id(self: SharedUtilsProtocol) -> int | None:
-        return self.node_config.id
+        """
+        Node ID.
+
+        Will be sourced from different places depending on the context.
+
+        If running under eos_designs_structured_config:
+            Use 'self.hostvars.switch.id' or None
+
+        If running under eos_designs_facts and pool manager is activated:
+            Use pool manager requesting the value of 'self.switch_data_combined.id' if set.
+            If the 'id' field is set but not available in the pool, an error will be raised.
+
+        If running under eos_designs_facts and pool manager is _not_ activated:
+            Use 'self.switch_data_combined.id' which is the ID defined in the node type config or None.
+        """
+        # Check if we are running from eos_designs_structured_config ("switch" is a dict)
+        if isinstance(switch := get(self.hostvars, f"avd_switch_facts..{self.hostname}..switch", separator=".."), dict):
+            # Return value of 'self.hostvars.switch.id' or None
+            return switch.get("id")
+
+        # We are running from eos_designs_facts.
+        # Check if pool manager is activated.
+        node_id = self.node_config.id
+        if self.inputs.fabric_numbering.node_id.algorithm == "pool_manager":
+            if not isinstance(self.pool_manager, PoolManager):
+                msg = "'fabric_numbering.id.algorithm' is set to 'pool_manager' but no PoolManager instance is available."
+                raise AristaAvdError(msg)
+
+            id_from_pool = self.pool_manager.get_assignment(pool_type="node_id_pools", shared_utils=self, requested_value=node_id)
+
+            if node_id is not None and node_id != id_from_pool:
+                msg = (
+                    "When 'fabric_numbering.node_id.algorithm' is set to 'pool_manager', any 'id' set for the node will be reserved in the pool if possible. "
+                    f"Unfortunately the 'id: {node_id}' is not available in the Node ID pool at this time. The 'id' setting must either be removed or changed. "
+                    f"If you prefer to keep the 'id' setting, the next available value is {id_from_pool}."
+                )
+                raise AristaAvdInvalidInputsError(msg)
+
+            return id_from_pool
+
+        # Pool manager is not activated. Return 'id' from node settings or None.
+        return node_id
 
     @cached_property
     def filter_tags(self: SharedUtilsProtocol) -> list:

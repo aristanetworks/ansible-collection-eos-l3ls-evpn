@@ -20,13 +20,13 @@ spine:
   nodes:
     # Spine also working as EVPN RS
     - name: DC2-POD1-SPINE1
-      id: 1
+      # id: 1 Using pool manager for ID
       mgmt_ip: 192.168.1.20/24
       evpn_role: server
       uplink_switch_interfaces: ['Ethernet1', 'Ethernet1']
       evpn_route_servers: [ DC1-RS1, DC1-SUPER-SPINE1, DC1-POD1-SPINE1, DC1-POD1-LEAF1A ]
     - name: DC2-POD1-SPINE2
-      id: 2
+      # id: 2 Using pool manager for ID
       evpn_role: none
       mgmt_ip: 192.168.1.21/24
       uplink_switch_interfaces: ['Ethernet2', 'Ethernet2']
@@ -65,7 +65,7 @@ l3leaf:
       bgp_as: 65211
       nodes:
         - name: DC2-POD1-LEAF1A
-          id: 1
+          # id: 1 Using pool manager for ID
           mgmt_ip: 192.168.1.22/24
           uplink_switch_interfaces: ['Ethernet3', 'Ethernet3']
 
@@ -77,7 +77,7 @@ l3leaf:
       evpn_services_l2_only: true
       nodes:
         - name: DC2-POD1-LEAF2A
-          id: 2
+          # id: 2 Using pool manager for ID
           mgmt_ip: 192.168.1.24/24
           uplink_switch_interfaces: ['Ethernet4', 'Ethernet4']
 
@@ -98,13 +98,13 @@ l2leaf:
       uplink_switches: ['DC2-POD1-LEAF1A']
       nodes:
         - name: DC2-POD1-L2LEAF1A
-          id: 1
+          # id: 1 Using pool manager for ID
           mgmt_ip: 192.168.1.23/24
           uplink_switch_interfaces: ['Ethernet3']
     - group: RACK2_SINGLE
       uplink_switches: ['DC2-POD1-LEAF2A']
       nodes:
         - name: DC2-POD1-L2LEAF2A
-          id: 2
+          # id: 2 Using pool manager for ID
           mgmt_ip: 192.168.1.25/24
           uplink_switch_interfaces: ['Ethernet3']
