@@ -19,12 +19,7 @@ LOGGER = getLogger(__name__)
 
 
 async def verify_devices_on_cv(
-    *,
-    devices: list[CVDevice],
-    workspace_id: str,
-    skip_missing_devices: bool,
-    warnings: list[Exception],
-    cv_client: CVClient,
+    *, devices: list[CVDevice], workspace_id: str, skip_missing_devices: bool, warnings: list[Exception], cv_client: CVClient
 ) -> list[CVDevice]:
     """
     Verify that the given Devices are already present in the CloudVision Inventory & I&T Studio.
