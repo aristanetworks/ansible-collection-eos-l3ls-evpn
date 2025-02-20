@@ -29,13 +29,18 @@ core_interfaces:
       id: 1
       interfaces: [ Ethernet1, Ethernet2 ]
       profile: isis_bb_profile
+      as: [65000, 65002]
+      ip: [192.168.0.2/31, 192.168.0.3/31]
 
     # Link w/o bb profile
     - nodes: [ duplicate-interfaces-core-interfaces, peer2]
       id: 2
       interfaces: [ Ethernet1, Ethernet3 ]
+      as: [65000, 65002]
+      ip: [192.168.0.2/31, 192.168.0.3/31]
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined under core_interfaces p2p_link.
-  {'name': 'Ethernet1', 'peer': 'peer2', 'peer_interface': 'Ethernet3', 'description': 'P2P_peer2_Ethernet3', 'mtu': 9214} conflicts with
-  {'name': 'Ethernet1', 'peer': 'peer1', 'peer_interface': 'Ethernet2', 'description': 'P2P_peer1_Ethernet2', 'mtu': 1500}.
+  Found duplicate objects with conflicting data while generating configuration for Neighbors. {'ip_address': '192.168.0.3',
+  'peer_group': 'IPv4-UNDERLAY-PEERS', 'remote_as': '65002', 'local_as': '65000', 'peer': 'peer2', 'description': 'peer2'}
+  conflicts with {'ip_address': '192.168.0.3', 'peer_group': 'IPv4-UNDERLAY-PEERS', 'remote_as': '65002', 'local_as': '65000',
+  'peer': 'peer1', 'description': 'peer1'}.

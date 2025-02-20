@@ -24,6 +24,7 @@ l3_edge:
       ptp:
         enabled: true
         profile: PROFILE DOES NOT EXIST
+      as: [65000, 65002]
 
 expected_error_message: >-
   PTP Profile 'PROFILE DOES NOT EXIST' referenced under l3_edge.p2p_links does not exist in `ptp_profiles`.

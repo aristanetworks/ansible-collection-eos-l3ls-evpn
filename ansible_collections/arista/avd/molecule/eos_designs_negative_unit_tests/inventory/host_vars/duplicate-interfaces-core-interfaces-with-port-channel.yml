@@ -33,6 +33,7 @@ core_interfaces:
       interfaces: [ Ethernet1, Ethernet2 ]
       profile: isis_bb_profile
       ip: ["unnumbered loopback0", "unnumbered loopback0"]
+      as: [65000, 65002]
 
     # core Port-Channel
     - nodes: [ duplicate-interfaces-core-interfaces-with-port-channel, core-2-ospf-ldp ]
@@ -46,6 +47,8 @@ core_interfaces:
           - node: core-2-ospf-ldp
             interfaces: [ Ethernet12]
       profile: isis_bb_profile
+      as: [65000, 65002]
+      ip: [192.168.0.2/31, 192.168.0.3/31]
 
 expected_error_message: >-
   Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined under
