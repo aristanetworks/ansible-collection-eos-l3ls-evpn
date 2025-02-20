@@ -258,7 +258,7 @@ class EthernetInterfacesMixin(Protocol):
     def _set_l3_interface(
         self: AvdStructuredConfigUnderlayProtocol, l3_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
     ) -> None:
-        """Returns structured_configuration for one L3 interface."""
+        """Set structured_configuration for one L3 interface."""
         # build common portion of the interface cfg
         interface = self._get_l3_common_interface_cfg(l3_interface)
 
