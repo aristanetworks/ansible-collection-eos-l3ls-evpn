@@ -92,6 +92,20 @@ class RouteMapsMixin(Protocol):
 
         return route_maps or None
 
+    def _route_maps_vrf_default_check(self: AvdStructuredConfigNetworkServicesProtocol) -> bool | None:
+        if not self._vrf_default_evpn:
+            return None
+
+        if any((self._vrf_default_ipv4_subnets, self._vrf_default_ipv4_static_routes["static_routes"], self.shared_utils.is_wan_router)):
+            return True
+
+        if not self.inputs.underlay_filter_redistribute_connected:
+            return None
+
+        if self.shared_utils.wan_role and self._vrf_default_ipv4_static_routes["redistribute_in_overlay"]:
+            return True
+        return None
+
     def _bgp_mlag_peer_group_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
         Return dict with one route-map.
