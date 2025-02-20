@@ -1,5 +1,5 @@
 ---
-- name: Converge - cv_deploy with Workspace Pending
+- name: "{{ test_id | upper }} Converge - cv_deploy with Workspace Pending"
   hosts: SITE1_FABRIC
   connection: local
   gather_facts: false
@@ -12,39 +12,54 @@
     structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_configs"
     intended_tag_device: avd-ci-leaf1
     intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
+    test_id: "submit-ws-false"
+    cv_common_pattern: "avd_cv-deploy_{{ test_id }}"
 
   tasks:
-    - name: Generate random string
-      ansible.builtin.set_fact:
-        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+    - name: "{{ test_id | upper }} Banner"
+      tags: ["{{ test_id }}"]
       run_once: true
+      ansible.builtin.debug:
+        msg:
+          - "{{ ('#' * (31 + test_id | length))[:100] }}"
+          - "### STARTING MOLECULE TEST {{ test_id[:69] | upper }} ###"
+          - "{{ ('#' * (31 + test_id | length))[:100] }}"
 
-    - name: Set facts
-      ansible.builtin.set_fact:
-        cv_workspace_name: avd-cv-deploy-{{ r }}
-        cv_workspace_description: sample description
-        cv_change_control_name: cc_cv_deploy-{{ r }}
-        cv_change_control_description: sample description
-        cv_register_detailed_results: true
+    - name: "{{ test_id | upper }} {{ 'Read' if lookup('env', 'MOLECULE_EXECUTION_ID') else 'Generate' }} molecule execution ID"
+      tags: ["{{ test_id }}"]
       run_once: true
+      ansible.builtin.set_fact:
+        r: "{{ lookup('env', 'MOLECULE_EXECUTION_ID') or lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
 
-    - name: Provision with workspace "Pending"
+    - name: "{{ test_id | upper }} Provision with Workspace Pending"
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
         name: arista.avd.cv_deploy
       vars:
+        cv_workspace_name: "{{ cv_common_pattern }}_{{ r }}_converge"
+        cv_workspace_description: "{{ (cv_common_pattern + '_' + r + '_converge') | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}_{{ r }}_converge"
+        cv_change_control_description: "{{ (cv_common_pattern + '_' + r + '_converge') | upper }}"
+        cv_register_detailed_results: true
         cv_submit_workspace: false
-        cv_submit_workspace_force: true
 
-    - name: Check CVP returns
+    - name: "{{ test_id | upper }} Display CVP result"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      ansible.builtin.debug:
+        msg: '{{ cv_deploy_results }}'
+
+    - name: "{{ test_id | upper }} Check CVP returns"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
           # workspace
           - cv_deploy_results.workspace.state == cv_deploy_results.workspace.requested_state
 
-    - name: Cleanup orphan workspace
+    - name: "{{ test_id | upper }} Cleanup orphan workspace"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.legacy.uri:
         url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
@@ -77,16 +92,24 @@
       retries: 3
       delay: 3
       ignore_errors: true
-      when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+      when: |
+        cv_deploy_results.workspace.id is not none and
+        cv_deploy_results.workspace.id | length > 0 and
+        cv_deploy_results.workspace.state | default('') != "abandoned"
 
-    - name: Cleanup
+    - name: "{{ test_id | upper }} Cleanup"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
         name: arista.avd.cv_deploy
       vars:
+        cv_workspace_name: "{{ cv_common_pattern }}_{{ r }}_cleanup"
+        cv_workspace_description: "{{ (cv_common_pattern + '_' + r + '_cleanup') | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}_{{ r }}_cleanup"
+        cv_change_control_description: "{{ (cv_common_pattern + '_' + r + '_cleanup') | upper }}"
+        cv_register_detailed_results: true
         eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
         structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
-        cv_submit_workspace: true
         cv_submit_workspace_force: true
         cv_run_change_control: true
