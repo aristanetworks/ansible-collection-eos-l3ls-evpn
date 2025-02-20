@@ -5972,6 +5972,8 @@ class EosDesigns(EosDesignsRootModel):
             "dhcp_accept_default_route": {"type": bool, "default": True},
             "enabled": {"type": bool, "default": True},
             "speed": {"type": str},
+            "receive_bandwidth": {"type": int},
+            "transmit_bandwidth": {"type": int},
             "peer": {"type": str},
             "peer_interface": {"type": str},
             "peer_ip": {"type": str},
@@ -6054,6 +6056,18 @@ class EosDesigns(EosDesignsRootModel):
         """
         Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
         <interface_speed>`.
+        """
+        receive_bandwidth: int | None
+        """
+        Maximum allowed receive bandwidth (download) in Mbps for this interface.
+        This is currently used on
+        CVaaS to provide more information in the visualization.
+        """
+        transmit_bandwidth: int | None
+        """
+        Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+        This is currently used on
+        CVaaS to provide more information in the visualization.
         """
         peer: str | None
         """The peer device name. Used for description and documentation."""
@@ -6145,6 +6159,8 @@ class EosDesigns(EosDesignsRootModel):
                 dhcp_accept_default_route: bool | UndefinedType = Undefined,
                 enabled: bool | UndefinedType = Undefined,
                 speed: str | None | UndefinedType = Undefined,
+                receive_bandwidth: int | None | UndefinedType = Undefined,
+                transmit_bandwidth: int | None | UndefinedType = Undefined,
                 peer: str | None | UndefinedType = Undefined,
                 peer_interface: str | None | UndefinedType = Undefined,
                 peer_ip: str | None | UndefinedType = Undefined,
@@ -6210,6 +6226,14 @@ class EosDesigns(EosDesignsRootModel):
                     speed:
                        Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                        <interface_speed>`.
+                    receive_bandwidth:
+                       Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                       This is currently used on
+                       CVaaS to provide more information in the visualization.
+                    transmit_bandwidth:
+                       Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                       This is currently used on
+                       CVaaS to provide more information in the visualization.
                     peer: The peer device name. Used for description and documentation.
                     peer_interface: The peer device interface. Used for description and documentation.
                     peer_ip:
@@ -19200,6 +19224,8 @@ class EosDesigns(EosDesignsRootModel):
                             "dhcp_accept_default_route": {"type": bool, "default": True},
                             "enabled": {"type": bool, "default": True},
                             "speed": {"type": str},
+                            "receive_bandwidth": {"type": int},
+                            "transmit_bandwidth": {"type": int},
                             "peer": {"type": str},
                             "peer_interface": {"type": str},
                             "peer_ip": {"type": str},
@@ -19279,6 +19305,18 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                         <interface_speed>`.
+                        """
+                        receive_bandwidth: int | None
+                        """
+                        Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
+                        """
+                        transmit_bandwidth: int | None
+                        """
+                        Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
                         """
                         peer: str | None
                         """The peer device name. Used for description and documentation."""
@@ -19370,6 +19408,8 @@ class EosDesigns(EosDesignsRootModel):
                                 dhcp_accept_default_route: bool | UndefinedType = Undefined,
                                 enabled: bool | UndefinedType = Undefined,
                                 speed: str | None | UndefinedType = Undefined,
+                                receive_bandwidth: int | None | UndefinedType = Undefined,
+                                transmit_bandwidth: int | None | UndefinedType = Undefined,
                                 peer: str | None | UndefinedType = Undefined,
                                 peer_interface: str | None | UndefinedType = Undefined,
                                 peer_ip: str | None | UndefinedType = Undefined,
@@ -19433,6 +19473,14 @@ class EosDesigns(EosDesignsRootModel):
                                     speed:
                                        Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                        <interface_speed>`.
+                                    receive_bandwidth:
+                                       Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
+                                    transmit_bandwidth:
+                                       Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
                                     peer: The peer device name. Used for description and documentation.
                                     peer_interface: The peer device interface. Used for description and documentation.
                                     peer_ip:
@@ -23027,6 +23075,8 @@ class EosDesigns(EosDesignsRootModel):
                                 "dhcp_accept_default_route": {"type": bool, "default": True},
                                 "enabled": {"type": bool, "default": True},
                                 "speed": {"type": str},
+                                "receive_bandwidth": {"type": int},
+                                "transmit_bandwidth": {"type": int},
                                 "peer": {"type": str},
                                 "peer_interface": {"type": str},
                                 "peer_ip": {"type": str},
@@ -23106,6 +23156,18 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                             <interface_speed>`.
+                            """
+                            receive_bandwidth: int | None
+                            """
+                            Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                            This is currently used on
+                            CVaaS to provide more information in the visualization.
+                            """
+                            transmit_bandwidth: int | None
+                            """
+                            Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                            This is currently used on
+                            CVaaS to provide more information in the visualization.
                             """
                             peer: str | None
                             """The peer device name. Used for description and documentation."""
@@ -23197,6 +23259,8 @@ class EosDesigns(EosDesignsRootModel):
                                     dhcp_accept_default_route: bool | UndefinedType = Undefined,
                                     enabled: bool | UndefinedType = Undefined,
                                     speed: str | None | UndefinedType = Undefined,
+                                    receive_bandwidth: int | None | UndefinedType = Undefined,
+                                    transmit_bandwidth: int | None | UndefinedType = Undefined,
                                     peer: str | None | UndefinedType = Undefined,
                                     peer_interface: str | None | UndefinedType = Undefined,
                                     peer_ip: str | None | UndefinedType = Undefined,
@@ -23260,6 +23324,14 @@ class EosDesigns(EosDesignsRootModel):
                                         speed:
                                            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                            <interface_speed>`.
+                                        receive_bandwidth:
+                                           Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                                           This is currently used on
+                                           CVaaS to provide more information in the visualization.
+                                        transmit_bandwidth:
+                                           Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                                           This is currently used on
+                                           CVaaS to provide more information in the visualization.
                                         peer: The peer device name. Used for description and documentation.
                                         peer_interface: The peer device interface. Used for description and documentation.
                                         peer_ip:
@@ -26812,6 +26884,8 @@ class EosDesigns(EosDesignsRootModel):
                             "dhcp_accept_default_route": {"type": bool, "default": True},
                             "enabled": {"type": bool, "default": True},
                             "speed": {"type": str},
+                            "receive_bandwidth": {"type": int},
+                            "transmit_bandwidth": {"type": int},
                             "peer": {"type": str},
                             "peer_interface": {"type": str},
                             "peer_ip": {"type": str},
@@ -26891,6 +26965,18 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                         <interface_speed>`.
+                        """
+                        receive_bandwidth: int | None
+                        """
+                        Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
+                        """
+                        transmit_bandwidth: int | None
+                        """
+                        Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
                         """
                         peer: str | None
                         """The peer device name. Used for description and documentation."""
@@ -26982,6 +27068,8 @@ class EosDesigns(EosDesignsRootModel):
                                 dhcp_accept_default_route: bool | UndefinedType = Undefined,
                                 enabled: bool | UndefinedType = Undefined,
                                 speed: str | None | UndefinedType = Undefined,
+                                receive_bandwidth: int | None | UndefinedType = Undefined,
+                                transmit_bandwidth: int | None | UndefinedType = Undefined,
                                 peer: str | None | UndefinedType = Undefined,
                                 peer_interface: str | None | UndefinedType = Undefined,
                                 peer_ip: str | None | UndefinedType = Undefined,
@@ -27045,6 +27133,14 @@ class EosDesigns(EosDesignsRootModel):
                                     speed:
                                        Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                        <interface_speed>`.
+                                    receive_bandwidth:
+                                       Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
+                                    transmit_bandwidth:
+                                       Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
                                     peer: The peer device name. Used for description and documentation.
                                     peer_interface: The peer device interface. Used for description and documentation.
                                     peer_ip:
@@ -30655,6 +30751,8 @@ class EosDesigns(EosDesignsRootModel):
                             "dhcp_accept_default_route": {"type": bool, "default": True},
                             "enabled": {"type": bool, "default": True},
                             "speed": {"type": str},
+                            "receive_bandwidth": {"type": int},
+                            "transmit_bandwidth": {"type": int},
                             "peer": {"type": str},
                             "peer_interface": {"type": str},
                             "peer_ip": {"type": str},
@@ -30734,6 +30832,18 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                         <interface_speed>`.
+                        """
+                        receive_bandwidth: int | None
+                        """
+                        Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
+                        """
+                        transmit_bandwidth: int | None
+                        """
+                        Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
                         """
                         peer: str | None
                         """The peer device name. Used for description and documentation."""
@@ -30825,6 +30935,8 @@ class EosDesigns(EosDesignsRootModel):
                                 dhcp_accept_default_route: bool | UndefinedType = Undefined,
                                 enabled: bool | UndefinedType = Undefined,
                                 speed: str | None | UndefinedType = Undefined,
+                                receive_bandwidth: int | None | UndefinedType = Undefined,
+                                transmit_bandwidth: int | None | UndefinedType = Undefined,
                                 peer: str | None | UndefinedType = Undefined,
                                 peer_interface: str | None | UndefinedType = Undefined,
                                 peer_ip: str | None | UndefinedType = Undefined,
@@ -30888,6 +31000,14 @@ class EosDesigns(EosDesignsRootModel):
                                     speed:
                                        Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                        <interface_speed>`.
+                                    receive_bandwidth:
+                                       Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
+                                    transmit_bandwidth:
+                                       Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
                                     peer: The peer device name. Used for description and documentation.
                                     peer_interface: The peer device interface. Used for description and documentation.
                                     peer_ip:
@@ -40787,6 +40907,8 @@ class EosDesigns(EosDesignsRootModel):
                             "dhcp_accept_default_route": {"type": bool, "default": True},
                             "enabled": {"type": bool, "default": True},
                             "speed": {"type": str},
+                            "receive_bandwidth": {"type": int},
+                            "transmit_bandwidth": {"type": int},
                             "peer": {"type": str},
                             "peer_interface": {"type": str},
                             "peer_ip": {"type": str},
@@ -40866,6 +40988,18 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                         <interface_speed>`.
+                        """
+                        receive_bandwidth: int | None
+                        """
+                        Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
+                        """
+                        transmit_bandwidth: int | None
+                        """
+                        Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
                         """
                         peer: str | None
                         """The peer device name. Used for description and documentation."""
@@ -40957,6 +41091,8 @@ class EosDesigns(EosDesignsRootModel):
                                 dhcp_accept_default_route: bool | UndefinedType = Undefined,
                                 enabled: bool | UndefinedType = Undefined,
                                 speed: str | None | UndefinedType = Undefined,
+                                receive_bandwidth: int | None | UndefinedType = Undefined,
+                                transmit_bandwidth: int | None | UndefinedType = Undefined,
                                 peer: str | None | UndefinedType = Undefined,
                                 peer_interface: str | None | UndefinedType = Undefined,
                                 peer_ip: str | None | UndefinedType = Undefined,
@@ -41020,6 +41156,14 @@ class EosDesigns(EosDesignsRootModel):
                                     speed:
                                        Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                        <interface_speed>`.
+                                    receive_bandwidth:
+                                       Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
+                                    transmit_bandwidth:
+                                       Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
                                     peer: The peer device name. Used for description and documentation.
                                     peer_interface: The peer device interface. Used for description and documentation.
                                     peer_ip:
@@ -44614,6 +44758,8 @@ class EosDesigns(EosDesignsRootModel):
                                 "dhcp_accept_default_route": {"type": bool, "default": True},
                                 "enabled": {"type": bool, "default": True},
                                 "speed": {"type": str},
+                                "receive_bandwidth": {"type": int},
+                                "transmit_bandwidth": {"type": int},
                                 "peer": {"type": str},
                                 "peer_interface": {"type": str},
                                 "peer_ip": {"type": str},
@@ -44693,6 +44839,18 @@ class EosDesigns(EosDesignsRootModel):
                             """
                             Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                             <interface_speed>`.
+                            """
+                            receive_bandwidth: int | None
+                            """
+                            Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                            This is currently used on
+                            CVaaS to provide more information in the visualization.
+                            """
+                            transmit_bandwidth: int | None
+                            """
+                            Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                            This is currently used on
+                            CVaaS to provide more information in the visualization.
                             """
                             peer: str | None
                             """The peer device name. Used for description and documentation."""
@@ -44784,6 +44942,8 @@ class EosDesigns(EosDesignsRootModel):
                                     dhcp_accept_default_route: bool | UndefinedType = Undefined,
                                     enabled: bool | UndefinedType = Undefined,
                                     speed: str | None | UndefinedType = Undefined,
+                                    receive_bandwidth: int | None | UndefinedType = Undefined,
+                                    transmit_bandwidth: int | None | UndefinedType = Undefined,
                                     peer: str | None | UndefinedType = Undefined,
                                     peer_interface: str | None | UndefinedType = Undefined,
                                     peer_ip: str | None | UndefinedType = Undefined,
@@ -44847,6 +45007,14 @@ class EosDesigns(EosDesignsRootModel):
                                         speed:
                                            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                            <interface_speed>`.
+                                        receive_bandwidth:
+                                           Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                                           This is currently used on
+                                           CVaaS to provide more information in the visualization.
+                                        transmit_bandwidth:
+                                           Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                                           This is currently used on
+                                           CVaaS to provide more information in the visualization.
                                         peer: The peer device name. Used for description and documentation.
                                         peer_interface: The peer device interface. Used for description and documentation.
                                         peer_ip:
@@ -48399,6 +48567,8 @@ class EosDesigns(EosDesignsRootModel):
                             "dhcp_accept_default_route": {"type": bool, "default": True},
                             "enabled": {"type": bool, "default": True},
                             "speed": {"type": str},
+                            "receive_bandwidth": {"type": int},
+                            "transmit_bandwidth": {"type": int},
                             "peer": {"type": str},
                             "peer_interface": {"type": str},
                             "peer_ip": {"type": str},
@@ -48478,6 +48648,18 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                         <interface_speed>`.
+                        """
+                        receive_bandwidth: int | None
+                        """
+                        Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
+                        """
+                        transmit_bandwidth: int | None
+                        """
+                        Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
                         """
                         peer: str | None
                         """The peer device name. Used for description and documentation."""
@@ -48569,6 +48751,8 @@ class EosDesigns(EosDesignsRootModel):
                                 dhcp_accept_default_route: bool | UndefinedType = Undefined,
                                 enabled: bool | UndefinedType = Undefined,
                                 speed: str | None | UndefinedType = Undefined,
+                                receive_bandwidth: int | None | UndefinedType = Undefined,
+                                transmit_bandwidth: int | None | UndefinedType = Undefined,
                                 peer: str | None | UndefinedType = Undefined,
                                 peer_interface: str | None | UndefinedType = Undefined,
                                 peer_ip: str | None | UndefinedType = Undefined,
@@ -48632,6 +48816,14 @@ class EosDesigns(EosDesignsRootModel):
                                     speed:
                                        Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                        <interface_speed>`.
+                                    receive_bandwidth:
+                                       Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
+                                    transmit_bandwidth:
+                                       Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
                                     peer: The peer device name. Used for description and documentation.
                                     peer_interface: The peer device interface. Used for description and documentation.
                                     peer_ip:
@@ -52242,6 +52434,8 @@ class EosDesigns(EosDesignsRootModel):
                             "dhcp_accept_default_route": {"type": bool, "default": True},
                             "enabled": {"type": bool, "default": True},
                             "speed": {"type": str},
+                            "receive_bandwidth": {"type": int},
+                            "transmit_bandwidth": {"type": int},
                             "peer": {"type": str},
                             "peer_interface": {"type": str},
                             "peer_ip": {"type": str},
@@ -52321,6 +52515,18 @@ class EosDesigns(EosDesignsRootModel):
                         """
                         Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                         <interface_speed>`.
+                        """
+                        receive_bandwidth: int | None
+                        """
+                        Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
+                        """
+                        transmit_bandwidth: int | None
+                        """
+                        Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                        This is currently used on
+                        CVaaS to provide more information in the visualization.
                         """
                         peer: str | None
                         """The peer device name. Used for description and documentation."""
@@ -52412,6 +52618,8 @@ class EosDesigns(EosDesignsRootModel):
                                 dhcp_accept_default_route: bool | UndefinedType = Undefined,
                                 enabled: bool | UndefinedType = Undefined,
                                 speed: str | None | UndefinedType = Undefined,
+                                receive_bandwidth: int | None | UndefinedType = Undefined,
+                                transmit_bandwidth: int | None | UndefinedType = Undefined,
                                 peer: str | None | UndefinedType = Undefined,
                                 peer_interface: str | None | UndefinedType = Undefined,
                                 peer_ip: str | None | UndefinedType = Undefined,
@@ -52475,6 +52683,14 @@ class EosDesigns(EosDesignsRootModel):
                                     speed:
                                        Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
                                        <interface_speed>`.
+                                    receive_bandwidth:
+                                       Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
+                                    transmit_bandwidth:
+                                       Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                                       This is currently used on
+                                       CVaaS to provide more information in the visualization.
                                     peer: The peer device name. Used for description and documentation.
                                     peer_interface: The peer device interface. Used for description and documentation.
                                     peer_ip:

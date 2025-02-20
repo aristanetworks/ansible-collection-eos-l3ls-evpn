@@ -20,6 +20,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dhcp_accept_default_route</samp>](## "<node_type_keys.key>.defaults.l3_interfaces.[].dhcp_accept_default_route") | Boolean |  | `True` |  | Accept a default route from DHCP if `ip_address` is set to `dhcp`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.defaults.l3_interfaces.[].enabled") | Boolean |  | `True` |  | Enable or Shutdown the interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed</samp>](## "<node_type_keys.key>.defaults.l3_interfaces.[].speed") | String |  |  |  | Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive_bandwidth</samp>](## "<node_type_keys.key>.defaults.l3_interfaces.[].receive_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed receive bandwidth (download) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transmit_bandwidth</samp>](## "<node_type_keys.key>.defaults.l3_interfaces.[].transmit_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed transmit bandwidth (upload) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer</samp>](## "<node_type_keys.key>.defaults.l3_interfaces.[].peer") | String |  |  |  | The peer device name. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_interface</samp>](## "<node_type_keys.key>.defaults.l3_interfaces.[].peer_interface") | String |  |  |  | The peer device interface. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_ip</samp>](## "<node_type_keys.key>.defaults.l3_interfaces.[].peer_ip") | String |  |  |  | The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true and `ip` is an IP address. |
@@ -59,6 +61,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dhcp_accept_default_route</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].l3_interfaces.[].dhcp_accept_default_route") | Boolean |  | `True` |  | Accept a default route from DHCP if `ip_address` is set to `dhcp`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].l3_interfaces.[].enabled") | Boolean |  | `True` |  | Enable or Shutdown the interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].l3_interfaces.[].speed") | String |  |  |  | Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive_bandwidth</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].l3_interfaces.[].receive_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed receive bandwidth (download) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transmit_bandwidth</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].l3_interfaces.[].transmit_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed transmit bandwidth (upload) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].l3_interfaces.[].peer") | String |  |  |  | The peer device name. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_interface</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].l3_interfaces.[].peer_interface") | String |  |  |  | The peer device interface. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_ip</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].l3_interfaces.[].peer_ip") | String |  |  |  | The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true and `ip` is an IP address. |
@@ -94,6 +98,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dhcp_accept_default_route</samp>](## "<node_type_keys.key>.node_groups.[].l3_interfaces.[].dhcp_accept_default_route") | Boolean |  | `True` |  | Accept a default route from DHCP if `ip_address` is set to `dhcp`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].l3_interfaces.[].enabled") | Boolean |  | `True` |  | Enable or Shutdown the interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed</samp>](## "<node_type_keys.key>.node_groups.[].l3_interfaces.[].speed") | String |  |  |  | Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive_bandwidth</samp>](## "<node_type_keys.key>.node_groups.[].l3_interfaces.[].receive_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed receive bandwidth (download) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transmit_bandwidth</samp>](## "<node_type_keys.key>.node_groups.[].l3_interfaces.[].transmit_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed transmit bandwidth (upload) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer</samp>](## "<node_type_keys.key>.node_groups.[].l3_interfaces.[].peer") | String |  |  |  | The peer device name. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_interface</samp>](## "<node_type_keys.key>.node_groups.[].l3_interfaces.[].peer_interface") | String |  |  |  | The peer device interface. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_ip</samp>](## "<node_type_keys.key>.node_groups.[].l3_interfaces.[].peer_ip") | String |  |  |  | The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true and `ip` is an IP address. |
@@ -131,6 +137,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dhcp_accept_default_route</samp>](## "<node_type_keys.key>.nodes.[].l3_interfaces.[].dhcp_accept_default_route") | Boolean |  | `True` |  | Accept a default route from DHCP if `ip_address` is set to `dhcp`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.nodes.[].l3_interfaces.[].enabled") | Boolean |  | `True` |  | Enable or Shutdown the interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;speed</samp>](## "<node_type_keys.key>.nodes.[].l3_interfaces.[].speed") | String |  |  |  | Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;receive_bandwidth</samp>](## "<node_type_keys.key>.nodes.[].l3_interfaces.[].receive_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed receive bandwidth (download) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;transmit_bandwidth</samp>](## "<node_type_keys.key>.nodes.[].l3_interfaces.[].transmit_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed transmit bandwidth (upload) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer</samp>](## "<node_type_keys.key>.nodes.[].l3_interfaces.[].peer") | String |  |  |  | The peer device name. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_interface</samp>](## "<node_type_keys.key>.nodes.[].l3_interfaces.[].peer_interface") | String |  |  |  | The peer device interface. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;peer_ip</samp>](## "<node_type_keys.key>.nodes.[].l3_interfaces.[].peer_ip") | String |  |  |  | The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true and `ip` is an IP address. |
@@ -166,6 +174,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;dhcp_accept_default_route</samp>](## "l3_interface_profiles.[].dhcp_accept_default_route") | Boolean |  | `True` |  | Accept a default route from DHCP if `ip_address` is set to `dhcp`. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "l3_interface_profiles.[].enabled") | Boolean |  | `True` |  | Enable or Shutdown the interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;speed</samp>](## "l3_interface_profiles.[].speed") | String |  |  |  | Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;receive_bandwidth</samp>](## "l3_interface_profiles.[].receive_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed receive bandwidth (download) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;transmit_bandwidth</samp>](## "l3_interface_profiles.[].transmit_bandwidth") | Integer |  |  | Min: 1<br>Max: 4294967295 | Maximum allowed transmit bandwidth (upload) in Mbps for this interface.<br>This is currently used on CVaaS to provide more information in the visualization. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;peer</samp>](## "l3_interface_profiles.[].peer") | String |  |  |  | The peer device name. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;peer_interface</samp>](## "l3_interface_profiles.[].peer_interface") | String |  |  |  | The peer device interface. Used for description and documentation. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;peer_ip</samp>](## "l3_interface_profiles.[].peer_ip") | String |  |  |  | The peer device IPv4 address (no mask). Used as default route gateway if `set_default_route` is true and `ip` is an IP address. |
@@ -245,6 +255,14 @@
 
             # Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
             speed: <str>
+
+            # Maximum allowed receive bandwidth (download) in Mbps for this interface.
+            # This is currently used on CVaaS to provide more information in the visualization.
+            receive_bandwidth: <int; 1-4294967295>
+
+            # Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+            # This is currently used on CVaaS to provide more information in the visualization.
+            transmit_bandwidth: <int; 1-4294967295>
 
             # The peer device name. Used for description and documentation.
             peer: <str>
@@ -386,6 +404,14 @@
                   # Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
                   speed: <str>
 
+                  # Maximum allowed receive bandwidth (download) in Mbps for this interface.
+                  # This is currently used on CVaaS to provide more information in the visualization.
+                  receive_bandwidth: <int; 1-4294967295>
+
+                  # Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+                  # This is currently used on CVaaS to provide more information in the visualization.
+                  transmit_bandwidth: <int; 1-4294967295>
+
                   # The peer device name. Used for description and documentation.
                   peer: <str>
 
@@ -512,6 +538,14 @@
 
               # Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
               speed: <str>
+
+              # Maximum allowed receive bandwidth (download) in Mbps for this interface.
+              # This is currently used on CVaaS to provide more information in the visualization.
+              receive_bandwidth: <int; 1-4294967295>
+
+              # Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+              # This is currently used on CVaaS to provide more information in the visualization.
+              transmit_bandwidth: <int; 1-4294967295>
 
               # The peer device name. Used for description and documentation.
               peer: <str>
@@ -646,6 +680,14 @@
               # Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
               speed: <str>
 
+              # Maximum allowed receive bandwidth (download) in Mbps for this interface.
+              # This is currently used on CVaaS to provide more information in the visualization.
+              receive_bandwidth: <int; 1-4294967295>
+
+              # Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+              # This is currently used on CVaaS to provide more information in the visualization.
+              transmit_bandwidth: <int; 1-4294967295>
+
               # The peer device name. Used for description and documentation.
               peer: <str>
 
@@ -773,6 +815,14 @@
 
         # Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
         speed: <str>
+
+        # Maximum allowed receive bandwidth (download) in Mbps for this interface.
+        # This is currently used on CVaaS to provide more information in the visualization.
+        receive_bandwidth: <int; 1-4294967295>
+
+        # Maximum allowed transmit bandwidth (upload) in Mbps for this interface.
+        # This is currently used on CVaaS to provide more information in the visualization.
+        transmit_bandwidth: <int; 1-4294967295>
 
         # The peer device name. Used for description and documentation.
         peer: <str>
