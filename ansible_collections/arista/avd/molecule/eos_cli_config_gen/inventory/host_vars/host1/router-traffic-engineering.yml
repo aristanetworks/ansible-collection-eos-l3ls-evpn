@@ -52,3 +52,31 @@ router_traffic_engineering:
                 segment_list:
                   - label_stack: "900002 900008 900009 900006"
                   - label_stack: "900002 900010 900011 900012"
+  flex_algos:
+    - number: 128
+      name: test-algo
+      administrative_group:
+        include_all: 99,100,102,105
+        include_any: 101,103,110-115,117
+        exclude: 45,60-70
+      color: 450000
+      metric: 1
+      srlg_exclude: "test,400-500,502"
+      priority: 127
+    - number: 129
+      name: test-2
+      administrative_group:
+        include_all: 4
+        exclude: 101
+      color: 100
+      metric: min-delay
+      srlg_exclude: "100,0xA"
+      priority: 128
+    - number: 130
+      name: test-3
+      color: 1234
+      metric: te-metric
+      administrative_group:
+        exclude: "117"
+      srlg_exclude: 101
+      priority: 123
