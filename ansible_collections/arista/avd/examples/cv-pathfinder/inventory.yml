@@ -24,6 +24,8 @@ all:
               ansible_host: 192.168.17.14
             site1-border2:
               ansible_host: 192.168.17.15
+            site1-spine1:
+              ansible_host: 192.168.17.101
         SITE2:
           hosts:
             site2-wan1:

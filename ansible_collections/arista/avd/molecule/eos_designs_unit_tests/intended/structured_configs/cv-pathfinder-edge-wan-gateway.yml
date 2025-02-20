@@ -71,20 +71,20 @@ dps_interfaces:
 - name: Dps1
   description: DPS Interface
   mtu: 9194
-  ip_address: 192.168.142.14/32
+  ip_address: 192.168.142.12/32
   flow_tracker:
     hardware: FLOW-TRACKER
 enable_password:
   disabled: true
 ethernet_interfaces:
 - name: Ethernet52
-  description: P2P_leaf-wan-use-evpn-on-lan_Ethernet2
+  description: P2P_cv-pathfinder-spine1_Ethernet1
   shutdown: false
   mtu: 9214
-  ip_address: 172.18.0.27/31
-  peer: leaf-wan-use-evpn-on-lan
-  peer_interface: Ethernet2
-  peer_type: l3leaf
+  ip_address: 172.18.0.23/31
+  peer: cv-pathfinder-spine1
+  peer_interface: Ethernet1
+  peer_type: spine
   switchport:
     enabled: false
 - name: Ethernet1
@@ -109,17 +109,17 @@ flow_tracking:
         local_interface: Loopback0
         template_interval: 3600000
     shutdown: false
-hostname: cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan
+hostname: cv-pathfinder-edge-wan-gateway
 ip_extcommunity_lists:
 - name: ECL-EVPN-SOO
   entries:
   - type: permit
-    extcommunities: soo 192.168.42.14:12
+    extcommunities: soo 192.168.42.12:12
 ip_routing: true
 ip_security:
   ike_policies:
   - name: CP-IKE-POLICY
-    local_id: 192.168.142.14
+    local_id: 192.168.142.12
   sa_policies:
   - name: DP-SA-POLICY
     esp:
@@ -156,7 +156,7 @@ loopback_interfaces:
 - name: Loopback0
   description: ROUTER_ID
   shutdown: false
-  ip_address: 192.168.42.14/32
+  ip_address: 192.168.42.12/32
 management_api_http:
   enable_https: true
   enable_vrfs:
@@ -201,7 +201,7 @@ metadata:
     region: AVD_Land_West
     zone: AVD_Land_West-ZONE
     site: Site12
-    vtep_ip: 192.168.142.14
+    vtep_ip: 192.168.142.12
     ssl_profile: profileA
     pathfinders:
     - vtep_ip: 192.168.144.1
@@ -216,7 +216,7 @@ prefix_lists:
   - sequence: 10
     action: permit 192.168.42.0/24 eq 32
   - sequence: 20
-    action: permit 192.168.142.14/32 eq 32
+    action: permit 192.168.142.12/32 eq 32
 route_maps:
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -225,14 +225,14 @@ route_maps:
     match:
     - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
     set:
-    - extcommunity soo 192.168.42.14:12 additive
+    - extcommunity soo 192.168.42.12:12 additive
 - name: RM-BGP-UNDERLAY-PEERS-IN
   sequence_numbers:
   - sequence: 40
     type: permit
     description: Mark prefixes originated from the LAN
     set:
-    - extcommunity soo 192.168.42.14:12 additive
+    - extcommunity soo 192.168.42.12:12 additive
 - name: RM-EVPN-SOO-IN
   sequence_numbers:
   - sequence: 10
@@ -246,7 +246,7 @@ route_maps:
   - sequence: 10
     type: permit
     set:
-    - extcommunity soo 192.168.42.14:12 additive
+    - extcommunity soo 192.168.42.12:12 additive
 - name: RM-EVPN-EXPORT-VRF-DEFAULT
   sequence_numbers:
   - sequence: 10
@@ -314,15 +314,6 @@ router_adaptive_virtual_topology:
       id: 4
     - name: PROD-AVT-POLICY-DEFAULT
       id: 1
-  - name: WAN-VRF-NO-AF
-    policy: PROD-AVT-POLICY
-    profiles:
-    - name: PROD-AVT-POLICY-VOICE
-      id: 2
-    - name: PROD-AVT-POLICY-VIDEO
-      id: 4
-    - name: PROD-AVT-POLICY-DEFAULT
-      id: 1
 router_bfd:
   multihop:
     interval: 300
@@ -330,7 +321,7 @@ router_bfd:
     multiplier: 3
 router_bgp:
   as: '65000'
-  router_id: 192.168.42.14
+  router_id: 192.168.42.12
   maximum_paths:
     paths: 16
   updates:
@@ -344,6 +335,13 @@ router_bgp:
     send_community: all
     maximum_routes: 12000
     route_map_in: RM-BGP-UNDERLAY-PEERS-IN
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
   - name: WAN-OVERLAY-PEERS
     type: wan
     remote_as: '65000'
@@ -358,11 +356,16 @@ router_bgp:
     maximum_routes: 0
     ttl_maximum_hops: 1
   neighbors:
-  - ip_address: 172.18.0.26
+  - ip_address: 172.18.0.22
     peer_group: IPv4-UNDERLAY-PEERS
-    remote_as: '65042'
-    peer: leaf-wan-use-evpn-on-lan
-    description: leaf-wan-use-evpn-on-lan_Ethernet2
+    remote_as: '65000'
+    peer: cv-pathfinder-spine1
+    description: cv-pathfinder-spine1_Ethernet1
+  - ip_address: 192.168.42.17
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65000'
+    peer: cv-pathfinder-spine1
+    description: cv-pathfinder-spine1_Loopback0
   - ip_address: 192.168.144.1
     peer_group: WAN-OVERLAY-PEERS
     peer: cv-pathfinder-pathfinder
@@ -383,11 +386,15 @@ router_bgp:
       route_map_out: RM-EVPN-SOO-OUT
       domain_remote: true
       encapsulation: path-selection
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
   address_family_ipv4:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
     - name: WAN-OVERLAY-PEERS
+      activate: false
+    - name: EVPN-OVERLAY-PEERS
       activate: false
   address_family_ipv4_sr_te:
     peer_groups:
@@ -410,7 +417,7 @@ router_bgp:
       activate: true
   vrfs:
   - name: default
-    rd: 192.168.42.14:1
+    rd: 192.168.42.12:1
     route_targets:
       import:
       - address_family: evpn
@@ -422,7 +429,7 @@ router_bgp:
         - '1:1'
         - route-map RM-EVPN-EXPORT-VRF-DEFAULT
   - name: PROD
-    rd: 192.168.42.14:142
+    rd: 192.168.42.12:142
     route_targets:
       import:
       - address_family: evpn
@@ -432,22 +439,7 @@ router_bgp:
       - address_family: evpn
         route_targets:
         - 142:142
-    router_id: 192.168.42.14
-    redistribute:
-      connected:
-        enabled: true
-  - name: WAN-VRF-NO-AF
-    rd: 192.168.42.14:200
-    route_targets:
-      import:
-      - address_family: evpn
-        route_targets:
-        - 200:200
-      export:
-      - address_family: evpn
-        route_targets:
-        - 200:200
-    router_id: 192.168.42.14
+    router_id: 192.168.42.12
     redistribute:
       connected:
         enabled: true
@@ -517,18 +509,9 @@ vrfs:
 - name: PROD
   ip_routing: true
   tenant: TenantA
-- name: VRF-NO-WAN
-  ip_routing: true
-  tenant: TenantD
-- name: VRF-NO-WAN-NO-AF
-  ip_routing: true
-  tenant: TenantD
-- name: WAN-VRF-NO-AF
-  ip_routing: true
-  tenant: TenantD
 vxlan_interface:
   vxlan1:
-    description: cv-pathfinder-edge-wan-use-evpn-on-lan-no-overlay-on-lan_VTEP
+    description: cv-pathfinder-edge-wan-gateway_VTEP
     vxlan:
       source_interface: Dps1
       udp_port: 4789
@@ -537,7 +520,3 @@ vxlan_interface:
         vni: 1
       - name: PROD
         vni: 42
-      - name: VRF-NO-WAN
-        vni: 300
-      - name: WAN-VRF-NO-AF
-        vni: 200

@@ -215,6 +215,8 @@ prefix_lists:
   sequence_numbers:
   - sequence: 10
     action: permit 192.168.42.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.142.12/32 eq 32
 route_maps:
 - name: RM-CONN-2-BGP
   sequence_numbers:
@@ -253,6 +255,7 @@ route_maps:
     - extcommunity ECL-EVPN-SOO
 router_adaptive_virtual_topology:
   topology_role: edge
+  gateway_vxlan: true
   region:
     name: AVD_Land_West
     id: 42
@@ -376,11 +379,16 @@ router_bgp:
       enabled: true
       route_map: RM-CONN-2-BGP
   address_family_evpn:
+    neighbor_default:
+      next_hop_self_received_evpn_routes:
+        enable: true
+        inter_domain: true
     peer_groups:
     - name: WAN-OVERLAY-PEERS
       activate: true
       route_map_in: RM-EVPN-SOO-IN
       route_map_out: RM-EVPN-SOO-OUT
+      domain_remote: true
       encapsulation: path-selection
     - name: EVPN-OVERLAY-PEERS
       activate: true
@@ -389,6 +397,8 @@ router_bgp:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
     - name: WAN-OVERLAY-PEERS
+      activate: false
+    - name: EVPN-OVERLAY-PEERS
       activate: false
   address_family_ipv4_sr_te:
     peer_groups:

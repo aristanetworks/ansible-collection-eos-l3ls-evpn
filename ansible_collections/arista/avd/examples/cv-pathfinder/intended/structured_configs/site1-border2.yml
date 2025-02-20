@@ -36,6 +36,18 @@ ethernet_interfaces:
   peer: site1-border1
   peer_interface: Ethernet6
   peer_type: mlag_peer
+- name: Ethernet1
+  description: P2P_site1-spine1_Ethernet2
+  shutdown: false
+  mtu: 9214
+  flow_tracker:
+    sampled: FLOW-TRACKER
+  ip_address: 10.0.5.11/31
+  peer: site1-spine1
+  peer_interface: Ethernet2
+  peer_type: spine
+  switchport:
+    enabled: false
 - name: Ethernet3
   description: P2P_site1-wan1_Ethernet2
   shutdown: false
@@ -48,32 +60,6 @@ ethernet_interfaces:
   peer_type: wan_router
   switchport:
     enabled: false
-- name: Ethernet3.100
-  description: P2P_site1-wan1_Ethernet2.100_VRF_BLUE
-  shutdown: false
-  mtu: 9214
-  vrf: BLUE
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  encapsulation_dot1q:
-    vlan: 100
-  ip_address: 10.0.1.10/31
-  peer: site1-wan1
-  peer_interface: Ethernet2.100
-  peer_type: wan_router
-- name: Ethernet3.101
-  description: P2P_site1-wan1_Ethernet2.101_VRF_RED
-  shutdown: false
-  mtu: 9214
-  vrf: RED
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  encapsulation_dot1q:
-    vlan: 101
-  ip_address: 10.0.1.10/31
-  peer: site1-wan1
-  peer_interface: Ethernet2.101
-  peer_type: wan_router
 - name: Ethernet4
   description: P2P_site1-wan2_Ethernet2
   shutdown: false
@@ -86,32 +72,6 @@ ethernet_interfaces:
   peer_type: wan_router
   switchport:
     enabled: false
-- name: Ethernet4.100
-  description: P2P_site1-wan2_Ethernet2.100_VRF_BLUE
-  shutdown: false
-  mtu: 9214
-  vrf: BLUE
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  encapsulation_dot1q:
-    vlan: 100
-  ip_address: 10.0.1.14/31
-  peer: site1-wan2
-  peer_interface: Ethernet2.100
-  peer_type: wan_router
-- name: Ethernet4.101
-  description: P2P_site1-wan2_Ethernet2.101_VRF_RED
-  shutdown: false
-  mtu: 9214
-  vrf: RED
-  flow_tracker:
-    sampled: FLOW-TRACKER
-  encapsulation_dot1q:
-    vlan: 101
-  ip_address: 10.0.1.14/31
-  peer: site1-wan2
-  peer_interface: Ethernet2.101
-  peer_type: wan_router
 flow_tracking:
   sampled:
     sample: 10000
@@ -270,6 +230,11 @@ router_bgp:
     peer_group: MLAG-IPv4-UNDERLAY-PEER
     peer: site1-border1
     description: site1-border1_Vlan4093
+  - ip_address: 10.0.5.10
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65110'
+    peer: site1-spine1
+    description: site1-spine1_Ethernet2
   - ip_address: 10.0.1.11
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65000'
@@ -280,6 +245,11 @@ router_bgp:
     remote_as: '65000'
     peer: site1-wan2
     description: site1-wan2_Ethernet2
+  - ip_address: 192.168.255.18
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65110'
+    peer: site1-spine1
+    description: site1-spine1_Loopback0
   redistribute:
     connected:
       enabled: true
@@ -327,14 +297,6 @@ router_bgp:
         - 100:100
     router_id: 192.168.255.6
     neighbors:
-    - ip_address: 10.0.1.11
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site1-wan1_Ethernet2.100_vrf_BLUE
-    - ip_address: 10.0.1.15
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site1-wan2_Ethernet2.100_vrf_BLUE
     - ip_address: 10.255.251.8
       peer_group: MLAG-IPv4-UNDERLAY-PEER
       description: site1-border1_Vlan3099
@@ -355,14 +317,6 @@ router_bgp:
         - 101:101
     router_id: 192.168.255.6
     neighbors:
-    - ip_address: 10.0.1.11
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site1-wan1_Ethernet2.101_vrf_RED
-    - ip_address: 10.0.1.15
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65000'
-      description: site1-wan2_Ethernet2.101_vrf_RED
     - ip_address: 10.255.251.8
       peer_group: MLAG-IPv4-UNDERLAY-PEER
       description: site1-border1_Vlan3100

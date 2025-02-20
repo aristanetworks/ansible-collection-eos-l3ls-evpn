@@ -91,6 +91,7 @@ wan_router:
         - name: site2-wan1
           id: 7
           mgmt_ip: 192.168.17.16/24
+          evpn_role: none
           uplink_switches: [site2-leaf1]
           l3_interfaces:
             - name: Ethernet3
@@ -104,6 +105,7 @@ wan_router:
           id: 8
           mgmt_ip: 192.168.17.17/24
           uplink_switches: [site2-leaf2]
+          evpn_role: none
           l3_interfaces:
             - name: Ethernet4
               peer_interface: Ethernet7

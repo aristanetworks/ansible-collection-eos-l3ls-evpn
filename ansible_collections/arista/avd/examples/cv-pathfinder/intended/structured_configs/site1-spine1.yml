@@ -1,0 +1,208 @@
+aaa_authorization:
+  exec:
+    default: local
+aaa_root:
+  disabled: true
+config_end: true
+daemon_terminattr:
+  cvaddrs:
+  - www.cv-staging.corp.arista.io:443
+  cvauth:
+    method: token-secure
+    token_file: /tmp/cv-onboarding-token
+  cvvrf: MGMT
+  disable_aaa: false
+  ingestexclude: /Sysdb/cell/1/agent,/Sysdb/cell/2/agent
+  smashexcludes: ale,flexCounter,hardware,kni,pulse,strata
+dns_domain: wan.example.local
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_site1-border1_Ethernet1
+  shutdown: false
+  mtu: 9214
+  flow_tracker:
+    sampled: FLOW-TRACKER
+  ip_address: 10.0.5.8/31
+  peer: site1-border1
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+- name: Ethernet2
+  description: P2P_site1-border2_Ethernet1
+  shutdown: false
+  mtu: 9214
+  flow_tracker:
+    sampled: FLOW-TRACKER
+  ip_address: 10.0.5.10/31
+  peer: site1-border2
+  peer_interface: Ethernet1
+  peer_type: l3leaf
+  switchport:
+    enabled: false
+flow_tracking:
+  sampled:
+    sample: 10000
+    trackers:
+    - record_export:
+        on_inactive_timeout: 70000
+        on_interval: 5000
+      name: FLOW-TRACKER
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+    shutdown: false
+hostname: site1-spine1
+ip_name_servers:
+- ip_address: 192.168.17.1
+  vrf: MGMT
+ip_routing: true
+is_deployed: true
+local_users:
+- name: ansible
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$7u4j1rkb3VELgcZE$EJt2Qff8kd/TapRoci0XaIZsL4tFzgq1YZBLD9c6f/knXzvcYY0NcMKndZeCv0T268knGKhOEwZAxqKjlMm920
+- name: arista
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$Enl0WfE32FthwyiJ$yTyGaEJ2uPKLU.F7314YtB7J1jrzrMi7ogXIRTEHQfLdLgKWWmr1UvNlZLN6AyuxET7G5aH3AI9OYRzxVTkB1.
+- name: cvpadmin
+  privilege: 15
+  role: network-admin
+  sha512_password: $6$a7LdQWHxWzYHpvVt$n62q.1mbm4kzQ5oBr0lhXCE9ntnTn.SNa16DovZHahFQLH.iPcPMZa5JUSFtncrDW4EDQ3oSWgP8G0S4FtOFx1
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.18/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+management_interfaces:
+- name: Management1
+  description: OOB_MANAGEMENT
+  shutdown: false
+  vrf: MGMT
+  ip_address: 192.168.17.101/24
+  type: oob
+  gateway: 192.168.17.1
+  lldp:
+    transmit: false
+    receive: false
+metadata:
+  platform: vEOS-lab
+  fabric_name: WAN
+ntp:
+  local_interface:
+    name: Management1
+    vrf: MGMT
+  servers:
+  - name: 0.pool.ntp.org
+    preferred: true
+    vrf: MGMT
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '65110'
+  router_id: 192.168.255.18
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    next_hop_unchanged: true
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 10.0.5.9
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: site1-border1
+    description: site1-border1_Ethernet1
+  - ip_address: 10.0.5.11
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65101'
+    peer: site1-border2
+    description: site1-border2_Ethernet1
+  - ip_address: 192.168.255.5
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65101'
+    peer: site1-border1
+    description: site1-border1_Loopback0
+  - ip_address: 192.168.255.6
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65101'
+    peer: site1-border2
+    description: site1-border2_Loopback0
+  - ip_address: 192.168.255.3
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65000'
+    peer: site1-wan1
+    description: site1-wan1_Loopback0
+  - ip_address: 192.168.255.4
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65000'
+    peer: site1-wan2
+    description: site1-wan2_Loopback0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+static_routes:
+- vrf: MGMT
+  destination_address_prefix: 0.0.0.0/0
+  gateway: 192.168.17.1
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

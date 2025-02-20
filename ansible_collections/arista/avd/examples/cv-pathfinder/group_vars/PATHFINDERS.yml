@@ -1,5 +1,7 @@
 ---
 # WAN Pathfinder nodes variables
+overlay_routing_protocol: none
+
 wan_rr:
   defaults:
     data_plane_cpu_allocation_max: 1  # (1)!
@@ -10,6 +12,7 @@ wan_rr:
     - name: pf1
       id: 1
       mgmt_ip: 192.168.17.10/24
+      evpn_role: none
       cv_pathfinder_site: PF1-GLOBAL  # (2)!
       # WAN interfaces
       l3_interfaces:
@@ -36,6 +39,7 @@ wan_rr:
     - name: pf2
       id: 2
       mgmt_ip: 192.168.17.11/24
+      evpn_role: none
       cv_pathfinder_site: PF2-GLOBAL
       # WAN interfaces
       l3_interfaces:

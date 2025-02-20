@@ -104,32 +104,6 @@ ethernet_interfaces:
   peer_type: l3leaf
   switchport:
     enabled: false
-- name: Ethernet1.100
-  description: P2P_site1-border1_Ethernet4.100_VRF_BLUE
-  shutdown: false
-  mtu: 9214
-  vrf: BLUE
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  encapsulation_dot1q:
-    vlan: 100
-  ip_address: 10.0.1.13/31
-  peer: site1-border1
-  peer_interface: Ethernet4.100
-  peer_type: l3leaf
-- name: Ethernet1.101
-  description: P2P_site1-border1_Ethernet4.101_VRF_RED
-  shutdown: false
-  mtu: 9214
-  vrf: RED
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  encapsulation_dot1q:
-    vlan: 101
-  ip_address: 10.0.1.13/31
-  peer: site1-border1
-  peer_interface: Ethernet4.101
-  peer_type: l3leaf
 - name: Ethernet2
   description: P2P_site1-border2_Ethernet4
   shutdown: false
@@ -142,32 +116,6 @@ ethernet_interfaces:
   peer_type: l3leaf
   switchport:
     enabled: false
-- name: Ethernet2.100
-  description: P2P_site1-border2_Ethernet4.100_VRF_BLUE
-  shutdown: false
-  mtu: 9214
-  vrf: BLUE
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  encapsulation_dot1q:
-    vlan: 100
-  ip_address: 10.0.1.15/31
-  peer: site1-border2
-  peer_interface: Ethernet4.100
-  peer_type: l3leaf
-- name: Ethernet2.101
-  description: P2P_site1-border2_Ethernet4.101_VRF_RED
-  shutdown: false
-  mtu: 9214
-  vrf: RED
-  flow_tracker:
-    hardware: FLOW-TRACKER
-  encapsulation_dot1q:
-    vlan: 101
-  ip_address: 10.0.1.15/31
-  peer: site1-border2
-  peer_interface: Ethernet4.101
-  peer_type: l3leaf
 - name: Ethernet3
   description: ACME-MPLS-INC_mpls-site1-wan2_mpls-cloud_Ethernet6
   shutdown: false
@@ -337,23 +285,7 @@ metadata:
       tags:
       - name: Type
         value: lan
-    - interface: Ethernet1.100
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet1.101
-      tags:
-      - name: Type
-        value: lan
     - interface: Ethernet2
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2.100
-      tags:
-      - name: Type
-        value: lan
-    - interface: Ethernet2.101
       tags:
       - name: Type
         value: lan
@@ -405,6 +337,8 @@ prefix_lists:
   sequence_numbers:
   - sequence: 10
     action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.42.4/32 eq 32
 - name: PL-WAN-HA-PREFIXES
   sequence_numbers:
   - sequence: 10
@@ -502,6 +436,7 @@ route_maps:
     - extcommunity ECL-EVPN-SOO
 router_adaptive_virtual_topology:
   topology_role: transit region
+  gateway_vxlan: true
   region:
     name: REGION1
     id: 1
@@ -601,6 +536,13 @@ router_bgp:
       times: 1
     route_map_in: RM-BGP-UNDERLAY-PEERS-IN
     route_map_out: RM-BGP-UNDERLAY-PEERS-OUT
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
   - name: WAN-OVERLAY-PEERS
     type: wan
     remote_as: '65000'
@@ -625,6 +567,11 @@ router_bgp:
     remote_as: '65101'
     peer: site1-border2
     description: site1-border2_Ethernet4
+  - ip_address: 192.168.255.18
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65110'
+    peer: site1-spine1
+    description: site1-spine1_Loopback0
   - ip_address: 192.168.42.1
     peer_group: WAN-OVERLAY-PEERS
     peer: pf1
@@ -650,6 +597,7 @@ router_bgp:
     neighbor_default:
       next_hop_self_received_evpn_routes:
         enable: true
+        inter_domain: true
     neighbors:
     - ip_address: 192.168.42.3
       activate: true
@@ -659,12 +607,17 @@ router_bgp:
       activate: true
       route_map_in: RM-EVPN-SOO-IN
       route_map_out: RM-EVPN-SOO-OUT
+      domain_remote: true
       encapsulation: path-selection
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
   address_family_ipv4:
     peer_groups:
     - name: IPv4-UNDERLAY-PEERS
       activate: true
     - name: WAN-OVERLAY-PEERS
+      activate: false
+    - name: EVPN-OVERLAY-PEERS
       activate: false
   address_family_ipv4_sr_te:
     peer_groups:
@@ -698,15 +651,6 @@ router_bgp:
         route_targets:
         - 100:100
     router_id: 192.168.255.4
-    neighbors:
-    - ip_address: 10.0.1.12
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border1_Ethernet4.100_vrf_BLUE
-    - ip_address: 10.0.1.14
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border2_Ethernet4.100_vrf_BLUE
     redistribute:
       connected:
         enabled: true
@@ -722,15 +666,6 @@ router_bgp:
         route_targets:
         - 101:101
     router_id: 192.168.255.4
-    neighbors:
-    - ip_address: 10.0.1.12
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border1_Ethernet4.101_vrf_RED
-    - ip_address: 10.0.1.14
-      peer_group: IPv4-UNDERLAY-PEERS
-      remote_as: '65101'
-      description: site1-border2_Ethernet4.101_vrf_RED
     redistribute:
       connected:
         enabled: true
