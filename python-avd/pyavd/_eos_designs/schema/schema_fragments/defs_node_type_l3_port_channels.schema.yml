@@ -68,6 +68,36 @@ $defs:
                 type: str
                 description: |-
                   Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
+              rx_queue:
+                type: dict
+                description: |-
+                  Receive queue parameters for Receive Side Scaling (RSS) profile for this interface.
+                  This setting is ignored unless the `platform_sfe_interface_profile.supported` is set as `true` under `platform_settings.feature_support` for the `platform` set on this device.
+                keys:
+                  count:
+                    type: int
+                    min: 1
+                    convert_types:
+                      - str
+                    description: |-
+                      Number of receive queues.
+                      The maximum value is determined by `platform_sfe_interface_profile.max_rx_queues` under `platform_settings.feature_support` for the `platform` set on this device.
+                  worker:
+                    type: list
+                    items:
+                      type: str
+                      convert_types:
+                        - int
+                      description: |-
+                        Worker ids specified as values or range of values such as 0-4 or 7.
+                        Values are between 0 and one less than maximum value determined by `platform_sfe_interface_profile.max_rx_queues` under `platform_settings.feature_support` for the `platform` set on this device.
+                  mode:
+                    type: str
+                    description: Mode applicable to the workers.
+                    default: shared
+                    valid_values:
+                      - shared
+                      - exclusive
               structured_config:
                 type: dict
                 documentation_options:

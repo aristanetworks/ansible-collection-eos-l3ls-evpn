@@ -1,0 +1,22 @@
+---
+type: l3leaf
+l3leaf:
+  defaults:
+    platform: AWE-5510
+  nodes:
+    - bgp_as: 65000
+      name: rss-profile-worker-id-invalid-range
+      id: 1
+      loopback_ipv4_pool: 192.168.0.0/24
+      vtep_loopback_ipv4_pool: 192.168.1.0/24
+      l3_port_channels:
+        - name: Port-Channel5
+          ip_address: 172.16.0.2/30
+          member_interfaces:
+            - name: Ethernet1/19
+              rx_queue:
+                worker:
+                  - 8-5
+
+expected_error_message: >-
+  Worker id '8-5' under 'rx_queue' for interface 'Ethernet1/19' is not a valid range of <low> to <high> values.

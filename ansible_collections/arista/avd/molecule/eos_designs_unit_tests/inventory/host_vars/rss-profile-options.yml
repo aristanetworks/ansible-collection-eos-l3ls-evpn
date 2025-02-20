@@ -1,0 +1,71 @@
+---
+# This yml file is being used to test generation of RSS profile for regular L3 interfaces and member interfaces of
+# L3 Port-Channel based on presence of 'rx_queue' schema key.
+type: l3leaf
+
+l3leaf:
+  defaults:
+    platform: AWE-5310
+    data_plane_cpu_allocation_max: 3
+  node_groups:
+    - group: Site511
+      uplink_type: p2p-vrfs
+      nodes:
+        - name: rss-profile-options
+          id: 1
+          loopback_ipv4_pool: 192.168.255.0/24
+          vtep_loopback_ipv4_pool: 192.168.142.0/24
+          bgp_as: 65005
+          l3_interfaces:
+            - name: Ethernet5
+              ip_address: 192.168.1.201/31
+              rx_queue:
+                mode: shared
+                worker:
+                  - 1-2
+                  - 4
+            - name: Ethernet7
+              ip_address: dhcp
+            - name: Ethernet9
+              ip_address: 192.168.1.202/31
+              rx_queue:
+                mode: shared
+                count: 3
+              wan_carrier: Cybercast
+          l3_port_channels:
+            - name: Port-Channel2
+              mode: active
+              member_interfaces:
+                - name: Ethernet1
+                - name: Ethernet2
+                  rx_queue:
+                    mode: shared
+                    worker:
+                      - 0
+                      - 3
+                    count: 2
+                - name: Ethernet3
+                  rx_queue:
+                    count: 2
+              ip_address: 192.168.1.102/31
+              wan_carrier: Cybercast
+            - name: Port-Channel5
+              mode: passive
+              member_interfaces:
+                - name: Ethernet1/4
+                - name: Ethernet1/5
+              ip_address: 192.168.1.105/31
+              wan_carrier: StreamFast
+            - name: Port-Channel5.108
+              encapsulation_dot1q_vlan: 108
+              ip_address: 192.168.100.115/31
+            - name: Port-Channel8
+              mode: 'on'
+              ip_address: 192.168.100.125/31
+              member_interfaces:
+                - name: Ethernet1/10
+                  peer: peerDevice3
+                  peer_interface: Ethernet1/10
+                  rx_queue:
+                    worker:
+                      - 5

@@ -507,7 +507,13 @@ class AvdStructuredConfigBaseProtocol(NtpMixin, SnmpServerMixin, RouterGeneralMi
             # this value is required for the solution to work.
             msg = "For AutoVPN RRs and Pathfinders, 'data_plane_cpu_allocation_max' must be set"
             raise AristaAvdInvalidInputsError(msg)
-
+        # populate RSS interface profile for SFE platform (if supported)
+        if self.shared_utils.is_rss_profile_supported:
+            sfe_rss_profiles = self.shared_utils.get_rss_profiles
+            if sfe_rss_profiles:
+                if "sfe" not in platform:
+                    platform["sfe"] = {}
+                platform["sfe"]["interface"] = sfe_rss_profiles
         if platform:
             return platform
         return None

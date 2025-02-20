@@ -1,0 +1,210 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet5
+  shutdown: false
+  ip_address: 192.168.1.201/31
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet7
+  shutdown: false
+  ip_address: dhcp
+  dhcp_client_accept_default_route: true
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet9
+  description: Cybercast
+  shutdown: false
+  ip_address: 192.168.1.202/31
+  peer_type: l3_interface
+  switchport:
+    enabled: false
+- name: Ethernet1
+  shutdown: false
+  channel_group:
+    id: 2
+    mode: active
+  peer_type: l3_port_channel_member
+- name: Ethernet2
+  shutdown: false
+  channel_group:
+    id: 2
+    mode: active
+  peer_type: l3_port_channel_member
+- name: Ethernet3
+  shutdown: false
+  channel_group:
+    id: 2
+    mode: active
+  peer_type: l3_port_channel_member
+- name: Ethernet1/4
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: passive
+  peer_type: l3_port_channel_member
+- name: Ethernet1/5
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: passive
+  peer_type: l3_port_channel_member
+- name: Ethernet1/10
+  description: peerDevice3_Ethernet1/10
+  shutdown: false
+  channel_group:
+    id: 8
+    mode: 'on'
+  peer: peerDevice3
+  peer_interface: Ethernet1/10
+  peer_type: l3_port_channel_member
+hostname: rss-profile-options
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.1/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.142.1/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+metadata:
+  platform: AWE-5310
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
+platform:
+  sfe:
+    data_plane_cpu_allocation_max: 3
+    interface:
+      profiles:
+      - name: Default_RSS_Profile
+        interfaces:
+        - name: Ethernet5
+          rx_queue:
+            worker: 1-2,4
+            mode: shared
+        - name: Ethernet9
+          rx_queue:
+            count: 3
+            mode: shared
+        - name: Ethernet2
+          rx_queue:
+            count: 2
+            worker: 0,3
+            mode: shared
+        - name: Ethernet3
+          rx_queue:
+            count: 2
+        - name: Ethernet1/10
+          rx_queue:
+            worker: '5'
+      interface_profile: Default_RSS_Profile
+port_channel_interfaces:
+- name: Port-Channel2
+  description: Cybercast
+  shutdown: false
+  ip_address: 192.168.1.102/31
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
+- name: Port-Channel5
+  description: StreamFast
+  shutdown: false
+  ip_address: 192.168.1.105/31
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
+- name: Port-Channel5.108
+  shutdown: false
+  encapsulation_dot1q:
+    vlan: 108
+  ip_address: 192.168.100.115/31
+  peer_type: l3_port_channel
+- name: Port-Channel8
+  shutdown: false
+  ip_address: 192.168.100.125/31
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.142.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '65005'
+  router_id: 192.168.255.1
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false
+vxlan_interface:
+  vxlan1:
+    description: rss-profile-options_VTEP
+    vxlan:
+      source_interface: Loopback1
+      udp_port: 4789
