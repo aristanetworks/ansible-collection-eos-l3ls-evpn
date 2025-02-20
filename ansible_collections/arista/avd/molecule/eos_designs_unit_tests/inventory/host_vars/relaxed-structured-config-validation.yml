@@ -16,4 +16,6 @@ l2leaf:
             console:
               # Adding group here but not including the required key 'type'.
               # This will not raise a validation error because of relax mode in the schema.
-              group: node_group
+              methods:
+                - method: group
+                  group: node_group

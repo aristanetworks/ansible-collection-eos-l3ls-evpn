@@ -28,8 +28,19 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods.group
+                  remove_in_version: 6.0.0
               logging:
                 type: bool
+                deprecation:
+                  warning: true
+                  new_key: methods.method
+                  remove_in_version: 6.0.0
+              methods:
+                type: list
+                $ref: eos_cli_config_gen#/$defs/methods
           default:
             type: dict
             keys:
@@ -42,8 +53,19 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods.group
+                  remove_in_version: 6.0.0
               logging:
                 type: bool
+                deprecation:
+                  warning: true
+                  new_key: methods.method
+                  remove_in_version: 6.0.0
+              methods:
+                type: list
+                $ref: eos_cli_config_gen#/$defs/methods
       system:
         type: dict
         keys:
@@ -59,6 +81,13 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods.group
+                  remove_in_version: 6.0.0
+              methods:
+                type: list
+                $ref: eos_cli_config_gen#/$defs/methods
       dot1x:
         type: dict
         keys:
@@ -73,6 +102,24 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods.group
+                  remove_in_version: 6.0.0
+              methods:
+                type: list
+                min_length: 1
+                items:
+                  type: dict
+                  $ref: eos_cli_config_gen#/$defs/methods/items
+                  keys:
+                    multicast:
+                      type: bool
+                      description: 'Forward accounting packets to all servers within
+                        the specified group.
+
+                        This option is applicable only when the `method` key is explicitly
+                        set to `group`.'
       commands:
         type: dict
         keys:
@@ -96,8 +143,19 @@ keys:
                 group:
                   description: Group Name.
                   type: str
+                  deprecation:
+                    warning: true
+                    new_key: methods.group
+                    remove_in_version: 6.0.0
                 logging:
                   type: bool
+                  deprecation:
+                    warning: true
+                    new_key: methods.method
+                    remove_in_version: 6.0.0
+                methods:
+                  type: list
+                  $ref: eos_cli_config_gen#/$defs/methods
           default:
             type: list
             items:
@@ -118,8 +176,19 @@ keys:
                 group:
                   description: Group Name.
                   type: str
+                  deprecation:
+                    warning: true
+                    new_key: methods.group
+                    remove_in_version: 6.0.0
                 logging:
                   type: bool
+                  deprecation:
+                    warning: true
+                    new_key: methods.method
+                    remove_in_version: 6.0.0
+                methods:
+                  type: list
+                  $ref: eos_cli_config_gen#/$defs/methods
   aaa_authentication:
     type: dict
     keys:
@@ -23166,6 +23235,24 @@ keys:
         type: dict
         $ref: eos_cli_config_gen#/keys/vxlan_interface/keys/vxlan1
 $defs:
+  methods:
+    type: list
+    min_length: 1
+    items:
+      type: dict
+      keys:
+        method:
+          type: str
+          required: true
+          valid_values:
+          - logging
+          - group
+        group:
+          type: str
+          description: 'Specify the server group to be used.
+
+            This option is applicable only when the `method` key is explicitly set
+            to `group`.'
   application_traffic_recognition_application:
     type: dict
     keys:

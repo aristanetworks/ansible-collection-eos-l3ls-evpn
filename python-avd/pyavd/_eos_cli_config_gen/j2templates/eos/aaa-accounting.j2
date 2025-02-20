@@ -7,6 +7,20 @@
 {% if aaa_accounting is arista.avd.defined %}
 {%     if aaa_accounting.exec.console.type is arista.avd.defined('none') %}
 aaa accounting exec console none
+{%     elif aaa_accounting.exec.console.type is arista.avd.defined and aaa_accounting.exec.console.methods is arista.avd.defined %}
+{%         set exec_console_list = [] %}
+{%         for method in aaa_accounting.exec.console.methods %}
+{%             if method.method == "logging" %}
+{%                 do exec_console_list.append(method.method) %}
+{%             elif method.method == "group" and method.group is arista.avd.defined %}
+{%                 set group_cli = "group " ~ method.group %}
+{%                 do exec_console_list.append(group_cli) %}
+{%             endif %}
+{%         endfor %}
+{%         set exec_console_cli = " ".join(exec_console_list) %}
+{%         if exec_console_cli %}
+aaa accounting exec console {{ aaa_accounting.exec.console.type }} {{ exec_console_cli }}
+{%         endif %}
 {%     elif aaa_accounting.exec.console.type is arista.avd.defined and (aaa_accounting.exec.console.group is arista.avd.defined or aaa_accounting.exec.console.logging is arista.avd.defined(true)) %}
 {%         set exec_console_cli = "aaa accounting exec console " ~ aaa_accounting.exec.console.type %}
 {%         if aaa_accounting.exec.console.group is arista.avd.defined %}
@@ -18,16 +32,30 @@ aaa accounting exec console none
 {{ exec_console_cli }}
 {%     endif %}
 {%     if aaa_accounting.commands.console is arista.avd.defined %}
-{%         for command_default in aaa_accounting.commands.console %}
-{%             if command_default.commands is arista.avd.defined and command_default.type is arista.avd.defined %}
-{%                 if command_default.type is arista.avd.defined('none') %}
-aaa accounting commands {{ command_default.commands }} console none
-{%                 elif command_default.group is arista.avd.defined or command_default.logging is arista.avd.defined(true) %}
-{%                     set commands_console_cli = "aaa accounting commands " ~ command_default.commands ~ " console " ~ command_default.type %}
-{%                     if command_default.group is arista.avd.defined %}
-{%                         set commands_console_cli = commands_console_cli ~ " group " ~ command_default.group %}
+{%         for command_console in aaa_accounting.commands.console %}
+{%             if command_console.commands is arista.avd.defined and command_console.type is arista.avd.defined %}
+{%                 if command_console.type == 'none' %}
+aaa accounting commands {{ command_console.commands }} console none
+{%                 elif command_console.methods is arista.avd.defined %}
+{%                     set command_console_list = [] %}
+{%                     for method in command_console.methods %}
+{%                         if method.method == "logging" %}
+{%                             do command_console_list.append(method.method) %}
+{%                         elif method.method == "group" and method.group is arista.avd.defined %}
+{%                             set group_cli = "group " ~ method.group %}
+{%                             do command_console_list.append(group_cli) %}
+{%                         endif %}
+{%                     endfor %}
+{%                     set command_console_cli = " ".join(command_console_list) %}
+{%                     if command_console_cli %}
+aaa accounting commands {{ command_console.commands }} console {{ command_console.type }} {{ command_console_cli }}
 {%                     endif %}
-{%                     if command_default.logging is arista.avd.defined(true) %}
+{%                 elif command_console.type is arista.avd.defined and (command_console.group is arista.avd.defined or command_console.logging is arista.avd.defined(true)) %}
+{%                     set commands_console_cli = "aaa accounting commands " ~ command_console.commands ~ " console " ~ command_console.type %}
+{%                     if command_console.group is arista.avd.defined %}
+{%                         set commands_console_cli = commands_console_cli ~ " group " ~ command_console.group %}
+{%                     endif %}
+{%                     if command_console.logging is arista.avd.defined(true) %}
 {%                         set commands_console_cli = commands_console_cli ~ " logging" %}
 {%                     endif %}
 {{ commands_console_cli }}
@@ -37,6 +65,20 @@ aaa accounting commands {{ command_default.commands }} console none
 {%     endif %}
 {%     if aaa_accounting.exec.default.type is arista.avd.defined('none') %}
 aaa accounting exec default none
+{%     elif aaa_accounting.exec.default.type is arista.avd.defined and aaa_accounting.exec.default.methods is arista.avd.defined %}
+{%         set exec_default_list = [] %}
+{%         for method in aaa_accounting.exec.default.methods %}
+{%             if method.method == "logging" %}
+{%                 do exec_default_list.append(method.method) %}
+{%             elif method.method == "group" and method.group is arista.avd.defined %}
+{%                 set group_cli = "group " ~ method.group %}
+{%                 do exec_default_list.append(group_cli) %}
+{%             endif %}
+{%         endfor %}
+{%         set exec_default_cli = " ".join(exec_default_list) %}
+{%         if exec_default_cli %}
+aaa accounting exec default {{ aaa_accounting.exec.default.type }} {{ exec_default_cli }}
+{%         endif %}
 {%     elif aaa_accounting.exec.default.type is arista.avd.defined and (aaa_accounting.exec.default.group is arista.avd.defined or aaa_accounting.exec.default.logging is arista.avd.defined(true)) %}
 {%         set exec_default_cli = "aaa accounting exec default " ~  aaa_accounting.exec.default.type %}
 {%         if aaa_accounting.exec.default.group is arista.avd.defined %}
@@ -47,17 +89,72 @@ aaa accounting exec default none
 {%         endif %}
 {{ exec_default_cli }}
 {%     endif %}
-{%     if aaa_accounting.system.default.type is arista.avd.defined and aaa_accounting.system.default.group is arista.avd.defined %}
-aaa accounting system default {{ aaa_accounting.system.default.type }} group {{ aaa_accounting.system.default.group }}
+{%     if aaa_accounting.system.default.type is arista.avd.defined('none') %}
+aaa accounting system default none
+{%     elif aaa_accounting.system.default.type is arista.avd.defined and aaa_accounting.system.default.methods is arista.avd.defined %}
+{%         set system_default_list = [] %}
+{%         for method in aaa_accounting.system.default.methods %}
+{%             if method.method == "logging" %}
+{%                 do system_default_list.append(method.method) %}
+{%             elif method.method == "group" and method.group is arista.avd.defined %}
+{%                 set group_cli = "group " ~ method.group %}
+{%                 do system_default_list.append(group_cli) %}
+{%             endif %}
+{%         endfor %}
+{%         set system_default_cli = " ".join(system_default_list) %}
+{%         if system_default_cli %}
+aaa accounting system default {{ aaa_accounting.system.default.type }} {{ system_default_cli }}
+{%         endif %}
+{%     elif aaa_accounting.system.default.type is arista.avd.defined and (aaa_accounting.system.default.group is arista.avd.defined or aaa_accounting.system.default.logging is arista.avd.defined(true)) %}
+{%         set system_default_cli = "aaa accounting system default " ~  aaa_accounting.system.default.type %}
+{%         if aaa_accounting.system.default.group is arista.avd.defined %}
+{%             set system_default_cli = system_default_cli ~ " group " ~ aaa_accounting.system.default.group %}
+{%         endif %}
+{{ system_default_cli }}
 {%     endif %}
-{%     if aaa_accounting.dot1x.default.type is arista.avd.defined and aaa_accounting.dot1x.default.group is arista.avd.defined %}
-aaa accounting dot1x default {{ aaa_accounting.dot1x.default.type }} group {{ aaa_accounting.dot1x.default.group }}
+{%     if aaa_accounting.dot1x.default.type is arista.avd.defined and aaa_accounting.dot1x.default.methods is arista.avd.defined %}
+{%         set dot1x_default_list = [] %}
+{%         for method in aaa_accounting.dot1x.default.methods %}
+{%             if method.method == "logging" %}
+{%                 do dot1x_default_list.append(method.method) %}
+{%             elif method.method == "group" and method.group is arista.avd.defined %}
+{%                 set group_cli = "group " ~ method.group %}
+{%                 if method.multicast is arista.avd.defined(true) %}
+{%                     set group_cli = group_cli ~ " multicast" %}
+{%                 endif %}
+{%                 do dot1x_default_list.append(group_cli) %}
+{%             endif %}
+{%         endfor %}
+{%         set dot1x_default_cli = " ".join(dot1x_default_list) %}
+{%         if dot1x_default_cli %}
+aaa accounting dot1x default {{ aaa_accounting.dot1x.default.type }} {{ dot1x_default_cli }}
+{%         endif %}
+{%     elif aaa_accounting.dot1x.default.type is arista.avd.defined and (aaa_accounting.dot1x.default.group is arista.avd.defined or aaa_accounting.dot1x.default.logging is arista.avd.defined(true)) %}
+{%         set dot1x_default_cli = "aaa accounting dot1x default " ~  aaa_accounting.dot1x.default.type %}
+{%         if aaa_accounting.dot1x.default.group is arista.avd.defined %}
+{%             set dot1x_default_cli = dot1x_default_cli ~ " group " ~ aaa_accounting.dot1x.default.group %}
+{%         endif %}
+{{ dot1x_default_cli }}
 {%     endif %}
 {%     if aaa_accounting.commands.default is arista.avd.defined %}
 {%         for command_default in aaa_accounting.commands.default %}
 {%             if command_default.commands is arista.avd.defined and command_default.type is arista.avd.defined %}
-{%                 if command_default.type is arista.avd.defined('none') %}
+{%                 if command_default.type == 'none' %}
 aaa accounting commands {{ command_default.commands }} default none
+{%                 elif command_default.methods is arista.avd.defined %}
+{%                     set commands_default_list = [] %}
+{%                     for method in command_default.methods %}
+{%                         if method.method == "logging" %}
+{%                             do commands_default_list.append(method.method) %}
+{%                         elif method.method == "group" and method.group is arista.avd.defined %}
+{%                             set group_cli = "group " ~ method.group %}
+{%                             do commands_default_list.append(group_cli) %}
+{%                         endif %}
+{%                     endfor %}
+{%                     set command_default_cli = " ".join(commands_default_list) %}
+{%                     if command_default_cli %}
+aaa accounting commands {{ command_default.commands }} default {{ command_default.type }} {{ command_default_cli }}
+{%                     endif %}
 {%                 elif command_default.group is arista.avd.defined or command_default.logging is arista.avd.defined(true) %}
 {%                     set commands_default_cli = "aaa accounting commands " ~ command_default.commands ~ " default " ~ command_default.type %}
 {%                     if command_default.group is arista.avd.defined %}

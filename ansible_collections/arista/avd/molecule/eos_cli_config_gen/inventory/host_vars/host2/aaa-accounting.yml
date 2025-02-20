@@ -4,6 +4,26 @@ aaa_accounting:
   exec:
     console:
       type: none
-      logging: true
+      methods:
+        - method: logging
     default:
       type: none
+  system:
+    default:
+      type: none
+  dot1x:
+    default:
+      type: start-stop
+      methods:
+        - method: logging
+  commands:
+    console:
+      - commands: all
+        type: none
+      - commands: 0
+        type: none
+    default:
+      - commands: all
+        type: none
+      - commands: 0
+        type: none
