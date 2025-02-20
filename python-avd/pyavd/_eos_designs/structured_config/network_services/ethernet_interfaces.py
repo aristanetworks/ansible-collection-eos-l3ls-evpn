@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
-from pyavd._errors import AristaAvdError
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
 from pyavd._utils import get
 from pyavd.j2filters import natural_sort
 
@@ -181,9 +181,13 @@ class EthernetInterfacesMixin(Protocol):
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
         subif_parent_interface_names: set[str],
     ) -> None:
-        """Set the structured_config for ethernet_interfaces with the point-to-point interfaces defined under network_services."""
+        """
+        Set the structured_config for ethernet_interfaces with the point-to-point interfaces defined under network_services.
+
+        This makes sure that any added interface is not conflicting with an already existing interface.
+        """
         for point_to_point_service in tenant.point_to_point_services._natural_sorted():
-            for endpoint in point_to_point_service.endpoints:
+            for endpoint_index, endpoint in enumerate(point_to_point_service.endpoints):
                 # TODO: Filter port-to-point services in filtered_tenants
                 if self.shared_utils.hostname not in endpoint.nodes:
                     continue
@@ -191,6 +195,15 @@ class EthernetInterfacesMixin(Protocol):
                 for node_index, interface_name in enumerate(endpoint.interfaces):
                     if endpoint.nodes[node_index] != self.shared_utils.hostname:
                         continue
+
+                    if interface_name in self.structured_config.ethernet_interfaces:
+                        context = f"tenants[{tenant.name}].point_to_point_services[{point_to_point_service.name}].endpoints[{endpoint_index}]"
+                        msg = (
+                            "Found duplicate objects with conflicting data while generating configuration for Network Services "
+                            f"point-to-point EthernetInterfaces. Interface {interface_name} defined under {context} "
+                            f"conflicts with {self.structured_config.ethernet_interfaces[interface_name]._as_dict()}."
+                        )
+                        raise AristaAvdInvalidInputsError(msg)
 
                     if (port_channel_mode := endpoint.port_channel.mode) in ["active", "on"]:
                         first_interface_index = endpoint.nodes.index(self.shared_utils.hostname)
@@ -210,6 +223,15 @@ class EthernetInterfacesMixin(Protocol):
                         subif_parent_interface_names.add(interface_name)
                         for subif in point_to_point_service.subinterfaces:
                             subif_name = f"{interface_name}.{subif.number}"
+                            if subif_name in self.structured_config.ethernet_interfaces:
+                                context = f"tenants[{tenant.name}].point_to_point_services[{point_to_point_service.name}].endpoints[{endpoint_index}]"
+                                msg = (
+                                    "Found duplicate objects with conflicting data while generating configuration for Network Services "
+                                    f"point-to-point EthernetInterfaces. Interface {subif_name} defined under {context} "
+                                    f"conflicts with {self.structured_config.ethernet_interfaces[subif_name]._as_dict()}."
+                                )
+                                raise AristaAvdInvalidInputsError(msg)
+
                             interface = EosCliConfigGen.EthernetInterfacesItem(
                                 name=subif_name,
                                 peer_type="point_to_point_service",

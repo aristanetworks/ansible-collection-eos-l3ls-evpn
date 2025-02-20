@@ -56,6 +56,6 @@ tenants:
               mode: "on"
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
-  {'name': 'Ethernet6', 'shutdown': False, 'channel_group': {'id': 6, 'mode': 'on'}, 'peer_type': 'point_to_point_service'} conflicts with
-  {'name': 'Ethernet6', 'shutdown': False, 'channel_group': {'id': 6, 'mode': 'active'}, 'peer_type': 'point_to_point_service'}.
+  Found duplicate objects with conflicting data while generating configuration for Network Services point-to-point EthernetInterfaces.
+  Interface Ethernet6 defined under tenants[TENANT_B].point_to_point_services[TEN_B_site2_site5_eline_port_based].endpoints[0]
+  conflicts with {'name': 'Ethernet6', 'shutdown': False, 'channel_group': {'id': 6, 'mode': 'active'}, 'peer_type': 'point_to_point_service'}.
