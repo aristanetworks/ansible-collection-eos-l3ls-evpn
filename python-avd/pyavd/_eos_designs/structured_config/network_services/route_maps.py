@@ -208,7 +208,7 @@ class RouteMapsMixin(Protocol):
         if not self.inputs.underlay_filter_redistribute_connected:
             return
 
-        sequence_numbers = EosCliConfigGen.RouteMapsItem.SequenceNumbers()  # (name="RM-CONN-2-BGP")
+        sequence_numbers = EosCliConfigGen.RouteMapsItem.SequenceNumbers()
 
         if self._vrf_default_ipv4_subnets:
             # Add subnets to redistribution in default VRF
