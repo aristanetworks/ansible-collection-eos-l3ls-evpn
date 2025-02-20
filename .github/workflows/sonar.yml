@@ -20,7 +20,7 @@ jobs:
         with:
           name: ansible-test-units-coverage
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run. }}
+          run-id: ${{ github.event.workflow_run.run_number }}
           path: ansible_collections/arista/avd/tests/output/coverage/
           merge-multiple: true
       - name: Download coverage from ansible-test integration
@@ -28,7 +28,7 @@ jobs:
         with:
           name: ansible-test-integration-coverage
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run. }}
+          run-id: ${{ github.event.workflow_run.run_number }}
           path: ansible_collections/arista/avd/tests/output/coverage/
           merge-multiple: true
       - name: Download coverage from pytest
@@ -36,7 +36,7 @@ jobs:
         with:
           name: pytest-coverage
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run. }}
+          run-id: ${{ github.event.workflow_run.run_number }}
           path: python-avd/coverage.xml
           merge-multiple: true
       - name: SonarCloud Scan
