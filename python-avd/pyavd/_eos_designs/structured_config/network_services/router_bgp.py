@@ -256,7 +256,7 @@ class RouterBgpMixin(Protocol):
             else:
                 target["route_targets"].append(rt.route_target)
 
-        if vrf.name == "default" and self._vrf_default_evpn and self._route_maps_vrf_default:
+        if vrf.name == "default" and self._vrf_default_evpn and self._route_maps_vrf_default_check():
             # Special handling of vrf default with evpn.
 
             if (target := get_item(route_targets["export"], "address_family", "evpn")) is None:
