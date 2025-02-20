@@ -12,8 +12,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: |
-          echo "${{ toJson(github.event.workflow_run) }}"
+          echo '${{ toJson(github.event.workflow_run) }}'
       - name: 'Get PR context'
+        # Source: https://github.com/orgs/community/discussions/25220#discussioncomment-11316244
         id: pr-context
         env:
           # Token required for GH CLI:
