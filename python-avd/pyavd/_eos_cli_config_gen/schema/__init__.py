@@ -23162,8 +23162,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     """Significance value in microseconds."""
                     offset: int
                     """
-                    Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be smaller
-                    than significance value.
+                    Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be lower than
+                    the significance value.
                     """
 
                     if TYPE_CHECKING:
@@ -23178,8 +23178,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                             Args:
                                 value: Significance value in microseconds.
                                 offset:
-                                   Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be smaller
-                                   than significance value.
+                                   Offset in microseconds, used to round up calculated TWAMP light delay statistics. Must be lower than
+                                   the significance value.
 
                             """
 

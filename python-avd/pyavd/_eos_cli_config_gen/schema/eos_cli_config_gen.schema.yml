@@ -9104,7 +9104,6 @@ keys:
               keys:
                 name:
                   type: str
-                  required: true
                 measurement_interval:
                   type: int
                   min: 1
@@ -9138,7 +9137,7 @@ keys:
                       convert_types:
                       - str
                       description: Offset in microseconds, used to round up calculated
-                        TWAMP light delay statistics. Must be smaller than significance
+                        TWAMP light delay statistics. Must be lower than the significance
                         value.
   mpls:
     type: dict
