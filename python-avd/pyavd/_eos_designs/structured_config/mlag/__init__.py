@@ -5,7 +5,8 @@ from __future__ import annotations
 
 from functools import cached_property
 
-from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import StructuredConfigGenerator, structured_config_contributor
 from pyavd._utils import AvdStringFormatter, default, strip_empties_from_dict
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import list_compress
@@ -26,32 +27,26 @@ class AvdStructuredConfigMlag(StructuredConfigGenerator):
 
         return {"no_spanning_tree_vlan": list_compress(vlans)}
 
-    @cached_property
-    def vlans(self) -> list:
-        vlans = []
+    @structured_config_contributor
+    def vlans(self) -> None:
         if self.shared_utils.mlag_peer_l3_vlan is not None and self.shared_utils.underlay_routing_protocol != "none":
-            vlans.append(
-                {
-                    "id": self.shared_utils.mlag_peer_l3_vlan,
-                    "tenant": "system",
-                    "name": AvdStringFormatter().format(
-                        self.inputs.mlag_peer_l3_vlan_name, mlag_peer=self.shared_utils.mlag_peer, mlag_peer_l3_vlan=self.shared_utils.mlag_peer_l3_vlan
-                    ),
-                    "trunk_groups": [self.inputs.trunk_groups.mlag_l3.name],
-                },
+            self.structured_config.vlans.append_new(
+                id=self.shared_utils.mlag_peer_l3_vlan,
+                tenant="system",
+                name=AvdStringFormatter().format(
+                    self.inputs.mlag_peer_l3_vlan_name, mlag_peer=self.shared_utils.mlag_peer, mlag_peer_l3_vlan=self.shared_utils.mlag_peer_l3_vlan
+                ),
+                trunk_groups=EosCliConfigGen.VlansItem.TrunkGroups([self.inputs.trunk_groups.mlag_l3.name]),
             )
 
-        vlans.append(
-            {
-                "id": self.shared_utils.node_config.mlag_peer_vlan,
-                "tenant": "system",
-                "name": AvdStringFormatter().format(
-                    self.inputs.mlag_peer_vlan_name, mlag_peer=self.shared_utils.mlag_peer, mlag_peer_vlan=self.shared_utils.node_config.mlag_peer_vlan
-                ),
-                "trunk_groups": [self.inputs.trunk_groups.mlag.name],
-            },
+        self.structured_config.vlans.append_new(
+            id=self.shared_utils.node_config.mlag_peer_vlan,
+            tenant="system",
+            name=AvdStringFormatter().format(
+                self.inputs.mlag_peer_vlan_name, mlag_peer=self.shared_utils.mlag_peer, mlag_peer_vlan=self.shared_utils.node_config.mlag_peer_vlan
+            ),
+            trunk_groups=EosCliConfigGen.VlansItem.TrunkGroups([self.inputs.trunk_groups.mlag.name]),
         )
-        return vlans
 
     @cached_property
     def vlan_interfaces(self) -> list | None:
