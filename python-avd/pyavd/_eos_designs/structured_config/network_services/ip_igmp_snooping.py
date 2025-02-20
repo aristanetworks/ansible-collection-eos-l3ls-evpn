@@ -40,7 +40,6 @@ class IpIgmpSnoopingMixin(Protocol):
             for l2vlan in tenant.l2vlans:
                 self._ip_igmp_snooping_vlan(l2vlan, tenant)
 
-        self.structured_config.ip_igmp_snooping.globally_enabled = igmp_snooping_enabled
 
     def _ip_igmp_snooping_vlan(
         self: AvdStructuredConfigNetworkServicesProtocol,
