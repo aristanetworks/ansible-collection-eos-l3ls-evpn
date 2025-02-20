@@ -3,6 +3,9 @@
 port_channel_interfaces:
   - name: Port-Channel5
     description: DC1_L2LEAF1_Po1
+    comment: |-
+      testing multi line comments with |-
+      applied to port-channel 5
     link_tracking_groups:
       - name: EVPN_MH_ES1
         direction: downstream
@@ -70,6 +73,9 @@ port_channel_interfaces:
           destination_mac_address: forwardable
 
   - name: Port-Channel15
+    comment: |
+      testing multi line comments with |
+      applied to port-channel 15
     description: DC1_L2LEAF3_Po1
     link_tracking_groups:
       - name: EVPN_MH_ES2
@@ -111,6 +117,7 @@ port_channel_interfaces:
       output: BLUE-C2-POLICY
 
   - name: Port-Channel16
+    comment: testing single line comment
     description: DC1_L2LEAF4_Po1
     snmp_trap_link_change: true
     mlag: 16
@@ -334,7 +341,8 @@ port_channel_interfaces:
         link_status: true
     description: IFL for TENANT01
     mtu: 1500
-    ip_address: 10.1.1.3/31
+    ipv6_address: "cafe::b4"
+    ipv6_nd_managed_config_flag: true
     encapsulation_dot1q:
       vlan: 101
 
@@ -373,7 +381,7 @@ port_channel_interfaces:
 
   - name: Port-Channel8.101
     description: to Dev02 Port-Channel8.101 - VRF-C1
-    ip_address: 10.1.2.3/31
+    ipv6_address: "cafe::b4"
     encapsulation_dot1q:
       vlan: 101
 
@@ -650,6 +658,7 @@ port_channel_interfaces:
     description: Flexencap Port-Channel
     switchport:
       enabled: false
+    isis_passive: true
 
   - name: Port-Channel111.1
     description: TENANT_A pseudowire 1 interface
@@ -721,6 +730,8 @@ port_channel_interfaces:
     lacp_fallback_mode: individual
     ip_address: dhcp
     dhcp_client_accept_default_route: true
+    dhcp_server_ipv4: true
+    dhcp_server_ipv6: true
 
   - name: Port-Channel113
     description: interface_with_mpls_enabled
@@ -729,6 +740,8 @@ port_channel_interfaces:
     ip_address: 172.31.128.9/31
     # This won't be rendered because IP address is not DHCP
     dhcp_client_accept_default_route: true
+    dhcp_server_ipv4: false
+    dhcp_server_ipv6: false
     mpls:
       ip: true
       ldp:
@@ -827,6 +840,7 @@ port_channel_interfaces:
         static:
           - original_ip: 3.0.0.1
             translated_ip: 4.0.0.1
+      service_profile: TEST-NAT-PROFILE
 
   - name: Port-Channel131
     description: dot1q-tunnel mode
@@ -1056,6 +1070,10 @@ port_channel_interfaces:
       enabled: true
       administrative_groups:
         - 7
+      min_delay_dynamic:
+        twamp_light_fallback:
+          number: 123
+          unit: microseconds
 
   - name: Port-Channel137
     description: Traffic Engineering Interface
@@ -1068,3 +1086,11 @@ port_channel_interfaces:
         - 4
         - 7-100
         - testgrp
+      srlg: 16
+      metric: 2
+      bandwidth:
+        number: 100
+        unit: mbps
+      min_delay_static:
+        number: 2
+        unit: milliseconds

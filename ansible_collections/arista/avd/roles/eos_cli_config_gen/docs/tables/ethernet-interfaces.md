@@ -9,6 +9,7 @@
     | -------- | ---- | -------- | ------- | ------------------ | ----------- |
     | [<samp>ethernet_interfaces</samp>](## "ethernet_interfaces") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;-&nbsp;name</samp>](## "ethernet_interfaces.[].name") | String | Required, Unique |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;comment</samp>](## "ethernet_interfaces.[].comment") | String |  |  |  | Text comment added under ethernet interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;description</samp>](## "ethernet_interfaces.[].description") | String |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;shutdown</samp>](## "ethernet_interfaces.[].shutdown") | Boolean |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;load_interval</samp>](## "ethernet_interfaces.[].load_interval") | Integer |  |  | Min: 0<br>Max: 600 | Interval in seconds for updating interface counters. |
@@ -607,6 +608,18 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "ethernet_interfaces.[].traffic_engineering.enabled") | Boolean |  |  |  | Whether to enable traffic-engineering on this interface. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;administrative_groups</samp>](## "ethernet_interfaces.[].traffic_engineering.administrative_groups") | List, items: String |  |  |  | List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single integers 0-127. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;&lt;str&gt;</samp>](## "ethernet_interfaces.[].traffic_engineering.administrative_groups.[]") | String |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;srlg</samp>](## "ethernet_interfaces.[].traffic_engineering.srlg") | String |  |  |  | SRLG name or number. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metric</samp>](## "ethernet_interfaces.[].traffic_engineering.metric") | Integer |  |  | Min: 1<br>Max: 16777215 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bandwidth</samp>](## "ethernet_interfaces.[].traffic_engineering.bandwidth") | Dictionary |  |  |  | Interface maximum reservable bandwidth. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number</samp>](## "ethernet_interfaces.[].traffic_engineering.bandwidth.number") | Integer | Required |  | Min: 0<br>Max: 10000 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unit</samp>](## "ethernet_interfaces.[].traffic_engineering.bandwidth.unit") | String | Required |  | Valid Values:<br>- <code>gbps</code><br>- <code>mbps</code><br>- <code>percent</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_delay_static</samp>](## "ethernet_interfaces.[].traffic_engineering.min_delay_static") | Dictionary |  |  |  | Mutually exclusive with min_delay_dynamic, if both are defined min_delay_static takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number</samp>](## "ethernet_interfaces.[].traffic_engineering.min_delay_static.number") | Integer | Required |  |  | Valid values are 1-16777215 microseconds. This is regardless of whether the specified unit is milliseconds or microseconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unit</samp>](## "ethernet_interfaces.[].traffic_engineering.min_delay_static.unit") | String | Required |  | Valid Values:<br>- <code>microseconds</code><br>- <code>milliseconds</code> |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;min_delay_dynamic</samp>](## "ethernet_interfaces.[].traffic_engineering.min_delay_dynamic") | Dictionary |  |  |  | Mutually exclusive with min_delay_static, if both are defined min_delay_static takes precedence. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;twamp_light_fallback</samp>](## "ethernet_interfaces.[].traffic_engineering.min_delay_dynamic.twamp_light_fallback") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;number</samp>](## "ethernet_interfaces.[].traffic_engineering.min_delay_dynamic.twamp_light_fallback.number") | Integer | Required |  |  | Valid values are 1-16777215 microseconds.<br>This is regardless of whether the specified unit is milliseconds or microseconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;unit</samp>](## "ethernet_interfaces.[].traffic_engineering.min_delay_dynamic.twamp_light_fallback.unit") | String | Required |  | Valid Values:<br>- <code>microseconds</code><br>- <code>milliseconds</code> |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;eos_cli</samp>](## "ethernet_interfaces.[].eos_cli") | String |  |  |  | Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration. |
 
 === "YAML"
@@ -614,6 +627,9 @@
     ```yaml
     ethernet_interfaces:
       - name: <str; required; unique>
+
+        # Text comment added under ethernet interface.
+        comment: <str>
         description: <str>
         shutdown: <bool>
 
@@ -1945,6 +1961,31 @@
           # List of traffic-engineering administrative groups, valid values are names, ranges 0-127, or single integers 0-127.
           administrative_groups:
             - <str>
+
+          # SRLG name or number.
+          srlg: <str>
+          metric: <int; 1-16777215>
+
+          # Interface maximum reservable bandwidth.
+          bandwidth:
+            number: <int; 0-10000; required>
+            unit: <str; "gbps" | "mbps" | "percent"; required>
+
+          # Mutually exclusive with min_delay_dynamic, if both are defined min_delay_static takes precedence.
+          min_delay_static:
+
+            # Valid values are 1-16777215 microseconds. This is regardless of whether the specified unit is milliseconds or microseconds.
+            number: <int; required>
+            unit: <str; "microseconds" | "milliseconds"; required>
+
+          # Mutually exclusive with min_delay_static, if both are defined min_delay_static takes precedence.
+          min_delay_dynamic:
+            twamp_light_fallback:
+
+              # Valid values are 1-16777215 microseconds.
+              # This is regardless of whether the specified unit is milliseconds or microseconds.
+              number: <int; required>
+              unit: <str; "microseconds" | "milliseconds"; required>
 
         # Multiline EOS CLI rendered directly on the ethernet interface in the final EOS configuration.
         eos_cli: <str>

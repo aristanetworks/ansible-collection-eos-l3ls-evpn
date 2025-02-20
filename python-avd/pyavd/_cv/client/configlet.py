@@ -6,7 +6,7 @@ from __future__ import annotations
 from asyncio import gather
 from logging import getLogger
 from pathlib import Path
-from typing import TYPE_CHECKING, Literal
+from typing import TYPE_CHECKING, Literal, Protocol
 
 from pyavd._cv.api.arista.configlet.v1 import (
     Configlet,
@@ -38,7 +38,8 @@ from .exceptions import get_cv_client_exception
 if TYPE_CHECKING:
     from datetime import datetime
 
-    from . import CVClient
+    from . import CVClientProtocol
+
 
 ASSIGNMENT_MATCH_POLICY_MAP = {
     "match_first": MatchPolicy.MATCH_FIRST,
@@ -50,13 +51,13 @@ PARALLEL_COROUTINES = 20
 LOGGER = getLogger(__name__)
 
 
-class ConfigletMixin:
+class ConfigletMixin(Protocol):
     """Only to be used as mixin on CVClient class."""
 
     configlet_api_version: Literal["v1"] = "v1"
 
     async def get_configlet_containers(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         container_ids: list[str] | None = None,
         time: datetime | None = None,
@@ -93,7 +94,7 @@ class ConfigletMixin:
         return configlet_assignments
 
     async def set_configlet_container(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         container_id: str,
         display_name: str | None = None,
@@ -139,7 +140,7 @@ class ConfigletMixin:
     @LimitCvVersion(min_ver="2024.2.0")
     @grpc_msg_size_handler("containers")
     async def set_configlet_containers(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         containers: list[tuple[str, str | None, str | None, list[str] | None, str | None, list[str] | None, str | None]],
         timeout: float = DEFAULT_API_TIMEOUT,
@@ -182,7 +183,7 @@ class ConfigletMixin:
     # Use this variant for versions below 2024.2.0 (still respecting overall min version)
     @LimitCvVersion(max_ver="2024.1.99")
     async def set_configlet_containers(  # noqa: F811 - Redefining with decorator.
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         containers: list[tuple[str, str | None, str | None, list[str] | None, str | None, list[str] | None, str | None]],
         timeout: float = DEFAULT_API_TIMEOUT,
@@ -229,7 +230,7 @@ class ConfigletMixin:
         ]
 
     async def delete_configlet_container(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         assignment_id: str,
         timeout: float = DEFAULT_API_TIMEOUT,
@@ -260,7 +261,7 @@ class ConfigletMixin:
 
     @grpc_msg_size_handler("configlet_ids")
     async def get_configlets(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         configlet_ids: list[str] | None = None,
         time: datetime | None = None,
@@ -298,7 +299,7 @@ class ConfigletMixin:
         return configlets
 
     async def set_configlet(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         configlet_id: str,
         display_name: str | None = None,
@@ -337,7 +338,7 @@ class ConfigletMixin:
         return response.value
 
     async def set_configlet_from_file(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         configlet_id: str,
         file: str,
@@ -378,7 +379,7 @@ class ConfigletMixin:
     @LimitCvVersion(min_ver="2024.2.0")
     @grpc_msg_size_handler("configlets")
     async def set_configlets_from_files(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         configlets: list[tuple[str, str]],
         timeout: float = DEFAULT_API_TIMEOUT,
@@ -419,7 +420,7 @@ class ConfigletMixin:
     # Use this variant for versions below 2024.2.0 (still respecting overall min version)
     @LimitCvVersion(max_ver="2024.1.99")
     async def set_configlets_from_files(  # noqa: F811 - Redefining with decorator.
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         configlets: list[tuple[str, str]],
         timeout: float = DEFAULT_API_TIMEOUT,
@@ -456,7 +457,7 @@ class ConfigletMixin:
 
     @grpc_msg_size_handler("configlet_ids")
     async def delete_configlets(
-        self: CVClient,
+        self: CVClientProtocol,
         workspace_id: str,
         configlet_ids: list[str],
         timeout: float = DEFAULT_API_TIMEOUT,

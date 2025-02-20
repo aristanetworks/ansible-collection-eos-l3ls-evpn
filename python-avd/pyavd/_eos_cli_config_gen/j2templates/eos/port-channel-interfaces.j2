@@ -7,6 +7,11 @@
 {% for port_channel_interface in port_channel_interfaces | arista.avd.natural_sort('name') %}
 !
 interface {{ port_channel_interface.name }}
+{%     if port_channel_interface.comment is arista.avd.defined %}
+{%         for comment_line in port_channel_interface.comment.splitlines() | arista.avd.default([]) %}
+   !! {{ comment_line }}
+{%         endfor %}
+{%     endif %}
 {%     if port_channel_interface.profile is arista.avd.defined %}
    profile {{ port_channel_interface.profile }}
 {%     endif %}
@@ -356,6 +361,12 @@ interface {{ port_channel_interface.name }}
    bfd per-link
 {%         endif %}
 {%     endif %}
+{%     if port_channel_interface.dhcp_server_ipv4 is arista.avd.defined(true) %}
+   dhcp server ipv4
+{%     endif %}
+{%     if port_channel_interface.dhcp_server_ipv6 is arista.avd.defined(true) %}
+   dhcp server ipv6
+{%     endif %}
 {%     if port_channel_interface.ip_igmp_host_proxy.enabled is arista.avd.defined(true) %}
 {%         set host_proxy_cli =  "ip igmp host-proxy" %}
    {{ host_proxy_cli }}
@@ -472,6 +483,9 @@ interface {{ port_channel_interface.name }}
 {%     if port_channel_interface.ip_nat is arista.avd.defined %}
 {%         set interface_ip_nat = port_channel_interface.ip_nat %}
 {%         include 'eos/interface-ip-nat.j2' %}
+{%         if port_channel_interface.ip_nat.service_profile is arista.avd.defined %}
+   ip nat service-profile {{ port_channel_interface.ip_nat.service_profile }}
+{%         endif %}
 {%     endif %}
 {%     if port_channel_interface.ospf_cost is arista.avd.defined %}
    ip ospf cost {{ port_channel_interface.ospf_cost }}
@@ -926,8 +940,22 @@ interface {{ port_channel_interface.name }}
 {%     if port_channel_interface.traffic_engineering.enabled is arista.avd.defined(true) %}
    traffic-engineering
 {%     endif %}
+{%     if port_channel_interface.traffic_engineering.bandwidth is arista.avd.defined %}
+   traffic-engineering bandwidth {{ port_channel_interface.traffic_engineering.bandwidth.number }} {{ port_channel_interface.traffic_engineering.bandwidth.unit }}
+{%     endif %}
 {%     if port_channel_interface.traffic_engineering.administrative_groups is arista.avd.defined %}
    traffic-engineering administrative-group {{ port_channel_interface.traffic_engineering.administrative_groups | join(",") }}
+{%     endif %}
+{%     if port_channel_interface.traffic_engineering.srlg is arista.avd.defined %}
+   traffic-engineering srlg {{ port_channel_interface.traffic_engineering.srlg }}
+{%     endif %}
+{%     if port_channel_interface.traffic_engineering.metric is arista.avd.defined %}
+   traffic-engineering metric {{ port_channel_interface.traffic_engineering.metric }}
+{%     endif %}
+{%     if port_channel_interface.traffic_engineering.min_delay_static is arista.avd.defined %}
+   traffic-engineering min-delay static {{ port_channel_interface.traffic_engineering.min_delay_static.number }} {{ port_channel_interface.traffic_engineering.min_delay_static.unit }}
+{%     elif port_channel_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback is arista.avd.defined %}
+   traffic-engineering min-delay dynamic twamp-light fallback {{ port_channel_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback.number }} {{ port_channel_interface.traffic_engineering.min_delay_dynamic.twamp_light_fallback.unit }}
 {%     endif %}
 {%     for link_tracking_group in port_channel_interface.link_tracking_groups | arista.avd.natural_sort('name') %}
 {%         if link_tracking_group.name is arista.avd.defined and link_tracking_group.direction is arista.avd.defined %}

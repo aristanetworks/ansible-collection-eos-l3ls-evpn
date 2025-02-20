@@ -139,3 +139,15 @@ router_path_selection:
     - name: VRF-3
   tcp_mss_ceiling:
     ipv4_segment_size: 200
+  interfaces:
+    - name: Ethernet2
+    - name: Port-Channel4
+      metric_bandwidth:
+        receive: 100
+        transmit: 200
+    - name: Ethernet3
+      metric_bandwidth:
+        transmit: 200
+    - name: Ethernet1
+      metric_bandwidth:
+        receive: 100

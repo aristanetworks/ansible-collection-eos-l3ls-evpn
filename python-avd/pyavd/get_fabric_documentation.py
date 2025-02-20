@@ -19,6 +19,7 @@ def get_fabric_documentation(
     include_connected_endpoints: bool = False,
     topology_csv: bool = False,
     p2p_links_csv: bool = False,
+    toc: bool = True,
 ) -> FabricDocumentation:
     """
     Build and return the AVD fabric documentation.
@@ -36,6 +37,7 @@ def get_fabric_documentation(
         include_connected_endpoints: Includes connected endpoints in the fabric documentation when set to True.
         topology_csv: Returns topology CSV when set to True.
         p2p_links_csv: Returns P2P links CSV when set to True.
+        toc: Skip TOC when set to False.
 
     Returns:
         FabricDocumentation object containing the requested documentation areas.
@@ -48,7 +50,7 @@ def get_fabric_documentation(
     from .templater import Templar
     # pylint: enable=import-outside-toplevel
 
-    fabric_documentation_facts = FabricDocumentationFacts(avd_facts, structured_configs, fabric_name, include_connected_endpoints)
+    fabric_documentation_facts = FabricDocumentationFacts(avd_facts, structured_configs, fabric_name, include_connected_endpoints, toc)
     result = FabricDocumentation()
     doc_templar = Templar(precompiled_templates_path=EOS_DESIGNS_JINJA2_PRECOMPILED_TEMPLATE_PATH)
     if fabric_documentation:
@@ -56,8 +58,8 @@ def get_fabric_documentation(
         result.fabric_documentation = doc_templar.render_template_from_file("fabric_documentation.j2", fabric_documentation_facts_dict)
         if include_connected_endpoints:
             result.fabric_documentation += "\n" + doc_templar.render_template_from_file("connected_endpoints_documentation.j2", fabric_documentation_facts_dict)
-
-        result.fabric_documentation = add_md_toc(result.fabric_documentation, skip_lines=3)
+        if toc:
+            result.fabric_documentation = add_md_toc(result.fabric_documentation, skip_lines=3)
 
     if topology_csv:
         result.topology_csv = _get_topology_csv(fabric_documentation_facts)

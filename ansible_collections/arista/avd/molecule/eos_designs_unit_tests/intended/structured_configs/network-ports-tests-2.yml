@@ -721,12 +721,20 @@ ethernet_interfaces:
     id: 43
     mode: active
   peer_type: network_port
+  switchport:
+    access_vlan: 123
 - name: Ethernet52
   shutdown: false
   channel_group:
     id: 43
     mode: active
   peer_type: network_port
+- name: Ethernet24
+  description: Matched on only 24 port platform
+  shutdown: false
+  peer_type: network_port
+  switchport:
+    enabled: true
 hostname: network-ports-tests-2
 ip_igmp_snooping:
   globally_enabled: true
@@ -736,6 +744,7 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
 metadata:
+  platform: 720XPM-24Y6
   fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: mlag

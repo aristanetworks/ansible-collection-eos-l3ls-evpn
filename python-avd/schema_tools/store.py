@@ -9,10 +9,10 @@ from pickle import HIGHEST_PROTOCOL
 from pickle import dump as pickle_dump
 from pickle import load as pickle_load
 
-from yaml import safe_load
+from yaml import CSafeLoader, load
 
 from .avdschemaresolver import AvdSchemaResolver
-from .constants import PICKLED_SCHEMAS, SCHEMA_PATHS
+from .constants import SCHEMAS
 
 
 @lru_cache
@@ -45,8 +45,8 @@ def create_store(*, load_from_yaml: bool = False, force_rebuild: bool = False) -
         return _compile_schemas()
 
     # Load from Pickle.
-    for schema_id, schema_file in PICKLED_SCHEMAS.items():
-        with Path(schema_file).open("rb") as file:
+    for schema_id, schema_paths in SCHEMAS.items():
+        with Path(schema_paths.pickled_schema).open("rb") as file:
             store[schema_id] = pickle_load(file)  # noqa: S301
 
     return store
@@ -55,18 +55,18 @@ def create_store(*, load_from_yaml: bool = False, force_rebuild: bool = False) -
 def _should_recompile_schemas() -> bool:
     """Returns true if pickled schemas should be recompiled."""
     # Check if any pickled schema is missing
-    for pickle_file in PICKLED_SCHEMAS.values():
-        if not pickle_file.exists():
+    for schema_paths in SCHEMAS.values():
+        if not schema_paths.pickled_schema.exists():
             return True
 
     # Check if any hash file is missing and if any stored hash does not match the hash of the schema file
-    for schema_file in SCHEMA_PATHS.values():
-        hash_file = schema_file.with_suffix(".sha1")
+    for schema_paths in SCHEMAS.values():
+        hash_file = schema_paths.yaml_file.with_suffix(".sha1")
         if not hash_file.exists():
             return True
 
         existing_hash = hash_file.with_suffix(".sha1").read_text(encoding="UTF-8")
-        new_hash = sha1(schema_file.read_bytes(), usedforsecurity=False).hexdigest()  # NOSONAR
+        new_hash = sha1(schema_paths.yaml_file.read_bytes(), usedforsecurity=False).hexdigest()  # NOSONAR
         if existing_hash != new_hash:
             return True
 
@@ -76,9 +76,9 @@ def _should_recompile_schemas() -> bool:
 def _create_store_from_yaml() -> dict[str, dict]:
     """Returns a schema store loaded from yaml files with $ref."""
     store = {}
-    for schema_id, schema_file in SCHEMA_PATHS.items():
-        with Path(schema_file).open(encoding="UTF-8") as stream:
-            store[schema_id] = safe_load(stream)
+    for schema_id, schema_paths in SCHEMAS.items():
+        with Path(schema_paths.yaml_file).open(encoding="UTF-8") as stream:
+            store[schema_id] = load(stream=stream, Loader=CSafeLoader)
     return store
 
 
@@ -94,7 +94,7 @@ def _compile_schemas() -> dict:
 
     # We rely on eos_cli_config_gen being before eos_designs,
     # so anything in eos_cli_config_gen can be resolved and $def popped before resolving from eos_designs.
-    for schema_name, pickle_file in PICKLED_SCHEMAS.items():
+    for schema_name, schema_paths in SCHEMAS.items():
         if schema_name == "avd_meta_schema":
             # Do not resolve $ref in the meta schema.
             resolved_schema = schema_store[schema_name]
@@ -107,11 +107,11 @@ def _compile_schemas() -> dict:
 
         # Update pickle file with binary version of the completely resolved schema.
         try:
-            with pickle_file.open("wb") as stream:
+            with schema_paths.pickled_schema.open("wb") as stream:
                 pickle_dump(resolved_schema, stream, HIGHEST_PROTOCOL)
 
             # Update the .sha1 file with the new hash of the yaml schema file.
-            schema_file = SCHEMA_PATHS[schema_name]
+            schema_file = schema_paths.yaml_file
             new_hash = sha1(schema_file.read_bytes(), usedforsecurity=False).hexdigest()  # NOSONAR
             schema_file.with_suffix(".sha1").write_text(new_hash, encoding="UTF-8")
         except PermissionError:

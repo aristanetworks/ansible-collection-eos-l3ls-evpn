@@ -17,7 +17,7 @@ $defs:
           description: |-
             Ethernet interface name like 'Ethernet2' or subinterface name like 'Ethernet2.42'.
             For a subinterface, the parent physical interface is automatically created.
-          pattern: "Ethernet[\\d/]+(.[\\d]+)?"
+          pattern: "Ethernet[\\d/]+(\\.[\\d]+)?"
         description:
           type: str
           description: |-

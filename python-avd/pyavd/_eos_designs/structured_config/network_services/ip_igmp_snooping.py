@@ -4,19 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._utils import append_if_not_duplicate, default, strip_empties_from_dict
-
-from .utils import UtilsMixin
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
 
-    from . import AvdStructuredConfigNetworkServices
+    from . import AvdStructuredConfigNetworkServicesProtocol
 
 
-class IpIgmpSnoopingMixin(UtilsMixin):
+class IpIgmpSnoopingMixin(Protocol):
     """
     Mixin Class used to generate structured config for one key.
 
@@ -24,7 +22,7 @@ class IpIgmpSnoopingMixin(UtilsMixin):
     """
 
     @cached_property
-    def ip_igmp_snooping(self: AvdStructuredConfigNetworkServices) -> dict | None:
+    def ip_igmp_snooping(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Return structured config for ip_igmp_snooping."""
         if not self.shared_utils.network_services_l2:
             return None
@@ -63,7 +61,7 @@ class IpIgmpSnoopingMixin(UtilsMixin):
         return ip_igmp_snooping
 
     def _ip_igmp_snooping_vlan(
-        self: AvdStructuredConfigNetworkServices,
+        self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,

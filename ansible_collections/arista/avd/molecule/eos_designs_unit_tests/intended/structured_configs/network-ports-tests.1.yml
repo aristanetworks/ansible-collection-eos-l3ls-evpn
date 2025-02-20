@@ -13,6 +13,14 @@ ethernet_interfaces:
   peer: network-ports-tests-2
   peer_interface: Ethernet10/1
   peer_type: mlag_peer
+- name: Ethernet14
+  description: SERVER_CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT_Eth42
+  shutdown: false
+  peer: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
+  peer_interface: Eth42
+  peer_type: server
+  switchport:
+    enabled: true
 - name: Ethernet1
   description: PCs
   shutdown: false
@@ -669,19 +677,12 @@ ethernet_interfaces:
   peer_type: network_port
   switchport:
     enabled: true
-- name: Ethernet14
-  description: SERVER_CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT_Eth42
-  shutdown: false
-  peer: CONNECTED_ENDPOINT_OVERWRITING_NETWORK_PORT
-  peer_interface: Eth42
-  peer_type: server
-  switchport:
-    enabled: true
 - name: Ethernet51
   shutdown: true
   peer_type: network_port
   switchport:
     enabled: true
+    access_vlan: 123
 - name: Ethernet52
   shutdown: true
   peer_type: network_port
@@ -697,6 +698,40 @@ ethernet_interfaces:
   peer_type: network_port
   switchport:
     enabled: true
+- name: Ethernet48
+  description: Matched on all hostnames and 48 port platform
+  shutdown: false
+  peer_type: network_port
+  switchport:
+    enabled: true
+- name: Ethernet20
+  description: Single overwrite
+  shutdown: false
+  peer_type: network_port
+  switchport:
+    enabled: true
+    access_vlan: 42
+- name: Ethernet21
+  description: Range
+  shutdown: false
+  peer_type: network_port
+  switchport:
+    enabled: true
+    access_vlan: 666
+- name: Ethernet22
+  description: Single overwrite
+  shutdown: false
+  channel_group:
+    id: 222
+    mode: active
+  peer_type: network_port
+- name: Ethernet23
+  description: Range
+  shutdown: false
+  channel_group:
+    id: 222
+    mode: active
+  peer_type: network_port
 hostname: network-ports-tests.1
 ip_igmp_snooping:
   globally_enabled: true
@@ -706,6 +741,7 @@ management_api_http:
   enable_vrfs:
   - name: MGMT
 metadata:
+  platform: 720XPM-48Y6
   fabric_name: EOS_DESIGNS_UNIT_TESTS
 mlag_configuration:
   domain_id: mlag
@@ -724,6 +760,13 @@ port_channel_interfaces:
     trunk:
       groups:
       - MLAG
+- name: Port-Channel222
+  description: Range
+  shutdown: false
+  mlag: 222
+  switchport:
+    enabled: true
+    access_vlan: 666
 service_routing_protocols_model: multi-agent
 spanning_tree:
   no_spanning_tree_vlan: '4094'

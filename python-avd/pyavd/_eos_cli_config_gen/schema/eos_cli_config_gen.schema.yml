@@ -842,6 +842,10 @@ keys:
       qos:
         type: list
         primary_key: name
+        description: 'The keys `vlan`, `cos`, `ip`, `ipv6`, `dscp`, `ecn` are mutually
+          exclusive,
+
+          except `dscp` and `ecn` which can be given separate or together.'
         items:
           type: dict
           keys:
@@ -874,6 +878,22 @@ keys:
                   description: IPv6 Access-List Name.
                   convert_types:
                   - int
+            dscp:
+              type: str
+              description: "Match packets based on the DSCP value(s).\nAccepted formats:\n
+                \ - Single AF/CS/EF DSCP name like \"af12\".\n  - Single decimal DSCP
+                value. Example: \"23\".\n  - Range of decimal DSCP values. Examples:
+                \"1,3-10\"."
+            ecn:
+              type: str
+              valid_values:
+              - ce
+              - ect
+              - ect-ce
+              - non-ect
+              description: "Match packets based on the ECN value.\nAccepted values:\n
+                \ - non-ect (matches 00).\n  - ect (matches 01 an 10).\n  - ce (matches
+                11).\n  - ect-ce (matches 01, 10 and 11)."
   clock:
     type: dict
     keys:
@@ -1965,6 +1985,10 @@ keys:
 
           '
         default: true
+      toc:
+        type: bool
+        default: true
+        description: Generate the table of content(TOC) on device documentation.
   errdisable:
     type: dict
     keys:
@@ -2025,6 +2049,9 @@ keys:
       keys:
         name:
           type: str
+        comment:
+          type: str
+          description: Text comment added under ethernet interface.
         description:
           type: str
         shutdown:
@@ -4430,6 +4457,76 @@ keys:
                 type: str
                 convert_types:
                 - int
+            srlg:
+              description: SRLG name or number.
+              type: str
+              convert_types:
+              - int
+            metric:
+              type: int
+              convert_types:
+              - str
+              min: 1
+              max: 16777215
+            bandwidth:
+              type: dict
+              description: Interface maximum reservable bandwidth.
+              keys:
+                number:
+                  type: int
+                  required: true
+                  convert_types:
+                  - str
+                  min: 0
+                  max: 10000
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                  - gbps
+                  - mbps
+                  - percent
+            min_delay_static:
+              type: dict
+              description: Mutually exclusive with min_delay_dynamic, if both are
+                defined min_delay_static takes precedence.
+              keys:
+                number:
+                  type: int
+                  description: Valid values are 1-16777215 microseconds. This is regardless
+                    of whether the specified unit is milliseconds or microseconds.
+                  required: true
+                  convert_types:
+                  - str
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                  - microseconds
+                  - milliseconds
+            min_delay_dynamic:
+              type: dict
+              description: Mutually exclusive with min_delay_static, if both are defined
+                min_delay_static takes precedence.
+              keys:
+                twamp_light_fallback:
+                  type: dict
+                  keys:
+                    number:
+                      type: int
+                      description: 'Valid values are 1-16777215 microseconds.
+
+                        This is regardless of whether the specified unit is milliseconds
+                        or microseconds.'
+                      required: true
+                      convert_types:
+                      - str
+                    unit:
+                      type: str
+                      required: true
+                      valid_values:
+                      - microseconds
+                      - milliseconds
         eos_cli:
           type: str
           description: Multiline EOS CLI rendered directly on the ethernet interface
@@ -5557,6 +5654,42 @@ keys:
                 per-vlan.
 
                 '
+  ip_name_server_groups:
+    type: list
+    primary_key: name
+    items:
+      type: dict
+      keys:
+        name:
+          type: str
+        name_servers:
+          type: list
+          primary_key: ip_address
+          allow_duplicate_primary_key: true
+          items:
+            type: dict
+            keys:
+              ip_address:
+                type: str
+                description: IPv4 or IPv6 address for DNS server.
+              vrf:
+                description: VRF Name.
+                type: str
+                required: true
+                convert_types:
+                - int
+              priority:
+                description: Priority value (lower is first).
+                type: int
+                convert_types:
+                - str
+                min: 0
+                max: 15
+        dns_domain:
+          type: str
+        ip_domain_list:
+          type: str
+          description: Set domain names to complete unqualified host names.
   ip_name_servers:
     type: list
     items:
@@ -6077,6 +6210,13 @@ keys:
   ip_virtual_router_mac_address:
     type: str
     description: MAC address (hh:hh:hh:hh:hh:hh).
+  ip_virtual_router_mac_address_advertisement_interval:
+    type: int
+    description: Advertisement interval in seconds.
+    convert_types:
+    - str
+    min: 0
+    max: 86400
   ipv6_access_lists:
     type: list
     primary_key: name
@@ -6390,7 +6530,11 @@ keys:
       timer:
         type: int
       timer_reinitialization:
-        type: str
+        type: int
+        min: 1
+        max: 10
+        convert_types:
+        - str
       holdtime:
         type: int
       management_address:
@@ -6400,7 +6544,7 @@ keys:
         convert_types:
         - int
       receive_packet_tagged_drop:
-        type: str
+        type: bool
       tlvs:
         type: list
         primary_key: name
@@ -6663,6 +6807,7 @@ keys:
                     valid_values:
                     - tcp
                     - udp
+                    - tls
                     default: udp
                   ports:
                     type: list
@@ -6670,6 +6815,10 @@ keys:
                       type: int
                       convert_types:
                       - str
+                  ssl_profile:
+                    type: str
+                    description: Used when host protocol is 'tls'. Profiles are defined
+                      under `management_security.ssl_profiles`.
       policy:
         type: dict
         keys:
@@ -7265,6 +7414,8 @@ keys:
         type: bool
       enable_https:
         type: bool
+      enable_unix:
+        type: bool
       https_ssl_profile:
         description: SSL Profile Name.
         type: str
@@ -7517,6 +7668,9 @@ keys:
           keys:
             name:
               type: str
+            fips_restrictions:
+              type: bool
+              description: Use FIPS compliant algorithms.
             tls_versions:
               type: str
               description: "List of allowed TLS versions as string.\nExamples:\n  -
@@ -8419,6 +8573,13 @@ keys:
               type: str
             ip:
               type: str
+            icmp_echo_size:
+              type: int
+              description: Size of ICMP probe in bytes.
+              convert_types:
+              - str
+              min: 36
+              max: 18024
             local_interfaces:
               type: str
             address_only:
@@ -8432,6 +8593,9 @@ keys:
               default: true
             url:
               type: str
+      name_server_group:
+        type: str
+        description: Set name-server group.
       vrfs:
         type: list
         primary_key: name
@@ -8478,6 +8642,13 @@ keys:
                     type: str
                   ip:
                     type: str
+                  icmp_echo_size:
+                    type: int
+                    description: Size of ICMP probe in bytes.
+                    convert_types:
+                    - str
+                    min: 36
+                    max: 18024
                   local_interfaces:
                     type: str
                   address_only:
@@ -8581,15 +8752,16 @@ keys:
         - inner-packet
   monitor_sessions:
     type: list
+    primary_key: name
     items:
       type: dict
       keys:
         name:
           type: str
-          required: true
           description: Session Name.
         sources:
           type: list
+          primary_key: name
           items:
             type: dict
             keys:
@@ -9174,6 +9346,51 @@ keys:
           shutdown:
             type: bool
             description: Make `shutdown` key false for `no shutdown` cli.
+      tunnel:
+        description: Configure MPLS tunnel.
+        type: dict
+        keys:
+          termination:
+            description: Controls selection of the TTL/DSCP values by LER when decapsulating
+              MPLS packets.
+            type: dict
+            keys:
+              model:
+                type: dict
+                keys:
+                  ttl:
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+                  dscp:
+                    description: The DSCP model `uniform` is supported only on specific
+                      hardware platforms.
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+              php_model:
+                description: Used on PHP router in the absence of any VPN routes and
+                  explicit null VRF labels.
+                type: dict
+                keys:
+                  ttl:
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
+                  dscp:
+                    description: The DSCP model `uniform` is supported only on specific
+                      hardware platforms.
+                    type: str
+                    required: true
+                    valid_values:
+                    - pipe
+                    - uniform
   name_server:
     documentation_options:
       table: ip-name-servers
@@ -9199,6 +9416,7 @@ keys:
             - int
       servers:
         type: list
+        primary_key: name
         items:
           type: dict
           keys:
@@ -9267,9 +9485,11 @@ keys:
               valid_values:
               - md5
               - sha1
+              required: true
             key:
               type: str
               description: Obfuscated key.
+              required: true
             key_type:
               type: str
               convert_types:
@@ -9610,6 +9830,64 @@ keys:
             - str
             min: 1
             max: 128
+          interface:
+            type: dict
+            description: Configure interface related settings for Sfe platform.
+            keys:
+              profiles:
+                type: list
+                primary_key: name
+                description: 'Configure one or more Receive Side Scaling (RSS) interface
+                  profiles.
+
+                  This is supported on specific platforms.'
+                items:
+                  type: dict
+                  keys:
+                    name:
+                      type: str
+                      description: RSS interface profile name.
+                    interfaces:
+                      type: list
+                      description: Interfaces within RSS profile.
+                      primary_key: name
+                      items:
+                        type: dict
+                        keys:
+                          name:
+                            type: str
+                            description: Interface name such as 'Ethernet2'.
+                          rx_queue:
+                            type: dict
+                            description: Receive queue parameters for the selected
+                              interface.
+                            keys:
+                              count:
+                                type: int
+                                min: 1
+                                convert_types:
+                                - str
+                                description: 'Number of receive queues.
+
+                                  The maximum value is platform dependent.'
+                              worker:
+                                type: str
+                                description: 'Worker ids specified as combination
+                                  of range and/or comma separated values
+
+                                  such as 0-4,7.'
+                              mode:
+                                type: str
+                                description: Mode applicable to the workers. Default
+                                  mode is 'shared'.
+                                valid_values:
+                                - shared
+                                - exclusive
+              interface_profile:
+                type: str
+                description: 'RSS interface profile name to apply for the platform.
+
+                  Needs system reload or Sfe agent restart for change to take effect.'
   poe:
     type: dict
     keys:
@@ -9834,6 +10112,9 @@ keys:
       keys:
         name:
           type: str
+        comment:
+          type: str
+          description: Text comment added under port-channel interface.
         description:
           type: str
         profile:
@@ -10679,6 +10960,12 @@ keys:
         dhcp_client_accept_default_route:
           type: bool
           description: Install default-route obtained via DHCP.
+        dhcp_server_ipv4:
+          type: bool
+          description: Enable IPv4 DHCP server.
+        dhcp_server_ipv6:
+          type: bool
+          description: Enable IPv6 DHCP server.
         ip_verify_unicast_source_reachable_via:
           type: str
           valid_values:
@@ -10687,6 +10974,10 @@ keys:
         ip_nat:
           type: dict
           $ref: eos_cli_config_gen#/$defs/interface_ip_nat
+          keys:
+            service_profile:
+              type: str
+              description: NAT interface profile.
         ipv6_enable:
           type: bool
         ipv6_address:
@@ -11275,6 +11566,78 @@ keys:
                 type: str
                 convert_types:
                 - int
+            srlg:
+              description: SRLG name or number.
+              type: str
+              convert_types:
+              - int
+            metric:
+              type: int
+              convert_types:
+              - str
+              min: 1
+              max: 16777215
+            bandwidth:
+              type: dict
+              description: Interface maximum reservable bandwidth.
+              keys:
+                number:
+                  type: int
+                  required: true
+                  convert_types:
+                  - str
+                  min: 0
+                  max: 10000
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                  - gbps
+                  - mbps
+                  - percent
+            min_delay_static:
+              type: dict
+              description: Mutually exclusive with min_delay_dynamic, if both are
+                defined min_delay_static takes precedence.
+              keys:
+                number:
+                  type: int
+                  description: 'Valid values are 1-16777215 microseconds.
+
+                    This is regardless of whether the specified unit is milliseconds
+                    or microseconds.'
+                  required: true
+                  convert_types:
+                  - str
+                unit:
+                  type: str
+                  required: true
+                  valid_values:
+                  - microseconds
+                  - milliseconds
+            min_delay_dynamic:
+              description: Mutually exclusive with min_delay_static, if both are defined
+                min_delay_static takes precedence.
+              type: dict
+              keys:
+                twamp_light_fallback:
+                  type: dict
+                  keys:
+                    number:
+                      type: int
+                      description: 'Valid values are 1-16777215 microseconds.
+
+                        This is regardless of whether the specified unit is milliseconds
+                        or microseconds.'
+                      required: true
+                      convert_types:
+                      - str
+                    unit:
+                      type: str
+                      required: true
+                      valid_values:
+                      - microseconds
+                      - milliseconds
         validate_state:
           type: bool
           description: Set to false to disable interface state and LLDP topology validation
@@ -14165,6 +14528,10 @@ keys:
                   - mpls
                   - path-selection
                   description: Transport encapsulation for the peer-group.
+                next_hop_self_source_interface:
+                  description: Source interface name for MPLS encapsulation. Requires
+                    `encapsulation` to be set as `mpls`.
+                  type: str
                 additional_paths:
                   type: dict
                   $ref: eos_cli_config_gen#/$defs/bgp_additional_paths
@@ -20072,6 +20439,31 @@ keys:
             description: 'Enforce on packets through DPS tunnel for a specific direction.
 
               Only ''ingress'' direction is supported.'
+      interfaces:
+        type: list
+        primary_key: name
+        items:
+          type: dict
+          keys:
+            name:
+              type: str
+            metric_bandwidth:
+              type: dict
+              keys:
+                receive:
+                  description: Maximum receive bandwidth in Mbps.
+                  type: int
+                  min: 1
+                  max: 4294967295
+                  convert_types:
+                  - str
+                transmit:
+                  description: Maximum transmit bandwidth in Mbps.
+                  type: int
+                  min: 1
+                  max: 4294967295
+                  convert_types:
+                  - str
   router_pim_sparse_mode:
     type: dict
     keys:
@@ -22690,9 +23082,31 @@ keys:
                       '
                   map_dscp_to_traffic_class_decapsulation:
                     type: bool
+              vlan_range:
+                type: dict
+                description: 'Set VNI on range of VLANs. Number of VLANs must equal
+                  number of VNIs.
+
+                  If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans`
+                  is ignored for that VLAN.'
+                keys:
+                  vlans:
+                    type: str
+                    required: true
+                    description: e.g. "94,96,100-110".
+                  vnis:
+                    type: str
+                    required: true
+                    description: 'Set `vnis` in the correct sequence as `vlans`.
+
+                      e.g. "10094,10096,10100-10110".'
               vlans:
                 type: list
                 primary_key: id
+                description: 'Set VNI/multicast group/remote vtep on a vlan.
+
+                  If a VNI is set for a VLAN using `vlan_range`, VNI setting in `vxlan_interface.vxlan1.vxlan.vlans`
+                  is ignored for that VLAN.'
                 items:
                   type: dict
                   keys:

@@ -2,6 +2,39 @@ aaa_root: null
 config_end: null
 enable_password: null
 ethernet_interfaces:
+- name: Ethernet12
+  description: SERVER_TEST_SERVER_01_Nic1
+  shutdown: false
+  peer: TEST_SERVER_01
+  peer_interface: Nic1
+  peer_type: server
+  port_profile: MY_PROFILE
+  switchport:
+    enabled: true
+    mode: trunk
+    trunk:
+      allowed_vlan: 1-100
+      native_vlan: 1000
+- name: Ethernet1
+  description: SERVER_TEST_SERVER_01_Nic1
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: TEST_SERVER_01
+  peer_interface: Nic1
+  peer_type: server
+  port_profile: MY_PROFILE
+- name: Ethernet2
+  description: SERVER_TEST_SERVER_01_Nic2
+  shutdown: false
+  channel_group:
+    id: 1
+    mode: active
+  peer: TEST_SERVER_01
+  peer_interface: Nic2
+  peer_type: server
+  port_profile: MY_PROFILE
 - name: Ethernet20
   description: Network Port
   shutdown: false
@@ -122,39 +155,6 @@ ethernet_interfaces:
     trunk:
       allowed_vlan: 1-100
       native_vlan: 1000
-- name: Ethernet12
-  description: SERVER_TEST_SERVER_01_Nic1
-  shutdown: false
-  peer: TEST_SERVER_01
-  peer_interface: Nic1
-  peer_type: server
-  port_profile: MY_PROFILE
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      allowed_vlan: 1-100
-      native_vlan: 1000
-- name: Ethernet1
-  description: SERVER_TEST_SERVER_01_Nic1
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-  peer: TEST_SERVER_01
-  peer_interface: Nic1
-  peer_type: server
-  port_profile: MY_PROFILE
-- name: Ethernet2
-  description: SERVER_TEST_SERVER_01_Nic2
-  shutdown: false
-  channel_group:
-    id: 1
-    mode: active
-  peer: TEST_SERVER_01
-  peer_interface: Nic2
-  peer_type: server
-  port_profile: MY_PROFILE
 hostname: only-connected-endpoints
 is_deployed: null
 management_api_http: null

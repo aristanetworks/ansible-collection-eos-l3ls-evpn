@@ -13,21 +13,23 @@
 | Name | Field | Value |
 | ---- | ----- | ----- |
 {%     for class_map in class_maps.qos | arista.avd.natural_sort('name') %}
-{%         set row = namespace() %}
 {%         if class_map.cos is arista.avd.defined %}
-{%             set row.type = 'cos' %}
-{%             set row.value = class_map.cos %}
+| {{ class_map.name }} | cos | {{ class_map.cos }} |
 {%         elif class_map.vlan is arista.avd.defined %}
-{%             set row.type = 'vlan' %}
-{%             set row.value = class_map.vlan %}
+| {{ class_map.name }} | vlan | {{ class_map.vlan }} |
 {%         elif class_map.ip.access_group is arista.avd.defined %}
-{%             set row.type = 'acl' %}
-{%             set row.value = class_map.ip.access_group %}
+| {{ class_map.name }} | acl | {{ class_map.ip.access_group }} |
 {%         else %}
-{%             set row.type = '-' %}
-{%             set row.value = '-' %}
+{%             if class_map.dscp is arista.avd.defined and class_map.ecn is arista.avd.defined %}
+| {{ class_map.name }} | dscp<br>ecn | {{ class_map.dscp }}<br>{{ class_map.ecn }} |
+{%             elif class_map.dscp is arista.avd.defined %}
+| {{ class_map.name }} | dscp | {{ class_map.dscp }} |
+{%             elif class_map.ecn is arista.avd.defined %}
+| {{ class_map.name }} | ecn | {{ class_map.ecn }} |
+{%             else %}
+| {{ class_map.name }} | - | - |
+{%             endif %}
 {%         endif %}
-| {{ class_map.name }} | {{ row.type }} | {{ row.value }} |
 {%     endfor %}
 
 #### Class-maps Device Configuration

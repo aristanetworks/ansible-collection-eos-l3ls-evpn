@@ -4,17 +4,17 @@
 from __future__ import annotations
 
 from functools import cached_property
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Protocol
 
 from pyavd._errors import AristaAvdMissingVariableError
 from pyavd._utils import load_python_class
 from pyavd.api.ip_addressing import AvdIpAddressing
 
 if TYPE_CHECKING:
-    from . import SharedUtils
+    from . import SharedUtilsProtocol
 
 
-class IpAddressingMixin:
+class IpAddressingMixin(Protocol):
     """
     Mixin Class providing a subset of SharedUtils.
 
@@ -23,7 +23,7 @@ class IpAddressingMixin:
     """
 
     @cached_property
-    def loopback_ipv6_pool(self: SharedUtils) -> str:
+    def loopback_ipv6_pool(self: SharedUtilsProtocol) -> str:
         if not self.node_config.loopback_ipv6_pool:
             msg = "loopback_ipv6_pool"
             raise AristaAvdMissingVariableError(msg)
@@ -31,7 +31,7 @@ class IpAddressingMixin:
         return self.node_config.loopback_ipv6_pool
 
     @cached_property
-    def loopback_ipv4_pool(self: SharedUtils) -> str:
+    def loopback_ipv4_pool(self: SharedUtilsProtocol) -> str:
         if not self.node_config.loopback_ipv4_pool:
             msg = "loopback_ipv4_pool"
             raise AristaAvdMissingVariableError(msg)
@@ -39,7 +39,7 @@ class IpAddressingMixin:
         return self.node_config.loopback_ipv4_pool
 
     @cached_property
-    def vtep_loopback_ipv4_pool(self: SharedUtils) -> str:
+    def vtep_loopback_ipv4_pool(self: SharedUtilsProtocol) -> str:
         if not self.node_config.vtep_loopback_ipv4_pool:
             msg = "vtep_loopback_ipv4_pool"
             raise AristaAvdMissingVariableError(msg)
@@ -47,7 +47,7 @@ class IpAddressingMixin:
         return self.node_config.vtep_loopback_ipv4_pool
 
     @cached_property
-    def vtep_ip(self: SharedUtils) -> str:
+    def vtep_ip(self: SharedUtilsProtocol) -> str:
         """Render ipv4 address for vtep_ip using dynamically loaded python module."""
         if self.mlag is True:
             return self.ip_addressing.vtep_ip_mlag()
@@ -55,7 +55,7 @@ class IpAddressingMixin:
         return self.ip_addressing.vtep_ip()
 
     @cached_property
-    def ip_addressing(self: SharedUtils) -> AvdIpAddressing:
+    def ip_addressing(self: SharedUtilsProtocol) -> AvdIpAddressing:
         """
         Load the python_module defined in `templates.ip_addressing.python_module`.
 

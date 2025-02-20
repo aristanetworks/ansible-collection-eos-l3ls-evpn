@@ -24,20 +24,18 @@
 | Server | VRF | Preferred | Burst | iBurst | Version | Min Poll | Max Poll | Local-interface | Key |
 | ------ | --- | --------- | ----- | ------ | ------- | -------- | -------- | --------------- | --- |
 {%         for server in ntp.servers | arista.avd.natural_sort('name') %}
-{%             if server.name is arista.avd.defined %}
-{%                 set r = namespace() %}
-{%                 set r.s = server.name %}
-{%                 set r.v = server.vrf | arista.avd.default('-') %}
-{%                 set r.p = server.preferred | arista.avd.default('-') %}
-{%                 set r.b = server.burst | arista.avd.default('-') %}
-{%                 set r.i = server.iburst | arista.avd.default('-') %}
-{%                 set r.vv = server.version | arista.avd.default('-') %}
-{%                 set r.mi = server.minpoll | arista.avd.default('-') %}
-{%                 set r.ma = server.maxpoll | arista.avd.default('-') %}
-{%                 set r.l = server.local_interface | arista.avd.default('-') %}
-{%                 set r.k = server.key | arista.avd.default('-') %}
+{%             set r = namespace() %}
+{%             set r.s = server.name %}
+{%             set r.v = server.vrf | arista.avd.default('-') %}
+{%             set r.p = server.preferred | arista.avd.default('-') %}
+{%             set r.b = server.burst | arista.avd.default('-') %}
+{%             set r.i = server.iburst | arista.avd.default('-') %}
+{%             set r.vv = server.version | arista.avd.default('-') %}
+{%             set r.mi = server.minpoll | arista.avd.default('-') %}
+{%             set r.ma = server.maxpoll | arista.avd.default('-') %}
+{%             set r.l = server.local_interface | arista.avd.default('-') %}
+{%             set r.k = server.key | arista.avd.default('-') %}
 | {{ r.s }} | {{ r.v }} | {{ r.p }} | {{ r.b }} | {{ r.i }} | {{ r.vv }} | {{ r.mi }} | {{ r.ma }} | {{ r.l }} | {{ r.k }} |
-{%             endif %}
 {%         endfor %}
 {%     endif %}
 {%     if ntp.authenticate is arista.avd.defined
@@ -64,11 +62,7 @@
 | ID | Algorithm |
 | -- | -------- |
 {%         for authentication_key in ntp.authentication_keys | arista.avd.natural_sort('id') %}
-{%             if authentication_key.id is arista.avd.defined and
-                  authentication_key.key is arista.avd.defined and
-                  authentication_key.hash_algorithm is arista.avd.defined %}
 | {{ authentication_key.id }} | {{ authentication_key.hash_algorithm }} |
-{%             endif %}
 {%         endfor %}
 {%     endif %}
 

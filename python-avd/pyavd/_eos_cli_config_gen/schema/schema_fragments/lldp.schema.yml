@@ -12,7 +12,11 @@ keys:
       timer:
         type: int
       timer_reinitialization:
-        type: str
+        type: int
+        min: 1
+        max: 10
+        convert_types:
+          - str
       holdtime:
         type: int
       management_address:
@@ -22,7 +26,7 @@ keys:
         convert_types:
           - int
       receive_packet_tagged_drop:
-        type: str
+        type: bool
       tlvs:
         type: list
         primary_key: name
