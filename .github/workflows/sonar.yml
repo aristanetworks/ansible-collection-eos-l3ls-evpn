@@ -44,7 +44,7 @@ jobs:
           name: ansible-test-units-coverage
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
-          path: ansible_collections/arista/avd/tests/output/coverage/
+          path: ansible_collections/arista/avd/
           merge-multiple: true
       - name: Download coverage from ansible-test integration
         uses: actions/download-artifact@v4
@@ -52,7 +52,7 @@ jobs:
           name: ansible-test-integration-coverage
           github-token: ${{ secrets.GITHUB_TOKEN }}
           run-id: ${{ github.event.workflow_run.id }}
-          path: ansible_collections/arista/avd/tests/output/coverage/
+          path: ansible_collections/arista/avd/
           merge-multiple: true
       - name: Download coverage from pytest
         uses: actions/download-artifact@v4
