@@ -318,7 +318,7 @@ $defs:
           type: list
           primary_key: name
           description: |
-            VRFs will only be configured on a node if any of the underlying objects like `svis` or `l3_interfaces` apply to the node.
+            VRFs will only be configured on a node if any of the underlying objects like `svis`, `l3_interfaces` or `l3_port_channels` apply to the node.
 
             It is recommended to only define a VRF in one Tenant. If the same VRF name is used across multiple tenants and those tenants
             are accepted by `filter.tenants` on the node, any object set under the duplicate VRFs must either be unique or be an exact match.
@@ -826,6 +826,198 @@ $defs:
                       type: str
                       description: |
                         EOS CLI rendered directly on the Ethernet interface in the final EOS configuration.
+              l3_port_channels:
+                documentation_options:
+                  table: network-services-vrfs-l3-port-channel-settings
+                type: list
+                primary_key: name
+                items:
+                  type: dict
+                  keys:
+                    name:
+                      type: str
+                      required: true
+                      description: |-
+                        Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                        For a Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                      pattern: "Port-Channel[\\d/]+(\\.[\\d]+)?"
+                    nodes:
+                      type: list
+                      required: true
+                      items:
+                        type: str
+                        description: Node.
+                    description:
+                      type: str
+                      description: |-
+                        Interface description.
+                        If not set, a default description will be configured with '[<peer>[ <peer_port_channel>]]'.
+                    descriptions:
+                      type: list
+                      items:
+                        type: str
+                      description: |
+                        "descriptions" has precedence over "description".
+                    mode:
+                      type: str
+                      description: |-
+                        Port-Channel mode.
+                        Should not be set on Port-Channel subinterfaces.
+                      valid_values:
+                        - "active"
+                        - "passive"
+                        - "on"
+                      default: "active"
+                    member_interfaces:
+                      description: |-
+                        Port-Channel member interfaces.
+                        Should not be set on Port-Channel subinterfaces.
+                      type: list
+                      primary_key: name
+                      items:
+                        type: dict
+                        keys:
+                          name:
+                            type: str
+                            required: true
+                            description: |-
+                              Ethernet interface name like 'Ethernet2'.
+                              Member interface cannot be subinterface.
+                            pattern: "Ethernet[\\d/]+"
+                          description:
+                            type: str
+                            description: |-
+                              Interface description for this member.
+                              If not set, a default description will be configured with '[<peer>[ <peer_interface>]]'.
+                          peer:
+                            type: str
+                            description: |-
+                              The peer device name. Used for description and documentation.
+                              If not set, this inherits the peer setting on the port-channel interface.
+                          peer_interface:
+                            type: str
+                            description: |-
+                              The peer device interface. Used for description and documentation.
+                          speed:
+                            type: str
+                            description: |-
+                              Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto <interface_speed>`.
+                          structured_config:
+                            type: dict
+                            documentation_options:
+                              hide_keys: true
+                            description: |-
+                              Custom structured config for the member ethernet interface.
+                            $ref: "eos_cli_config_gen#/keys/ethernet_interfaces/items"
+                    ip_address:
+                      type: str
+                      description: IPv4 address/Mask.
+                    ip_addresses:
+                      type: list
+                      items:
+                        type: str
+                        description: IPv4_address/Mask.
+                    encapsulation_dot1q_vlan:
+                      description: For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be specified.
+                      type: int
+                      convert_types:
+                        - str
+                      min: 1
+                      max: 4094
+                    enabled:
+                      type: bool
+                      default: true
+                      description: Enable or Shutdown the interface.
+                    peer:
+                      type: str
+                      description: |-
+                        The peer device name. Used for description and documentation.
+                    peer_port_channel:
+                      type: str
+                      description: |-
+                        The peer device port-channel interface. Used for description and documentation.
+                    mtu:
+                      type: int
+                      convert_types:
+                        - str
+                      description: MTU can only be set on the parent Port-Channel.
+                    ipv4_acl_in:
+                      description: |-
+                        Name of the IPv4 access-list to be assigned in the ingress direction.
+                      type: str
+                      convert_types:
+                        - int
+                    ipv4_acl_out:
+                      description: |-
+                        Name of the IPv4 Access-list to be assigned in the egress direction.
+                      type: str
+                      convert_types:
+                        - int
+                    ospf:
+                      type: dict
+                      description: OSPF interface configuration.
+                      keys:
+                        enabled:
+                          type: bool
+                        point_to_point:
+                          type: bool
+                          default: false
+                        area:
+                          type: str
+                          convert_types:
+                            - int
+                          description: OSPF area ID.
+                          default: "0.0.0.0"
+                        cost:
+                          type: int
+                          convert_types:
+                            - str
+                          description: OSPF link cost.
+                        authentication:
+                          type: str
+                          valid_values:
+                            - simple
+                            - message-digest
+                        simple_auth_key:
+                          type: str
+                          description: Password used with simple authentication.
+                        message_digest_keys:
+                          type: list
+                          items:
+                            type: dict
+                            keys:
+                              id:
+                                type: int
+                                convert_types:
+                                  - str
+                              hash_algorithm:
+                                type: str
+                                valid_values:
+                                  - md5
+                                  - sha1
+                                  - sha256
+                                  - sha384
+                                  - sha512
+                                default: sha512
+                              key:
+                                type: str
+                                description: Key password.
+                    flow_tracking:
+                      type: dict
+                      $ref: "eos_designs#/$defs/flow_tracking_link"
+                      description: |-
+                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels` setting.
+                    structured_config:
+                      type: dict
+                      relaxed_validation: true
+                      description: Custom structured config added under port_channel_interfaces.[name=<interface>] for eos_cli_config_gen.
+                      documentation_options:
+                        hide_keys: true
+                      $ref: "eos_cli_config_gen#/keys/port_channel_interfaces/items"
+                    raw_eos_cli:
+                      type: str
+                      description: |
+                        EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
               loopbacks:
                 documentation_options:
                   table: network-services-vrfs-loopbacks-settings

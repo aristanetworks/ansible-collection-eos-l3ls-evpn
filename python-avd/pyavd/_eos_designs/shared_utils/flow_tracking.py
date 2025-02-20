@@ -62,6 +62,9 @@ class FlowTrackingMixin(Protocol):
             case EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.L3InterfacesItem.FlowTracking():
                 enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.l3_interfaces.enabled)
                 name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.l3_interfaces.name)
+            case EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.L3PortChannelsItem.FlowTracking():
+                enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.l3_port_channels.enabled)
+                name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.l3_port_channels.name)
             case EosDesigns.CoreInterfaces.P2pLinksItem.FlowTracking():
                 enabled: bool = default(flow_tracking.enabled, self.inputs.fabric_flow_tracking.core_interfaces.enabled)
                 name: str = default(flow_tracking.name, self.inputs.fabric_flow_tracking.core_interfaces.name)
