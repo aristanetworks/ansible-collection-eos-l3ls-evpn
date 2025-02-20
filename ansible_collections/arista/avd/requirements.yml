@@ -1,0 +1,8 @@
+# collection requirements leveraged by molecule etc
+collections:
+  - name: arista.cvp
+    version: ">=3.11.0"
+  - name: arista.eos
+    version: ">=7.0.0"
+  - name: ansible.utils
+    version: ">=3.0.0"
