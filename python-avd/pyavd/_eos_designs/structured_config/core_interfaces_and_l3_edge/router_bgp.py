@@ -35,7 +35,7 @@ class RouterBgpMixin(Protocol):
                 msg = f"{self.data_model}.p2p_links.[].as or {self.data_model}.p2p_links_profiles.[].as"
                 raise AristaAvdInvalidInputsError(msg)
 
-            neighbors = EosCliConfigGen.RouterBgp.NeighborsItem(
+            neighbor = EosCliConfigGen.RouterBgp.NeighborsItem(
                 remote_as=p2p_link_data["peer_bgp_as"],
                 peer=p2p_link_data["peer"],
                 description=p2p_link_data["peer"],
@@ -44,13 +44,7 @@ class RouterBgpMixin(Protocol):
 
             # RFC5549
             if self.inputs.underlay_rfc5549 and p2p_link.routing_protocol != "ebgp":
-                self.structured_config.router_bgp.neighbor_interfaces.append_new(
-                    name=p2p_link_data["interface"],
-                    remote_as=p2p_link_data["peer_bgp_as"],
-                    peer=p2p_link_data["peer"],
-                    description=p2p_link_data["peer"],
-                    peer_group=self.inputs.bgp_peer_groups.ipv4_underlay_peers.name,
-                )
+                self.structured_config.router_bgp.neighbor_interfaces.append_new(name=p2p_link_data["interface"], **neighbor._as_dict())
                 continue
 
             # Regular BGP Neighbors
@@ -58,9 +52,9 @@ class RouterBgpMixin(Protocol):
                 msg = f"{self.data_model}.p2p_links.[].ip, .subnet or .ip_pool"
                 raise AristaAvdInvalidInputsError(msg)
 
-            neighbors.bfd = p2p_link.bfd
+            neighbor.bfd = p2p_link.bfd
             if p2p_link_data["bgp_as"] != self.shared_utils.bgp_as:
-                neighbors.local_as = p2p_link_data["bgp_as"]
+                neighbor.local_as = p2p_link_data["bgp_as"]
 
-            neighbors.ip_address = get_ip_from_ip_prefix(p2p_link_data["peer_ip"])
-            self.structured_config.router_bgp.neighbors.append(neighbors)
+            neighbor.ip_address = get_ip_from_ip_prefix(p2p_link_data["peer_ip"])
+            self.structured_config.router_bgp.neighbors.append(neighbor)
