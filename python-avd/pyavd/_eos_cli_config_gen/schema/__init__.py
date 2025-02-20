@@ -23191,7 +23191,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 }
                 name: str
                 measurement_interval: int | None
-                """Measuremnt interval in seconds."""
+                """Measurement interval in seconds."""
                 measurement_samples: int | None
                 """Number of samples used to calculate TWAMP light metrics."""
                 significance: Significance
@@ -23215,7 +23215,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                         Args:
                             name: name
-                            measurement_interval: Measuremnt interval in seconds.
+                            measurement_interval: Measurement interval in seconds.
                             measurement_samples: Number of samples used to calculate TWAMP light metrics.
                             significance: Subclass of AvdModel.
 

@@ -16,7 +16,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;source_port</samp>](## "monitor_twamp.twamp_light.sender_defaults.source_port") | Integer |  |  | Min: 1<br>Max: 65535 |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;sender_profiles</samp>](## "monitor_twamp.twamp_light.sender_profiles") | List, items: Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].name") | String | Required, Unique |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;measurement_interval</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].measurement_interval") | Integer |  |  | Min: 1<br>Max: 255 | Measuremnt interval in seconds. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;measurement_interval</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].measurement_interval") | Integer |  |  | Min: 1<br>Max: 255 | Measurement interval in seconds. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;measurement_samples</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].measurement_samples") | Integer |  |  | Min: 1<br>Max: 65535 | Number of samples used to calculate TWAMP light metrics. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;significance</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].significance") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value</samp>](## "monitor_twamp.twamp_light.sender_profiles.[].significance.value") | Integer | Required |  | Min: 1<br>Max: 1000000 | Significance value in microseconds. |
@@ -35,7 +35,7 @@
         sender_profiles:
           - name: <str; required; unique>
 
-            # Measuremnt interval in seconds.
+            # Measurement interval in seconds.
             measurement_interval: <int; 1-255>
 
             # Number of samples used to calculate TWAMP light metrics.

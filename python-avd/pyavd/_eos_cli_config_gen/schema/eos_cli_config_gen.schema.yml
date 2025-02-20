@@ -9111,7 +9111,7 @@ keys:
                   max: 255
                   convert_types:
                   - str
-                  description: Measuremnt interval in seconds.
+                  description: Measurement interval in seconds.
                 measurement_samples:
                   type: int
                   min: 1
