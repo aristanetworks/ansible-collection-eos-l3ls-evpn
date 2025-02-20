@@ -34,6 +34,9 @@ cv_pathfinder_regions:
       - name: Site423
         id: 423
         location: Somewhere-warm
+      - name: Site12
+        id: 12
+        location: 12 Downing Street, London
   - name: AVD_Land_East
     id: 43
     description: AVD Region
@@ -620,6 +623,25 @@ tenants:
             nodes:
               - node: site-ha-disabled-leaf
                 ip_address: 10.66.66.1
+  - name: TenantD
+    # Tenant used to test VRFs
+    # knob wan_use_evpn_node_settings_for_lan: true
+    mac_vrf_vni_base: 1000
+    vrfs:
+      - name: WAN-VRF-NO-AF
+        vrf_id: 200
+        # Setting address families under tenant to empty list
+        # and checking the VRF is still added on the WAN when the knob is true
+        # and the VRF is defined under wan_virtual_topologies.vrfs
+        address_families: []
+      - name: VRF-NO-WAN
+        vrf_id: 300
+        # keeping default address family "evpn" and verifying we do not raise
+        # when the knob is true. The VRF should be configured.
+      - name: VRF-NO-WAN-NO-AF
+        vrf_id: 400
+        # when the knob is true. The VRF should not be configured under VXLAN and BGP.
+        address_families: []
 
 wan_virtual_topologies:
   vrfs:
@@ -639,6 +661,10 @@ wan_virtual_topologies:
       wan_vni: 66
     - name: ATTRACTED-VRF-FROM-UPLINK
       wan_vni: 166
+    - name: WAN-VRF-NO-AF
+      # Using PROD policy to avoid extra noise
+      policy: PROD-AVT-POLICY
+      wan_vni: 200
   policies:
     - name: PROD-AVT-POLICY
       default_virtual_topology:
