@@ -168,7 +168,7 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Get RFC3339 timestamp for org.opencontainers.image.created label
+      - name: Get RFC3339 timestamp for org.opencontainers.image.created label ⌚
         id: rfc3339
         run: echo "timestamp=$(date --rfc-3339=seconds)" >> $GITHUB_OUTPUT
 
