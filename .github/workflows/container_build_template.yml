@@ -74,12 +74,15 @@ jobs:
             case ${{ inputs.container_name }} in
               base)
                 echo "image_tags=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
+                echo "image_version=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
                 ;;
               dev)
                 echo "image_tags=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
+                echo "image_version=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
                 ;;
               *)
                 echo "image_tags=python${{ inputs.python_version }}-avd-${{ github.ref_name }}" >> $GITHUB_OUTPUT
+                echo "image_version=python${{ inputs.python_version }}-avd-${{ github.ref_name }}" >> $GITHUB_OUTPUT
                 ;;
             esac
           else
@@ -87,12 +90,15 @@ jobs:
               case ${{ inputs.container_name }} in
                 base)
                   echo "image_tags=latest,python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
+                  echo "image_version=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
                   ;;
                 dev)
                   echo "image_tags=latest,python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
+                  echo "image_version=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
                   ;;
                 *)
                   echo "image_tags=latest,python${{ inputs.python_version }}-avd-${{ github.ref_name }}" >> $GITHUB_OUTPUT
+                  echo "image_version=python${{ inputs.python_version }}-avd-${{ github.ref_name }}" >> $GITHUB_OUTPUT
                   ;;
               esac
             else
@@ -184,6 +190,7 @@ jobs:
           UID: ${{ inputs.user_id }}
           GID: ${{ inputs.group_id }}
           RFC3339_TIMESTAMP: ${{ steps.rfc3339.outputs.timestamp }}
+          IMAGE_VERSION: ${{ steps.build-tags.outputs.image_version }}
         with:
           subFolder: containers/${{ inputs.container_name }}
           imageName: ghcr.io/${{ github.repository }}/${{ inputs.container_name }}

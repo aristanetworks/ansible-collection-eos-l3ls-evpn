@@ -4,6 +4,8 @@ FROM ${FROM_IMAGE}:${FROM_VARIANT}
 
 # RFC3339 time to set label
 ARG RFC3339_TIMESTAMP
+# Image version will be set by the build workflow
+ARG IMAGE_VERSION
 # set labels
 LABEL org.opencontainers.image.description="AVD base image. This image MUST NOT be used directly and only required to optimize build process for other images."
 LABEL com.arista.license_terms="https://github.com/aristanetworks/avd/blob/devel/LICENSE"
@@ -13,7 +15,7 @@ LABEL org.opencontainers.image.url="https://github.com/orgs/aristanetworks/packa
 LABEL org.opencontainers.image.documentation="https://avd.arista.com/"
 LABEL org.opencontainers.image.source="https://github.com/aristanetworks/avd/tree/devel/containers"
 LABEL org.opencontainers.image.created=${RFC3339_TIMESTAMP}
-LABEL org.opencontainers.image.version=""
+LABEL org.opencontainers.image.version=${IMAGE_VERSION}
 LABEL org.opencontainers.image.vendor="Arista Networks"
 
 # Install essential tools.
