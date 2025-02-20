@@ -26,6 +26,7 @@
     device_list: "{{ cv_devices }}"
     strict_tags: "{{ cv_strict_tags }}"
     skip_missing_devices: "{{ cv_skip_missing_devices }}"
+    tolerate_duplicated_devices: "{{ cv_tolerate_duplicated_devices }}"
     configlet_name_template: "{{ cv_configlet_name_template | arista.avd.default }}"
     workspace:
       name: "{{ cv_workspace_name | arista.avd.default }}"
