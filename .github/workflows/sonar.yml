@@ -13,27 +13,6 @@ jobs:
     steps:
       - run: |
           echo '${{ toJson(github.event.workflow_run) }}'
-      - name: 'Get PR context'
-        # Source: https://github.com/orgs/community/discussions/25220#discussioncomment-11316244
-        id: pr-context
-        env:
-          # Token required for GH CLI:
-          GH_TOKEN: ${{ github.token }}
-          # Best practice for scripts is to reference via ENV at runtime. Avoid using the expression syntax in the script content directly:
-          PR_TARGET_REPO: ${{ github.repository }}
-          # If the PR is from a fork, prefix it with `<owner-login>:`, otherwise only the PR branch name is relevant:
-          PR_BRANCH: |-
-            ${{
-              (github.event.workflow_run.head_repository.owner.login != github.event.workflow_run.repository.owner.login)
-                && format('{0}:{1}', github.event.workflow_run.head_repository.owner.login, github.event.workflow_run.head_branch)
-                || github.event.workflow_run.head_branch
-            }}
-        # Query the PR number by repo + branch, then assign to step output:
-        run: |
-          gh pr view --repo "${PR_TARGET_REPO}" "${PR_BRANCH}" \
-             --json 'number,baseRefName' --jq '"number=\(.number)\nbase_ref=\(.baseRefName)"' \
-             >> "${GITHUB_OUTPUT}"
-
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
@@ -78,6 +57,29 @@ jobs:
           run-id: ${{ github.event.workflow_run.id }}
           path: python-avd/pyavd/_eos_cli_config_gen/j2templates/compiled_templates/
           merge-multiple: true
+
+      - name: 'Get PR context'
+        # Source: https://github.com/orgs/community/discussions/25220#discussioncomment-11316244
+        id: pr-context
+        if: github.event.workflow_run.event == 'pull_request'
+        env:
+          # Token required for GH CLI:
+          GH_TOKEN: ${{ github.token }}
+          # Best practice for scripts is to reference via ENV at runtime. Avoid using the expression syntax in the script content directly:
+          PR_TARGET_REPO: ${{ github.repository }}
+          # If the PR is from a fork, prefix it with `<owner-login>:`, otherwise only the PR branch name is relevant:
+          PR_BRANCH: |-
+            ${{
+              (github.event.workflow_run.head_repository.owner.login != github.event.workflow_run.repository.owner.login)
+                && format('{0}:{1}', github.event.workflow_run.head_repository.owner.login, github.event.workflow_run.head_branch)
+                || github.event.workflow_run.head_branch
+            }}
+        # Query the PR number by repo + branch, then assign to step output:
+        run: |
+          gh pr view --repo "${PR_TARGET_REPO}" "${PR_BRANCH}" \
+             --json 'number,baseRefName' --jq '"number=\(.number)\nbase_ref=\(.baseRefName)"' \
+             >> "${GITHUB_OUTPUT}"
+
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5.0.0
         env:
