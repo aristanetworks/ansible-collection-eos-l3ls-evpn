@@ -484,3 +484,19 @@ jobs:
         with:
           name: pytest-coverage
           path: python-avd/coverage.xml
+
+      - name: Upload eos_designs compiled templates from pytest
+        if: |
+          matrix.python == '3.11'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-eos-designs-compiled-templates
+          path: python-avd/pyavd/_eos_designs/j2templates/compiled_templates/
+
+      - name: Upload eos_cli_config_gen compiled templates from pytest
+        if: |
+          matrix.python == '3.11'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-eos-cli-config-gen-compiled-templates
+          path: python-avd/pyavd/_eos_cli_config_gen/j2templates/compiled_templates/
