@@ -1,0 +1,32 @@
+---
+type: wan_router
+wan_router:
+  nodes:
+    - name: missing-wan-router-l3-interfaces-ip-address
+      id: 1
+      evpn_role: none
+      loopback_ipv4_pool: 1.2.3.4/24
+      vtep_loopback_ipv4_pool: 12.2.2.2/24
+      bgp_as: 65000
+      l3_interfaces:
+        # no ip address
+        - name: Ethernet42
+          # ip_address: 192.168.1.2/31
+          peer: peer1
+          peer_interface: eth1
+          peer_ip: 192.168.1.3
+          wan_carrier: TOTO
+          static_routes:
+            - prefix: 0.0.0.0/0
+
+wan_carriers:
+  - name: TOTO
+    path_group: INTERNET
+    trusted: true
+
+wan_path_groups:
+  - name: INTERNET
+    id: 42
+
+expected_error_message: >-
+  'wan_router.nodes[name=missing-wan-router-l3-interfaces-ip-address].l3_interfaces[name=Ethernet42].ip_address' is required but was not found.
