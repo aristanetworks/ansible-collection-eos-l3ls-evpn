@@ -70,6 +70,7 @@
             that:
               # errors and warnings
               - "'Failed to submit workspace' in cv_deploy_results.errors[0]"
+              - cv_deploy_results.workspace.state == "submit failed"
 
     - name: "{{ test_id | upper }} Cleanup orphan workspace"
       tags: ["{{ test_id }}"]
