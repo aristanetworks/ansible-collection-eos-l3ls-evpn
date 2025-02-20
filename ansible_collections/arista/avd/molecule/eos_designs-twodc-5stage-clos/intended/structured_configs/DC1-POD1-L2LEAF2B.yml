@@ -88,7 +88,7 @@ port_channel_interfaces:
       groups:
       - MLAG
 - name: Port-Channel1
-  description: L2_RACK2_MLAG_Port-Channel3
+  description: L2_DC1.POD1.LEAF2A_Port-Channel3
   shutdown: false
   mlag: 1
   service_profile: QOS-PROFILE

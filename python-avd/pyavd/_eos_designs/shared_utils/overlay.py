@@ -207,7 +207,9 @@ class OverlayMixin(Protocol):
     @cached_property
     def overlay_dpath(self: SharedUtilsProtocol) -> bool:
         # Set dpath based on ipvpn_gateway parameters
-        return self.overlay_ipvpn_gateway and self.node_config.ipvpn_gateway.enable_d_path
+        return (self.overlay_ipvpn_gateway and self.node_config.ipvpn_gateway.enable_d_path) or (
+            self.node_config.evpn_gateway.active_active_multihoming.enable_d_path and self.node_config.evpn_gateway.active_active_multihoming.enabled
+        )
 
     @cached_property
     def overlay_evpn_vxlan(self: SharedUtilsProtocol) -> bool:
