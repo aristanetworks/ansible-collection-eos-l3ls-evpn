@@ -361,11 +361,11 @@ jobs:
             3.12
       - name: "Install Python requirements"
         run: |
-          pip install mock pytest pytest-mock pytest-xdist coverage pyyaml "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+          pip install pyyaml "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
       - name: "Run ansible-test units test cases"
         run: |
           cd ansible_collections/arista/avd/
-          ansible-test units --coverage -vv
+          ansible-test units --coverage --requirements -vv
           ansible-test coverage xml
           mv tests/output/reports/coverage.xml ./units-coverage.xml
       - name: Upload coverage from ansible-test units
@@ -388,11 +388,11 @@ jobs:
             3.13
       - name: "Install Python requirements"
         run: |
-          pip install coverage "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
       - name: "Run ansible-test integration test cases"
         run: |
           cd ansible_collections/arista/avd/
-          ansible-test integration --coverage -vv
+          ansible-test integration --coverage --requirements -vv
           ansible-test coverage xml
           mv tests/output/reports/coverage.xml ./integration-coverage.xml
       - name: Upload coverage from ansible-test integration
