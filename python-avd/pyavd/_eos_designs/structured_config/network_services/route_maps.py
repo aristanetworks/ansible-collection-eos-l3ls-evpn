@@ -3,12 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
-from pyavd._utils import strip_empties_from_list
 
 if TYPE_CHECKING:
     from . import AvdStructuredConfigNetworkServicesProtocol
@@ -53,10 +51,7 @@ class RouteMapsMixin(Protocol):
                     )
 
                     self.structured_config.route_maps.append(route_maps_item)
-
-        if (route_maps_vrf_default := self._route_maps_vrf_default) is not None:
-            for route_map_vrf_default in route_maps_vrf_default:
-                self.structured_config.route_maps.append_new(name=route_map_vrf_default["name"], sequence_numbers=route_map_vrf_default["sequence_numbers"])
+        self._route_maps_vrf_default()
 
         # Note we check the 'flag need_mlag_peer_group' here which is being set by router_bgp logic. So this must run after.
         # TODO: Move this logic to a single place instead.
@@ -66,8 +61,7 @@ class RouteMapsMixin(Protocol):
         if self._mlag_ibgp_peering_subnets_without_redistribution:
             self._connected_to_bgp_vrfs_route_map()
 
-    @cached_property
-    def _route_maps_vrf_default(self: AvdStructuredConfigNetworkServicesProtocol) -> list | None:
+    def _route_maps_vrf_default(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         """
         Route-maps for EVPN services in VRF "default".
 
@@ -76,21 +70,15 @@ class RouteMapsMixin(Protocol):
         Also checked under router_bgp_vrfs to figure out if a route-map should be set on EVPN export.
         """
         if not self._vrf_default_evpn:
-            return None
+            return
 
         if not any([self._vrf_default_ipv4_subnets, self._vrf_default_ipv4_static_routes["static_routes"], self.shared_utils.is_wan_router]):
-            return None
+            return
 
-        route_maps = strip_empties_from_list(
-            [
-                self._evpn_export_vrf_default_route_map(),
-                self._bgp_underlay_peers_route_map(),
-                self._redistribute_connected_to_bgp_route_map(),
-                self._redistribute_static_to_bgp_route_map(),
-            ],
-        )
-
-        return route_maps or None
+        self._evpn_export_vrf_default_route_map()
+        self._bgp_underlay_peers_route_map()
+        self._redistribute_connected_to_bgp_route_map()
+        self._redistribute_static_to_bgp_route_map()
 
     def _route_maps_vrf_default_check(self: AvdStructuredConfigNetworkServicesProtocol) -> bool | None:
         if not self._vrf_default_evpn:
@@ -174,8 +162,7 @@ class RouteMapsMixin(Protocol):
                 )
         if not sequence_numbers:
             return None
-
-        return {"name": "RM-EVPN-EXPORT-VRF-DEFAULT", "sequence_numbers": sequence_numbers}
+        self.structured_config.route_maps.append_new(name="RM-EVPN-EXPORT-VRF-DEFAULT", sequence_numbers=sequence_numbers)
 
     def _bgp_underlay_peers_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
@@ -210,8 +197,7 @@ class RouteMapsMixin(Protocol):
             sequence=20,
             type="permit",
         )
-
-        return {"name": "RM-BGP-UNDERLAY-PEERS-OUT", "sequence_numbers": sequence_numbers}
+        self.structured_config.route_maps.append_new(name="RM-BGP-UNDERLAY-PEERS-OUT", sequence_numbers=sequence_numbers)
 
     def _redistribute_connected_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """
@@ -236,8 +222,7 @@ class RouteMapsMixin(Protocol):
 
         if not sequence_numbers:
             return None
-
-        return {"name": "RM-CONN-2-BGP", "sequence_numbers": sequence_numbers}
+        self.structured_config.route_maps.append_new(name="RM-CONN-2-BGP", sequence_numbers=sequence_numbers)
 
     def _redistribute_static_to_bgp_route_map(self: AvdStructuredConfigNetworkServicesProtocol) -> dict | None:
         """Append network services relevant entries to the route-map used to redistribute static routes to BGP."""
@@ -251,5 +236,4 @@ class RouteMapsMixin(Protocol):
             match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match(["ip address prefix-list PL-STATIC-VRF-DEFAULT"]),
             set=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Set([f"extcommunity soo {self.shared_utils.evpn_soo} additive"]),
         )
-
-        return {"name": "RM-STATIC-2-BGP", "sequence_numbers": sequence_numbers}
+        self.structured_config.route_maps.append_new(name="RM-STATIC-2-BGP", sequence_numbers=sequence_numbers)
