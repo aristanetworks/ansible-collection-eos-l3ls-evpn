@@ -6,6 +6,8 @@ from __future__ import annotations
 from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+
 if TYPE_CHECKING:
     from . import SharedUtilsProtocol
 
@@ -60,7 +62,7 @@ class UnderlayMixin(Protocol):
         return self.inputs.underlay_multicast and self.underlay_router
 
     @cached_property
-    def underlay_multicast_rp_interfaces(self: SharedUtilsProtocol) -> list[dict] | None:
+    def underlay_multicast_rp_interfaces(self: SharedUtilsProtocol) -> list[EosCliConfigGen.LoopbackInterfacesItem] | None:
         if not self.underlay_multicast or not self.inputs.underlay_multicast_rps:
             return None
 
@@ -70,11 +72,11 @@ class UnderlayMixin(Protocol):
                 continue
 
             underlay_multicast_rp_interfaces.append(
-                {
-                    "name": f"Loopback{rp_entry.nodes[self.hostname].loopback_number}",
-                    "description": rp_entry.nodes[self.hostname].description,
-                    "ip_address": f"{rp_entry.rp}/32",
-                },
+                EosCliConfigGen.LoopbackInterfacesItem(
+                    name=f"Loopback{rp_entry.nodes[self.hostname].loopback_number}",
+                    description=rp_entry.nodes[self.hostname].description,
+                    ip_address=f"{rp_entry.rp}/32",
+                )
             )
 
         if underlay_multicast_rp_interfaces:
