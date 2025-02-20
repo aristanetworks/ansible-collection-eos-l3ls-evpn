@@ -11,6 +11,8 @@ jobs:
     if: github.repository == 'aristanetworks/avd'
     runs-on: ubuntu-latest
     steps:
+      - run: |
+          echo "${{ github.event.workflow_run }}"
       - uses: actions/checkout@v4
         with:
           ref: ${{ github.event.workflow_run.head_sha }}
@@ -20,7 +22,7 @@ jobs:
         with:
           name: ansible-test-units-coverage
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run.run_number }}
+          run-id: ${{ github.event.workflow_run.id }}
           path: ansible_collections/arista/avd/tests/output/coverage/
           merge-multiple: true
       - name: Download coverage from ansible-test integration
@@ -28,7 +30,7 @@ jobs:
         with:
           name: ansible-test-integration-coverage
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run.run_number }}
+          run-id: ${{ github.event.workflow_run.id }}
           path: ansible_collections/arista/avd/tests/output/coverage/
           merge-multiple: true
       - name: Download coverage from pytest
@@ -36,7 +38,7 @@ jobs:
         with:
           name: pytest-coverage
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          run-id: ${{ github.event.workflow_run.run_number }}
+          run-id: ${{ github.event.workflow_run.id }}
           path: python-avd/coverage.xml
           merge-multiple: true
       - name: SonarCloud Scan
