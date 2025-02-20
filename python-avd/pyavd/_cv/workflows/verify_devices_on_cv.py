@@ -14,7 +14,6 @@ from .models import CVDevice
 if TYPE_CHECKING:
     from pyavd._cv.client import CVClient
 
-
 LOGGER = getLogger(__name__)
 
 
