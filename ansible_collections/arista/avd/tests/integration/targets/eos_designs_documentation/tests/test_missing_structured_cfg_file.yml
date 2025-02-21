@@ -1,0 +1,20 @@
+- name: Remove test output to force 'changed'
+  ansible.builtin.file:
+    path: "{{ actual_output_dir }}/eos_designs_documentation_missing_structured_cfg_file.md"
+    state: absent
+
+- name: Test missing structured config file for device (warning but success)
+  ignore_errors: false
+  register: result
+  arista.avd.eos_designs_documentation:
+    structured_config_dir: "{{ actual_output_dir }}/missing_dir"
+    fabric_documentation_file: "{{ actual_output_dir }}/eos_designs_documentation_missing_structured_cfg_file.md"
+    topology_csv_file: "not_used_but_required.csv"
+    p2p_links_csv_file: "not_used_but_required.csv"
+- name: Validate result
+  ansible.builtin.assert:
+    that:
+      - result is success
+      - result.changed == true
+      - result.warnings
+      - result.warnings[0] == "Could not find structured config files for 'testhost'. The documentation may be incomplete."

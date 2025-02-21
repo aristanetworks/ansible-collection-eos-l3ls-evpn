@@ -1,0 +1,3 @@
+---
+- name: Include test.yml
+  ansible.builtin.include_tasks: test.yml

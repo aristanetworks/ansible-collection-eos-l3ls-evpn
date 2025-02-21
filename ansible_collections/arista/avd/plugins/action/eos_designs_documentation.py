@@ -110,12 +110,22 @@ class ActionModule(ActionBase):
         return result
 
     def read_structured_configs(self, device_list: list[str], structured_config_dir: str, structured_config_suffix: str) -> dict[str, dict]:
-        return {device: self.read_one_structured_config(device, structured_config_dir, structured_config_suffix) for device in device_list}
+        missing = set()
+        structured_configs = {}
+        for device in device_list:
+            if structured_config := self.read_one_structured_config(device, structured_config_dir, structured_config_suffix):
+                structured_configs[device] = structured_config
+            else:
+                missing.add(device)
+        if missing:
+            LOGGER.warning("Could not find structured config files for '%s'. The documentation may be incomplete.", ",".join(missing))
+
+        return structured_configs
 
     def read_one_structured_config(self, device: str, structured_config_dir: str, structured_config_suffix: str) -> dict:
         path = Path(structured_config_dir, f"{device}.{structured_config_suffix}")
         if not path.exists():
-            logging.warning("Could not find structured config file for '%s'. The documentation may be incomplete.", device)
+            return {}
 
         with path.open(encoding="UTF-8") as stream:
             if structured_config_suffix in ["yml", "yaml"]:
