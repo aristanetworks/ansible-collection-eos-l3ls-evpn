@@ -24,6 +24,8 @@ l3_edge:
       profile: profile2
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined under l3_edge p2p_link.
-  {'name': 'ethernet1', 'peer': 'peer2', 'peer_interface': 'ethernet2', 'description': 'P2P_peer2_ethernet2'} conflicts with
-  {'name': 'ethernet1', 'peer': 'peer1', 'peer_interface': 'ethernet1', 'description': 'P2P_peer1_ethernet1'}.
+  Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
+  {'name': 'ethernet1', 'description': 'P2P_peer2_ethernet2', 'shutdown': False, 'mtu': 9214, 'peer': 'peer2',
+  'peer_interface': 'ethernet2', 'peer_type': 'other', 'switchport': {'enabled': False}}
+  conflicts with {'name': 'ethernet1', 'description': 'P2P_peer1_ethernet1', 'shutdown': False, 'mtu': 9214, 'peer': 'peer1',
+  'peer_interface': 'ethernet1', 'peer_type': 'other', 'switchport': {'enabled': False}}.

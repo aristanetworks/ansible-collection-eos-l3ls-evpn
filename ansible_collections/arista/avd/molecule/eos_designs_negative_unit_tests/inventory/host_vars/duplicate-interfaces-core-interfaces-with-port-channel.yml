@@ -48,9 +48,9 @@ core_interfaces:
       profile: isis_bb_profile
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined under
-  core_interfaces p2p_link port-Channel members.
-  {'name': 'Ethernet1', 'peer': 'core-2-ospf-ldp', 'peer_interface': 'Ethernet12', 'channel_group': {'id': 1, 'mode': 'active'},
-  'description': 'P2P_core-2-ospf-ldp_Ethernet12'}
-  conflicts with {'name': 'Ethernet1', 'peer': 'peer1', 'peer_interface': 'Ethernet2', 'channel_group': None,
-  'description': 'P2P_peer1_Ethernet2'}.
+  Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
+  {'name': 'Ethernet1', 'description': 'P2P_core-2-ospf-ldp_Ethernet12', 'shutdown': False, 'speed': 'forced 1000full',
+  'channel_group': {'id': 1, 'mode': 'active'}, 'peer': 'core-2-ospf-ldp', 'peer_interface': 'Ethernet12', 'peer_type': 'other'}
+  conflicts with {'name': 'Ethernet1', 'description': 'P2P_peer1_Ethernet2', 'shutdown': False, 'speed': 'forced 1000full',
+  'mtu': 1500, 'ip_address': 'unnumbered loopback0', 'ipv6_enable': True, 'peer': 'peer1', 'peer_interface': 'Ethernet2',
+  'peer_type': 'other', 'switchport': {'enabled': False}}.
