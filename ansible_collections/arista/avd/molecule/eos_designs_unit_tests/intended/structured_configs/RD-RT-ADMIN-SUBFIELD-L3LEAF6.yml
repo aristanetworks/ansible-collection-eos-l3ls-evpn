@@ -146,6 +146,21 @@ router_bgp:
     redistribute:
       connected:
         enabled: true
+  - name: TEST2
+    rd: '65535:12'
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '12:12'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '12:12'
+    router_id: 10.12.12.12
+    redistribute:
+      connected:
+        enabled: true
 service_routing_protocols_model: multi-agent
 static_routes:
 - vrf: MGMT
@@ -221,6 +236,10 @@ vrfs:
   description: TEST1
   ip_routing: true
   tenant: Tenant_A
+- name: TEST2
+  description: VRF with router-id
+  ip_routing: true
+  tenant: TENANT_WITH_VRFS_WITHOUT_SVIS
 vxlan_interface:
   vxlan1:
     description: RD-RT-ADMIN-SUBFIELD-L3LEAF6_VTEP
@@ -241,3 +260,5 @@ vxlan_interface:
       vrfs:
       - name: TEST1
         vni: 22
+      - name: TEST2
+        vni: 12
