@@ -9,3 +9,6 @@ __pycache__/
 /site/
 /pyavd/_eos_cli_config_gen/j2templates/compiled_templates
 /pyavd/_eos_designs/j2templates/compiled_templates
+coverage.xml
+# Ignoring auto-generated file
+/tests/pyavd/schema/data_merging_schema_class.py
