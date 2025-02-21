@@ -420,10 +420,11 @@ jobs:
       - name: "Build Ansible collection"
         run: |
           make collection-build
-      - uses: actions/upload-artifact@v4
+      - name: Upload collection
+        uses: actions/upload-artifact@v4
         with:
           name: avd-collection
-          path: ./arista-avd-collection.tar.gz
+          path: ./arista-avd-*.tar.gz
 
   # ----------------------------------- #
   # Galaxy Importer
@@ -444,7 +445,8 @@ jobs:
         run: |
           pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
           ansible-galaxy collection install -r ansible_collections/arista/avd/requirements.yml
-      - uses: actions/download-artifact@v4
+      - name: Download collection
+        uses: actions/download-artifact@v4
         with:
           name: avd-collection
       - name: Install galaxy-importer
