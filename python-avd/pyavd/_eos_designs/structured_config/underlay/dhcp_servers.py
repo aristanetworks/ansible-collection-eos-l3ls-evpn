@@ -11,6 +11,8 @@ from typing import TYPE_CHECKING, Protocol
 if TYPE_CHECKING:
     from . import AvdStructuredConfigUnderlayProtocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._errors import AristaAvdInvalidInputsError
 from pyavd._utils import get
 
@@ -22,14 +24,43 @@ class DhcpServersMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def _subnets(self: AvdStructuredConfigUnderlayProtocol) -> list:
+    @structured_config_contributor
+    def dhcp_servers(self: AvdStructuredConfigUnderlayProtocol) -> None:
+        """Return structured config for dhcp_server."""
+        dhcp_server = EosCliConfigGen.DhcpServersItem()
+        # Set subnets for DHCP server
+        self._subnets(dhcp_server)
+        if len(dhcp_server.subnets) == 0:
+            return
+        # Set ZTP bootfile
+        if ztp_bootfile := self._ipv4_ztp_boot_file:
+            dhcp_server.tftp_server.file_ipv4 = ztp_bootfile
+        # Set DNS servers
+        if dns_servers := self.inputs.name_servers:
+            dns_servers = dns_servers._cast_as(EosCliConfigGen.DhcpServersItem.DnsServersIpv4)
+            dhcp_server.dns_servers_ipv4 = dns_servers
+        # Set NTP servers
+        if ntp_servers := self._ntp_servers:
+            for so_dict in ntp_servers["sub_options"]:
+                so = EosCliConfigGen.DhcpServersItem.Ipv4VendorOptionsItem.SubOptions(
+                    [
+                        EosCliConfigGen.DhcpServersItem.Ipv4VendorOptionsItem.SubOptionsItem(
+                            code=so_dict["code"],
+                            array_ipv4_address=EosCliConfigGen.DhcpServersItem.Ipv4VendorOptionsItem.SubOptionsItem.ArrayIpv4Address(
+                                so_dict["array_ipv4_address"]
+                            ),
+                        )
+                    ]
+                )
+            dhcp_server.ipv4_vendor_options.append_new(vendor_id=ntp_servers["vendor_id"], sub_options=so)
+        self.structured_config.dhcp_servers.append(dhcp_server)
+
+    def _subnets(self: AvdStructuredConfigUnderlayProtocol, dhcp_server: EosCliConfigGen.DhcpServersItem) -> None:
         """
         Returns a list of dhcp subnets for downstream p2p interfaces.
 
         Used for l3 inband ztp/ztr.
         """
-        subnets = []
         for peer in self._avd_peers:
             peer_facts = self.shared_utils.get_peer_facts(peer, required=True)
             for uplink in peer_facts["uplinks"]:
@@ -40,15 +71,20 @@ class DhcpServersMixin(Protocol):
                     and "unnumbered" not in uplink["ip_address"]
                     and get(peer_facts, "inband_ztp")
                 ):
-                    subnet = {
-                        "subnet": str(ip_network(f"{uplink['peer_ip_address']}/{uplink['prefix_length']}", strict=False)),
-                        "ranges": [{"start": str(uplink["ip_address"]), "end": str(uplink["ip_address"])}],
-                        "name": f"inband ztp for {peer}-{uplink['interface']}",
-                        "default_gateway": f"{uplink['peer_ip_address']}",
-                    }
-                    subnets.append(subnet)
-
-        return subnets
+                    dhcp_server.vrf = "default"
+                    dhcp_server.subnets.append_new(
+                        subnet=str(ip_network(f"{uplink['peer_ip_address']}/{uplink['prefix_length']}", strict=False)),
+                        ranges=EosCliConfigGen.DhcpServersItem.SubnetsItem.Ranges(
+                            [
+                                EosCliConfigGen.DhcpServersItem.SubnetsItem.RangesItem(
+                                    start=str(uplink["ip_address"]),
+                                    end=str(uplink["ip_address"]),
+                                )
+                            ]
+                        ),
+                        name=f"inband ztp for {peer}-{uplink['interface']}",
+                        default_gateway=f"{uplink['peer_ip_address']}",
+                    )
 
     @cached_property
     def _ipv4_ztp_boot_file(self: AvdStructuredConfigUnderlayProtocol) -> str | None:
@@ -84,24 +120,3 @@ class DhcpServersMixin(Protocol):
             return {"vendor_id": "NTP", "sub_options": [{"code": 42, "array_ipv4_address": ntp_servers}]}
         msg = "When in-band ZTP is enabled, at least one NTP server's `name` field provided under `ntp_settings.servers` must be a valid IPv4 address."
         raise AristaAvdInvalidInputsError(msg)
-
-    @cached_property
-    def dhcp_servers(self: AvdStructuredConfigUnderlayProtocol) -> list | None:
-        """Return structured config for dhcp_server."""
-        dhcp_servers = []
-        # Set subnets for DHCP server
-        dhcp_server = {"vrf": "default", "subnets": self._subnets}
-        if len(dhcp_server["subnets"]) == 0:
-            return None
-        # Set ZTP bootfile
-        if ztp_bootfile := self._ipv4_ztp_boot_file:
-            dhcp_server["tftp_server"] = {"file_ipv4": ztp_bootfile}
-        # Set DNS servers
-        if dns_servers := self.inputs.name_servers:
-            dhcp_server["dns_servers_ipv4"] = dns_servers._as_list()
-        # Set NTP servers
-        if ntp_servers := self._ntp_servers:
-            dhcp_server["ipv4_vendor_options"] = [ntp_servers]
-        dhcp_servers.append(dhcp_server)
-
-        return dhcp_servers
