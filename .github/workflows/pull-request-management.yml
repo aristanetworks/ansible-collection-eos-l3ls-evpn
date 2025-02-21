@@ -432,18 +432,15 @@ jobs:
     name: Test galaxy-importer
     runs-on: ubuntu-latest
     needs: [build_collection]
-    env:
-      GALAXY_IMPORTER_CONFIG: galaxy-importer/galaxy-importer.cfg
     steps:
       - uses: actions/setup-python@v5
         with:
           python-version: |
-            3.10
+            3.11
       - uses: actions/checkout@v4
       - name: "Install Python & Ansible requirements"
         run: |
-          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
-          ansible-galaxy collection install -r ansible_collections/arista/avd/requirements.yml
+          pip install "ansible-core==2.16.0"
       - name: Download collection
         uses: actions/download-artifact@v4
         with:
