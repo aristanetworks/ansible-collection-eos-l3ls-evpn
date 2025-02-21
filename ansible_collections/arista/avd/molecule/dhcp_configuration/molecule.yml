@@ -22,8 +22,7 @@ scenario:
 dependency:
   name: galaxy
   options:
-    requirements-file: collections.yml
-  # enabled: false
+    requirements-file: requirements.yml
 driver:
   name: docker
 platforms:

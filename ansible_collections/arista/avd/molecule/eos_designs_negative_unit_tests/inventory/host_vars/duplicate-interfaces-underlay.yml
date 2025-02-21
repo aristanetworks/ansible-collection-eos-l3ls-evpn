@@ -17,7 +17,9 @@ l2leaf:
         - Ethernet8
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for Ethernet Interfaces defined for underlay.
-  {'name': 'Ethernet2', 'peer': 'duplicate-vlans-svi-id', 'peer_interface': 'Ethernet8', 'description': 'L2_duplicate-vlans-svi-id_Ethernet8',
-  'peer_type': 'l2leaf'} conflicts with {'name': 'Ethernet2', 'peer': 'duplicate-interface-l3-edge', 'peer_interface': 'Ethernet8',
-  'description': 'L2_duplicate-interface-l3-edge_Ethernet8', 'peer_type': 'spine'}.
+  Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
+  {'name': 'Ethernet2', 'description': 'L2_duplicate-vlans-svi-id_Ethernet8', 'shutdown': False, 'channel_group':
+  {'id': 2, 'mode': 'active'}, 'peer': 'duplicate-vlans-svi-id', 'peer_interface': 'Ethernet8', 'peer_type': 'l2leaf'}
+  conflicts with
+  {'name': 'Ethernet2', 'description': 'L2_duplicate-interface-l3-edge_Ethernet8', 'shutdown': False, 'channel_group':
+  {'id': 2, 'mode': 'active'}, 'peer': 'duplicate-interface-l3-edge', 'peer_interface': 'Ethernet8', 'peer_type': 'spine'}.

@@ -4,6 +4,6 @@
 version: 1
 
 dependencies:
-  galaxy: collections.yml
+  galaxy: requirements.yml
   python: requirements.txt
   system: bindep.txt
