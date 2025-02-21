@@ -10,7 +10,9 @@
             "ANSIBLE_INSTALL_LOCATION": "${localEnv:ANSIBLE_INSTALL_LOCATION}",
             "PYAVD_INSTALL_LOCATION": "${localEnv:PYAVD_INSTALL_LOCATION}",
             "ANSIBLE_CORE_VERSION": "${localEnv:ANSIBLE_CORE_VERSION}",
-            "USERNAME": "${localEnv:USERNAME}"
+            "USERNAME": "${localEnv:USERNAME}",
+            "RFC3339_TIMESTAMP": "${localEnv:RFC3339_TIMESTAMP}",
+            "IMAGE_VERSION": "${localEnv:IMAGE_VERSION}"
         }
     },
     "features": {

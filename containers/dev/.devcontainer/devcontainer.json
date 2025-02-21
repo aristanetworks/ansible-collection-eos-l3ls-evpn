@@ -7,7 +7,9 @@
         "args": {
             "FROM_IMAGE": "${localEnv:FROM_IMAGE}",
             "FROM_VARIANT": "${localEnv:FROM_VARIANT}",
-            "USERNAME": "${localEnv:USERNAME}"
+            "USERNAME": "${localEnv:USERNAME}",
+            "RFC3339_TIMESTAMP": "${localEnv:RFC3339_TIMESTAMP}",
+            "IMAGE_VERSION": "${localEnv:IMAGE_VERSION}"
         }
     },
     "features": {
