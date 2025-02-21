@@ -84,6 +84,7 @@
   - [Object Tracking](#object-tracking)
   - [Monitor Telemetry Postcard Policy](#monitor-telemetry-postcard-policy)
   - [Monitor Server Radius Summary](#monitor-server-radius-summary)
+  - [Monitor TWAMP](#monitor-twamp)
 - [Monitor Connectivity](#monitor-connectivity)
   - [Global Configuration](#global-configuration)
   - [VRF Configuration](#vrf-configuration)
@@ -2852,6 +2853,45 @@ monitor server radius
    probe interval 100 seconds
    probe threshold failure 100
    probe method access-request username arista password 7 <removed>
+```
+
+### Monitor TWAMP
+
+#### TWAMP-light Summary
+
+- Reflector Default Listen Port is 12345
+
+- Sender Default Destination Port is 123
+
+- Sender Default Source Port is 45678
+
+#### TWAMP-light Sender Profiles
+
+| Profile Name | Measurement Interval | Measurement Samples | Significance Value | Significance Offset |
+| ------------ | -------------------- | ------------------- | ------------------ | ------------------- |
+| test-profile | 5 | 10 | 50 | 5 |
+| test-profile2 | - | - | - | - |
+
+#### Monitor TWAMP configuration
+
+```eos
+!
+monitor twamp
+   twamp-light
+      reflector defaults
+         listen port 12345
+      !
+      sender defaults
+         destination port 123
+         source port 45678
+      !
+      sender profile test-profile
+         measurement interval 5 seconds
+         measurement samples 10
+         significance 50 microseconds offset 5 microseconds
+      !
+      sender profile test-profile2
+      !
 ```
 
 ## Monitor Connectivity
@@ -7068,6 +7108,8 @@ router service-insertion
 
 - Traffic Engineering is enabled.
 
+- TWAMP-light sender profile is test-profile
+
 #### Segment Routing Summary
 
 - SRTE is enabled.
@@ -7126,6 +7168,8 @@ router traffic-engineering
             segment-list label-stack 900002 900010 900011 900012
    router-id ipv4 10.0.0.1
    router-id ipv6 2001:beef:cafe::1
+   twamp-light sender profile test-profile
+   !
 ```
 
 ### Router OSPF
