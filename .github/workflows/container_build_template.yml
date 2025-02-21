@@ -160,6 +160,7 @@ jobs:
         with:
           platforms: ${{ inputs.platform }}
           image: tonistiigi/binfmt:qemu-v7.0.0-28
+          # workaround for Failed to CreateCacheEntry warning
           cache-image: false
 
       - name: Setup Docker buildX for multi-arch builds 🏗️
