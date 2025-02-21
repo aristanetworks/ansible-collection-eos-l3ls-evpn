@@ -6,9 +6,9 @@
 {# doc - monitor twamp #}
 {% if monitor_twamp.twamp_light is arista.avd.defined %}
 
-## Monitor TWAMP
+### Monitor TWAMP
 
-### TWAMP-light Summary
+#### TWAMP-light Summary
 {%     if monitor_twamp.twamp_light.reflector_defaults.listen_port is arista.avd.defined %}
 
 - Reflector Default Listen Port is {{ monitor_twamp.twamp_light.reflector_defaults.listen_port }}
@@ -36,7 +36,7 @@
 {%         endfor %}
 {%     endif %}
 
-### Monitor TWAMP configuration
+#### Monitor TWAMP configuration
 
 ```eos
 {%     include 'eos/monitor-twamp.j2' %}
