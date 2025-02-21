@@ -31,7 +31,7 @@ class PortChannelInterfacesMixin(Protocol):
             # Port-Channel interface
             port_channel_interface = EosCliConfigGen.PortChannelInterfacesItem()
             self._get_common_interface_cfg(p2p_link, p2p_link_data, port_channel_interface)
-            port_channel_interface.ptp = self._get_ptp_config_interface(p2p_link,output_type=EosCliConfigGen.PortChannelInterfacesItem.Ptp)
+            port_channel_interface.ptp = self._get_ptp_config_interface(p2p_link, output_type=EosCliConfigGen.PortChannelInterfacesItem.Ptp)
             port_channel_interface.description = self._p2p_link_port_channel_description(p2p_link_data)
 
             self.structured_config.port_channel_interfaces.append(port_channel_interface)

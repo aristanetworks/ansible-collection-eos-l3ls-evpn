@@ -28,7 +28,7 @@ class EthernetInterfacesMixin(Protocol):
             if p2p_link_data["port_channel_id"] is None:
                 # Ethernet interface
                 self._get_common_interface_cfg(p2p_link, p2p_link_data, ethernet_interface)
-                ethernet_interface.ptp = self._get_ptp_config_interface(p2p_link,output_type=EosCliConfigGen.EthernetInterfacesItem.Ptp)
+                ethernet_interface.ptp = self._get_ptp_config_interface(p2p_link, output_type=EosCliConfigGen.EthernetInterfacesItem.Ptp)
                 ethernet_interface.description = self._p2p_link_ethernet_description(p2p_link_data)
                 ethernet_interface.speed = p2p_link.speed
                 self.structured_config.ethernet_interfaces.append(ethernet_interface)

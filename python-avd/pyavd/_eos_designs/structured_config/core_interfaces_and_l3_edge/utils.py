@@ -21,6 +21,7 @@ T_P2pLinksItem = TypeVar("T_P2pLinksItem", EosDesigns.CoreInterfaces.P2pLinksIte
 T_P2pLinksProfiles = TypeVar("T_P2pLinksProfiles", EosDesigns.CoreInterfaces.P2pLinksProfiles, EosDesigns.L3Edge.P2pLinksProfiles)
 T_Ptp = TypeVar("T_Ptp", EosCliConfigGen.EthernetInterfacesItem.Ptp, EosCliConfigGen.PortChannelInterfacesItem.Ptp)
 
+
 class UtilsMixin(Protocol):
     """
     Mixin Class with internal functions.
@@ -184,8 +185,7 @@ class UtilsMixin(Protocol):
         msg = f"{self.data_model}.p2p_links must have either 'interfaces' or 'port_channel' with correct members set."
         raise AristaAvdInvalidInputsError(msg)
 
-    def _get_ptp_config_interface(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol, p2p_link: T_P2pLinksItem,
-                                  output_type: type[T_Ptp]) -> T_Ptp:
+    def _get_ptp_config_interface(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol, p2p_link: T_P2pLinksItem, output_type: type[T_Ptp]) -> T_Ptp:
         ptp_config = output_type()
         if p2p_link.ptp.enabled:
             if self.shared_utils.ptp_enabled:
@@ -212,8 +212,12 @@ class UtilsMixin(Protocol):
 
         return ptp_config
 
-    def _get_common_interface_cfg(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol, p2p_link: T_P2pLinksItem, p2p_link_data: dict,
-                                  interface: EosCliConfigGen.EthernetInterfacesItem | EosCliConfigGen.PortChannelInterfacesItem) -> None:
+    def _get_common_interface_cfg(
+        self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol,
+        p2p_link: T_P2pLinksItem,
+        p2p_link_data: dict,
+        interface: EosCliConfigGen.EthernetInterfacesItem | EosCliConfigGen.PortChannelInterfacesItem,
+    ) -> None:
         """
         Return partial structured_config for one p2p_link.
 
@@ -221,15 +225,18 @@ class UtilsMixin(Protocol):
         This config will only be used on the main interface - so not port-channel members.
         """
         index = p2p_link.nodes.index(self.shared_utils.hostname)
-        interface.name=p2p_link_data["interface"]
-        interface.peer=p2p_link_data["peer"]
-        interface.peer_interface=p2p_link_data["peer_interface"]
-        interface.peer_type=p2p_link_data["peer_type"]
-        interface.switchport.enabled=False
-        interface.shutdown=False
-        interface.mtu=p2p_link._get("mtu", self.shared_utils.p2p_uplinks_mtu) if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None
-        interface.service_profile=p2p_link._get("qos_profile", self.inputs.p2p_uplinks_qos_profile)
-        interface.eos_cli=p2p_link.raw_eos_cli
+
+        interface._update(
+            name=p2p_link_data["interface"],
+            peer=p2p_link_data["peer"],
+            peer_interface=p2p_link_data["peer_interface"],
+            peer_type=p2p_link_data["peer_type"],
+            shutdown=False,
+            mtu=p2p_link._get("mtu", self.shared_utils.p2p_uplinks_mtu) if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
+            service_profile=p2p_link._get("qos_profile", self.inputs.p2p_uplinks_qos_profile),
+            eos_cli=p2p_link.raw_eos_cli,
+        )
+        interface.switchport.enabled = False
 
         if p2p_link.structured_config:
             if str(interface_name := p2p_link_data["interface"]).lower().startswith("p"):
@@ -250,31 +257,30 @@ class UtilsMixin(Protocol):
 
         if p2p_link.include_in_underlay_protocol:
             if p2p_link.underlay_multicast and self.shared_utils.underlay_multicast:
-                interface.pim.ipv4.sparse_mode=True
+                interface.pim.ipv4.sparse_mode = True
 
             if (self.inputs.underlay_rfc5549 and p2p_link.routing_protocol != "ebgp") or p2p_link.ipv6_enable is True:
                 interface.ipv6_enable = True
 
             if self.shared_utils.underlay_ospf:
-                interface.ospf_network_point_to_point = True
-                interface.ospf_area = self.inputs.underlay_ospf_area
+                interface._update(ospf_network_point_to_point=True, ospf_area=self.inputs.underlay_ospf_area)
 
             if self.shared_utils.underlay_isis:
                 interface._update(
-                    isis_enable = self.shared_utils.isis_instance_name,
-                    isis_bfd = self.inputs.underlay_isis_bfd or None,
-                    isis_metric = default(p2p_link.isis_metric, self.inputs.isis_default_metric),
-                    isis_network_point_to_point = p2p_link.isis_network_type == "point-to-point",
-                    isis_hello_padding = p2p_link.isis_hello_padding,
-                    )
-                if default(p2p_link.isis_circuit_type, self.inputs.isis_default_circuit_type):
-                    interface.isis_circuit_type = default(p2p_link.isis_circuit_type, self.inputs.isis_default_circuit_type)
+                    isis_enable=self.shared_utils.isis_instance_name,
+                    isis_bfd=self.inputs.underlay_isis_bfd or None,
+                    isis_metric=default(p2p_link.isis_metric, self.inputs.isis_default_metric),
+                    isis_network_point_to_point=p2p_link.isis_network_type == "point-to-point",
+                    isis_hello_padding=p2p_link.isis_hello_padding,
+                )
+                if isis_circuit_type := default(p2p_link.isis_circuit_type, self.inputs.isis_default_circuit_type):
+                    interface.isis_circuit_type = isis_circuit_type
 
-                if default(p2p_link.isis_authentication_mode, self.inputs.underlay_isis_authentication_mode):
-                    interface.isis_authentication.both.mode = default(p2p_link.isis_authentication_mode, self.inputs.underlay_isis_authentication_mode)
-                    interface.isis_authentication.both._update(
-                        key=default(p2p_link.isis_authentication_key, self.inputs.underlay_isis_authentication_key),
-                        key_type="7")
+                if mode := default(p2p_link.isis_authentication_mode, self.inputs.underlay_isis_authentication_mode):
+                    interface.isis_authentication.both.mode = mode
+
+                if isis_authentication_key := default(p2p_link.isis_authentication_key, self.inputs.underlay_isis_authentication_key):
+                    interface.isis_authentication.both._update(key=isis_authentication_key, key_type="7")
 
         if p2p_link.macsec_profile:
             interface.mac_security.profile = p2p_link.macsec_profile
@@ -295,19 +301,22 @@ class UtilsMixin(Protocol):
                 interface.mpls.ldp.igp_sync = True
 
     def _get_port_channel_member_cfg(
-        self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol, p2p_link: T_P2pLinksItem, p2p_link_data: dict, member: dict,
-        interface: EosCliConfigGen.EthernetInterfacesItem | EosCliConfigGen.PortChannelInterfacesItem
-        ) -> None:
+        self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol,
+        p2p_link: T_P2pLinksItem,
+        p2p_link_data: dict,
+        member: dict,
+        interface: EosCliConfigGen.EthernetInterfacesItem | EosCliConfigGen.PortChannelInterfacesItem,
+    ) -> None:
         """
         Return partial structured_config for one p2p_link.
 
         Covers config for ethernet interfaces that are port-channel members.
         """
-        interface.name=member["interface"]
-        interface.peer=p2p_link_data["peer"]
-        interface.peer_interface=member["peer_interface"]
-        interface.peer_type=p2p_link_data["peer_type"]
-        interface.shutdown=False
-        interface.channel_group.id=p2p_link_data["port_channel_id"]
-        if p2p_link.port_channel.mode:
-            interface.channel_group.mode=p2p_link.port_channel.mode
+        interface.name = member["interface"]
+        interface.peer = p2p_link_data["peer"]
+        interface.peer_interface = member["peer_interface"]
+        interface.peer_type = p2p_link_data["peer_type"]
+        interface.shutdown = False
+        interface.channel_group.id = p2p_link_data["port_channel_id"]
+        if port_channel_mode := p2p_link.port_channel.mode:
+            interface.channel_group.mode = port_channel_mode
