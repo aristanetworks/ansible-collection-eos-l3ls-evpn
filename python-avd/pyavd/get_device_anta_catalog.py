@@ -8,11 +8,8 @@ from time import perf_counter
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from pathlib import Path
-
     from ._anta.lib import AntaCatalog
-    from .api.anta_test_spec import TestSpec
-    from .api.fabric_data import FabricData
+    from .api.anta import AntaCatalogGenerationSettings, MinimalStructuredConfig
 
 LOGGER = getLogger(__name__)
 
@@ -20,12 +17,8 @@ LOGGER = getLogger(__name__)
 def get_device_anta_catalog(
     hostname: str,
     structured_config: dict,
-    fabric_data: FabricData,
-    output_dir: str | Path | None = None,
-    custom_test_specs: list[TestSpec] | None = None,
-    run_tests: list[str] | None = None,
-    skip_tests: list[str] | None = None,
-    ignore_is_deployed: bool = False,
+    minimal_structured_configs: dict[str, MinimalStructuredConfig],
+    settings: AntaCatalogGenerationSettings | None = None,
 ) -> AntaCatalog:
     """Generate an ANTA catalog for a single device.
 
@@ -67,30 +60,21 @@ def get_device_anta_catalog(
     from ._anta.index import PYAVD_TEST_INDEX, PYAVD_TEST_NAMES
     from ._anta.lib import AntaCatalog
     from ._anta.utils import dump_anta_catalog
+    from .api.anta import AntaCatalogGenerationSettings
 
-    # Normalize input parameters
-    custom_test_specs = custom_test_specs or []
-    run_tests = run_tests or []
-    skip_tests = skip_tests or []
+    settings = settings or AntaCatalogGenerationSettings()
 
     start_time = perf_counter()
-    LOGGER.info(
-        "<%s>: generating catalog with options (run_tests=%s, skip_tests=%s, output_dir=%s, ignore_is_deployed=%s)",
-        hostname,
-        run_tests,
-        skip_tests,
-        output_dir,
-        ignore_is_deployed,
-    )
+    LOGGER.info("<%s>: generating catalog with settings: %s", hostname, settings.model_dump(mode="json"))
 
-    if ignore_is_deployed is False and not fabric_data.devices[hostname].is_deployed:
+    if settings.ignore_is_deployed is False and not structured_config.get("is_deployed", False):
         LOGGER.debug("<%s>: device is not deployed, returning an empty catalog", hostname)
         return AntaCatalog()
 
     # Check for invalid test names across all filters
     invalid_tests = {
-        "run_tests": set(run_tests) - set(PYAVD_TEST_NAMES),
-        "skip_tests": set(skip_tests) - set(PYAVD_TEST_NAMES),
+        "run_tests": set(settings.run_tests) - set(PYAVD_TEST_NAMES),
+        "skip_tests": set(settings.skip_tests) - set(PYAVD_TEST_NAMES),
     }
 
     for filter_type, invalid_names in invalid_tests.items():
@@ -99,30 +83,30 @@ def get_device_anta_catalog(
             raise ValueError(msg)
 
     # Remove any tests from run_tests that are in skip_tests
-    if run_tests and skip_tests:
-        run_tests = [test for test in run_tests if test not in skip_tests]
-        LOGGER.debug("<%s>: cleaned up run_tests after removing skipped tests: %s", hostname, run_tests)
+    if settings.run_tests and settings.skip_tests:
+        settings.run_tests = [test for test in settings.run_tests if test not in settings.skip_tests]
+        LOGGER.debug("<%s>: cleaned up run_tests after removing skipped tests: %s", hostname, settings.run_tests)
 
     # Filter test specs based on skip_tests and run_tests
     filtered_test_specs = []
 
     for test in PYAVD_TEST_INDEX:
         # Skip tests explicitly mentioned in skip_tests
-        if test.test_class.name in skip_tests:
+        if test.test_class.name in settings.skip_tests:
             continue
         # If run_tests is specified, only include tests in that set
-        if run_tests and test.test_class.name not in run_tests:
+        if settings.run_tests and test.test_class.name not in settings.run_tests:
             continue
 
         filtered_test_specs.append(test)
 
     # Add custom test specs, avoiding duplicates
-    filtered_test_specs.extend([test for test in custom_test_specs if test not in filtered_test_specs])
+    filtered_test_specs.extend([test for test in settings.custom_test_specs if test not in filtered_test_specs])
 
-    catalog = create_catalog(hostname, structured_config, fabric_data, filtered_test_specs)
+    catalog = create_catalog(hostname, structured_config, minimal_structured_configs, settings.test_generation_settings, filtered_test_specs)
 
-    if output_dir:
-        dump_anta_catalog(hostname, catalog, output_dir)
+    if settings.output_dir:
+        dump_anta_catalog(hostname, catalog, settings.output_dir)
 
     stop_time = perf_counter()
     LOGGER.debug("<%s>: generated catalog in %.4f seconds", hostname, stop_time - start_time)

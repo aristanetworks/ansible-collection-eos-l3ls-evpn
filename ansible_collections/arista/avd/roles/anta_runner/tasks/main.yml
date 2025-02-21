@@ -21,10 +21,10 @@
     mode: "0o775"
   loop:
     - "{{ anta_dir }}"
-    - "{{ anta_catalogs_dir }}"
+    - "{{ avd_catalogs_dir }}"
+    - "{{ user_catalogs_dir }}"
     - "{{ anta_reports_dir }}"
-    - "{{ custom_catalogs_dir }}"
-    - "{{ anta_logs_dir }}"
+    - "{{ anta_runner_logs_dir }}"
   delegate_to: localhost
   run_once: true
   check_mode: false
@@ -32,30 +32,27 @@
 - name: Run ANTA
   arista.avd.anta_workflow:
     device_list: "{{ anta_devices }}"
-    anta_catalog:
-      output_dir: "{{ anta_catalogs_dir }}"
+    avd_catalogs:
+      enabled: "{{ avd_catalogs_enabled }}"
+      output_dir: "{{ avd_catalogs_dir }}"
       structured_config_dir: "{{ structured_dir }}"
       structured_config_suffix: "{{ avd_structured_config_file_format }}"
-      scope:
-        boundary: "{{ anta_catalog_boundary }}"
-        allow_bgp_vrfs: "{{ anta_catalog_allow_bgp_vrfs }}"
-      filters: "{{ anta_catalog_filters | arista.avd.default([]) }}"
-    custom_catalog:
-      input_dir: "{{ custom_catalogs_dir }}"
-    anta_runner_settings:
+      allow_bgp_vrfs: "{{ avd_catalogs_allow_bgp_vrfs }}"
+      filters: "{{ avd_catalogs_filters | arista.avd.default([]) }}"
+    user_catalogs:
+      input_dir: "{{ user_catalogs_dir }}"
+    runner:
       timeout: "{{ anta_runner_timeout }}"
       batch_size: "{{ anta_runner_batch_size }}"
       tags: "{{ anta_runner_tags | arista.avd.default([]) }}"
       dry_run: "{{ anta_runner_dry_run }}"
-    anta_logging:
-      log_dir: "{{ anta_logs_dir }}"
+      logs_dir: "{{ anta_runner_logs_dir }}"
     report:
-      fabric_data_output: "{{ anta_report_fabric_data_path | arista.avd.default }}"
       csv_output: "{{ anta_report_csv_path }}"
       md_output: "{{ anta_report_md_path }}"
       json_output: "{{ anta_report_json_path }}"
       filters:
-        hide_statuses: "{{ anta_report_filter_status | arista.avd.default([]) }}"
+        hide_statuses: "{{ anta_report_hide_statuses | arista.avd.default([]) }}"
   register: anta
   delegate_to: localhost
   run_once: true

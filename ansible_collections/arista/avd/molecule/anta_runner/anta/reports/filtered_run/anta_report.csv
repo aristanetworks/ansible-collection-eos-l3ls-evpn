@@ -17,8 +17,7 @@ dc1-leaf1a,VerifyInterfacesStatus,unset,,Verifies the operational states of spec
 dc1-leaf1a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf1a,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc1-leaf1a,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-leaf1a,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
-dc1-leaf1a,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf1a,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc1-leaf1a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-leaf1a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc1-leaf1a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -41,14 +40,12 @@ dc1-leaf1b,VerifyInterfacesStatus,unset,,Verifies the operational states of spec
 dc1-leaf1b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf1b,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc1-leaf1b,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-leaf1b,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
-dc1-leaf1b,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf1b,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc1-leaf1b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-leaf1b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc1-leaf1b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-leaf1b,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-leaf1c,VerifyLLDPNeighbors,unset,,Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.,Connectivity
-dc1-leaf1c,VerifyReachability,unset,,Test network reachability to one or many destination IP(s).,Connectivity
 dc1-leaf1c,VerifyEnvironmentCooling,unset,,Verifies the status of power supply fans and all fan trays.,Hardware
 dc1-leaf1c,VerifyEnvironmentPower,unset,,Verifies the power supplies status.,Hardware
 dc1-leaf1c,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system cooling status.,Hardware
@@ -62,7 +59,7 @@ dc1-leaf1c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of in
 dc1-leaf1c,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc1-leaf1c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf1c,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-leaf1c,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf1c,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc1-leaf1c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-leaf1c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc1-leaf1c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -85,19 +82,17 @@ dc1-leaf2a,VerifyInterfacesStatus,unset,,Verifies the operational states of spec
 dc1-leaf2a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf2a,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc1-leaf2a,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-leaf2a,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
-dc1-leaf2a,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf2a,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc1-leaf2a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-leaf2a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc1-leaf2a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc1-leaf2a,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc1-leaf2a,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
-dc1-leaf2a,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc1-leaf2a,VerifyVxlan1Interface,unset,,Verifies if the Vxlan1 interface is configured and 'up/up'.,VXLAN
 dc1-leaf2a,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
 dc1-leaf2a,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
 dc1-leaf2a,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
 dc1-leaf2c,VerifyLLDPNeighbors,unset,,Verifies the connection status of the specified LLDP (Link Layer Discovery Protocol) neighbors.,Connectivity
-dc1-leaf2c,VerifyReachability,unset,,Test network reachability to one or many destination IP(s).,Connectivity
 dc1-leaf2c,VerifyEnvironmentCooling,unset,,Verifies the status of power supply fans and all fan trays.,Hardware
 dc1-leaf2c,VerifyEnvironmentPower,unset,,Verifies the power supplies status.,Hardware
 dc1-leaf2c,VerifyEnvironmentSystemCooling,unset,,Verifies the device's system cooling status.,Hardware
@@ -111,7 +106,7 @@ dc1-leaf2c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of in
 dc1-leaf2c,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc1-leaf2c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-leaf2c,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-leaf2c,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-leaf2c,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc1-leaf2c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-leaf2c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc1-leaf2c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -133,7 +128,7 @@ dc1-spine1,VerifyInterfaceUtilization,unset,,Verifies that the utilization of in
 dc1-spine1,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc1-spine1,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-spine1,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-spine1,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-spine1,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc1-spine1,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-spine1,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc1-spine1,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -155,7 +150,7 @@ dc1-spine2,VerifyInterfaceUtilization,unset,,Verifies that the utilization of in
 dc1-spine2,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc1-spine2,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-spine2,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-spine2,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-spine2,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc1-spine2,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-spine2,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc1-spine2,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -196,7 +191,7 @@ dc1-wan1,VerifyInterfaceUtilization,unset,,Verifies that the utilization of inte
 dc1-wan1,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc1-wan1,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-wan1,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-wan1,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-wan1,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc1-wan1,VerifySpecificIPSecConn,unset,,Verifies the IPv4 security connections.,Security
 dc1-wan1,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-wan1,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
@@ -221,7 +216,7 @@ dc1-wan2,VerifyInterfaceUtilization,unset,,Verifies that the utilization of inte
 dc1-wan2,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc1-wan2,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc1-wan2,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc1-wan2,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc1-wan2,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc1-wan2,VerifySpecificIPSecConn,unset,,Verifies the IPv4 security connections.,Security
 dc1-wan2,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc1-wan2,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
@@ -246,8 +241,7 @@ dc2-leaf1a,VerifyInterfacesStatus,unset,,Verifies the operational states of spec
 dc2-leaf1a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf1a,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf1a,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-leaf1a,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
-dc2-leaf1a,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf1a,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-leaf1a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-leaf1a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-leaf1a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -270,8 +264,7 @@ dc2-leaf1b,VerifyInterfacesStatus,unset,,Verifies the operational states of spec
 dc2-leaf1b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf1b,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf1b,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-leaf1b,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
-dc2-leaf1b,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf1b,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-leaf1b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-leaf1b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-leaf1b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -290,7 +283,7 @@ dc2-leaf1c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of in
 dc2-leaf1c,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc2-leaf1c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf1c,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-leaf1c,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf1c,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-leaf1c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-leaf1c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-leaf1c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -313,14 +306,13 @@ dc2-leaf2a,VerifyInterfacesStatus,unset,,Verifies the operational states of spec
 dc2-leaf2a,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf2a,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf2a,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-leaf2a,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
-dc2-leaf2a,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf2a,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-leaf2a,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-leaf2a,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-leaf2a,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf2a,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-leaf2a,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
-dc2-leaf2a,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc2-leaf2a,VerifyVxlan1Interface,unset,,Verifies if the Vxlan1 interface is configured and 'up/up'.,VXLAN
 dc2-leaf2a,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
 dc2-leaf2a,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
 dc2-leaf2a,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
@@ -342,14 +334,13 @@ dc2-leaf2b,VerifyInterfacesStatus,unset,,Verifies the operational states of spec
 dc2-leaf2b,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf2b,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf2b,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-leaf2b,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
-dc2-leaf2b,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf2b,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-leaf2b,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-leaf2b,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-leaf2b,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
 dc2-leaf2b,VerifyReloadCause,unset,,Verifies the last reload cause of the device.,System
 dc2-leaf2b,VerifyVxlan1ConnSettings,unset,,Verifies the interface vxlan1 source interface and UDP port.,VXLAN
-dc2-leaf2b,VerifyVxlan1Interface,unset,,Verifies the Vxlan1 interface status.,VXLAN
+dc2-leaf2b,VerifyVxlan1Interface,unset,,Verifies if the Vxlan1 interface is configured and 'up/up'.,VXLAN
 dc2-leaf2b,VerifyVxlanConfigSanity,unset,,Verifies there are no VXLAN config-sanity inconsistencies.,VXLAN
 dc2-leaf2b,VerifyVxlanVniBinding,unset,,Verifies the VNI-VLAN bindings of the Vxlan1 interface.,VXLAN
 dc2-leaf2b,VerifyVxlanVtep,unset,,Verifies the VTEP peers of the Vxlan1 interface.,VXLAN
@@ -367,7 +358,7 @@ dc2-leaf2c,VerifyInterfaceUtilization,unset,,Verifies that the utilization of in
 dc2-leaf2c,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc2-leaf2c,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf2c,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-leaf2c,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf2c,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-leaf2c,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-leaf2c,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-leaf2c,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -390,8 +381,7 @@ dc2-leaf3a.arista.com,VerifyInterfacesStatus,unset,,Verifies the operational sta
 dc2-leaf3a.arista.com,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf3a.arista.com,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf3a.arista.com,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-leaf3a.arista.com,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
-dc2-leaf3a.arista.com,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf3a.arista.com,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-leaf3a.arista.com,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-leaf3a.arista.com,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-leaf3a.arista.com,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -414,8 +404,7 @@ dc2-leaf3b.arista.com,VerifyInterfacesStatus,unset,,Verifies the operational sta
 dc2-leaf3b.arista.com,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-leaf3b.arista.com,VerifyMlagStatus,unset,,Verifies the health status of the MLAG configuration.,MLAG
 dc2-leaf3b.arista.com,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-leaf3b.arista.com,VerifyRoutingTableEntry,unset,,Verifies that the provided routes are present in the routing table of a specified VRF.,Routing
-dc2-leaf3b.arista.com,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-leaf3b.arista.com,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-leaf3b.arista.com,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-leaf3b.arista.com,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-leaf3b.arista.com,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -436,7 +425,7 @@ dc2-spine1,VerifyInterfaceUtilization,unset,,Verifies that the utilization of in
 dc2-spine1,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc2-spine1,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-spine1,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-spine1,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-spine1,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-spine1,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-spine1,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-spine1,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software
@@ -458,7 +447,7 @@ dc2-spine2,VerifyInterfaceUtilization,unset,,Verifies that the utilization of in
 dc2-spine2,VerifyInterfacesStatus,unset,,Verifies the operational states of specified interfaces to ensure they match expected configurations.,Interfaces
 dc2-spine2,VerifyStormControlDrops,unset,,Verifies there are no interface storm-control drop counters.,Interfaces
 dc2-spine2,VerifyRoutingProtocolModel,unset,,Verifies the configured routing protocol model.,Routing
-dc2-spine2,VerifyAPIHttpsSSL,unset,,Verifies if the eAPI has a valid SSL profile.,Security
+dc2-spine2,VerifyAPIHttpsSSL,unset,,Verifies if eAPI HTTPS server SSL profile is configured and valid.,Security
 dc2-spine2,VerifyEOSExtensions,unset,,Verifies that all EOS extensions installed on the device are enabled for boot persistence.,Software
 dc2-spine2,VerifyEOSVersion,unset,,Verifies the EOS version of the device.,Software
 dc2-spine2,VerifyTerminAttrVersion,unset,,Verifies the TerminAttr version of the device.,Software

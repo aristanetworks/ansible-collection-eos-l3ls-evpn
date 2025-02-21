@@ -17,6 +17,6 @@
         - reports
         - config_backup
         - intended
-        - anta/catalogs
+        - anta/avd_catalogs
         - anta/reports
         - anta/logs

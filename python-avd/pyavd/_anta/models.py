@@ -9,33 +9,13 @@ from dataclasses import dataclass
 from functools import cached_property
 from ipaddress import IPv4Address, IPv6Address, ip_interface
 from logging import getLogger
-from typing import TYPE_CHECKING, Any, Literal
-
-from pydantic import BaseModel
+from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
-    from pyavd.api.fabric_data import FabricData
+    from pyavd.api.anta import MinimalStructuredConfig, TestGenerationSettings
 
 LOGGER = getLogger(__name__)
-
-
-# TODO: Pydantic might be overkill for this. Consider using a dataclass instead.
-class FabricScope(BaseModel):
-    """Defines scope and permissions for fabric boundary test input generation."""
-
-    boundary: Literal["unlimited", "fabric", "dc", "pod", "rack"] = "unlimited"
-    allow_bgp_vrfs: bool = False
-
-
-@dataclass(frozen=True)
-class BoundaryLocation:
-    """Represents device location within fabric hierarchy (fabric->dc->pod->rack)."""
-
-    fabric: str | None = None
-    dc: str | None = None
-    pod: str | None = None
-    rack: str | None = None
 
 
 @dataclass(frozen=True)
@@ -48,53 +28,24 @@ class BgpNeighbor:
     peer: str | None = None
 
 
-@dataclass(frozen=True)
-class DeviceData:
-    """Stores device metadata and network attributes for test input generation."""
-
-    hostname: str
-    dns_domain: str | None
-    is_deployed: bool
-    # NOTE: Individual location fields are not used for now, but can be useful for future tests
-    fabric_name: str | None
-    dc_name: str | None
-    pod_name: str | None
-    rack: str | None
-    boundary_location: BoundaryLocation
-    is_vtep: bool
-    is_wan_router: bool
-    loopback0_ip: IPv4Address | None
-    vtep_ip: IPv4Address | None
-    routed_interface_ips: dict[str, IPv4Address]
-
-
 @dataclass
-class ExtendedDeviceData:
-    """Extends DeviceData with structured config and fabric-wide data access."""
+class DeviceTestContext:
+    """Stores device test context data for ANTA test generation."""
 
     hostname: str
-    fabric_data: FabricData
     structured_config: EosCliConfigGen
-
-    def __post_init__(self) -> None:
-        self._base: DeviceData = self.fabric_data.devices[self.hostname]
-
-        # Shortcut attributes for easier access and type hinting in the input factories
-        self.device = self._base
-        self.is_vtep = self._base.is_vtep
-        self.is_wan_router = self._base.is_wan_router
-        self.loopback0_ip = self._base.loopback0_ip
-        self.vtep_ip = self._base.vtep_ip
-        self.boundary_location = self._base.boundary_location
-
-    # Forward all other attribute access to the base DeviceData object
-    def __getattr__(self, name: str) -> Any:
-        return getattr(self._base, name)
+    structured_configs: dict[str, MinimalStructuredConfig]
+    test_generation_settings: TestGenerationSettings
 
     @cached_property
-    def devices_in_boundary(self) -> set[str]:
-        """Generate a set of device hostnames within the same boundary."""
-        return self.fabric_data.get_devices_by_attribute("boundary_location", self.boundary_location)
+    def is_vtep(self) -> bool:
+        """Check if the device is a VTEP."""
+        return bool(self.structured_config.vxlan_interface.vxlan1.vxlan.source_interface)
+
+    @cached_property
+    def is_wan_router(self) -> bool:
+        """Check if the device is a WAN router."""
+        return self.is_vtep and "Dps" in self.structured_config.vxlan_interface.vxlan1.vxlan.source_interface
 
     @cached_property
     def bgp_neighbors(self) -> list[BgpNeighbor]:
@@ -107,6 +58,7 @@ class ExtendedDeviceData:
             if neighbor.shutdown is True:
                 LOGGER.debug("<%s>: skipped BGP peer %s - shutdown", self.hostname, identifier)
                 continue
+
             # Skip neighbors in shutdown peer groups
             if (
                 neighbor.peer_group
@@ -117,7 +69,7 @@ class ExtendedDeviceData:
                 continue
 
             # When peer field is set, check if the peer device is in the fabric and deployed
-            if neighbor.peer and (neighbor.peer not in self.fabric_data.devices or not self.fabric_data.devices[neighbor.peer].is_deployed):
+            if neighbor.peer and (neighbor.peer not in self.structured_configs or not self.structured_configs[neighbor.peer].is_deployed):
                 LOGGER.debug("<%s>: skipped BGP peer %s - peer not in fabric or not deployed", self.hostname, identifier)
                 continue
 
@@ -129,7 +81,7 @@ class ExtendedDeviceData:
 
             neighbors.append(BgpNeighbor(ip_address=ip_address, vrf="default", peer_group=neighbor.peer_group, peer=neighbor.peer))
 
-        if not self.fabric_data.scope.allow_bgp_vrfs:
+        if not self.test_generation_settings.allow_bgp_vrfs:
             LOGGER.debug("<%s>: skipped BGP VRF peers - VRF processing disabled", self.hostname)
             return neighbors
 
@@ -141,6 +93,7 @@ class ExtendedDeviceData:
                 if neighbor.shutdown is True:
                     LOGGER.debug("<%s>: skipped BGP peer %s - shutdown", self.hostname, identifier)
                     continue
+
                 # Skip neighbors in shutdown peer groups
                 if (
                     neighbor.peer_group

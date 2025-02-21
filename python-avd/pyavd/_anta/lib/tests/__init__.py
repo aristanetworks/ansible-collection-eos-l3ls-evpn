@@ -16,7 +16,7 @@ from anta.tests.hardware import (
 from anta.tests.interfaces import VerifyInterfacesStatus
 from anta.tests.mlag import VerifyMlagStatus
 from anta.tests.routing.bgp import VerifyBGPPeerMPCaps, VerifyBGPPeerSession
-from anta.tests.routing.generic import VerifyRoutingProtocolModel, VerifyRoutingTableEntry
+from anta.tests.routing.generic import VerifyRoutingProtocolModel
 from anta.tests.security import VerifyAPIHttpsSSL, VerifySpecificIPSecConn
 from anta.tests.stun import VerifyStunClientTranslation
 from anta.tests.system import VerifyNTP, VerifyReloadCause
@@ -36,7 +36,6 @@ __all__ = [
     "VerifyReachability",
     "VerifyReloadCause",
     "VerifyRoutingProtocolModel",
-    "VerifyRoutingTableEntry",
     "VerifySpecificIPSecConn",
     "VerifyStunClientTranslation",
     "VerifyTemperature",

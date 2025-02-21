@@ -72,6 +72,15 @@ ethernet_interfaces:
   peer: dc1-leaf1c
   peer_interface: Ethernet2
   peer_type: l2leaf
+- name: Ethernet5
+  description: SERVER_dc1-leaf1-server1_PCI2
+  shutdown: false
+  channel_group:
+    id: 5
+    mode: active
+  peer: dc1-leaf1-server1
+  peer_interface: PCI2
+  peer_type: server
 - name: Ethernet41
   description: Cameras
   shutdown: false
@@ -162,15 +171,6 @@ ethernet_interfaces:
     enabled: true
     mode: access
     access_vlan: 50
-- name: Ethernet5
-  description: SERVER_dc1-leaf1-server1_PCI2
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-  peer: dc1-leaf1-server1
-  peer_interface: PCI2
-  peer_type: server
 hostname: dc1-leaf1b
 ip_igmp_snooping:
   globally_enabled: true

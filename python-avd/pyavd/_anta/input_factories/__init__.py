@@ -10,7 +10,6 @@ from .connectivity import VerifyLLDPNeighborsInputFactory, VerifyReachabilityInp
 from .hardware import VerifyEnvironmentCoolingInputFactory, VerifyEnvironmentPowerInputFactory, VerifyTransceiversManufacturersInputFactory
 from .interfaces import VerifyInterfacesStatusInputFactory
 from .routing_bgp import VerifyBGPPeerMPCapsInputFactory, VerifyBGPPeerSessionInputFactory
-from .routing_generic import VerifyRoutingTableEntryInputFactory
 from .security import VerifySpecificIPSecConnInputFactory
 from .stun import VerifyStunClientTranslationInputFactory
 
@@ -23,7 +22,6 @@ __all__ = [
     "VerifyInterfacesStatusInputFactory",
     "VerifyLLDPNeighborsInputFactory",
     "VerifyReachabilityInputFactory",
-    "VerifyRoutingTableEntryInputFactory",
     "VerifySpecificIPSecConnInputFactory",
     "VerifyStunClientTranslationInputFactory",
     "VerifyTransceiversManufacturersInputFactory",

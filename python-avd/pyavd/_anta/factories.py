@@ -5,10 +5,8 @@
 
 from __future__ import annotations
 
-from collections import defaultdict
 from logging import getLogger
-from time import perf_counter
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from anta.catalog import AntaCatalog, AntaTestDefinition
 from anta.models import AntaTest
@@ -18,150 +16,33 @@ from pyavd._utils import get_v2
 
 from .constants import StructuredConfigKey
 from .logs import LogMessage, TestLoggerAdapter
-from .models import BoundaryLocation, DeviceData, ExtendedDeviceData, FabricScope
-from .utils import get_device_roles, get_device_routed_interface_ips, get_device_special_ips
+from .models import DeviceTestContext
 
 if TYPE_CHECKING:
-    from ipaddress import IPv4Address
-
-    from pyavd.api.anta_test_spec import TestSpec
-    from pyavd.api.fabric_data import FabricData
+    from pyavd.api.anta import AntaCatalogGenerationSettings, MinimalStructuredConfig, TestSpec
 
 
 LOGGER = getLogger(__name__)
 
 
-def create_fabric_data(structured_configs: dict, scope: dict | None = None) -> FabricData:
-    """Factory function to create a FabricData instance from device structured configurations."""
-    from pyavd.api.fabric_data import FabricData
-
-    # TODO: Might need to handle Pydantic validation errors more gracefully
-    scope_obj = FabricScope(**scope) if scope is not None else FabricScope()
-    devices: dict[str, DeviceData] = {}
-    boundary_index: defaultdict[BoundaryLocation, set[str]] = defaultdict(set)
-
-    loopback0_ips: dict[str, IPv4Address] = {}
-    vtep_ips: dict[str, IPv4Address] = {}
-    special_ips: defaultdict[str, list[IPv4Address]] = defaultdict(list)
-
-    vteps: set[str] = set()
-    wan_routers: set[str] = set()
-
-    start_time = perf_counter()
-    LOGGER.debug("creating FabricData object with scope %s", scope)
-
-    # Build all the indexes
-    for hostname, structured_config in structured_configs.items():
-        structured_config_model = EosCliConfigGen._load(structured_config)
-        device_data = create_device_data(hostname, structured_config_model, scope_obj.boundary)
-        devices[hostname] = device_data
-
-        if scope_obj.boundary != "unlimited" and getattr(device_data.boundary_location, scope_obj.boundary) is None:
-            field = "rack" if scope_obj.boundary == "rack" else f"{scope_obj.boundary}_name"
-            msg = f"Device {hostname} is missing required metadata field '{field}' for boundary '{scope_obj.boundary}'"
-            raise ValueError(msg)
-
-        # Build boundary index
-        if scope_obj.boundary != "unlimited":
-            boundary_index[device_data.boundary_location].add(hostname)
-
-        # Build IP indexes
-        if device_data.loopback0_ip:
-            loopback0_ips[hostname] = device_data.loopback0_ip
-            special_ips[hostname].append(device_data.loopback0_ip)
-        else:
-            LOGGER.debug("<%s>: skipped Loopback0 IP mapping - IP not found", hostname)
-
-        if device_data.vtep_ip:
-            vtep_ips[hostname] = device_data.vtep_ip
-            special_ips[hostname].append(device_data.vtep_ip)
-        else:
-            LOGGER.debug("<%s>: skipped VTEP IP mapping - IP not found", hostname)
-
-        # Build role indexes
-        if device_data.is_vtep:
-            vteps.add(hostname)
-        if device_data.is_wan_router:
-            wan_routers.add(hostname)
-
-    fabric_data = FabricData(
-        scope=scope_obj,
-        devices=devices,
-        boundary_index=boundary_index,
-        _loopback0_ips=loopback0_ips,
-        _vtep_ips=vtep_ips,
-        _special_ips=special_ips,
-        _vteps=vteps,
-        _wan_routers=wan_routers,
-    )
-
-    stop_time = perf_counter()
-    LOGGER.debug("created FabricData object in %.4f seconds", stop_time - start_time)
-
-    return fabric_data
-
-
-def create_device_data(hostname: str, structured_config: EosCliConfigGen, boundary: str) -> DeviceData:
-    """Create the DeviceData object for the given hostname."""
-    boundary_location = create_device_boundary_location(structured_config, boundary)
-    is_vtep, is_wan_router = get_device_roles(structured_config)
-    loopback0_ip, vtep_ip = get_device_special_ips(structured_config)
-    routed_interface_ips = get_device_routed_interface_ips(structured_config)
-
-    return DeviceData(
-        hostname=hostname,
-        dns_domain=structured_config.dns_domain,
-        is_deployed=structured_config.is_deployed,
-        fabric_name=structured_config.metadata.fabric_name,
-        dc_name=structured_config.metadata.dc_name,
-        pod_name=structured_config.metadata.pod_name,
-        rack=structured_config.metadata.rack,
-        boundary_location=boundary_location,
-        is_vtep=is_vtep,
-        is_wan_router=is_wan_router,
-        loopback0_ip=loopback0_ip,
-        vtep_ip=vtep_ip,
-        routed_interface_ips=routed_interface_ips,
-    )
-
-
-def create_device_boundary_location(structured_config: EosCliConfigGen, boundary: str) -> BoundaryLocation:
-    """Create a BoundaryLocation object for the location of a device up to the specified boundary level."""
-    fabric_name, dc_name, pod_name, rack = (
-        structured_config.metadata.fabric_name,
-        structured_config.metadata.dc_name,
-        structured_config.metadata.pod_name,
-        structured_config.metadata.rack,
-    )
-
-    match boundary:
-        case "unlimited":
-            return BoundaryLocation()
-        case "fabric":
-            return BoundaryLocation(fabric=fabric_name)
-        case "dc":
-            return BoundaryLocation(fabric=fabric_name, dc=dc_name)
-        case "pod":
-            return BoundaryLocation(fabric=fabric_name, dc=dc_name, pod=pod_name)
-        case "rack":
-            return BoundaryLocation(fabric=fabric_name, dc=dc_name, pod=pod_name, rack=rack)
-        case _:
-            msg = f"Invalid boundary level: {boundary} - must be one of: unlimited, fabric, dc, pod, rack"
-            raise ValueError(msg)
-
-
-def create_catalog(hostname: str, structured_config: dict, fabric_data: FabricData, test_specs: list[TestSpec]) -> AntaCatalog:
+def create_catalog(
+    hostname: str,
+    structured_config: dict[str, Any],
+    structured_configs: dict[str, MinimalStructuredConfig],
+    test_generation_settings: AntaCatalogGenerationSettings,
+    test_specs: list[TestSpec],
+) -> AntaCatalog:
     """Create an ANTA catalog for a device from the provided test specs."""
-    device_data = ExtendedDeviceData(
+    device_context = DeviceTestContext(
         hostname=hostname,
-        fabric_data=fabric_data,
         structured_config=EosCliConfigGen._load(structured_config),
+        structured_configs=structured_configs,
+        test_generation_settings=test_generation_settings,
     )
-
     test_definitions: list[AntaTestDefinition] = []
     for test in test_specs:
         test_logger = TestLoggerAdapter.create(device=hostname, test=test.test_class.name, logger=LOGGER)
-        test_definition = create_test_definition(test, device_data, test_logger)
+        test_definition = create_test_definition(test, device_context, test_logger)
 
         # Skip the test if we couldn't create the test definition. Logging is done when creating the test definition
         if test_definition is None:
@@ -178,10 +59,10 @@ def create_catalog(hostname: str, structured_config: dict, fabric_data: FabricDa
     return AntaCatalog(tests=test_definitions)
 
 
-def create_test_definition(test_spec: TestSpec, device_data: ExtendedDeviceData, logger: TestLoggerAdapter) -> AntaTestDefinition | None:
+def create_test_definition(test_spec: TestSpec, device_context: DeviceTestContext, logger: TestLoggerAdapter) -> AntaTestDefinition | None:
     """Create the AntaTestDefinition from this TestSpec instance."""
     # Skip the test if the conditional keys are not present in the structured config
-    if test_spec.conditional_keys and not all(get_v2(device_data.structured_config, key.value) for key in test_spec.conditional_keys):
+    if test_spec.conditional_keys and not all(get_v2(device_context.structured_config, key.value) for key in test_spec.conditional_keys):
         keys = StructuredConfigKey.to_string_list(test_spec.conditional_keys)
         logger.debug(LogMessage.INPUT_NO_DATA_MODEL, caller=", ".join(keys))
         return None
@@ -194,7 +75,7 @@ def create_test_definition(test_spec: TestSpec, device_data: ExtendedDeviceData,
         logger.debug(LogMessage.INPUT_RENDERING, caller="input dictionary")
         rendered_inputs = {}
         for input_field, structured_config_key in test_spec.input_dict.items():
-            field_value = get_v2(device_data.structured_config, structured_config_key.value)
+            field_value = get_v2(device_context.structured_config, structured_config_key.value)
             if field_value is not None:
                 rendered_inputs[input_field] = field_value
             else:
@@ -206,7 +87,7 @@ def create_test_definition(test_spec: TestSpec, device_data: ExtendedDeviceData,
     # Else create the AntaTest.Input instance from the input factory if available
     elif test_spec.input_factory:
         logger.debug(LogMessage.INPUT_RENDERING, caller="input factory")
-        factory = test_spec.input_factory(device_data, logger)  # pylint: disable=not-callable
+        factory = test_spec.input_factory(device_context, logger)  # pylint: disable=not-callable
         inputs = factory.create()
         if inputs is None:
             logger.debug(LogMessage.INPUT_NONE_FOUND)

@@ -9,7 +9,7 @@ from asyncio import run
 from concurrent.futures import ProcessPoolExecutor
 from datetime import datetime, timezone
 from logging.handlers import QueueHandler, QueueListener
-from multiprocessing import Queue, current_process, get_start_method
+from multiprocessing import Queue, current_process, get_context
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -22,15 +22,15 @@ from ansible_collections.arista.avd.plugins.plugin_utils.utils import PythonToAn
 if TYPE_CHECKING:
     from collections.abc import Mapping
 
-    from pyavd.api.fabric_data import FabricData
+    from pyavd.api.anta import MinimalStructuredConfig
 
 PLUGIN_NAME = "arista.avd.anta_workflow"
 
 try:
     from pyavd._anta.lib import AntaCatalog, AntaInventory, AsyncEOSDevice, MDReportGenerator, ReportCsv, ResultManager, anta_runner
     from pyavd._utils import default, get, strip_empties_from_dict
+    from pyavd.api.anta import AntaCatalogGenerationSettings, TestGenerationSettings, get_minimal_structured_configs
     from pyavd.get_device_anta_catalog import get_device_anta_catalog
-    from pyavd.get_fabric_data import get_fabric_data
 
     HAS_PYAVD = True
 except ImportError:
@@ -56,19 +56,14 @@ ANSIBLE_CONNECTION_VARS = [
 
 ARGUMENT_SPEC = {
     "device_list": {"type": "list", "elements": "str", "required": True},
-    "anta_catalog": {
+    "avd_catalogs": {
         "type": "dict",
         "options": {
+            "enabled": {"type": "bool", "default": True},
             "output_dir": {"type": "str"},
             "structured_config_dir": {"type": "str"},
             "structured_config_suffix": {"type": "str", "choices": ["yml", "yaml", "json"], "default": "yml"},
-            "scope": {
-                "type": "dict",
-                "options": {
-                    "boundary": {"type": "str", "choices": ["unlimited", "fabric", "dc", "pod", "rack"], "default": "unlimited"},
-                    "allow_bgp_vrfs": {"type": "bool", "default": False},
-                },
-            },
+            "allow_bgp_vrfs": {"type": "bool", "default": False},
             "filters": {
                 "type": "list",
                 "elements": "dict",
@@ -80,31 +75,25 @@ ARGUMENT_SPEC = {
             },
         },
     },
-    "custom_catalog": {
+    "user_catalogs": {
         "type": "dict",
         "options": {
             "input_dir": {"type": "str"},
         },
     },
-    "anta_logging": {
-        "type": "dict",
-        "options": {
-            "log_dir": {"type": "str"},
-        },
-    },
-    "anta_runner_settings": {
+    "runner": {
         "type": "dict",
         "options": {
             "timeout": {"type": "float", "default": 30.0},
             "batch_size": {"type": "int", "default": 5},
             "tags": {"type": "list", "elements": "str"},
             "dry_run": {"type": "bool", "default": False},
+            "logs_dir": {"type": "str"},
         },
     },
     "report": {
         "type": "dict",
         "options": {
-            "fabric_data_output": {"type": "str"},
             "csv_output": {"type": "str"},
             "md_output": {"type": "str"},
             "json_output": {"type": "str"},
@@ -123,16 +112,16 @@ ARGUMENT_SPEC = {
 }
 
 # Global variables to share data between processes. Since the plugin is forked, these variables are inherited by child processes.
-FABRIC_DATA: FabricData | None = None
 STRUCTURED_CONFIGS: dict[str, dict[str, Any]] | None = None
+MINIMAL_STRUCTURED_CONFIGS: dict[str, MinimalStructuredConfig] | None = None
 PLUGIN_ARGS: dict[str, Any] | None = None
 ANSIBLE_VARS: dict[str, dict[str, Any]] | None = None
-CUSTOM_CATALOG: AntaCatalog | None = None
+USER_CATALOG: AntaCatalog | None = None
 
 
 class ActionModule(ActionBase):
     def run(self, tmp: Any = None, task_vars: dict | None = None) -> dict:
-        global FABRIC_DATA, STRUCTURED_CONFIGS, PLUGIN_ARGS, ANSIBLE_VARS, CUSTOM_CATALOG  # noqa: PLW0603
+        global STRUCTURED_CONFIGS, MINIMAL_STRUCTURED_CONFIGS, PLUGIN_ARGS, ANSIBLE_VARS, USER_CATALOG  # noqa: PLW0603
 
         self._supports_check_mode = False
 
@@ -144,11 +133,6 @@ class ActionModule(ActionBase):
 
         if not HAS_PYAVD:
             msg = f"The {PLUGIN_NAME} plugin requires the 'pyavd' Python library. Got import error"
-            raise AnsibleActionFail(msg)
-
-        # NOTE: Ansible uses 'fork' even on MacOS which has 'spawn' as the default. OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES will be required for Mac users.
-        if get_start_method() != "fork":
-            msg = f"The {PLUGIN_NAME} plugin requires the 'fork' start method for multiprocessing"
             raise AnsibleActionFail(msg)
 
         # Setup the module logging using a logging queue with a listener
@@ -174,30 +158,35 @@ class ActionModule(ActionBase):
         ANSIBLE_VARS = extract_hostvars(device_list, task_vars["hostvars"])
         deployed_devices = list(ANSIBLE_VARS.keys())
 
-        structured_config_dir = get(PLUGIN_ARGS, "anta_catalog.structured_config_dir")
-        custom_catalog_dir = get(PLUGIN_ARGS, "custom_catalog.input_dir")
+        generate_avd_catalog = get(PLUGIN_ARGS, "avd_catalogs.enabled")
+        structured_config_dir = get(PLUGIN_ARGS, "avd_catalogs.structured_config_dir")
+        user_catalog_dir = get(PLUGIN_ARGS, "user_catalogs.input_dir")
 
-        if structured_config_dir is None and custom_catalog_dir is None:
+        if generate_avd_catalog is False and user_catalog_dir is None:
             msg = (
-                "'structured_config_dir' must be provided to generate ANTA catalogs. "
-                "Otherwise, provide a directory with custom ANTA catalogs using the 'custom_catalog.input_dir' argument"
+                "When 'avd_catalogs.enabled' is False, a directory with user-defined ANTA catalogs "
+                "must be provided using the 'user_catalogs.input_dir' argument"
+            )
+            raise AnsibleActionFail(msg)
+        if generate_avd_catalog is True and structured_config_dir is None:
+            msg = (
+                "When 'avd_catalogs.enabled' is True, a directory with device structured configurations "
+                "must be provided using the 'avd_catalogs.structured_config_dir' argument"
             )
             raise AnsibleActionFail(msg)
 
         try:
-            # Load the custom ANTA catalogs if provided
-            if custom_catalog_dir is not None:
-                CUSTOM_CATALOG = load_custom_catalogs(custom_catalog_dir)
+            # Load the user-defined ANTA catalogs if provided
+            if user_catalog_dir is not None:
+                USER_CATALOG = load_user_catalogs(user_catalog_dir)
 
             # Load the structured configs and build FabricData if structured_config_dir is provided
-            if structured_config_dir is not None:
-                STRUCTURED_CONFIGS = load_structured_configs(deployed_devices, structured_config_dir, get(PLUGIN_ARGS, "anta_catalog.structured_config_suffix"))
-                FABRIC_DATA = get_fabric_data(
-                    structured_configs=STRUCTURED_CONFIGS, scope=get(PLUGIN_ARGS, "anta_catalog.scope"), filename=get(PLUGIN_ARGS, "report.fabric_data_output")
-                )
+            if generate_avd_catalog:
+                STRUCTURED_CONFIGS = load_structured_configs(deployed_devices, structured_config_dir, get(PLUGIN_ARGS, "avd_catalogs.structured_config_suffix"))
+                MINIMAL_STRUCTURED_CONFIGS = get_minimal_structured_configs(STRUCTURED_CONFIGS)
 
-            with ProcessPoolExecutor(max_workers=min((ansible_forks - 1), 1)) as executor:
-                batch_size = get(PLUGIN_ARGS, "anta_runner_settings.batch_size")
+            with ProcessPoolExecutor(max_workers=min((ansible_forks - 1), 1), mp_context=get_context("fork")) as executor:
+                batch_size = get(PLUGIN_ARGS, "runner.batch_size")
                 batches = [deployed_devices[i : i + batch_size] for i in range(0, len(deployed_devices), batch_size)]
                 batch_results = executor.map(run_anta, batches)
 
@@ -220,10 +209,10 @@ def run_anta(devices: list[str]) -> ResultManager:
     setup_process_logging()
 
     result_manager, inventory, catalog = build_anta_runner_objects(devices)
-    tags = set(get(PLUGIN_ARGS, "anta_runner_settings.tags", default=[])) or None
+    tags = set(get(PLUGIN_ARGS, "runner.tags", default=[])) or None
 
     LOGGER.info("running ANTA in process %s for devices: %s", current_process().name, ", ".join(devices))
-    run(anta_runner(result_manager, inventory, catalog, tags=tags, dry_run=get(PLUGIN_ARGS, "anta_runner_settings.dry_run")))
+    run(anta_runner(result_manager, inventory, catalog, tags=tags, dry_run=get(PLUGIN_ARGS, "runner.dry_run")))
     LOGGER.info("ANTA process %s completed", current_process().name)
 
     return result_manager
@@ -301,20 +290,24 @@ def build_anta_runner_objects(devices: list[str]) -> tuple[ResultManager, AntaIn
     inventory = AntaInventory()
     catalogs = []
 
-    if CUSTOM_CATALOG is not None:
-        catalogs.append(CUSTOM_CATALOG)
+    if USER_CATALOG is not None:
+        catalogs.append(USER_CATALOG)
 
     for device in devices:
         anta_device = build_anta_device(device)
         inventory.add_device(anta_device)
-        # We generate the device's ANTA catalog only if structured configs are provided
-        if FABRIC_DATA is not None and STRUCTURED_CONFIGS is not None:
+        # We generate the device's AVD catalog only if structured configs are provided
+        if STRUCTURED_CONFIGS is not None and MINIMAL_STRUCTURED_CONFIGS is not None:
+            settings = AntaCatalogGenerationSettings(
+                test_generation_settings=TestGenerationSettings(allow_bgp_vrfs=get(PLUGIN_ARGS, "avd_catalogs.allow_bgp_vrfs")),
+                output_dir=get(PLUGIN_ARGS, "avd_catalogs.output_dir"),
+                **get_anta_catalog_filters(device, get(PLUGIN_ARGS, "avd_catalogs.filters", default=[])),
+            )
             catalog = get_device_anta_catalog(
                 hostname=device,
                 structured_config=STRUCTURED_CONFIGS[device],
-                fabric_data=FABRIC_DATA,
-                output_dir=get(PLUGIN_ARGS, "anta_catalog.output_dir"),
-                **get_anta_catalog_filters(device, get(PLUGIN_ARGS, "anta_catalog.filters", default=[])),
+                minimal_structured_configs=MINIMAL_STRUCTURED_CONFIGS,
+                settings=settings,
             )
             catalogs.append(catalog)
 
@@ -323,17 +316,17 @@ def build_anta_runner_objects(devices: list[str]) -> tuple[ResultManager, AntaIn
     return result_manager, inventory, catalog
 
 
-def get_anta_catalog_filters(device: str, anta_catalog_filters: list[dict]) -> dict[str, list[str] | None]:
-    """Get the test filters for a device from the provided ANTA catalog filters.
+def get_anta_catalog_filters(device: str, avd_catalog_filters: list[dict]) -> dict[str, list[str]]:
+    """Get the test filters for a device from the provided AVD catalog filters.
 
     More specific filters (appearing later in the list) override earlier ones.
     For example, if a device matches both a group filter and an individual filter,
     the individual filter's tests will completely replace the group's run_tests or
     skip_tests if they are specified.
     """
-    final_filters = {"run_tests": None, "skip_tests": None}
+    final_filters = {"run_tests": [], "skip_tests": []}
 
-    for filter_config in anta_catalog_filters:
+    for filter_config in avd_catalog_filters:
         if device in get(filter_config, "device_list", default=[]):
             run_tests = get(filter_config, "run_tests")
             skip_tests = get(filter_config, "skip_tests")
@@ -357,7 +350,6 @@ def build_anta_device(device: str) -> AsyncEOSDevice:
     # Required settings to create the AsyncEOSDevice object
     required_settings = ["host", "username", "password"]
 
-    anta_runner_settings = get(PLUGIN_ARGS, "anta_runner_settings")
     device_vars = ANSIBLE_VARS[device]
 
     # TODO: Confirm this is working with Ansible Vault
@@ -377,7 +369,7 @@ def build_anta_device(device: str) -> AsyncEOSDevice:
             "ansible_httpapi_port",
             default=(80 if get(device_vars, "ansible_httpapi_use_ssl", default=False) is False else 443),
         ),
-        "timeout": get(anta_runner_settings, "timeout"),
+        "timeout": get(PLUGIN_ARGS, "runner.timeout"),
         "tags": set(get(device_vars, "anta_tags", default=[])),
     }
 
@@ -393,12 +385,12 @@ def build_anta_device(device: str) -> AsyncEOSDevice:
     return AsyncEOSDevice(**device_settings)
 
 
-def load_custom_catalogs(catalog_dir: str) -> AntaCatalog:
-    """Load custom ANTA catalogs from the provided directory. Supported file formats are YAML and JSON."""
+def load_user_catalogs(catalogs_dir: str) -> AntaCatalog:
+    """Load user-defined ANTA catalogs from the provided directory. Supported file formats are YAML and JSON."""
     supported_formats = {".yml": "yaml", ".yaml": "yaml", ".json": "json"}
     catalogs = []
 
-    for path_obj in Path(catalog_dir).iterdir():
+    for path_obj in Path(catalogs_dir).iterdir():
         # Skip directories and non-files
         if not path_obj.is_file():
             continue
@@ -413,7 +405,7 @@ def load_custom_catalogs(catalog_dir: str) -> AntaCatalog:
         catalogs.append(catalog)
 
     if not catalogs:
-        LOGGER.info("no custom ANTA catalogs found in directory: %s", catalog_dir)
+        LOGGER.info("no custom ANTA catalogs found in directory: %s", catalogs_dir)
 
     return AntaCatalog.merge_catalogs(catalogs)
 
@@ -521,12 +513,12 @@ def setup_process_logging() -> None:
     underlying libraries will be written to a file per process for debugging purposes.
     """
     # TODO: Add process prefix to console logs
-    anta_log_dir = get(PLUGIN_ARGS, "anta_logging.log_dir")
+    anta_logs_dir = get(PLUGIN_ARGS, "runner.logs_dir")
     root_logger = logging.getLogger()
 
-    if root_logger.isEnabledFor(logging.DEBUG) and anta_log_dir:
+    if root_logger.isEnabledFor(logging.DEBUG) and anta_logs_dir:
         timestamp = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        filename = f"{anta_log_dir}/anta_debug_{timestamp}_{current_process().name}.log"
+        filename = f"{anta_logs_dir}/anta_debug_{timestamp}_{current_process().name}.log"
         file_handler = logging.FileHandler(filename)
         file_formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         file_handler.setFormatter(file_formatter)

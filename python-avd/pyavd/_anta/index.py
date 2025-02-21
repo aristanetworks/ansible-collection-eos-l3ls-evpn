@@ -7,7 +7,7 @@ from __future__ import annotations
 
 from pyavd._anta.input_factories import *
 from pyavd._anta.lib.tests import *
-from pyavd.api.anta_test_spec import TestSpec
+from pyavd.api.anta import TestSpec
 
 from .constants import StructuredConfigKey
 
@@ -70,10 +70,6 @@ PYAVD_TEST_INDEX: list[TestSpec] = [
         test_class=VerifyRoutingProtocolModel,
         conditional_keys=[StructuredConfigKey.SERVICE_ROUTING_PROTOCOLS_MODEL],
         input_dict={"model": StructuredConfigKey.SERVICE_ROUTING_PROTOCOLS_MODEL},
-    ),
-    TestSpec(
-        test_class=VerifyRoutingTableEntry,
-        input_factory=VerifyRoutingTableEntryInputFactory,
     ),
     TestSpec(
         test_class=VerifySpecificIPSecConn,

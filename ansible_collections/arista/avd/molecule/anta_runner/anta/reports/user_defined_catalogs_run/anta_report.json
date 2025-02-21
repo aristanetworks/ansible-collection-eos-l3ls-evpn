@@ -368,7 +368,7 @@
         "categories": [
             "vxlan"
         ],
-        "description": "Verifies the Vxlan1 interface status.",
+        "description": "Verifies if the Vxlan1 interface is configured and 'up/up'.",
         "result": "unset",
         "messages": [],
         "custom_field": null
@@ -1391,7 +1391,7 @@
         "categories": [
             "vxlan"
         ],
-        "description": "Verifies the Vxlan1 interface status.",
+        "description": "Verifies if the Vxlan1 interface is configured and 'up/up'.",
         "result": "unset",
         "messages": [],
         "custom_field": null
@@ -1534,7 +1534,7 @@
         "categories": [
             "vxlan"
         ],
-        "description": "Verifies the Vxlan1 interface status.",
+        "description": "Verifies if the Vxlan1 interface is configured and 'up/up'.",
         "result": "unset",
         "messages": [],
         "custom_field": null
