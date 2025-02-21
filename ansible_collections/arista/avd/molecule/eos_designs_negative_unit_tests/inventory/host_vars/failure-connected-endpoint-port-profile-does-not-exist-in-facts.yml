@@ -18,7 +18,8 @@ l3leaf:
 servers:
   - name: TEST-ENDPOINT
     adapters:
-      - switches: [failure-connected-endpoint-port-profile-does-not-exist-in-facts]
+      - switches:
+          [failure-connected-endpoint-port-profile-does-not-exist-in-facts]
         switch_ports: [Ethernet9]
         profile: THIS-PROFILE-DOES-NOT-EXIST
         # Setting VLANs to trigger merging of adapters in facts phase

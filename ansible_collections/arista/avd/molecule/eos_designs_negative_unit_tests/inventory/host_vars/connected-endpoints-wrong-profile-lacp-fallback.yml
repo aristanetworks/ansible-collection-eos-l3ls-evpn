@@ -10,7 +10,11 @@ servers:
   # port-channel with lacp fallback individual and missing profile for lacp fallback
   - name: INDIVIDUAL_1
     adapters:
-      - switches: [connected-endpoints-wrong-profile-lacp-fallback, connected-endpoints-wrong-profile-lacp-fallback]
+      - switches:
+          [
+            connected-endpoints-wrong-profile-lacp-fallback,
+            connected-endpoints-wrong-profile-lacp-fallback,
+          ]
         switch_ports: [Ethernet14, Ethernet15]
         port_channel:
           mode: "active"

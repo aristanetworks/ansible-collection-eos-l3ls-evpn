@@ -210,19 +210,14 @@ class UtilsMixin(Protocol):
         # variables being set for constructing appropriate validation error
         if isinstance(l3_generic_interface, EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem):
             interface = EosCliConfigGen.EthernetInterfacesItem()
-            schema_key = "l3_interfaces"
         else:
             # implies interface is "L3 Port-Channel"
             interface = EosCliConfigGen.PortChannelInterfacesItem()
-            schema_key = "l3_port_channels"
 
         # logic below is common to l3_interface and l3_port_channel interface types
-
         # TODO: catch if ip_address is not valid or not dhcp
         if not l3_generic_interface.ip_address:
-            msg = f"{self.shared_utils.node_type_key_data.key}.nodes[name={self.shared_utils.hostname}].{schema_key}"
-            msg += f"[name={l3_generic_interface.name}].ip_address"
-            raise AristaAvdMissingVariableError(msg)
+            raise AristaAvdMissingVariableError(l3_generic_interface.get_field_source("ip_address"))
 
         is_subinterface = "." in l3_generic_interface.name
         interface._update(

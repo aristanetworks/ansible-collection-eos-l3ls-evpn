@@ -60,7 +60,13 @@ class UtilsMixin(Protocol):
 
     @lru_cache  # noqa: B019
     def get_merged_port_profile(self: SharedUtilsProtocol, profile_name: str, context: str) -> EosDesigns.PortProfilesItem:
-        """Return list of merged "port_profiles" where "parent_profile" has been applied."""
+        """Return list of merged "port_profiles" where "parent_profile" has been applied.
+
+        Args:
+            profile_name: The name of the port_profile to apply.
+            context: A string representing the adapter under which the profile should be applied.
+                     Used for error message.
+        """
         if profile_name not in self.inputs.port_profiles:
             msg = f"Profile '{profile_name}' applied under '{context}' does not exist in `port_profiles`."
             raise AristaAvdInvalidInputsError(msg)
@@ -68,7 +74,10 @@ class UtilsMixin(Protocol):
         port_profile = self.inputs.port_profiles[profile_name]
         if port_profile.parent_profile:
             if port_profile.parent_profile not in self.inputs.port_profiles:
-                msg = f"Profile '{port_profile.parent_profile}' applied under port profile '{profile_name}' does not exist in `port_profiles`."
+                msg = (
+                    f"Profile '{port_profile.parent_profile}' applied under port profile '{port_profile.get_field_source('parent_profile')}' "
+                    "does not exist in 'port_profiles'."
+                )
                 raise AristaAvdInvalidInputsError(msg)
 
             parent_profile = self.inputs.port_profiles[port_profile.parent_profile]
@@ -93,7 +102,7 @@ class UtilsMixin(Protocol):
             # No profile to apply
             return adapter_or_network_port_settings
 
-        adapter_profile = self.get_merged_port_profile(profile_name, adapter_or_network_port_settings._internal_data.context)
+        adapter_profile = self.get_merged_port_profile(profile_name, adapter_or_network_port_settings._source)
         profile_as_adapter_or_network_port_settings = adapter_profile._cast_as(type(adapter_or_network_port_settings))
         adapter_or_network_port_settings._deepinherit(profile_as_adapter_or_network_port_settings)
         return adapter_or_network_port_settings
