@@ -42,10 +42,9 @@ class IpSecurityMixin(Protocol):
             msg = "wan_ipsec_profiles.control_plane"
             raise AristaAvdMissingVariableError(msg)
 
-        if self.shared_utils.is_wan_client and (data_plane := self.inputs.wan_ipsec_profiles.data_plane):
-            self._append_data_plane(data_plane)
-        control_plane = self.inputs.wan_ipsec_profiles.control_plane
-        self._append_control_plane(control_plane)
+        if self.shared_utils.is_wan_client and self.inputs.wan_ipsec_profiles.data_plane:
+            self._append_data_plane(self.inputs.wan_ipsec_profiles.data_plane)
+        self._append_control_plane(self.inputs.wan_ipsec_profiles.control_plane)
 
     def _append_data_plane(self: AvdStructuredConfigOverlayProtocol, data_plane_config: EosDesigns.WanIpsecProfiles.DataPlane) -> None:
         """In place update of ip_security for DataPlane."""
