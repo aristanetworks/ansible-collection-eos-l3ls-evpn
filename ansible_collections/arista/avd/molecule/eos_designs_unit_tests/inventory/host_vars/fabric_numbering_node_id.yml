@@ -1,0 +1,11 @@
+type: spine
+
+spine:
+  defaults:
+    bgp_as: 65001-65100
+    loopback_ipv4_pool: 192.168.0.0/24
+    # id: 1 will be set by pool_manager
+
+fabric_numbering:
+  node_id:
+    algorithm: pool_manager

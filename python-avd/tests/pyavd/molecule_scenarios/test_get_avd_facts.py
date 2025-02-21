@@ -30,7 +30,7 @@ from tests.models import MoleculeScenario
 def test_get_avd_facts(molecule_scenario: MoleculeScenario) -> None:
     """Test get_avd_facts."""
     molecule_inputs = {host.name: deepcopy(host.hostvars) for host in molecule_scenario.hosts}
-    avd_facts = get_avd_facts(molecule_inputs)
+    avd_facts = get_avd_facts(molecule_inputs, pool_manager=molecule_scenario.pool_manager)
 
     assert isinstance(avd_facts, dict)
     assert "avd_switch_facts" in avd_facts

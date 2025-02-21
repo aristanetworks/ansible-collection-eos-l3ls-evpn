@@ -15,6 +15,7 @@ from ansible.vars.manager import VariableManager
 from yaml import CSafeLoader, load
 
 from pyavd import get_avd_facts
+from pyavd.api.pool_manager import PoolManager
 
 if TYPE_CHECKING:
     from ansible.inventory.host import Host as AnsibleHost
@@ -75,6 +76,7 @@ class MoleculeScenario:
     name: str
     path: Path
     hosts: list[MoleculeHost]
+    pool_manager: PoolManager | None
 
     def __init__(self, name: str) -> None:
         """
@@ -107,8 +109,9 @@ class MoleculeScenario:
                 # Ignore members of the group IGNORE_IN_PYTEST from Molecule scenarios.
                 continue
             self.hosts.append(MoleculeHost(name=host.name, ansible_host=host, scenario=self))
+        self.pool_manager = PoolManager(self.path / "intended")
 
     @cached_property
     def avd_facts(self) -> dict:
         """The AVD facts calculated from the full Ansible inventory in the molecule scenario."""
-        return get_avd_facts({host.name: deepcopy(host.hostvars) for host in self.hosts})
+        return get_avd_facts({host.name: deepcopy(host.hostvars) for host in self.hosts}, pool_manager=self.pool_manager)

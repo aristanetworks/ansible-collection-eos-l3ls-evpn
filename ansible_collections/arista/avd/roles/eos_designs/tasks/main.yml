@@ -31,6 +31,7 @@
     # cprofile_file: "eos_designs_facts.prof"
     template_output: true
     validation_mode: "{{ avd_data_validation_mode }}"
+    output_dir: "{{ output_dir }}"
   check_mode: false
   run_once: true
 
