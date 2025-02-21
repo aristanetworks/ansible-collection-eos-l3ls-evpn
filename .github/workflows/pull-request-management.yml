@@ -4,6 +4,9 @@ name: "Collection code testing"
 "on":
   pull_request:
   merge_group:
+  push:
+    branches:
+      - devel
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
@@ -358,11 +361,18 @@ jobs:
             3.12
       - name: "Install Python requirements"
         run: |
-          pip install mock pytest pytest-mock pytest-xdist pyyaml "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+          pip install pyyaml "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
       - name: "Run ansible-test units test cases"
         run: |
           cd ansible_collections/arista/avd/
-          ansible-test units -vv
+          ansible-test units --coverage --requirements -vv
+          ansible-test coverage xml
+          mv tests/output/reports/coverage.xml ./units-coverage.xml
+      - name: Upload coverage from ansible-test units
+        uses: actions/upload-artifact@v4
+        with:
+          name: ansible-test-units-coverage
+          path: ansible_collections/arista/avd/units-coverage.xml
 
   ansible_test_integration:
     name: Run ansible-test integration test cases
@@ -382,7 +392,14 @@ jobs:
       - name: "Run ansible-test integration test cases"
         run: |
           cd ansible_collections/arista/avd/
-          ansible-test integration -vv
+          ansible-test integration --coverage --requirements -vv
+          ansible-test coverage xml
+          mv tests/output/reports/coverage.xml ./integration-coverage.xml
+      - name: Upload coverage from ansible-test integration
+        uses: actions/upload-artifact@v4
+        with:
+          name: ansible-test-integration-coverage
+          path: ansible_collections/arista/avd/integration-coverage.xml
 
   # ----------------------------------- #
   # Galaxy Importer
@@ -488,3 +505,27 @@ jobs:
         working-directory: python-avd
         run: |
           tox
+      - name: Upload coverage from pytest
+        # Coverage only runs as part of 3.11.
+        if: |
+          matrix.python == '3.11'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-coverage
+          path: python-avd/coverage.xml
+
+      - name: Upload eos_designs compiled templates from pytest
+        if: |
+          matrix.python == '3.11'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-eos-designs-compiled-templates
+          path: python-avd/pyavd/_eos_designs/j2templates/compiled_templates/
+
+      - name: Upload eos_cli_config_gen compiled templates from pytest
+        if: |
+          matrix.python == '3.11'
+        uses: actions/upload-artifact@v4
+        with:
+          name: pytest-eos-cli-config-gen-compiled-templates
+          path: python-avd/pyavd/_eos_cli_config_gen/j2templates/compiled_templates/
