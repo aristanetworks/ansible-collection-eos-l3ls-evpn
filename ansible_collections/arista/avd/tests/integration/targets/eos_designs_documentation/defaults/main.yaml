@@ -1,0 +1,18 @@
+---
+testcase: '*'
+collection_path: "{{ lookup('env', 'ANSIBLE_COLLECTIONS_PATH') }}/ansible_collections/arista/avd/tests"
+expected_output_dir: "{{ collection_path }}/inventory/eos_designs_structured_config/expected_output"
+actual_output_dir: "{{ collection_path }}/output"
+
+fabric_name: integration_tests
+type: l2leaf
+l2leaf:
+  nodes:
+    - name: testhost
+      id: 1
+avd_switch_facts:
+  testhost:
+    switch:
+      id: 1
+      vlans: ""
+      uplinks: []
