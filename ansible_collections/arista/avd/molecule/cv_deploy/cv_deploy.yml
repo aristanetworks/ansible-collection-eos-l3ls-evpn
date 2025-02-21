@@ -1,5 +1,5 @@
 ---
-- name: Converge - Configuration deployment with CVP
+- name: "{{ test_id | upper }} Converge - Configuration deployment with CVP"
   hosts: SITE1_FABRIC
   connection: local
   gather_facts: false
@@ -12,48 +12,55 @@
     structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_configs"
     intended_tag_device: avd-ci-leaf1
     intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
+    test_id: "force-ws-true_run-cc-true"
+    cv_common_pattern: "avd_cv-deploy_{{ test_id }}"
 
   tasks:
-    - name: Generate random string
-      ansible.builtin.set_fact:
-        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+    - name: "{{ test_id | upper }} Banner"
+      tags: ["{{ test_id }}"]
       run_once: true
+      ansible.builtin.debug:
+        msg:
+          - "{{ ('#' * (31 + test_id | length))[:100] }}"
+          - "### STARTING MOLECULE TEST {{ test_id[:69] | upper }} ###"
+          - "{{ ('#' * (31 + test_id | length))[:100] }}"
 
-    - name: Set facts
-      ansible.builtin.set_fact:
-        cv_workspace_name: avd-cv-deploy-{{ r }}
-        cv_workspace_description: sample description
-        cv_change_control_name: cc_cv_deploy-{{ r }}
-        cv_change_control_description: sample description
-        cv_register_detailed_results: true
+    - name: "{{ test_id | upper }} {{ 'Read' if lookup('env', 'MOLECULE_EXECUTION_ID') else 'Generate' }} molecule execution ID"
+      tags: ["{{ test_id }}"]
       run_once: true
+      ansible.builtin.set_fact:
+        r: "{{ lookup('env', 'MOLECULE_EXECUTION_ID') or lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
 
-###########################
-######## cv_deploy ########
-###########################
-    - name: Provision CVP with AVD configuration
+    - name: "{{ test_id | upper }} Provision CVP with AVD configuration"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
         name: arista.avd.cv_deploy
       vars:
-        cv_submit_workspace: true
+        cv_workspace_name: "{{ cv_common_pattern }}_{{ r }}_converge"
+        cv_workspace_description: "{{ (cv_common_pattern + '_' + r + '_converge') | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}_{{ r }}_converge"
+        cv_change_control_description: "{{ (cv_common_pattern + '_' + r + '_converge') | upper }}"
+        cv_register_detailed_results: true
         cv_submit_workspace_force: true
         cv_run_change_control: true
-        cv_register_detailed_results: true
 
-    - name: Display CVP result
+    - name: "{{ test_id | upper }} Display CVP result"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.debug:
         msg: '{{ cv_deploy_results }}'
 
-    - name: Check CVP returns
+    - name: "{{ test_id | upper }} Check CVP returns"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
           # workspace
           - cv_deploy_results.workspace.name == cv_workspace_name
           - cv_deploy_results.workspace.state == "submitted"
+          - cv_deploy_results.workspace.description == cv_workspace_description
           - cv_deploy_results.workspace.state
           # errors and warnings
           - cv_deploy_results.errors == []
@@ -65,8 +72,14 @@
           - cv_deploy_results.change_control.name == cv_change_control_name
           - cv_deploy_results.change_control.requested_state == "completed"
           - cv_deploy_results.change_control.description == cv_change_control_description
+      vars:
+        cv_workspace_name: "{{ cv_common_pattern }}_{{ r }}_converge"
+        cv_workspace_description: "{{ (cv_common_pattern + '_' + r + '_converge') | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}_{{ r }}_converge"
+        cv_change_control_description: "{{ (cv_common_pattern + '_' + r + '_converge') | upper }}"
 
-    - name: Check tags from output
+    - name: "{{ test_id | upper }} Check tags from output"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
@@ -74,13 +87,15 @@
           - item.0.value == item.1.value
       loop: "{{ cv_deploy_results.deployed_device_tags | zip(cv_deploy_results.device_tags) | list }}"
 
-    - name: Extract all device tags from structured configs
+    - name: "{{ test_id | upper }} Extract all device tags from structured configs"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         expected_device_tags: "{{ intended_tags.metadata.cv_tags.device_tags }}"
         output_device_tags: "{{ cv_deploy_results.deployed_device_tags }}"
 
-    - name: Check output device tags == intended device tags
+    - name: "{{ test_id | upper }} Check output device tags == intended device tags"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
@@ -88,12 +103,14 @@
           - item.0.value == item.1.value
       loop: "{{ expected_device_tags | zip(output_device_tags) | list }}"
 
-    - name: Extract all interface tags from role output
+    - name: "{{ test_id | upper }} Extract all interface tags from role output"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         output_interface_tags: "{{ cv_deploy_results.deployed_interface_tags }}"
 
-    - name: Extract all interface tags from structured configs
+    - name: "{{ test_id | upper }} Extract all interface tags from structured configs"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         expected_interface_tags: "{{ expected_interface_tags | default([]) + [item.tags | list | first | combine({'interface': item.interface})] }}"
@@ -101,7 +118,8 @@
       loop_control:
         label: "{{ item.interface }}"
 
-    - name: Check output interface tags == intended interface tags
+    - name: "{{ test_id | upper }} Check output interface tags == intended interface tags"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
@@ -109,13 +127,15 @@
           - item.0.value == item.1.value
       loop: "{{ expected_interface_tags | zip(output_interface_tags) | list }}"
 
-    - name: Convert unstructed data into yaml
+    - name: "{{ test_id | upper }} Convert unstructed data into yaml"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         deivces_structure: '{{ cv_deploy_results.deployed_configs | from_yaml }}'
         output_devices: []
 
-    - name: Extract devices from output
+    - name: "{{ test_id | upper }} Extract devices from output"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.set_fact:
         output_devices: "{{ output_devices + [item.device.hostname] }}"
@@ -123,20 +143,26 @@
       loop_control:
         label: "{{ item.configlet_name }}"
 
-    - name: Check output devices == intended devices
+    - name: "{{ test_id | upper }} Check output devices == intended devices"
+      tags: ["{{ test_id }}"]
       run_once: true
       ansible.builtin.assert:
         that:
           - output_devices == cv_devices
 
-    - name: Cleanup
+    - name: "{{ test_id | upper }} Cleanup"
+      tags: ["{{ test_id }}"]
       run_once: true
       delegate_to: localhost
       ansible.builtin.import_role:
         name: arista.avd.cv_deploy
       vars:
+        cv_workspace_name: "{{ cv_common_pattern }}_{{ r }}_cleanup"
+        cv_workspace_description: "{{ (cv_common_pattern + '_' + r + '_cleanup') | upper }}"
+        cv_change_control_name: "{{ cv_common_pattern }}_{{ r }}_cleanup"
+        cv_change_control_description: "{{ (cv_common_pattern + '_' + r + '_cleanup') | upper }}"
+        cv_register_detailed_results: true
         eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
         structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
-        cv_submit_workspace: true
         cv_submit_workspace_force: true
         cv_run_change_control: true
