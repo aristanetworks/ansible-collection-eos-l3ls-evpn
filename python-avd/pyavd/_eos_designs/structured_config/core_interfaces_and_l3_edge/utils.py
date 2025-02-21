@@ -266,10 +266,13 @@ class UtilsMixin(Protocol):
                     isis_metric = default(p2p_link.isis_metric, self.inputs.isis_default_metric),
                     isis_network_point_to_point = p2p_link.isis_network_type == "point-to-point",
                     isis_hello_padding = p2p_link.isis_hello_padding,
-                    isis_circuit_type = default(p2p_link.isis_circuit_type, self.inputs.isis_default_circuit_type)
                     )
-                interface.isis_authentication.both._update(
-                        mode=default(p2p_link.isis_authentication_mode, self.inputs.underlay_isis_authentication_mode),
+                if default(p2p_link.isis_circuit_type, self.inputs.isis_default_circuit_type):
+                    interface.isis_circuit_type = default(p2p_link.isis_circuit_type, self.inputs.isis_default_circuit_type)
+
+                if default(p2p_link.isis_authentication_mode, self.inputs.underlay_isis_authentication_mode):
+                    interface.isis_authentication.both.mode = default(p2p_link.isis_authentication_mode, self.inputs.underlay_isis_authentication_mode)
+                    interface.isis_authentication.both._update(
                         key=default(p2p_link.isis_authentication_key, self.inputs.underlay_isis_authentication_key),
                         key_type="7")
 
@@ -306,4 +309,5 @@ class UtilsMixin(Protocol):
         interface.peer_type=p2p_link_data["peer_type"]
         interface.shutdown=False
         interface.channel_group.id=p2p_link_data["port_channel_id"]
-        # interface.channel_group.mode=p2p_link.port_channel.mode
+        if p2p_link.port_channel.mode:
+            interface.channel_group.mode=p2p_link.port_channel.mode

@@ -35,6 +35,7 @@ class EthernetInterfacesMixin(Protocol):
 
             # Port-Channel members
             for member in p2p_link_data["port_channel_members"]:
+                ethernet_interface = EosCliConfigGen.EthernetInterfacesItem()
                 self._get_port_channel_member_cfg(p2p_link, p2p_link_data, member, ethernet_interface)
                 ethernet_interface.description = self._port_channel_member_description(p2p_link_data, member)
                 ethernet_interface.speed = p2p_link.speed

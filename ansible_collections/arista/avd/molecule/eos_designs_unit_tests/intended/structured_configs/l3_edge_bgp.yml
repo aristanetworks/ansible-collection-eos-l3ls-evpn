@@ -64,35 +64,39 @@ ethernet_interfaces:
   peer_type: other
   switchport:
     enabled: false
-- name: Ethernet6
-  description: P2P_peer5_Ethernet6
+- name: Ethernet5
+  description: P2P_peer5_Ethernet5
   shutdown: false
   channel_group:
     id: 5
+    mode: active
   peer: peer5
-  peer_interface: Ethernet6
+  peer_interface: Ethernet5
   peer_type: other
 - name: Ethernet6
   description: P2P_peer5_Ethernet6
   shutdown: false
   channel_group:
     id: 5
+    mode: active
   peer: peer5
   peer_interface: Ethernet6
   peer_type: other
-- name: Ethernet8
-  description: P2P_peer6_Ethernet8
+- name: Ethernet7
+  description: P2P_peer6_Ethernet7
   shutdown: false
   channel_group:
     id: 7
+    mode: active
   peer: peer6
-  peer_interface: Ethernet8
+  peer_interface: Ethernet7
   peer_type: other
 - name: Ethernet8
   description: P2P_peer6_Ethernet8
   shutdown: false
   channel_group:
     id: 7
+    mode: active
   peer: peer6
   peer_interface: Ethernet8
   peer_type: other

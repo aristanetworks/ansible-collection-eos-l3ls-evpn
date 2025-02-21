@@ -42,9 +42,6 @@ ethernet_interfaces:
   isis_network_point_to_point: false
   isis_circuit_type: level-1
   isis_hello_padding: true
-  isis_authentication:
-    both:
-      key_type: '7'
   service_profile: test_qos_profile
   mpls:
     ip: true
@@ -170,9 +167,6 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_circuit_type: level-2
   isis_hello_padding: true
-  isis_authentication:
-    both:
-      key_type: '7'
   ptp:
     enable: true
     announce:
@@ -192,14 +186,15 @@ ethernet_interfaces:
   peer_type: core_router
   switchport:
     enabled: false
-- name: Ethernet13
-  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet13
+- name: Ethernet12
+  description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet12
   shutdown: false
   speed: forced 1000full
   channel_group:
     id: 12
+    mode: active
   peer: core-2-ospf-ldp
-  peer_interface: Ethernet13
+  peer_interface: Ethernet12
   peer_type: core_router
 - name: Ethernet13
   description: P2P_LINK_TO_CORE-2-OSPF-LDP_Ethernet13
@@ -207,8 +202,19 @@ ethernet_interfaces:
   speed: forced 1000full
   channel_group:
     id: 12
+    mode: active
   peer: core-2-ospf-ldp
   peer_interface: Ethernet13
+  peer_type: core_router
+- name: Ethernet14
+  description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
+  shutdown: false
+  speed: forced 1000full
+  channel_group:
+    id: 14
+    mode: active
+  peer: core-2-ospf-ldp
+  peer_interface: Ethernet14
   peer_type: core_router
 - name: Ethernet15
   description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
@@ -216,17 +222,19 @@ ethernet_interfaces:
   speed: forced 1000full
   channel_group:
     id: 14
+    mode: active
   peer: core-2-ospf-ldp
   peer_interface: Ethernet15
   peer_type: core_router
-- name: Ethernet15
+- name: Ethernet16
   description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
   shutdown: false
   speed: forced 1000full
   channel_group:
-    id: 14
+    id: 16
+    mode: active
   peer: core-2-ospf-ldp
-  peer_interface: Ethernet15
+  peer_interface: Ethernet16
   peer_type: core_router
 - name: Ethernet17
   description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
@@ -234,15 +242,7 @@ ethernet_interfaces:
   speed: forced 1000full
   channel_group:
     id: 16
-  peer: core-2-ospf-ldp
-  peer_interface: Ethernet17
-  peer_type: core_router
-- name: Ethernet17
-  description: CUSTOM_DESCRIPTION_ON_P2P_LINK_A
-  shutdown: false
-  speed: forced 1000full
-  channel_group:
-    id: 16
+    mode: active
   peer: core-2-ospf-ldp
   peer_interface: Ethernet17
   peer_type: core_router
@@ -256,9 +256,6 @@ ethernet_interfaces:
   isis_network_point_to_point: true
   isis_circuit_type: level-2
   isis_hello_padding: true
-  isis_authentication:
-    both:
-      key_type: '7'
   peer: peer2
   peer_interface: ethernet21
   peer_type: other
