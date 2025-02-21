@@ -91,6 +91,9 @@ class AvdIndexedList(Sequence[T_AvdModel], Generic[T_PrimaryKey, T_AvdModel], Av
     def __setitem__(self, key: T_PrimaryKey, value: T_AvdModel) -> None:
         self._items[key] = value
 
+    def __delitem__(self, key: T_PrimaryKey) -> None:
+        del self._items[key]
+
     def __eq__(self, other: object) -> bool:
         return self._compare(other)
 
