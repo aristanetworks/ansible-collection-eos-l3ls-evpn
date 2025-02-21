@@ -74,12 +74,15 @@ jobs:
             case ${{ inputs.container_name }} in
               base)
                 echo "image_tags=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
+                echo "image_version=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
                 ;;
               dev)
                 echo "image_tags=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
+                echo "image_version=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
                 ;;
               *)
                 echo "image_tags=python${{ inputs.python_version }}-avd-${{ github.ref_name }}" >> $GITHUB_OUTPUT
+                echo "image_version=python${{ inputs.python_version }}-avd-${{ github.ref_name }}" >> $GITHUB_OUTPUT
                 ;;
             esac
           else
@@ -87,12 +90,15 @@ jobs:
               case ${{ inputs.container_name }} in
                 base)
                   echo "image_tags=latest,python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
+                  echo "image_version=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
                   ;;
                 dev)
                   echo "image_tags=latest,python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
+                  echo "image_version=python${{ inputs.python_version }}" >> $GITHUB_OUTPUT
                   ;;
                 *)
                   echo "image_tags=latest,python${{ inputs.python_version }}-avd-${{ github.ref_name }}" >> $GITHUB_OUTPUT
+                  echo "image_version=python${{ inputs.python_version }}-avd-${{ github.ref_name }}" >> $GITHUB_OUTPUT
                   ;;
               esac
             else
@@ -154,6 +160,8 @@ jobs:
         with:
           platforms: ${{ inputs.platform }}
           image: tonistiigi/binfmt:qemu-v7.0.0-28
+          # workaround for Failed to CreateCacheEntry warning
+          cache-image: false
 
       - name: Setup Docker buildX for multi-arch builds 🏗️
         # if: ${{ steps.check-image-presence.outputs.not_present == '1' }}
@@ -167,6 +175,10 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get RFC3339 timestamp for org.opencontainers.image.created label ⌚
+        id: rfc3339
+        run: echo "timestamp=$(date --rfc-3339=seconds)" >> $GITHUB_OUTPUT
+
       - name: Pre-build dev container image 🔨
         # if: ${{ steps.check-image-presence.outputs.not_present == '1' }}
         uses: devcontainers/ci@v0.3
@@ -178,6 +190,8 @@ jobs:
           USERNAME: ${{ inputs.username }}
           UID: ${{ inputs.user_id }}
           GID: ${{ inputs.group_id }}
+          RFC3339_TIMESTAMP: ${{ steps.rfc3339.outputs.timestamp }}
+          IMAGE_VERSION: ${{ steps.build-tags.outputs.image_version }}
         with:
           subFolder: containers/${{ inputs.container_name }}
           imageName: ghcr.io/${{ github.repository }}/${{ inputs.container_name }}

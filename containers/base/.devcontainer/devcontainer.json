@@ -4,7 +4,9 @@
         "context": ".",
         "args": {
             "FROM_IMAGE": "${localEnv:FROM_IMAGE}",
-            "FROM_VARIANT": "${localEnv:FROM_VARIANT}"
+            "FROM_VARIANT": "${localEnv:FROM_VARIANT}",
+            "RFC3339_TIMESTAMP": "${localEnv:RFC3339_TIMESTAMP}",
+            "IMAGE_VERSION": "${localEnv:IMAGE_VERSION}"
         }
     },
 
