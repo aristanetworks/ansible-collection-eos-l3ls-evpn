@@ -12,22 +12,20 @@ from pyavd._utils import strip_empties_from_dict
 
 
 class AvdStructuredConfigInbandManagement(StructuredConfigGenerator):
-    @cached_property
-    def vlans(self) -> list | None:
+    @structured_config_contributor
+    def vlans(self) -> None:
         if not self.shared_utils.inband_management_parent_vlans and not (
             self.shared_utils.configure_inband_mgmt or self.shared_utils.configure_inband_mgmt_ipv6
         ):
-            return None
-
-        vlan_cfg = {
-            "tenant": "system",
-            "name": self.shared_utils.node_config.inband_mgmt_vlan_name,
-        }
+            return
 
         if self.shared_utils.configure_inband_mgmt or self.shared_utils.configure_inband_mgmt_ipv6:
-            return [{"id": self.shared_utils.node_config.inband_mgmt_vlan, **vlan_cfg}]
-
-        return [{"id": svi, **vlan_cfg} for svi in self.shared_utils.inband_management_parent_vlans]
+            self.structured_config.vlans.append_new(
+                id=self.shared_utils.node_config.inband_mgmt_vlan, tenant="system", name=self.shared_utils.node_config.inband_mgmt_vlan_name
+            )
+            return
+        for svi in self.shared_utils.inband_management_parent_vlans:
+            self.structured_config.vlans.append_new(id=svi, tenant="system", name=self.shared_utils.node_config.inband_mgmt_vlan_name)
 
     @cached_property
     def vlan_interfaces(self) -> list | None:
