@@ -39,6 +39,9 @@ class PrefixListsMixin(Protocol):
             for index, network in enumerate(collapse_addresses(get_ipv4_networks_from_pool(self.shared_utils.loopback_ipv4_pool)), start=1)
         ]
 
+        if self.shared_utils.evpn_wan_gateway:
+            sequence_numbers.append({"sequence": (len(sequence_numbers) + 1) * 10, "action": f"permit {self.shared_utils.vtep_ip}/32 eq 32"})
+
         if self.shared_utils.overlay_vtep and self.shared_utils.vtep_loopback.lower() != "loopback0" and not self.shared_utils.is_wan_router:
             sequence_numbers.extend(
                 {"sequence": index * 10, "action": f"permit {network} eq 32"}

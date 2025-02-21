@@ -1,0 +1,88 @@
+---
+# Testing CV pathfinder edge using new toggle wan_use_evpn_node_settings_for_lan
+wan_use_evpn_node_settings_for_lan: true
+# enabling EVPN on LAN
+overlay_routing_protocol: ebgp
+
+# Spine switch group
+spine:
+  defaults:
+    platform: vEOS-lab
+    loopback_ipv4_pool: 192.168.42.0/24
+    bgp_as: 65105
+
+  nodes:
+    - name: cv-pathfinder-spine1
+      id: 17
+
+default_node_types:
+  - node_type: wan_rr
+    match_hostnames:
+      - "cv-pathfinder-pathfinder.*"
+  - node_type: wan_router
+    match_hostnames:
+      - "cv-pathfinder-edge.*"
+      - "cv-pathfinder-transit.*"
+  - node_type: l3leaf
+    match_hostnames:
+      - ".*leaf.*"
+  - node_type: spine
+    match_hostnames:
+      - ".*spine.*"
+
+l3leaf:
+  defaults:
+    bgp_as: 65042
+    loopback_ipv4_pool: 192.168.45.0/24
+    vtep_loopback_ipv4_pool: 192.168.255.0/24
+    virtual_router_mac_address: 00:1c:73:00:00:01
+    filter:
+      always_include_vrfs_in_tenants: [TenantA, TenantD]
+  nodes:
+    - name: leaf-wan-use-evpn-on-lan
+      id: 13
+
+wan_route_servers:
+  - hostname: cv-pathfinder-pathfinder
+
+wan_router:
+  defaults:
+    loopback_ipv4_pool: 192.168.42.0/24
+    vtep_loopback_ipv4_pool: 192.168.142.0/24
+    uplink_ipv4_pool: 172.18.0.0/24
+    filter:
+      always_include_vrfs_in_tenants: [TenantA, TenantD]
+      deny_vrfs: [IT]
+  nodes:
+    - name: cv-pathfinder-edge-wan-use-evpn-on-lan
+      cv_pathfinder_region: AVD_Land_West
+      cv_pathfinder_site: Site12
+      # Adding uplink to leaf for EVPN
+      uplink_switches: [leaf-wan-use-evpn-on-lan]
+      uplink_type: p2p
+      uplink_interfaces: [Ethernet52]
+      uplink_switch_interfaces: [Ethernet1]
+      evpn_role: client
+      id: 12
+      l3_interfaces:
+        - name: Ethernet1
+          wan_carrier: ATT
+          wan_circuit_id: 666
+          dhcp_accept_default_route: true
+          ip_address: dhcp
+    - name: cv-pathfinder-edge-wan-gateway-spine-uplink
+      cv_pathfinder_region: AVD_Land_West
+      cv_pathfinder_site: Site12
+      # Adding uplink to leaf for EVPN
+      uplink_switches: [cv-pathfinder-spine1]
+      uplink_type: p2p
+      uplink_interfaces: [Ethernet52]
+      uplink_switch_interfaces: [Ethernet1]
+      evpn_role: client
+      id: 12
+      l3_interfaces:
+        - name: Ethernet1
+          wan_carrier: ATT
+          wan_circuit_id: 666
+          dhcp_accept_default_route: true
+          ip_address: dhcp

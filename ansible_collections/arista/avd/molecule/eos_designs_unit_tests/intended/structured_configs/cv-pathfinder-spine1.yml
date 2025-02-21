@@ -1,0 +1,107 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet1
+  description: P2P_cv-pathfinder-edge-wan-gateway-spine-uplink_Ethernet52
+  shutdown: false
+  mtu: 9214
+  ip_address: 172.18.0.22/31
+  peer: cv-pathfinder-edge-wan-gateway-spine-uplink
+  peer_interface: Ethernet52
+  peer_type: wan_router
+  switchport:
+    enabled: false
+hostname: cv-pathfinder-spine1
+ip_routing: true
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.42.17/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+metadata:
+  platform: vEOS-lab
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.42.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '65105'
+  router_id: 192.168.42.17
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    next_hop_unchanged: true
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  neighbors:
+  - ip_address: 172.18.0.23
+    peer_group: IPv4-UNDERLAY-PEERS
+    remote_as: '65000'
+    peer: cv-pathfinder-edge-wan-gateway-spine-uplink
+    description: cv-pathfinder-edge-wan-gateway-spine-uplink_Ethernet52
+  - ip_address: 192.168.42.12
+    peer_group: EVPN-OVERLAY-PEERS
+    remote_as: '65000'
+    peer: cv-pathfinder-edge-wan-gateway-spine-uplink
+    description: cv-pathfinder-edge-wan-gateway-spine-uplink_Loopback0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+service_routing_protocols_model: multi-agent
+spanning_tree:
+  mode: none
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false

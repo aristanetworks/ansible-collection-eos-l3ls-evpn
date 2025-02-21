@@ -229,7 +229,7 @@ daemon TerminAttr
 
 | Tracker Name | Record Export On Inactive Timeout | Record Export On Interval | MPLS | Number of Exporters | Applied On | Table Size |
 | ------------ | --------------------------------- | ------------------------- | ---- | ------------------- | ---------- | ---------- |
-| FLOW-TRACKER | 70000 | 5000 | - | 1 | Ethernet3<br>Ethernet3.100<br>Ethernet3.101<br>Ethernet4<br>Ethernet4.100<br>Ethernet4.101 | - |
+| FLOW-TRACKER | 70000 | 5000 | - | 1 | Ethernet1<br>Ethernet3<br>Ethernet4 | - |
 
 ##### Exporters Summary
 
@@ -362,29 +362,25 @@ vlan 4094
 
 *Inherited from Port-Channel Interface
 
-##### Encapsulation Dot1q Interfaces
-
-| Interface | Description | Vlan ID | Dot1q VLAN Tag | Dot1q Inner VLAN Tag |
-| --------- | ----------- | ------- | -------------- | -------------------- |
-| Ethernet3.100 | P2P_site1-wan1_Ethernet2.100_VRF_BLUE | - | 100 | - |
-| Ethernet3.101 | P2P_site1-wan1_Ethernet2.101_VRF_RED | - | 101 | - |
-| Ethernet4.100 | P2P_site1-wan2_Ethernet2.100_VRF_BLUE | - | 100 | - |
-| Ethernet4.101 | P2P_site1-wan2_Ethernet2.101_VRF_RED | - | 101 | - |
-
 ##### IPv4
 
 | Interface | Description | Channel Group | IP Address | VRF |  MTU | Shutdown | ACL In | ACL Out |
 | --------- | ----------- | ------------- | ---------- | ----| ---- | -------- | ------ | ------- |
+| Ethernet1 | P2P_site1-spine1_Ethernet2 | - | 10.0.5.11/31 | default | 9214 | False | - | - |
 | Ethernet3 | P2P_site1-wan1_Ethernet2 | - | 10.0.1.10/31 | default | 9214 | False | - | - |
-| Ethernet3.100 | P2P_site1-wan1_Ethernet2.100_VRF_BLUE | - | 10.0.1.10/31 | BLUE | 9214 | False | - | - |
-| Ethernet3.101 | P2P_site1-wan1_Ethernet2.101_VRF_RED | - | 10.0.1.10/31 | RED | 9214 | False | - | - |
 | Ethernet4 | P2P_site1-wan2_Ethernet2 | - | 10.0.1.14/31 | default | 9214 | False | - | - |
-| Ethernet4.100 | P2P_site1-wan2_Ethernet2.100_VRF_BLUE | - | 10.0.1.14/31 | BLUE | 9214 | False | - | - |
-| Ethernet4.101 | P2P_site1-wan2_Ethernet2.101_VRF_RED | - | 10.0.1.14/31 | RED | 9214 | False | - | - |
 
 #### Ethernet Interfaces Device Configuration
 
 ```eos
+!
+interface Ethernet1
+   description P2P_site1-spine1_Ethernet2
+   no shutdown
+   mtu 9214
+   no switchport
+   flow tracker sampled FLOW-TRACKER
+   ip address 10.0.5.11/31
 !
 interface Ethernet3
    description P2P_site1-wan1_Ethernet2
@@ -394,48 +390,12 @@ interface Ethernet3
    flow tracker sampled FLOW-TRACKER
    ip address 10.0.1.10/31
 !
-interface Ethernet3.100
-   description P2P_site1-wan1_Ethernet2.100_VRF_BLUE
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 100
-   flow tracker sampled FLOW-TRACKER
-   vrf BLUE
-   ip address 10.0.1.10/31
-!
-interface Ethernet3.101
-   description P2P_site1-wan1_Ethernet2.101_VRF_RED
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 101
-   flow tracker sampled FLOW-TRACKER
-   vrf RED
-   ip address 10.0.1.10/31
-!
 interface Ethernet4
    description P2P_site1-wan2_Ethernet2
    no shutdown
    mtu 9214
    no switchport
    flow tracker sampled FLOW-TRACKER
-   ip address 10.0.1.14/31
-!
-interface Ethernet4.100
-   description P2P_site1-wan2_Ethernet2.100_VRF_BLUE
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 100
-   flow tracker sampled FLOW-TRACKER
-   vrf BLUE
-   ip address 10.0.1.14/31
-!
-interface Ethernet4.101
-   description P2P_site1-wan2_Ethernet2.101_VRF_RED
-   no shutdown
-   mtu 9214
-   encapsulation dot1q vlan 101
-   flow tracker sampled FLOW-TRACKER
-   vrf RED
    ip address 10.0.1.14/31
 !
 interface Ethernet5
@@ -721,12 +681,10 @@ ASN Notation: asplain
 | -------- | --------- | --- | -------- | -------------- | -------------- | ---------- | --- | --------------------- | ---------------------- | ------- | ------------ |
 | 10.0.1.11 | 65000 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 10.0.1.15 | 65000 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 10.0.5.10 | 65110 | default | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 10.255.251.8 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | default | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
-| 10.0.1.11 | 65000 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 10.0.1.15 | 65000 | BLUE | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
+| 192.168.255.18 | 65110 | default | - | Inherited from peer group EVPN-OVERLAY-PEERS | Inherited from peer group EVPN-OVERLAY-PEERS | - | Inherited from peer group EVPN-OVERLAY-PEERS | - | - | - | - |
 | 10.255.251.8 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | BLUE | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
-| 10.0.1.11 | 65000 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
-| 10.0.1.15 | 65000 | RED | - | Inherited from peer group IPv4-UNDERLAY-PEERS | Inherited from peer group IPv4-UNDERLAY-PEERS | - | - | - | - | - | - |
 | 10.255.251.8 | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | RED | - | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | Inherited from peer group MLAG-IPv4-UNDERLAY-PEER | - | - | - | - | - | - |
 
 #### Router BGP EVPN Address Family
@@ -781,8 +739,14 @@ router bgp 65101
    neighbor 10.0.1.15 peer group IPv4-UNDERLAY-PEERS
    neighbor 10.0.1.15 remote-as 65000
    neighbor 10.0.1.15 description site1-wan2_Ethernet2
+   neighbor 10.0.5.10 peer group IPv4-UNDERLAY-PEERS
+   neighbor 10.0.5.10 remote-as 65110
+   neighbor 10.0.5.10 description site1-spine1_Ethernet2
    neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER
    neighbor 10.255.251.8 description site1-border1_Vlan4093
+   neighbor 192.168.255.18 peer group EVPN-OVERLAY-PEERS
+   neighbor 192.168.255.18 remote-as 65110
+   neighbor 192.168.255.18 description site1-spine1_Loopback0
    redistribute connected route-map RM-CONN-2-BGP
    !
    vlan 42
@@ -808,12 +772,6 @@ router bgp 65101
       route-target import evpn 100:100
       route-target export evpn 100:100
       router-id 192.168.255.6
-      neighbor 10.0.1.11 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.11 remote-as 65000
-      neighbor 10.0.1.11 description site1-wan1_Ethernet2.100_vrf_BLUE
-      neighbor 10.0.1.15 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.15 remote-as 65000
-      neighbor 10.0.1.15 description site1-wan2_Ethernet2.100_vrf_BLUE
       neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER
       neighbor 10.255.251.8 description site1-border1_Vlan3099
       redistribute connected route-map RM-CONN-2-BGP-VRFS
@@ -823,12 +781,6 @@ router bgp 65101
       route-target import evpn 101:101
       route-target export evpn 101:101
       router-id 192.168.255.6
-      neighbor 10.0.1.11 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.11 remote-as 65000
-      neighbor 10.0.1.11 description site1-wan1_Ethernet2.101_vrf_RED
-      neighbor 10.0.1.15 peer group IPv4-UNDERLAY-PEERS
-      neighbor 10.0.1.15 remote-as 65000
-      neighbor 10.0.1.15 description site1-wan2_Ethernet2.101_vrf_RED
       neighbor 10.255.251.8 peer group MLAG-IPv4-UNDERLAY-PEER
       neighbor 10.255.251.8 description site1-border1_Vlan3100
       redistribute connected route-map RM-CONN-2-BGP-VRFS

@@ -437,7 +437,7 @@ ansible_collections/arista/avd/examples/cv-pathfinder/group_vars/SITE1.yml
 --8<--
 ```
 
-1. The uplink type `p2p-vrfs` is used to connect to the LAN switches.
+1. If evpn_role is configured on a wan router, it will be configured to start acting as wan gateway. In this setting, the uplink type `p2p` is used to connect to the LAN switches.
 2. `cv_pathfinder_transit_mode` defaults to `none` and the site is considered an `edge` site. To use it as transit, the variable must be set to `region` as it is the case here.
 
 ### Site 2

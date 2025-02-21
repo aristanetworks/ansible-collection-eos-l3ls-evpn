@@ -22,6 +22,7 @@ wan_router:
       cv_pathfinder_site: SITE3
       id: 11
       mgmt_ip: 192.168.17.20/24
+      evpn_role: none
       uplink_switches: [site3-leaf1]
       l3_port_channels:
         - name: Port-Channel4
