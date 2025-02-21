@@ -1,0 +1,14 @@
+---
+# Ansible connectivity definitions
+# eAPI connectivity via HTTPS is specified (as opposed to CLI via SSH)
+ansible_connection: ansible.netcommon.httpapi
+# Specifies that we are indeed using Arista EOS
+ansible_network_os: arista.eos.eos
+# This user/password must exist on the switches to enable Ansible access
+ansible_user: ansible
+ansible_password: ansible
+# User escalation (to enter enable mode)
+ansible_become: true
+ansible_become_method: enable
+ansible_httpapi_use_ssl: true
+ansible_httpapi_validate_certs: false

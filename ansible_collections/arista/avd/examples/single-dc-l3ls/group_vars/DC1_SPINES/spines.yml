@@ -1,0 +1,25 @@
+---
+type: spine
+
+spine:
+  # Define variables for all nodes of this type
+  defaults:
+    # Set the relevant platform as each platform has different default values in Ansible AVD
+    # Arista platform family <- from the documentation page https://avd.arista.com/5.1/roles/eos_designs/docs/input-variables.html#node-type-settings TOREVISE
+    platform: vEOS-lab
+    # Pool of IPv4 addresses to configure interface Loopback0 used for BGP EVPN sessions
+    loopback_ipv4_pool: 10.255.0.0/27
+    # Autonous System Number for BGP
+    bgp_as: 65100
+  # Define variables per node
+  nodes:
+    # The Node Name is used as “hostname”
+    - name: dc1-spine1
+      # Unique identifier used for IP addressing and other algorithms
+      id: 1
+      # Node management interface IPv4 address
+      mgmt_ip: 172.16.1.11/24
+
+    - name: dc1-spine2
+      id: 2
+      mgmt_ip: 172.16.1.12/24
