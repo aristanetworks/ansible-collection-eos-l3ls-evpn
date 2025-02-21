@@ -30,8 +30,8 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weight</samp>](## "router_traffic_engineering.segment_routing.policy_endpoints.[].colors.[].path_group.[].segment_list.[].weight") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index</samp>](## "router_traffic_engineering.segment_routing.policy_endpoints.[].colors.[].path_group.[].segment_list.[].index") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;flex_algos</samp>](## "router_traffic_engineering.flex_algos") | List, items: Dictionary |  |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;number</samp>](## "router_traffic_engineering.flex_algos.[].number") | Integer | Required |  | Min: 128<br>Max: 255 |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "router_traffic_engineering.flex_algos.[].name") | String | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;number</samp>](## "router_traffic_engineering.flex_algos.[].number") | Integer | Required, Unique |  | Min: 128<br>Max: 255 | Flex-algo number, must be unique across all flex-algo definitions. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "router_traffic_engineering.flex_algos.[].name") | String | Required |  |  | Flex-algo name, must be unique across all flex-algo definitions. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;administrative_group</samp>](## "router_traffic_engineering.flex_algos.[].administrative_group") | Dictionary |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_all</samp>](## "router_traffic_engineering.flex_algos.[].administrative_group.include_all") | String |  |  |  | Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127 |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_any</samp>](## "router_traffic_engineering.flex_algos.[].administrative_group.include_any") | String |  |  |  | Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127 |
@@ -74,7 +74,11 @@
                         weight: <int>
                         index: <int>
       flex_algos:
-        - number: <int; 128-255; required>
+
+          # Flex-algo number, must be unique across all flex-algo definitions.
+        - number: <int; 128-255; required; unique>
+
+          # Flex-algo name, must be unique across all flex-algo definitions.
           name: <str; required>
           administrative_group:
 

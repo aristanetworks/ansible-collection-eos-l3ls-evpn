@@ -56020,7 +56020,9 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                 "srlg_exclude": {"type": str},
             }
             number: int
+            """Flex-algo number, must be unique across all flex-algo definitions."""
             name: str
+            """Flex-algo name, must be unique across all flex-algo definitions."""
             administrative_group: AdministrativeGroup
             """Subclass of AvdModel."""
             metric: Literal["0", "1", "2", "igp-metric", "min-delay", "te-metric"] | None
@@ -56056,8 +56058,8 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     Subclass of AvdModel.
 
                     Args:
-                        number: number
-                        name: name
+                        number: Flex-algo number, must be unique across all flex-algo definitions.
+                        name: Flex-algo name, must be unique across all flex-algo definitions.
                         administrative_group: Subclass of AvdModel.
                         metric:
                            Metric can be specified as an integer or named type, 0 = igp-metric, 1 = min-delay, 2 = te-metric.
@@ -56070,8 +56072,10 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
 
                     """
 
-        class FlexAlgos(AvdList[FlexAlgosItem]):
-            """Subclass of AvdList with `FlexAlgosItem` items."""
+        class FlexAlgos(AvdIndexedList[int, FlexAlgosItem]):
+            """Subclass of AvdIndexedList with `FlexAlgosItem` items. Primary key is `number` (`int`)."""
+
+            _primary_key: ClassVar[str] = "number"
 
         FlexAlgos._item_type = FlexAlgosItem
 
@@ -56087,7 +56091,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
         segment_routing: SegmentRouting
         """Subclass of AvdModel."""
         flex_algos: FlexAlgos
-        """Subclass of AvdList with `FlexAlgosItem` items."""
+        """Subclass of AvdIndexedList with `FlexAlgosItem` items. Primary key is `number` (`int`)."""
 
         if TYPE_CHECKING:
 
@@ -56109,7 +56113,7 @@ class EosCliConfigGen(EosCliConfigGenRootModel):
                     enabled: enabled
                     router_id: Subclass of AvdModel.
                     segment_routing: Subclass of AvdModel.
-                    flex_algos: Subclass of AvdList with `FlexAlgosItem` items.
+                    flex_algos: Subclass of AvdIndexedList with `FlexAlgosItem` items. Primary key is `number` (`int`).
 
                 """
 

@@ -20854,6 +20854,9 @@ keys:
                                     - str
       flex_algos:
         type: list
+        primary_key: number
+        unique_keys:
+        - name
         items:
           type: dict
           keys:
@@ -20862,11 +20865,13 @@ keys:
               required: true
               min: 128
               max: 255
+              description: Flex-algo number, must be unique across all flex-algo definitions.
               convert_types:
               - str
             name:
               type: str
               required: true
+              description: Flex-algo name, must be unique across all flex-algo definitions.
             administrative_group:
               type: dict
               keys:
