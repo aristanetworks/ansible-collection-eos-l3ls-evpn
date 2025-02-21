@@ -7,7 +7,7 @@ from typing import TYPE_CHECKING, Protocol
 
 from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
 from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
-from pyavd._utils import default, strip_empties_from_dict
+from pyavd._utils import Undefined, default
 
 if TYPE_CHECKING:
     from pyavd._eos_designs.schema import EosDesigns
@@ -36,18 +36,20 @@ class IpIgmpSnoopingMixin(Protocol):
         for tenant in self.shared_utils.filtered_tenants:
             for vrf in tenant.vrfs:
                 for svi in vrf.svis:
-                    self._ip_igmp_snooping_vlan(svi, tenant)
+                    self._set_ip_igmp_snooping_vlan(svi, tenant)
             for l2vlan in tenant.l2vlans:
-                self._ip_igmp_snooping_vlan(l2vlan, tenant)
+                self._set_ip_igmp_snooping_vlan(l2vlan, tenant)
 
-    def _ip_igmp_snooping_vlan(
+        self.structured_config.ip_igmp_snooping.globally_enabled = igmp_snooping_enabled
+
+    def _set_ip_igmp_snooping_vlan(
         self: AvdStructuredConfigNetworkServicesProtocol,
         vlan: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.VrfsItem.SvisItem
         | EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L2vlansItem,
         tenant: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem,
     ) -> None:
         """
-        ip_igmp_snooping logic for one vlan.
+        Set ip_igmp_snooping structured_config for one vlan.
 
         Can be used for both svis and l2vlans
         """
@@ -68,17 +70,18 @@ class IpIgmpSnoopingMixin(Protocol):
                 igmp_snooping_querier_enabled = default(vlan.igmp_snooping_querier.enabled, tenant.igmp_snooping_querier.enabled)
 
         vlan_item = EosCliConfigGen.IpIgmpSnooping.VlansItem(
-            enabled=igmp_snooping_enabled,
+            enabled=igmp_snooping_enabled if igmp_snooping_enabled is not None else Undefined,
             querier=EosCliConfigGen.IpIgmpSnooping.VlansItem.Querier(
-                enabled=igmp_snooping_querier_enabled,
+                enabled=igmp_snooping_querier_enabled if igmp_snooping_querier_enabled is not None else Undefined,
                 address=default(vlan.igmp_snooping_querier.source_address, tenant.igmp_snooping_querier.source_address, self.shared_utils.router_id)
                 if igmp_snooping_querier_enabled
-                else None,
-                version=default(vlan.igmp_snooping_querier.version, tenant.igmp_snooping_querier.version) if igmp_snooping_querier_enabled else None,
-            ),
-            fast_leave=default(vlan.igmp_snooping_querier.fast_leave, tenant.evpn_l2_multicast.fast_leave) if evpn_l2_multicast_enabled else None,
+                else Undefined,
+                version=default(vlan.igmp_snooping_querier.version, tenant.igmp_snooping_querier.version) if igmp_snooping_querier_enabled else Undefined,
+            )
+            or Undefined,
+            fast_leave=default(vlan.igmp_snooping_querier.fast_leave, tenant.evpn_l2_multicast.fast_leave) if evpn_l2_multicast_enabled else Undefined,
         )
 
-        if strip_empties_from_dict(vlan_item._as_dict()):
+        if vlan_item:
             vlan_item._update(id=vlan.id)
             self.structured_config.ip_igmp_snooping.vlans.append(vlan_item)
