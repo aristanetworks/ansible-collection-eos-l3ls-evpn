@@ -492,7 +492,7 @@ jobs:
       - name: "🥷 Remove unskippable ansible-lint rule added for Galaxy"
         working-directory: collections
         run: |
-          sed -i '' 's/- syntax-check/# - syntax-check/g' .ansible-lint
+          sed -i 's/- syntax-check/# - syntax-check/g' .ansible-lint
       - name: "Run ansible-lint"
         working-directory: collections
         run: |
