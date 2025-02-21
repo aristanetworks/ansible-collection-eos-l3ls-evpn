@@ -492,7 +492,7 @@ jobs:
         run: |
           mkdir collections
           tar xvzf arista-avd-*.tar.gz -C collections
-      - name: "Run ansible-test units test cases"
+      - name: "Run ansible-lint"
         run: |
           cd collections/
           ansible-lint --force-color --strict -v
