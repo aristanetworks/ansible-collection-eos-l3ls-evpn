@@ -31,6 +31,9 @@ class RouterPathSelectionMixin(Protocol):
             "path_groups": self._get_path_groups(),
         }
 
+        metric_interfaces = self._get_interface_bandwidths(router_path_selection["path_groups"])
+        router_path_selection["interfaces"] = metric_interfaces
+
         if self.shared_utils.is_wan_server:
             router_path_selection["peer_dynamic_source"] = "stun"
 
@@ -127,6 +130,24 @@ class RouterPathSelectionMixin(Protocol):
             ha_path_group["ipsec_profile"] = self._dp_ipsec_profile_name
 
         return ha_path_group
+
+    def _get_interface_bandwidths(self: AvdStructuredConfigOverlayProtocol, path_groups: dict) -> list:
+        """Generate the bandwidths for the interfaces configured in path groups."""
+        wan_interfaces = self.shared_utils.wan_interfaces
+        metric_interfaces = []
+        for path_group in path_groups:
+            interfaces = path_group.get("local_interfaces", [])
+            for interface in interfaces:
+                name = interface["name"]
+                if l3_intf := wan_interfaces.get(name):
+                    bandwidths = {}
+                    if l3_intf.receive_bandwidth is not None:
+                        bandwidths["receive"] = l3_intf.receive_bandwidth
+                    if l3_intf.transmit_bandwidth is not None:
+                        bandwidths["transmit"] = l3_intf.transmit_bandwidth
+                    if bandwidths:
+                        metric_interfaces.append({"name": name, "metric_bandwidth": bandwidths})
+        return metric_interfaces
 
     def _wan_ha_interfaces(self: AvdStructuredConfigOverlayProtocol) -> list:
         """Return list of interfaces for HA."""

@@ -1201,6 +1201,11 @@ router_path_selection:
       priority: 2
   tcp_mss_ceiling:
     ipv4_segment_size: auto
+  interfaces:
+  - name: Ethernet2
+    metric_bandwidth:
+      receive: 34
+      transmit: 412
 router_service_insertion:
   enabled: true
   connections:

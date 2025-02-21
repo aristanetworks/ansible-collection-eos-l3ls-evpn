@@ -358,7 +358,7 @@ wan_router:
 
 ### WAN interfaces
 
-A WAN interface in AVD is defined under the node settings either under the `l3_interfaces` or the `l3_port_channels` list. To be considered as a WAN interface by AVD, an `l3_interface` pr `l3_port_channel` must have the `wan_carrier` key defined (which will allow to detect the path-group thanks to the carrier to path-group mapping). The `wan_circuit_id` is optional and used on CVaaS to provide more information in the visualization as well as in the AVD generated interface description. Finally the key `connected_to_pathfinder` allows to disable the static peering configuration on a given path-group.
+A WAN interface in AVD is defined under the node settings either under the `l3_interfaces` or the `l3_port_channels` list. To be considered as a WAN interface by AVD, an `l3_interface` pr `l3_port_channel` must have the `wan_carrier` key defined (which will allow to detect the path-group thanks to the carrier to path-group mapping). The `wan_circuit_id` is optional and used on CVaaS to provide more information in the visualization as well as in the AVD generated interface description. The `receive_bandwidth` and `transmit_bandwidth` fields are also used just for visualization on CVaaS. Finally the key `connected_to_pathfinder` allows to disable the static peering configuration on a given path-group.
 
 !!! Danger
 
@@ -387,6 +387,8 @@ wan_router:
             ipv4_acl_in: TEST-IPV4-ACL-WITH-IP-FIELDS-IN # (3)!
             ipv4_acl_out: TEST-IPV4-ACL-WITH-IP-FIELDS-OUT # (3)!
             dhcp_accept_default_route: true
+            receive_bandwidth: 10000 # (5)!
+            transmit_bandwidth: 1000 # (5)!
             ip_address: dhcp
             dhcp_ip: 7.7.7.7
           - name: Ethernet2
@@ -430,6 +432,7 @@ ipv4_prefix_list_catalog:
 2. `wan_circuit_id` is optional and used for description.
 3. Configure IPv4 ACLs in and out for the L3 interface. The access lists must be defined under `ipv4_acls` top level key.
 4. For BGP peering for WAN interfaces, the `ipv4_prefix_list_in` is mandatory for security reaasons. It is defined in the `ipv4_prefix_list_catalog`.
+5. Mbps
 
 ### WAN policies
 

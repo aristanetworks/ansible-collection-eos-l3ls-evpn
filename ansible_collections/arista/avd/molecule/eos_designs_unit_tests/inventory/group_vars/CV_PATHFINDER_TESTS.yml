@@ -185,6 +185,8 @@ wan_router:
               dhcp_accept_default_route: true
               ip_address: dhcp
               connected_to_pathfinder: false
+              receive_bandwidth: 34
+              transmit_bandwidth: 412
             - name: Ethernet3
               wan_carrier: ATT
               wan_circuit_id: 404
