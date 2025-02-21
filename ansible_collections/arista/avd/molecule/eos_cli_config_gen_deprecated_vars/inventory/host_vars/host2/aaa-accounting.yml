@@ -1,0 +1,53 @@
+---
+aaa_accounting:
+  dot1x:
+    default:
+      type: start-stop
+      group: group1
+  exec:
+    console:
+      type: start-stop
+      group: TACACS
+      logging: true
+    default:
+      type: start-stop
+      group: TACACS
+      logging: true
+  system:
+    default:
+      type: start-stop
+      group: TACACS
+  commands:
+    console:
+      - commands: all
+        type: start-stop
+        group: TACACS
+        logging: true
+      - commands: 0
+        type: start-stop
+        logging: true
+      - commands: 1
+        type: start-stop
+        logging: false
+        group: TACACS1
+      - commands: 2
+        type: none
+        logging: true
+      - commands: 3
+        type: start-stop
+        logging: false
+    default:
+      - commands: all
+        type: start-stop
+        group: TACACS
+        logging: true
+      - commands: 0
+        type: start-stop
+        logging: true
+      - commands: 1
+        type: start-stop
+        logging: false
+        group: TACACS
+      - commands: 3
+        type: start-stop
+        logging: false

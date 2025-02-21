@@ -22,19 +22,42 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods.group
+                  remove_in_version: 6.0.0
               logging:
                 type: bool
+                deprecation:
+                  warning: true
+                  new_key: methods.method
+                  remove_in_version: 6.0.0
+              methods:
+                type: list
+                $ref: "eos_cli_config_gen#/$defs/methods"
           default:
             type: dict
             keys:
               type:
                 type: str
                 valid_values: ["none", "start-stop", "stop-only"]
+              # TODO: AVD 6.0 Add required:true for all 'type' keys
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods.group
+                  remove_in_version: 6.0.0
               logging:
                 type: bool
+                deprecation:
+                  warning: true
+                  new_key: methods.method
+                  remove_in_version: 6.0.0
+              methods:
+                type: list
+                $ref: "eos_cli_config_gen#/$defs/methods"
       system:
         type: dict
         keys:
@@ -47,6 +70,13 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods.group
+                  remove_in_version: 6.0.0
+              methods:
+                type: list
+                $ref: "eos_cli_config_gen#/$defs/methods"
       dot1x:
         type: dict
         keys:
@@ -59,6 +89,22 @@ keys:
               group:
                 description: Group Name.
                 type: str
+                deprecation:
+                  warning: true
+                  new_key: methods.group
+                  remove_in_version: 6.0.0
+              methods:
+                type: list
+                min_length: 1
+                items:
+                  type: dict
+                  $ref: "eos_cli_config_gen#/$defs/methods/items"
+                  keys:
+                    multicast:
+                      type: bool
+                      description: |-
+                        Forward accounting packets to all servers within the specified group.
+                        This option is applicable only when the `method` key is explicitly set to `group`.
       commands:
         type: dict
         keys:
@@ -78,8 +124,19 @@ keys:
                 group:
                   description: Group Name.
                   type: str
+                  deprecation:
+                    warning: true
+                    new_key: methods.group
+                    remove_in_version: 6.0.0
                 logging:
                   type: bool
+                  deprecation:
+                    warning: true
+                    new_key: methods.method
+                    remove_in_version: 6.0.0
+                methods:
+                  type: list
+                  $ref: "eos_cli_config_gen#/$defs/methods"
           default:
             type: list
             items:
@@ -96,5 +153,16 @@ keys:
                 group:
                   description: Group Name.
                   type: str
+                  deprecation:
+                    warning: true
+                    new_key: methods.group
+                    remove_in_version: 6.0.0
                 logging:
                   type: bool
+                  deprecation:
+                    warning: true
+                    new_key: methods.method
+                    remove_in_version: 6.0.0
+                methods:
+                  type: list
+                  $ref: "eos_cli_config_gen#/$defs/methods"

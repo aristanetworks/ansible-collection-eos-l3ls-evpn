@@ -2,7 +2,9 @@ aaa_accounting:
   exec:
     console:
       type: start-stop
-      group: node_group
+      methods:
+      - method: group
+        group: node_group
 aaa_root:
   disabled: true
 config_end: true
