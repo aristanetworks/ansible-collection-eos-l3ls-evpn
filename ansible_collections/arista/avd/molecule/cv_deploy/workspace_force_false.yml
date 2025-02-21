@@ -45,12 +45,18 @@
             cv_devices: [ avd-ci-leaf1, avd-ci-core1 ]
             cv_submit_workspace_force: false
       rescue:
+
+        - name: Display CVP result
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
         - name: Check CVP returns
           run_once: true
           ansible.builtin.assert:
             that:
               # errors and warnings
-              - "'Failed to submit workspace' in cv_deploy_results.errors[0]"
+              - "'Failed to submit CloudVision Workspace due to the presence of inactive devices. Use force to override' in cv_deploy_results.errors[0]"
               - cv_deploy_results.workspace.state == "submit failed"
 
     - name: Cleanup orphan workspace
