@@ -8,7 +8,7 @@ from typing import TYPE_CHECKING, Any, Protocol
 
 from pyavd._eos_designs.schema import EosDesigns
 from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
-from pyavd._utils import default, get
+from pyavd._utils import append_if_not_duplicate, default, get, strip_empties_from_dict
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import range_expand
 
@@ -322,3 +322,127 @@ class MiscMixin(Protocol):
         l3_bgp_neighbors = self.get_l3_generic_interface_bgp_neighbors(self.l3_interfaces)
         l3_bgp_neighbors.extend(self.get_l3_generic_interface_bgp_neighbors(self.node_config.l3_port_channels))
         return l3_bgp_neighbors
+
+    @cached_property
+    def is_rss_profile_supported(self: SharedUtilsProtocol) -> bool:
+        """Returns bool indicating whether Receive Side Scaling (RSS) profile is supported for this platform."""
+        return self.platform_settings.feature_support.platform_sfe_interface_profile.supported
+
+    @cached_property
+    def max_rss_queues(self: SharedUtilsProtocol) -> int:
+        """
+        Returns maximum value allowed for rx_queue count configured under L3 interface or L3 Port-Channel interface.
+
+        This is used for building RSS profile.
+        """
+        if not self.is_rss_profile_supported:
+            return 0
+        return self.platform_settings.feature_support.platform_sfe_interface_profile.max_rx_queues
+
+    @cached_property
+    def get_rss_profiles(self: SharedUtilsProtocol) -> dict:
+        """Returns a dictionary containing list of RSS profiles and profile chosen to apply."""
+        rss_profiles = {}
+        rss_interfaces = self.get_rss_profile_member_interfaces()
+        if rss_interfaces is not None:
+            default_rss_profile_name = "Default_RSS_Profile"
+            # list of profiles contains a single profile which is the one to apply
+            rss_profiles["profiles"] = [
+                {
+                    "name": default_rss_profile_name,
+                    "interfaces": rss_interfaces,
+                }
+            ]
+            rss_profiles["interface_profile"] = default_rss_profile_name
+        return rss_profiles
+
+    def get_rss_profile_member_interfaces(self: SharedUtilsProtocol) -> list | None:
+        """Returns list of eligible interfaces with RSS related settings."""
+        # Iterate thru all L3 interfaces checking for those with rx_queue config
+        # Also iterate thru member interfaces of all L3 Port-Channels with rx_queue config
+        rss_profile_member_interfaces = []
+        if not self.is_rss_profile_supported:
+            return rss_profile_member_interfaces
+        # iterate thru each L3 interface
+        for interface in self.l3_interfaces:
+            intf_with_rss = self.build_interface_with_rx_queue_settings(interface)
+            if intf_with_rss:
+                append_if_not_duplicate(
+                    list_of_dicts=rss_profile_member_interfaces,
+                    primary_key="name",
+                    new_dict=intf_with_rss,
+                    context="Ethernet interface defined with RSS settings",
+                    context_keys=["name"],
+                    ignore_same_dict=False,
+                )
+        # iterate thru member interfaces of each L3 Port-Channel
+        for interface in self.node_config.l3_port_channels:
+            for member_intf in interface.member_interfaces:
+                intf_with_rss = self.build_interface_with_rx_queue_settings(member_intf)
+                if intf_with_rss:
+                    append_if_not_duplicate(
+                        list_of_dicts=rss_profile_member_interfaces,
+                        primary_key="name",
+                        new_dict=intf_with_rss,
+                        context="Port-Channel member interface defined with RSS settings",
+                        context_keys=["name"],
+                        ignore_same_dict=False,
+                    )
+        if rss_profile_member_interfaces:
+            return rss_profile_member_interfaces
+        return None
+
+    def build_interface_with_rx_queue_settings(
+        self: SharedUtilsProtocol,
+        l3_member_interface: EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3InterfacesItem
+        | EosDesigns._DynamicKeys.DynamicNodeTypesItem.NodeTypes.NodesItem.L3PortChannelsItem.MemberInterfacesItem,
+    ) -> dict | None:
+        """Returns interface dictionary with RSS settings."""
+        intf_with_rss_settings = {}
+        if l3_member_interface._get("rx_queue"):
+            # validate rx_queue 'count' when specified
+            if l3_member_interface.rx_queue._get("count") and l3_member_interface.rx_queue.count > self.max_rss_queues:
+                msg = f"rx-queue count for interface '{l3_member_interface.name}' exceeds maximum supported '{self.max_rss_queues}' for this platform."
+                raise AristaAvdInvalidInputsError(msg)
+            intf_with_rss_settings["name"] = l3_member_interface.name
+            rx_queue_worker_cum = ""
+            for _worker in l3_member_interface.rx_queue.worker:
+                # validate worker ids for format and permissible values
+                is_range = "-" in _worker
+                if is_range:
+                    range_vals = _worker.split("-", maxsplit=1)
+                    if int(range_vals[0]) > int(range_vals[1]):
+                        # Range of values is specified incorrectly
+                        msg = (
+                            f"Worker id '{_worker}' under 'rx_queue' for interface '{l3_member_interface.name}' is not a valid range of <low> to <high> values."
+                        )
+                        raise AristaAvdInvalidInputsError(msg)
+                    if int(range_vals[0]) >= self.max_rss_queues or int(range_vals[1]) >= self.max_rss_queues:
+                        # one or more values in the range matches or exceeds maximum supported for this platform
+                        msg = (
+                            f"One or more worker ids within '{_worker}' under 'rx_queue' for interface '{l3_member_interface.name}' "
+                            f"equal or exceed maximum supported '{self.max_rss_queues}' for this platform."
+                        )
+                        raise AristaAvdInvalidInputsError(msg)
+                elif int(_worker) >= self.max_rss_queues:
+                    # worker_id is equal to or exceeds '{self.max_rss_queues}'
+                    msg = (
+                        f"Worker id '{_worker}' under 'rx_queue' for interface '{l3_member_interface.name}' "
+                        f"equals or exceeds maximum supported '{self.max_rss_queues}' for this platform."
+                    )
+                    raise AristaAvdInvalidInputsError(msg)
+                # build comma separated string representing specified worker id/range
+                if len(rx_queue_worker_cum) == 0:
+                    rx_queue_worker_cum = _worker
+                else:
+                    rx_queue_worker_cum += "," + _worker
+            rx_queue = {
+                "count": l3_member_interface.rx_queue.count,
+                "worker": rx_queue_worker_cum,
+                "mode": l3_member_interface.rx_queue.mode if l3_member_interface.rx_queue._get("mode") else "",
+            }
+            intf_with_rss_settings["rx_queue"] = strip_empties_from_dict(rx_queue)
+            return strip_empties_from_dict(intf_with_rss_settings)
+        # Implies specified interface does not have explicit "rx_queue" key or sub-keys specified
+        # In such case, skip generating any dictionary for such interface.
+        return None

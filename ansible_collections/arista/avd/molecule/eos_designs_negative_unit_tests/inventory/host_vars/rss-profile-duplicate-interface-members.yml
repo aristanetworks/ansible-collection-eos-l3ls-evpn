@@ -1,0 +1,27 @@
+---
+type: l3leaf
+l3leaf:
+  defaults:
+    platform: AWE-5510
+  nodes:
+    - bgp_as: 65000
+      name: rss-profile-duplicate-interface-members
+      id: 1
+      loopback_ipv4_pool: 192.168.0.0/24
+      vtep_loopback_ipv4_pool: 192.168.1.0/24
+      l3_interfaces:
+        - name: Ethernet1/19
+          ip_address: 172.16.0.3/30
+          rx_queue:
+            count: 2
+      l3_port_channels:
+        - name: Port-Channel5
+          ip_address: 172.16.0.2/30
+          member_interfaces:
+            - name: Ethernet1/19
+              rx_queue:
+                mode: exclusive
+
+expected_error_message: >-
+  Found duplicate objects with conflicting data while generating configuration for Port-Channel member interface defined with RSS settings.
+  {'name': 'Ethernet1/19', 'rx_queue': {'mode': 'exclusive'}} conflicts with {'name': 'Ethernet1/19', 'rx_queue': {'count': 2}}.
