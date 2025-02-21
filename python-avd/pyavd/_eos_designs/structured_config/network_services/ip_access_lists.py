@@ -24,9 +24,7 @@ class IpAccesslistsMixin(Protocol):
 
     def _acl_internet_exit_zscaler(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
         ip_access_list = EosCliConfigGen.IpAccessListsItem(name=self.get_internet_exit_nat_acl_name("zscaler"))
-        ip_access_list.entries.append(
-            EosCliConfigGen.IpAccessListsItem.EntriesItem(sequence=10, action="permit", protocol="ip", source="any", destination="any")
-        )
+        ip_access_list.entries.append_new(sequence=10, action="permit", protocol="ip", source="any", destination="any")
         self.structured_config.ip_access_lists.append(ip_access_list)
 
     def _acl_internet_exit_direct(self: AvdStructuredConfigNetworkServicesProtocol) -> None:
@@ -41,20 +39,13 @@ class IpAccesslistsMixin(Protocol):
             interface_ips = sorted(interface_ips)
             i = 0
             for i, interface_ip in enumerate(interface_ips):
-                acl.entries.append(
-                    EosCliConfigGen.IpAccessListsItem.EntriesItem(
-                        sequence=10 + i * 10, action="deny", protocol="ip", source=get_ip_from_ip_prefix(interface_ip), destination="any"
-                    )
-                )
-
-            acl.entries.append(
-                EosCliConfigGen.IpAccessListsItem.EntriesItem(
-                    sequence=20 + i * 10,
-                    action="permit",
-                    protocol="ip",
-                    source="any",
-                    destination="any",
-                )
+                acl.entries.append_new(sequence=10 + i * 10, action="deny", protocol="ip", source=get_ip_from_ip_prefix(interface_ip), destination="any")
+            acl.entries.append_new(
+                sequence=20 + i * 10,
+                action="permit",
+                protocol="ip",
+                source="any",
+                destination="any",
             )
 
             self.structured_config.ip_access_lists.append(acl)

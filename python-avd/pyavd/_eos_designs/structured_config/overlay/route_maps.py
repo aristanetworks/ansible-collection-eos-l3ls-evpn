@@ -26,18 +26,19 @@ class RouteMapsMixin(Protocol):
         if self.shared_utils.overlay_cvx:
             return
 
-        if self.shared_utils.overlay_routing_protocol == "ebgp":
-            if self.inputs.evpn_prevent_readvertise_to_server:
-                remote_asns = natural_sort({rs_dict.get("bgp_as") for rs_dict in self._evpn_route_servers.values()})
-                for remote_asn in remote_asns:
-                    route_maps_item = EosCliConfigGen.RouteMapsItem(name=f"RM-EVPN-FILTER-AS{remote_asn}")
-                    route_maps_item.sequence_numbers.append_new(
-                        sequence=10, type="deny", match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match([f"as {remote_asn}"])
-                    )
-                    route_maps_item.sequence_numbers.append_new(sequence=20, type="permit")
-                    self.structured_config.route_maps.append(route_maps_item)
+        if self.shared_utils.overlay_routing_protocol == "ebgp" and self.inputs.evpn_prevent_readvertise_to_server:
+            remote_asns = natural_sort({rs_dict.get("bgp_as") for rs_dict in self._evpn_route_servers.values()})
+            for remote_asn in remote_asns:
+                route_maps_item = EosCliConfigGen.RouteMapsItem(name=f"RM-EVPN-FILTER-AS{remote_asn}")
+                route_maps_item.sequence_numbers.append_new(
+                    sequence=10, type="deny", match=EosCliConfigGen.RouteMapsItem.SequenceNumbersItem.Match([f"as {remote_asn}"])
+                )
+                route_maps_item.sequence_numbers.append_new(sequence=20, type="permit")
+                self.structured_config.route_maps.append(route_maps_item)
 
-        elif self.shared_utils.overlay_routing_protocol == "ibgp" and self.shared_utils.overlay_vtep and self.shared_utils.evpn_role != "server":
+        if (
+            self.shared_utils.overlay_routing_protocol == "ibgp" and self.shared_utils.overlay_vtep and self.shared_utils.evpn_role != "server"
+        ) or self.shared_utils.is_wan_client:
             # Route-map IN and OUT for SOO
 
             route_maps_item = EosCliConfigGen.RouteMapsItem(name="RM-EVPN-SOO-IN")

@@ -64,9 +64,12 @@ class PortChannelInterfacesMixin(Protocol):
                 "service_profile": self.inputs.p2p_uplinks_qos_profile,
                 "link_tracking_groups": link.get("link_tracking_groups"),
                 "sflow": link.get("sflow"),
-                "flow_tracker": link.get("flow_tracker"),
                 "spanning_tree_portfast": link.get("spanning_tree_portfast"),
             }
+            if (flow_tracking := link.get("flow_tracking")) and (
+                flow_tracker := self.shared_utils.new_get_flow_tracker(flow_tracking, EosCliConfigGen.PortChannelInterfacesItem.FlowTracker)
+            ):
+                port_channel_interface["flow_tracker"] = flow_tracker._as_dict()
 
             if (trunk_groups := link.get("trunk_groups")) is not None:
                 port_channel_interface["switchport"]["trunk"]["groups"] = trunk_groups

@@ -238,15 +238,15 @@ hostname: cv-pathfinder-edge1
 ip_access_lists:
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Ethernet1_49.3
   entries:
-  - source: any
-    destination: 172.24.49.3
-    sequence: 15
+  - sequence: 15
     action: deny
     protocol: ip
-  - source: 172.24.49.2
+    source: any
     destination: 172.24.49.3
-    action: permit
+  - action: permit
     protocol: ip
+    source: 172.24.49.2
+    destination: 172.24.49.3
 - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN_Port-Channel540
   entries:
   - source: any
