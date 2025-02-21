@@ -206,6 +206,7 @@ nav:
       - dhcp_provisioner: ansible_collections/arista/avd/roles/dhcp_provisioner/README.md
       - build_output_folders: ansible_collections/arista/avd/roles/build_output_folders/README.md
       - cv_deploy: ansible_collections/arista/avd/roles/cv_deploy/README.md
+      - anta_runner: roles/anta_runner/README.md
   - Ansible Collection Plugins: docs/plugins/
   - Contributing to AVD:
       - Overview: docs/contribution/overview.md

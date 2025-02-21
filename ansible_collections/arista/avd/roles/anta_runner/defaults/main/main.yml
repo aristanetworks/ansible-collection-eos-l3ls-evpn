@@ -1,0 +1,25 @@
+---
+# Role defaults - main
+
+# Run ANTA for these devices.
+# Defaults to all hosts in the play.
+# This means the role must be imported/included in a play targeting only the relevant EOS devices - *not* CloudVision.
+anta_devices: "{{ ansible_play_hosts }}"
+
+# Enable AVD catalog generation.
+avd_catalogs_enabled: true
+
+# Generate tests for BGP peers in VRFs.
+avd_catalogs_allow_bgp_vrfs: false
+
+# Global timeout for the ANTA runner.
+anta_runner_timeout: 30
+
+# ANTA runner batch size. This controls the number of devices that will be processed in parallel. 5-10 is a good starting point.
+anta_runner_batch_size: 5
+
+# Run ANTA in dry-run mode. This will generate the tests but not execute them.
+anta_runner_dry_run: false
+
+# Structured configuration file format. Supported formats: yml, yaml, json.
+avd_structured_config_file_format: "yml"

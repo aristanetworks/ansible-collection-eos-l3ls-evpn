@@ -1,3 +1,4 @@
+anta_runner
 eos_cli_config_gen
 eos_cli_config_gen_deprecated_vars
 eos_config_deploy_cvp

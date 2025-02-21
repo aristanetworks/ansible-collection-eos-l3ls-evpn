@@ -2,57 +2,77 @@
 # defaults file for build_directories
 
 # Root directory where to build output structure
-root_dir: '{{ inventory_dir }}'
+root_dir: "{{ inventory_dir }}"
 
 # AVD configurations output
 # Main output directory
-output_dir_name: 'intended'
-output_dir: '{{ root_dir }}/{{ output_dir_name }}'
+output_dir_name: "intended"
+output_dir: "{{ root_dir }}/{{ output_dir_name }}"
 
 # Output for structured YAML files:
-structured_dir_name: 'structured_configs'
-structured_dir: '{{ output_dir }}/{{ structured_dir_name }}'
+structured_dir_name: "structured_configs"
+structured_dir: "{{ output_dir }}/{{ structured_dir_name }}"
 
 # Output for structured YAML files for CVP:
-structured_cvp_dir_name: 'cvp'
-structured_cvp_dir: '{{ structured_dir }}/{{ structured_cvp_dir_name }}'
+structured_cvp_dir_name: "cvp"
+structured_cvp_dir: "{{ structured_dir }}/{{ structured_cvp_dir_name }}"
 
 # EOS Configuration Directory name
-eos_config_dir_name: 'configs'
-eos_config_dir: '{{ output_dir }}/{{ eos_config_dir_name }}'
+eos_config_dir_name: "configs"
+eos_config_dir: "{{ output_dir }}/{{ eos_config_dir_name }}"
 
 # Documentation folders
 # Main documentation folder
-documentation_dir_name: 'documentation'
-documentation_dir: '{{ root_dir }}/{{ documentation_dir_name }}'
+documentation_dir_name: "documentation"
+documentation_dir: "{{ root_dir }}/{{ documentation_dir_name }}"
 
 # Fabric documentation
-fabric_dir_name: 'fabric'
-fabric_dir: '{{ documentation_dir }}/{{ fabric_dir_name }}'
+fabric_dir_name: "fabric"
+fabric_dir: "{{ documentation_dir }}/{{ fabric_dir_name }}"
 
 # Device documentation
-devices_dir_name: 'devices'
-devices_dir: '{{ documentation_dir }}/{{ devices_dir_name }}'
+devices_dir_name: "devices"
+devices_dir: "{{ documentation_dir }}/{{ devices_dir_name }}"
 
 # EOS config deploy eapi running config backup directory
-post_running_config_backup_dir_name: 'config_backup'
-post_running_config_backup_dir: '{{ root_dir }}/{{ post_running_config_backup_dir_name }}'
+post_running_config_backup_dir_name: "config_backup"
+post_running_config_backup_dir: "{{ root_dir }}/{{ post_running_config_backup_dir_name }}"
 
-pre_running_config_backup_dir_name: 'config_backup'
-pre_running_config_backup_dir: '{{ root_dir }}/{{ pre_running_config_backup_dir_name }}'
+pre_running_config_backup_dir_name: "config_backup"
+pre_running_config_backup_dir: "{{ root_dir }}/{{ pre_running_config_backup_dir_name }}"
 
 # EOS state validation test catalogs
-test_catalogs_dir_name: 'test_catalogs'
-test_catalogs_dir: '{{ output_dir }}/{{ test_catalogs_dir_name }}'
+test_catalogs_dir_name: "test_catalogs"
+test_catalogs_dir: "{{ output_dir }}/{{ test_catalogs_dir_name }}"
 
 # EOS state validation directory name
-eos_validate_state_name: 'reports'
-eos_validate_state_dir: '{{ root_dir }}/{{ eos_validate_state_name }}'
+eos_validate_state_name: "reports"
+eos_validate_state_dir: "{{ root_dir }}/{{ eos_validate_state_name }}"
 
 # Input directory for custom ANTA catalogs:
 custom_anta_catalogs_dir_name: "custom_anta_catalogs"
 custom_anta_catalogs_dir: "{{ root_dir }}/{{ custom_anta_catalogs_dir_name }}"
 
 # EOS snapshots directory name
-snapshots_backup_dir_name: 'snapshots'
-snapshots_backup_dir: '{{ root_dir }}/{{ snapshots_backup_dir_name }}'
+snapshots_backup_dir_name: "snapshots"
+snapshots_backup_dir: "{{ root_dir }}/{{ snapshots_backup_dir_name }}"
+
+# Main ANTA directory
+anta_dir_name: "anta"
+anta_dir: "{{ root_dir }}/{{ anta_dir_name }}"
+
+# Input for ANTA user-defined catalog files
+user_catalogs_dir_name: "user_catalogs"
+user_catalogs_dir: "{{ anta_dir }}/{{ user_catalogs_dir_name }}"
+
+# Output for ANTA AVD catalog files
+avd_catalogs_dir_name: "avd_catalogs"
+avd_catalogs_dir: "{{ anta_dir }}/{{ avd_catalogs_dir_name }}"
+
+# Output for ANTA reports
+anta_reports_dir_name: "reports"
+anta_reports_dir: "{{ anta_dir }}/{{ anta_reports_dir_name }}"
+
+# Output for ANTA log files
+anta_runner_logs_dir_name: "logs"
+anta_runner_logs_dir: "{{ anta_dir }}/{{ anta_runner_logs_dir_name }}"

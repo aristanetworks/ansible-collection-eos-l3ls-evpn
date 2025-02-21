@@ -1,0 +1,4 @@
+---
+dc_name: DC2
+
+mgmt_gateway: 172.16.1.1

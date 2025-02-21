@@ -107,3 +107,62 @@
     mode: "0o775"
   delegate_to: localhost
   run_once: true
+
+# anta_runner directories
+
+- name: "Cleanup existing folders in {{ anta_dir_name }}, preserving {{ user_catalogs_dir_name }}"
+  ansible.builtin.find:
+    paths: "{{ anta_dir }}"
+    file_type: directory
+    excludes: "{{ user_catalogs_dir_name }}"
+  register: dirs_to_clean
+  delegate_to: localhost
+  run_once: true
+
+- name: "Remove found directories in {{ anta_dir_name }}"
+  ansible.builtin.file:
+    path: "{{ item.path }}"
+    state: absent
+  loop: "{{ dirs_to_clean.files }}"
+  delegate_to: localhost
+  run_once: true
+
+- name: "Create folder {{ anta_dir_name }} for ANTA"
+  ansible.builtin.file:
+    path: "{{ anta_dir }}"
+    state: directory
+    mode: "0o775"
+  delegate_to: localhost
+  run_once: true
+
+- name: "Create folder {{ user_catalogs_dir_name }} for ANTA user-defined catalogs"
+  ansible.builtin.file:
+    path: "{{ user_catalogs_dir }}"
+    state: directory
+    mode: "0o775"
+  delegate_to: localhost
+  run_once: true
+
+- name: "Create folder {{ anta_catalogs_dir_name }} for ANTA AVD generated catalogs"
+  ansible.builtin.file:
+    path: "{{ avd_catalogs_dir }}"
+    state: directory
+    mode: "0o775"
+  delegate_to: localhost
+  run_once: true
+
+- name: "Create folder {{ anta_reports_dir_name }} for ANTA reports"
+  ansible.builtin.file:
+    path: "{{ anta_reports_dir }}"
+    state: directory
+    mode: "0o775"
+  delegate_to: localhost
+  run_once: true
+
+- name: "Create folder {{ anta_runner_logs_dir_name }} for ANTA logs"
+  ansible.builtin.file:
+    path: "{{ anta_runner_logs_dir }}"
+    state: directory
+    mode: "0o775"
+  delegate_to: localhost
+  run_once: true

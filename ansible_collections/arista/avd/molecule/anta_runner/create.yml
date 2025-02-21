@@ -1,0 +1,30 @@
+---
+- name: Configure local folders
+  hosts: FABRIC
+  gather_facts: false
+  connection: local
+  vars:
+    root_dir: "{{ playbook_dir }}"
+  tasks:
+    - name: Create local output folders
+      delegate_to: 127.0.0.1
+      ansible.builtin.import_role:
+        name: arista.avd.build_output_folders
+      run_once: true
+
+    - name: Create ANTA subfolders for different runs
+      delegate_to: 127.0.0.1
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        mode: "0o775"
+      loop:
+        - "{{ avd_catalogs_dir }}/default_run"
+        - "{{ avd_catalogs_dir }}/allow_bgp_vrfs_run"
+        - "{{ avd_catalogs_dir }}/filtered_run"
+        - "{{ anta_reports_dir }}/default_run"
+        - "{{ anta_reports_dir }}/allow_bgp_vrfs_run"
+        - "{{ anta_reports_dir }}/filtered_run"
+        - "{{ anta_reports_dir }}/user_defined_catalogs_run"
+        - "{{ anta_reports_dir }}/user_defined_catalogs_with_tags_run"
+      run_once: true

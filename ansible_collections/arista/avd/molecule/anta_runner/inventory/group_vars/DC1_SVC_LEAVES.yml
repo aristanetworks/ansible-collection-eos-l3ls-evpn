@@ -1,0 +1,33 @@
+---
+type: service_leaf
+
+# Custom node type service_leaf group
+service_leaf:
+  defaults:
+    platform: vEOS-lab
+    loopback_ipv4_pool: 10.33.0.0/27
+    vtep_loopback_ipv4_pool: 10.33.1.0/27
+    uplink_switches: [dc1-spine1, dc1-spine2]
+    uplink_ipv4_pool: 10.33.255.0/26
+    mlag_peer_ipv4_pool: 10.33.1.64/27
+    mlag_peer_l3_ipv4_pool: 10.33.1.96/27
+    virtual_router_mac_address: 00:1c:73:00:00:99
+    spanning_tree_priority: 4096
+    spanning_tree_mode: mstp
+
+  node_groups:
+    - group: DC1_SVC_LEAF1
+      bgp_as: 65133
+      nodes:
+        - name: dc1-svc-leaf1a
+          id: 5
+          mgmt_ip: 172.16.1.31/24
+          uplink_switch_interfaces:
+            - Ethernet5
+            - Ethernet5
+        - name: dc1-svc-leaf1b
+          id: 6
+          mgmt_ip: 172.16.1.32/24
+          uplink_switch_interfaces:
+            - Ethernet6
+            - Ethernet6
