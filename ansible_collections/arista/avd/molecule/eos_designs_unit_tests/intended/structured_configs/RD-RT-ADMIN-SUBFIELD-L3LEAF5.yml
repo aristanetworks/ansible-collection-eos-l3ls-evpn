@@ -132,7 +132,7 @@ router_bgp:
       activate: false
   vrfs:
   - name: TEST1
-    rd: 1.1.1.1:11
+    rd: 192.168.255.5:11
     route_targets:
       import:
       - address_family: evpn
@@ -143,6 +143,21 @@ router_bgp:
         route_targets:
         - '22:11'
     router_id: 192.168.255.5
+    redistribute:
+      connected:
+        enabled: true
+  - name: TEST2
+    rd: 10.12.12.12:12
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '12:12'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '12:12'
+    router_id: 10.12.12.12
     redistribute:
       connected:
         enabled: true
@@ -221,6 +236,10 @@ vrfs:
   description: TEST1
   ip_routing: true
   tenant: Tenant_A
+- name: TEST2
+  description: VRF with router-id
+  ip_routing: true
+  tenant: TENANT_WITH_VRFS_WITHOUT_SVIS
 vxlan_interface:
   vxlan1:
     description: RD-RT-ADMIN-SUBFIELD-L3LEAF5_VTEP
@@ -241,3 +260,5 @@ vxlan_interface:
       vrfs:
       - name: TEST1
         vni: 22
+      - name: TEST2
+        vni: 12
