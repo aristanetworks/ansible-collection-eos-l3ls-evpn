@@ -1,3 +1,5 @@
 # Installing PyAVD from source.
 # The package path below is relative to the repo root and will only work if the pip install is executed from there.
 ./python-avd[ansible-collection]
+# required for manifest when installing from source
+distlib
