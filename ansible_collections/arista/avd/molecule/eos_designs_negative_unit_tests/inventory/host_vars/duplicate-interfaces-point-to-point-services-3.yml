@@ -53,7 +53,7 @@ tenants:
             interfaces: ["Ethernet6"]
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for EthernetInterfaces.
-  {'name': 'Ethernet6.1000', 'shutdown': False, 'peer_type': 'point_to_point_service'} conflicts with
-  {'name': 'Ethernet6.1000', 'shutdown': False, 'encapsulation_vlan': {'client': {'encapsulation': 'dot1q', 'vlan': 1000},
+  Found duplicate objects with conflicting data while generating configuration for Network Services point-to-point EthernetInterfaces.
+  Interface Ethernet6.1000 defined under tenants[TENANT_B].point_to_point_services[TEN_B_site2_site5_eline_port_based].endpoints[0]
+  conflicts with {'name': 'Ethernet6.1000', 'shutdown': False, 'encapsulation_vlan': {'client': {'encapsulation': 'dot1q', 'vlan': 1000},
   'network': {'encapsulation': 'client'}}, 'peer_type': 'point_to_point_service'}.
