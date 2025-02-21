@@ -4,6 +4,7 @@
 anta==1.2.0
 cvprac>=1.4.0
 netaddr>=0.7.19
+passlib>=1.7.4
 PyYAML>=6.0.0
 treelib>=1.5.5
 jsonschema>=3.2.0
