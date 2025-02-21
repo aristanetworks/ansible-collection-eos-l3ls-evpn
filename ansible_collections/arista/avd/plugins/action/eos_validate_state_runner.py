@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import logging
+from contextlib import suppress
 from json import dump
 from typing import TYPE_CHECKING, Any
 
@@ -24,8 +25,10 @@ if TYPE_CHECKING:
     from pathlib import Path
 
 LOGGER = logging.getLogger("ansible_collections.arista.avd")
-# ANTA currently add some RichHandler to the root logger so need to disable propagation
-LOGGER.propagate = False
+with suppress(AttributeError):
+    # ANTA currently add some RichHandler to the root logger so need to disable propagation
+    # Suppressing AttribueError for ansible-lint
+    LOGGER.propagate = False
 LOGGING_LEVELS = ["DEBUG", "INFO", "ERROR", "WARNING", "CRITICAL"]
 
 
