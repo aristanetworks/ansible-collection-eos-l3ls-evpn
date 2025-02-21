@@ -77,6 +77,7 @@ core_interfaces:
       isis_authentication_mode: md5
       isis_authentication_key: $1c$sTNAlR6rKSw=
       isis_network_type: point-to-point
+      underlay_multicast_ipv4_static: true
 
     - name: ospf_bb_profile
       speed: "forced 1000full"
@@ -95,6 +96,7 @@ core_interfaces:
       id: 1
       interfaces: [ Ethernet1, Ethernet1 ]
       profile: isis_bb_profile
+      underlay_multicast_ipv4_static: false
       ip: ["unnumbered loopback0", "unnumbered loopback0"]
 
     # Link w/o bb profile
@@ -104,6 +106,7 @@ core_interfaces:
       ip_pool: some_other_pool
       speed: 100full
       mtu: 1601
+      underlay_multicast_ipv4_static: true
       isis_hello_padding: true
       isis_circuit_type: level-1
       isis_metric: 60
@@ -254,3 +257,4 @@ l3_edge:
       include_in_underlay_protocol: false
       ip_pool: pool_29_mask
       id: 2
+      underlay_multicast_ipv4_static: true
