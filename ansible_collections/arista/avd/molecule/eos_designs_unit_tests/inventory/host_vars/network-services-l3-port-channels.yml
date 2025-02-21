@@ -1,0 +1,139 @@
+---
+# This yml file is being used to test the various supported schema attributes for L3 Port-Channel
+
+flow_tracking_settings:
+  trackers:
+    - name: FT_Test
+      exporters:
+        - name: CV-TELEMETRY
+          collector:
+            host: 127.0.0.1
+          local_interface: Loopback0
+          template_interval: 3600000
+      record_export:
+        on_inactive_timeout: 70000
+        on_interval: 300000
+
+type: l3leaf
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    loopback_ipv4_offset: 8
+    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    virtual_router_mac_address: 00:dc:00:00:00:0a
+  nodes:
+    - name: network-services-l3-port-channels
+      id: 101
+      bgp_as: 101
+
+tenants:
+  - name: L3PO
+    mac_vrf_vni_base: 10000
+    vrfs:
+      - name: default
+        vrf_id: 1
+        bgp:
+          enabled: false
+        l3_port_channels:
+          - name: Port-Channel11
+            mode: active
+            peer: inet-cloud
+            peer_port_channel: Po11
+            enabled: true
+            nodes:
+              - network-services-l3-port-channels
+            member_interfaces:
+              - name: Ethernet10
+                peer_interface: Ethernet10
+                peer: inet-cloud
+              - name: Ethernet11
+                peer_interface: Ethernet11
+                peer: inet-cloud
+          - name: Port-Channel11.100
+            peer: inet-cloud-sub100
+            peer_port_channel: Po11.100
+            enabled: true
+            ip_addresses:
+              - 10.10.10.2/29
+            nodes:
+              - network-services-l3-port-channels
+      - name: TESTING
+        vrf_id: 2
+        ospf:
+          enabled: true
+        l3_port_channels:
+          - name: Port-Channel1111
+            mode: active
+            mtu: 1555
+            descriptions:
+              - Description list
+            peer: inet-cloud
+            peer_port_channel: Po1111
+            enabled: true
+            nodes:
+              - network-services-l3-port-channels
+            member_interfaces:
+              - name: Ethernet4
+                peer_interface: Ethernet8
+                peer: inet-cloud
+                description: man descr inet-clout eth8
+                speed: forced 100gfull
+                structured_config:
+                  mtu: 1600
+              - name: Ethernet5
+                peer_interface: Ethernet9
+                peer: inet-cloud
+                speed: forced 100gfull
+                structured_config:
+                  mtu: 1600
+          - name: Port-Channel1111.100
+            description: Single description line
+            peer: inet-cloud-sub100
+            peer_port_channel: Po1111.100
+            enabled: true
+            ip_addresses:
+              - 1.1.1.2/29
+            nodes:
+              - network-services-l3-port-channels
+            flow_tracking:
+              enabled: true
+              name: FT_Test
+            ospf:
+              enabled: true
+              point_to_point: false
+              area: "0.0.0.0"
+              cost: 1
+              authentication: "simple"
+              simple_auth_key: testpass
+            structured_config:
+              logging:
+                event:
+                  link_status: true
+                  storm_control_discards: true
+          - name: Port-Channel1111.200
+            peer: inet-cloud
+            peer_port_channel: Po1111.200
+            encapsulation_dot1q_vlan: 300
+            enabled: true
+            ip_address: 1.1.1.30/29
+            ipv4_acl_in: inACL
+            ipv4_acl_out: outACL
+            nodes:
+              - network-services-l3-port-channels
+            flow_tracking:
+              enabled: true
+            ospf:
+              enabled: true
+              point_to_point: false
+              area: "0.0.0.0"
+              cost: 1
+              authentication: "message-digest"
+              message_digest_keys:
+                - id: 1
+                  hash_algorithm: "sha256"
+                  key: testpass1
+                - id: 2
+                  key: testpass2
+            raw_eos_cli: |
+               logging event storm-control discards
+               logging event link-status

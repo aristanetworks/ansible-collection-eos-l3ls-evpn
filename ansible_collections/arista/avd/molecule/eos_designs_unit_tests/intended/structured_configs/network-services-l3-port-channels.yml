@@ -1,0 +1,281 @@
+aaa_root:
+  disabled: true
+config_end: true
+enable_password:
+  disabled: true
+ethernet_interfaces:
+- name: Ethernet10
+  description: inet-cloud_Ethernet10
+  shutdown: false
+  channel_group:
+    id: 11
+    mode: active
+  peer: inet-cloud
+  peer_interface: Ethernet10
+  peer_type: l3_port_channel_member
+- name: Ethernet11
+  description: inet-cloud_Ethernet11
+  shutdown: false
+  channel_group:
+    id: 11
+    mode: active
+  peer: inet-cloud
+  peer_interface: Ethernet11
+  peer_type: l3_port_channel_member
+- name: Ethernet4
+  description: man descr inet-clout eth8
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1600
+  channel_group:
+    id: 1111
+    mode: active
+  peer: inet-cloud
+  peer_interface: Ethernet8
+  peer_type: l3_port_channel_member
+- name: Ethernet5
+  description: inet-cloud_Ethernet9
+  shutdown: false
+  speed: forced 100gfull
+  mtu: 1600
+  channel_group:
+    id: 1111
+    mode: active
+  peer: inet-cloud
+  peer_interface: Ethernet9
+  peer_type: l3_port_channel_member
+flow_tracking:
+  sampled:
+    sample: 10000
+    trackers:
+    - record_export:
+        on_inactive_timeout: 70000
+        on_interval: 300000
+      name: FLOW-TRACKER
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+        template_interval: 3600000
+    - record_export:
+        on_inactive_timeout: 70000
+        on_interval: 300000
+      name: FT_Test
+      exporters:
+      - name: CV-TELEMETRY
+        collector:
+          host: 127.0.0.1
+        local_interface: Loopback0
+        template_interval: 3600000
+    shutdown: false
+hostname: network-services-l3-port-channels
+ip_igmp_snooping:
+  globally_enabled: true
+ip_routing: true
+ip_virtual_router_mac_address: 00:dc:00:00:00:0a
+is_deployed: true
+loopback_interfaces:
+- name: Loopback0
+  description: ROUTER_ID
+  shutdown: false
+  ip_address: 192.168.255.109/32
+- name: Loopback1
+  description: VXLAN_TUNNEL_SOURCE
+  shutdown: false
+  ip_address: 192.168.254.109/32
+management_api_http:
+  enable_https: true
+  enable_vrfs:
+  - name: MGMT
+metadata:
+  fabric_name: EOS_DESIGNS_UNIT_TESTS
+port_channel_interfaces:
+- name: Port-Channel11
+  description: inet-cloud_Po11
+  shutdown: false
+  peer: inet-cloud
+  peer_interface: Po11
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
+- name: Port-Channel11.100
+  description: inet-cloud-sub100_Po11.100
+  shutdown: false
+  encapsulation_dot1q:
+    vlan: 100
+  ip_address: 10.10.10.2/29
+  peer: inet-cloud-sub100
+  peer_interface: Po11.100
+  peer_type: l3_port_channel
+- name: Port-Channel1111
+  description: Description list
+  shutdown: false
+  vrf: TESTING
+  mtu: 1555
+  peer: inet-cloud
+  peer_interface: Po1111
+  peer_type: l3_port_channel
+  switchport:
+    enabled: false
+- name: Port-Channel1111.100
+  description: Single description line
+  logging:
+    event:
+      link_status: true
+      storm_control_discards: true
+  shutdown: false
+  encapsulation_dot1q:
+    vlan: 100
+  vrf: TESTING
+  ip_address: 1.1.1.2/29
+  ospf_network_point_to_point: false
+  ospf_area: 0.0.0.0
+  ospf_cost: 1
+  ospf_authentication: simple
+  ospf_authentication_key: testpass
+  flow_tracker:
+    sampled: FT_Test
+  peer: inet-cloud-sub100
+  peer_interface: Po1111.100
+  peer_type: l3_port_channel
+- name: Port-Channel1111.200
+  description: inet-cloud_Po1111.200
+  shutdown: false
+  encapsulation_dot1q:
+    vlan: 300
+  vrf: TESTING
+  ip_address: 1.1.1.30/29
+  access_group_in: inACL
+  access_group_out: outACL
+  ospf_network_point_to_point: false
+  ospf_area: 0.0.0.0
+  ospf_cost: 1
+  ospf_authentication: message-digest
+  ospf_message_digest_keys:
+  - id: 1
+    hash_algorithm: sha256
+    key: testpass1
+  - id: 2
+    hash_algorithm: sha512
+    key: testpass2
+  flow_tracker:
+    sampled: FLOW-TRACKER
+  peer: inet-cloud
+  peer_interface: Po1111.200
+  peer_type: l3_port_channel
+  eos_cli: 'logging event storm-control discards
+
+    logging event link-status
+
+    '
+prefix_lists:
+- name: PL-LOOPBACKS-EVPN-OVERLAY
+  sequence_numbers:
+  - sequence: 10
+    action: permit 192.168.255.0/24 eq 32
+  - sequence: 20
+    action: permit 192.168.254.0/24 eq 32
+route_maps:
+- name: RM-CONN-2-BGP
+  sequence_numbers:
+  - sequence: 10
+    type: permit
+    match:
+    - ip address prefix-list PL-LOOPBACKS-EVPN-OVERLAY
+router_bfd:
+  multihop:
+    interval: 300
+    min_rx: 300
+    multiplier: 3
+router_bgp:
+  as: '101'
+  router_id: 192.168.255.109
+  maximum_paths:
+    paths: 4
+    ecmp: 4
+  updates:
+    wait_install: true
+  bgp:
+    default:
+      ipv4_unicast: false
+  peer_groups:
+  - name: IPv4-UNDERLAY-PEERS
+    type: ipv4
+    send_community: all
+    maximum_routes: 12000
+  - name: EVPN-OVERLAY-PEERS
+    type: evpn
+    update_source: Loopback0
+    bfd: true
+    ebgp_multihop: 3
+    send_community: all
+    maximum_routes: 0
+  redistribute:
+    connected:
+      enabled: true
+      route_map: RM-CONN-2-BGP
+  address_family_evpn:
+    peer_groups:
+    - name: EVPN-OVERLAY-PEERS
+      activate: true
+  address_family_ipv4:
+    peer_groups:
+    - name: IPv4-UNDERLAY-PEERS
+      activate: true
+    - name: EVPN-OVERLAY-PEERS
+      activate: false
+  vrfs:
+  - name: TESTING
+    rd: 192.168.255.109:2
+    route_targets:
+      import:
+      - address_family: evpn
+        route_targets:
+        - '2:2'
+      export:
+      - address_family: evpn
+        route_targets:
+        - '2:2'
+    router_id: 192.168.255.109
+    redistribute:
+      connected:
+        enabled: true
+      ospf:
+        enabled: true
+router_ospf:
+  process_ids:
+  - id: 2
+    vrf: TESTING
+    passive_interface_default: true
+    router_id: 192.168.255.109
+    no_passive_interfaces:
+    - Port-Channel1111.100
+    - Port-Channel1111.200
+    redistribute:
+      bgp:
+        enabled: true
+service_routing_protocols_model: multi-agent
+transceiver_qsfp_default_mode_4x10: true
+vlan_internal_order:
+  allocation: ascending
+  range:
+    beginning: 1006
+    ending: 1199
+vrfs:
+- name: MGMT
+  ip_routing: false
+- name: TESTING
+  ip_routing: true
+  tenant: L3PO
+vxlan_interface:
+  vxlan1:
+    description: network-services-l3-port-channels_VTEP
+    vxlan:
+      source_interface: Loopback1
+      udp_port: 4789
+      vrfs:
+      - name: default
+        vni: 1
+      - name: TESTING
+        vni: 2

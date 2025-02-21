@@ -121,6 +121,23 @@
 {%     endfor %}
 
 *Inherited from Port-Channel Interface
+
+##### L3 Port-Channel Members
+
+| Interface | Description | Mode | Channel-Group |
+| --------- | ----------- | ---- | ------------- |
+{%     for ethernet_interface in ethernet_interfaces | arista.avd.natural_sort('name') %}
+{%         if ethernet_interface.channel_group.id is arista.avd.defined %}
+{%             set port_channel_interface_name = 'Port-Channel' ~ ethernet_interface.channel_group.id %}
+{%             set port_channel_interface = port_channel_interfaces | arista.avd.default([]) |
+                                                                      selectattr('name', 'arista.avd.defined', port_channel_interface_name) |
+                                                                      first %}
+{%             set description = ethernet_interface.description | arista.avd.default("-") %}
+{%             set mode = ethernet_interface.channel_group.mode | arista.avd.default('-') %}
+{%             set channel_group = ethernet_interface.channel_group.id %}
+| {{ ethernet_interface.name }} | {{ description }} | {{ mode }} | {{ channel_group }} |
+{%         endif %}
+{%     endfor %}
 {# Encapsulation #}
 {%     set encapsulation_dot1q_interfaces = [] %}
 {%     set flexencap_interfaces = [] %}

@@ -93,7 +93,7 @@ class RouterOspfMixin(Protocol):
         """
         Populates the list of OSPF-enabled interfaces for the given VRF.
 
-        This method iterates through L3 interfaces and SVIs, adding those that have OSPF enabled.
+        This method iterates through L3 interfaces, L3 Port-Channels and SVIs, adding those that have OSPF enabled.
 
         Args:
             process: The OSPF process configuration object.
@@ -105,6 +105,10 @@ class RouterOspfMixin(Protocol):
                     if node != self.shared_utils.hostname:
                         continue
                     process.no_passive_interfaces.append(l3_interface.interfaces[node_index])
+
+        for l3_port_channel in vrf.l3_port_channels:
+            if l3_port_channel.ospf.enabled:
+                process.no_passive_interfaces.append(l3_port_channel.name)
 
         for svi in vrf.svis:
             if svi.ospf.enabled:

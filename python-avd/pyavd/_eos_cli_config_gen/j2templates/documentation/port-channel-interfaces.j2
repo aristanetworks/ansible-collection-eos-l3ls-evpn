@@ -71,6 +71,22 @@
 | {{ port_channel_interface.name }} | {{ description }} | {{ mode }} | {{ switchport_vlans }} | {{ native_vlan }} | {{ trunk_groups }} | {{ lacp_fallback_timeout }} | {{ lacp_fallback_mode }} | {{ mlag }} | {{ esi }} |
 {%         endif %}
 {%     endfor %}
+
+##### L3 Port-Channel
+
+| Interface | Description | VRF | MTU | Shutdown | LACP Fallback Timeout | LACP Fallback Mode | MLAG ID | EVPN ESI |
+| --------- | ----------- | --- | --- | -------- | --------------------- | ------------------ | ------- | -------- |
+{%     for port_channel_interface in port_channel_interfaces | arista.avd.natural_sort('name') %}
+{%         set description = port_channel_interface.description | arista.avd.default("-") %}
+{%         set vrf = port_channel_interface.vrf | arista.avd.default("default") %}
+{%         set mtu = port_channel_interface.mtu | arista.avd.default("-") %}
+{%         set shutdown = port_channel_interface.shutdown | arista.avd.default("-") %}
+{%         set lacp_fallback_timeout = port_channel_interface.lacp_fallback_timeout | arista.avd.default("-") %}
+{%         set lacp_fallback_mode = port_channel_interface.lacp_fallback_mode | arista.avd.default("-") %}
+{%         set mlag = port_channel_interface.mlag | arista.avd.default("-") %}
+{%         set esi = port_channel_interface.evpn_ethernet_segment.identifier | arista.avd.default("-") %}
+| {{ port_channel_interface.name }} | {{ description }} | {{ vrf }} | {{ mtu }} | {{ shutdown }} | {{ lacp_fallback_timeout }} | {{ lacp_fallback_mode }} | {{ mlag }} | {{ esi }} |
+{%     endfor %}
 {# Encapsulation #}
 {%     set encapsulation_dot1q_interfaces = [] %}
 {%     set flexencap_interfaces = [] %}

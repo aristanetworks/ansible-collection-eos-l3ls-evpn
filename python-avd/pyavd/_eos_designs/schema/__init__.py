@@ -36518,6 +36518,418 @@ class EosDesigns(EosDesignsRootModel):
 
                     L3Interfaces._item_type = L3InterfacesItem
 
+                    class L3PortChannelsItem(AvdModel):
+                        """Subclass of AvdModel."""
+
+                        class Nodes(AvdList[str]):
+                            """Subclass of AvdList with `str` items."""
+
+                        Nodes._item_type = str
+
+                        class Descriptions(AvdList[str]):
+                            """Subclass of AvdList with `str` items."""
+
+                        Descriptions._item_type = str
+
+                        class MemberInterfacesItem(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {
+                                "name": {"type": str},
+                                "description": {"type": str},
+                                "peer": {"type": str},
+                                "peer_interface": {"type": str},
+                                "speed": {"type": str},
+                                "structured_config": {"type": EosCliConfigGen.EthernetInterfacesItem},
+                            }
+                            name: str
+                            """
+                            Ethernet interface name like 'Ethernet2'.
+                            Member interface cannot be subinterface.
+                            """
+                            description: str | None
+                            """
+                            Interface description for this member.
+                            If not set, a default description will be configured with
+                            '[<peer>[ <peer_interface>]]'.
+                            """
+                            peer: str | None
+                            """
+                            The peer device name. Used for description and documentation.
+                            If not set, this inherits the peer
+                            setting on the port-channel interface.
+                            """
+                            peer_interface: str | None
+                            """The peer device interface. Used for description and documentation."""
+                            speed: str | None
+                            """
+                            Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                            <interface_speed>`.
+                            """
+                            structured_config: EosCliConfigGen.EthernetInterfacesItem
+                            """Custom structured config for the member ethernet interface."""
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    name: str | UndefinedType = Undefined,
+                                    description: str | None | UndefinedType = Undefined,
+                                    peer: str | None | UndefinedType = Undefined,
+                                    peer_interface: str | None | UndefinedType = Undefined,
+                                    speed: str | None | UndefinedType = Undefined,
+                                    structured_config: EosCliConfigGen.EthernetInterfacesItem | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    MemberInterfacesItem.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        name:
+                                           Ethernet interface name like 'Ethernet2'.
+                                           Member interface cannot be subinterface.
+                                        description:
+                                           Interface description for this member.
+                                           If not set, a default description will be configured with
+                                           '[<peer>[ <peer_interface>]]'.
+                                        peer:
+                                           The peer device name. Used for description and documentation.
+                                           If not set, this inherits the peer
+                                           setting on the port-channel interface.
+                                        peer_interface: The peer device interface. Used for description and documentation.
+                                        speed:
+                                           Speed should be set in the format `<interface_speed>` or `forced <interface_speed>` or `auto
+                                           <interface_speed>`.
+                                        structured_config: Custom structured config for the member ethernet interface.
+
+                                    """
+
+                        class MemberInterfaces(AvdIndexedList[str, MemberInterfacesItem]):
+                            """Subclass of AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`)."""
+
+                            _primary_key: ClassVar[str] = "name"
+
+                        MemberInterfaces._item_type = MemberInterfacesItem
+
+                        class IpAddresses(AvdList[str]):
+                            """Subclass of AvdList with `str` items."""
+
+                        IpAddresses._item_type = str
+
+                        class Ospf(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            class MessageDigestKeysItem(AvdModel):
+                                """Subclass of AvdModel."""
+
+                                _fields: ClassVar[dict] = {"id": {"type": int}, "hash_algorithm": {"type": str, "default": "sha512"}, "key": {"type": str}}
+                                id: int | None
+                                hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"]
+                                """Default value: `"sha512"`"""
+                                key: str | None
+                                """Key password."""
+
+                                if TYPE_CHECKING:
+
+                                    def __init__(
+                                        self,
+                                        *,
+                                        id: int | None | UndefinedType = Undefined,
+                                        hash_algorithm: Literal["md5", "sha1", "sha256", "sha384", "sha512"] | UndefinedType = Undefined,
+                                        key: str | None | UndefinedType = Undefined,
+                                    ) -> None:
+                                        """
+                                        MessageDigestKeysItem.
+
+
+                                        Subclass of AvdModel.
+
+                                        Args:
+                                            id: id
+                                            hash_algorithm: hash_algorithm
+                                            key: Key password.
+
+                                        """
+
+                            class MessageDigestKeys(AvdList[MessageDigestKeysItem]):
+                                """Subclass of AvdList with `MessageDigestKeysItem` items."""
+
+                            MessageDigestKeys._item_type = MessageDigestKeysItem
+
+                            _fields: ClassVar[dict] = {
+                                "enabled": {"type": bool},
+                                "point_to_point": {"type": bool, "default": False},
+                                "area": {"type": str, "default": "0.0.0.0"},
+                                "cost": {"type": int},
+                                "authentication": {"type": str},
+                                "simple_auth_key": {"type": str},
+                                "message_digest_keys": {"type": MessageDigestKeys},
+                            }
+                            enabled: bool | None
+                            point_to_point: bool
+                            """Default value: `False`"""
+                            area: str
+                            """
+                            OSPF area ID.
+
+                            Default value: `"0.0.0.0"`
+                            """
+                            cost: int | None
+                            """OSPF link cost."""
+                            authentication: Literal["simple", "message-digest"] | None
+                            simple_auth_key: str | None
+                            """Password used with simple authentication."""
+                            message_digest_keys: MessageDigestKeys
+                            """Subclass of AvdList with `MessageDigestKeysItem` items."""
+
+                            if TYPE_CHECKING:
+
+                                def __init__(
+                                    self,
+                                    *,
+                                    enabled: bool | None | UndefinedType = Undefined,
+                                    point_to_point: bool | UndefinedType = Undefined,
+                                    area: str | UndefinedType = Undefined,
+                                    cost: int | None | UndefinedType = Undefined,
+                                    authentication: Literal["simple", "message-digest"] | None | UndefinedType = Undefined,
+                                    simple_auth_key: str | None | UndefinedType = Undefined,
+                                    message_digest_keys: MessageDigestKeys | UndefinedType = Undefined,
+                                ) -> None:
+                                    """
+                                    Ospf.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        enabled: enabled
+                                        point_to_point: point_to_point
+                                        area: OSPF area ID.
+                                        cost: OSPF link cost.
+                                        authentication: authentication
+                                        simple_auth_key: Password used with simple authentication.
+                                        message_digest_keys: Subclass of AvdList with `MessageDigestKeysItem` items.
+
+                                    """
+
+                        class FlowTracking(AvdModel):
+                            """Subclass of AvdModel."""
+
+                            _fields: ClassVar[dict] = {"enabled": {"type": bool}, "name": {"type": str}}
+                            enabled: bool | None
+                            name: str | None
+                            """Flow tracker name as defined in flow_tracking_settings."""
+
+                            if TYPE_CHECKING:
+
+                                def __init__(self, *, enabled: bool | None | UndefinedType = Undefined, name: str | None | UndefinedType = Undefined) -> None:
+                                    """
+                                    FlowTracking.
+
+
+                                    Subclass of AvdModel.
+
+                                    Args:
+                                        enabled: enabled
+                                        name: Flow tracker name as defined in flow_tracking_settings.
+
+                                    """
+
+                        _fields: ClassVar[dict] = {
+                            "name": {"type": str},
+                            "nodes": {"type": Nodes},
+                            "description": {"type": str},
+                            "descriptions": {"type": Descriptions},
+                            "mode": {"type": str, "default": "active"},
+                            "member_interfaces": {"type": MemberInterfaces},
+                            "ip_address": {"type": str},
+                            "ip_addresses": {"type": IpAddresses},
+                            "encapsulation_dot1q_vlan": {"type": int},
+                            "enabled": {"type": bool, "default": True},
+                            "peer": {"type": str},
+                            "peer_port_channel": {"type": str},
+                            "mtu": {"type": int},
+                            "ipv4_acl_in": {"type": str},
+                            "ipv4_acl_out": {"type": str},
+                            "ospf": {"type": Ospf},
+                            "flow_tracking": {"type": FlowTracking},
+                            "structured_config": {"type": EosCliConfigGen.PortChannelInterfacesItem},
+                            "raw_eos_cli": {"type": str},
+                        }
+                        name: str
+                        """
+                        Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                        For a
+                        Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                        """
+                        nodes: Nodes
+                        """Subclass of AvdList with `str` items."""
+                        description: str | None
+                        """
+                        Interface description.
+                        If not set, a default description will be configured with '[<peer>[
+                        <peer_port_channel>]]'.
+                        """
+                        descriptions: Descriptions
+                        """
+                        "descriptions" has precedence over "description".
+
+
+                        Subclass of AvdList with `str` items.
+                        """
+                        mode: Literal["active", "passive", "on"]
+                        """
+                        Port-Channel mode.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Default value: `"active"`
+                        """
+                        member_interfaces: MemberInterfaces
+                        """
+                        Port-Channel member interfaces.
+                        Should not be set on Port-Channel subinterfaces.
+
+                        Subclass of
+                        AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                        """
+                        ip_address: str | None
+                        """IPv4 address/Mask."""
+                        ip_addresses: IpAddresses
+                        """Subclass of AvdList with `str` items."""
+                        encapsulation_dot1q_vlan: int | None
+                        """
+                        For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                        specified.
+                        """
+                        enabled: bool
+                        """
+                        Enable or Shutdown the interface.
+
+                        Default value: `True`
+                        """
+                        peer: str | None
+                        """The peer device name. Used for description and documentation."""
+                        peer_port_channel: str | None
+                        """The peer device port-channel interface. Used for description and documentation."""
+                        mtu: int | None
+                        """MTU can only be set on the parent Port-Channel."""
+                        ipv4_acl_in: str | None
+                        """Name of the IPv4 access-list to be assigned in the ingress direction."""
+                        ipv4_acl_out: str | None
+                        """Name of the IPv4 Access-list to be assigned in the egress direction."""
+                        ospf: Ospf
+                        """
+                        OSPF interface configuration.
+
+                        Subclass of AvdModel.
+                        """
+                        flow_tracking: FlowTracking
+                        """
+                        Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                        setting.
+
+                        Subclass of AvdModel.
+                        """
+                        structured_config: EosCliConfigGen.PortChannelInterfacesItem
+                        """
+                        Custom structured config added under port_channel_interfaces.[name=<interface>] for
+                        eos_cli_config_gen.
+                        """
+                        raw_eos_cli: str | None
+                        """EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration."""
+
+                        if TYPE_CHECKING:
+
+                            def __init__(
+                                self,
+                                *,
+                                name: str | UndefinedType = Undefined,
+                                nodes: Nodes | UndefinedType = Undefined,
+                                description: str | None | UndefinedType = Undefined,
+                                descriptions: Descriptions | UndefinedType = Undefined,
+                                mode: Literal["active", "passive", "on"] | UndefinedType = Undefined,
+                                member_interfaces: MemberInterfaces | UndefinedType = Undefined,
+                                ip_address: str | None | UndefinedType = Undefined,
+                                ip_addresses: IpAddresses | UndefinedType = Undefined,
+                                encapsulation_dot1q_vlan: int | None | UndefinedType = Undefined,
+                                enabled: bool | UndefinedType = Undefined,
+                                peer: str | None | UndefinedType = Undefined,
+                                peer_port_channel: str | None | UndefinedType = Undefined,
+                                mtu: int | None | UndefinedType = Undefined,
+                                ipv4_acl_in: str | None | UndefinedType = Undefined,
+                                ipv4_acl_out: str | None | UndefinedType = Undefined,
+                                ospf: Ospf | UndefinedType = Undefined,
+                                flow_tracking: FlowTracking | UndefinedType = Undefined,
+                                structured_config: EosCliConfigGen.PortChannelInterfacesItem | UndefinedType = Undefined,
+                                raw_eos_cli: str | None | UndefinedType = Undefined,
+                            ) -> None:
+                                """
+                                L3PortChannelsItem.
+
+
+                                Subclass of AvdModel.
+
+                                Args:
+                                    name:
+                                       Port-Channel interface name like 'Port-Channel2' or subinterface name like 'Port-Channel2.42'.
+                                       For a
+                                       Port-Channel subinterface, the parent Port-Channel interface must be defined as well.
+                                    nodes: Subclass of AvdList with `str` items.
+                                    description:
+                                       Interface description.
+                                       If not set, a default description will be configured with '[<peer>[
+                                       <peer_port_channel>]]'.
+                                    descriptions:
+                                       "descriptions" has precedence over "description".
+
+
+                                       Subclass of AvdList with `str` items.
+                                    mode:
+                                       Port-Channel mode.
+                                       Should not be set on Port-Channel subinterfaces.
+                                    member_interfaces:
+                                       Port-Channel member interfaces.
+                                       Should not be set on Port-Channel subinterfaces.
+
+                                       Subclass of
+                                       AvdIndexedList with `MemberInterfacesItem` items. Primary key is `name` (`str`).
+                                    ip_address: IPv4 address/Mask.
+                                    ip_addresses: Subclass of AvdList with `str` items.
+                                    encapsulation_dot1q_vlan:
+                                       For subinterfaces the dot1q vlan is derived from the interface name by default, but can also be
+                                       specified.
+                                    enabled: Enable or Shutdown the interface.
+                                    peer: The peer device name. Used for description and documentation.
+                                    peer_port_channel: The peer device port-channel interface. Used for description and documentation.
+                                    mtu: MTU can only be set on the parent Port-Channel.
+                                    ipv4_acl_in: Name of the IPv4 access-list to be assigned in the ingress direction.
+                                    ipv4_acl_out: Name of the IPv4 Access-list to be assigned in the egress direction.
+                                    ospf:
+                                       OSPF interface configuration.
+
+                                       Subclass of AvdModel.
+                                    flow_tracking:
+                                       Configures flow-tracking on the interface. Overrides `fabric_flow_tracking.l3_port_channels`
+                                       setting.
+
+                                       Subclass of AvdModel.
+                                    structured_config:
+                                       Custom structured config added under port_channel_interfaces.[name=<interface>] for
+                                       eos_cli_config_gen.
+                                    raw_eos_cli: EOS CLI rendered directly on the Port-Channel interface in the final EOS configuration.
+
+                                """
+
+                    class L3PortChannels(AvdIndexedList[str, L3PortChannelsItem]):
+                        """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
+
+                        _primary_key: ClassVar[str] = "name"
+
+                    L3PortChannels._item_type = L3PortChannelsItem
+
                     class LoopbacksItem(AvdModel):
                         """Subclass of AvdModel."""
 
@@ -37919,6 +38331,7 @@ class EosDesigns(EosDesignsRootModel):
                         "evpn_l2_multi_domain": {"type": bool},
                         "svis": {"type": Svis},
                         "l3_interfaces": {"type": L3Interfaces},
+                        "l3_port_channels": {"type": L3PortChannels},
                         "loopbacks": {"type": Loopbacks},
                         "static_routes": {"type": StaticRoutes},
                         "ipv6_static_routes": {"type": Ipv6StaticRoutes},
@@ -38092,6 +38505,8 @@ class EosDesigns(EosDesignsRootModel):
 
                     Subclass of AvdList with `L3InterfacesItem` items.
                     """
+                    l3_port_channels: L3PortChannels
+                    """Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`)."""
                     loopbacks: Loopbacks
                     """
                     List of Loopback interfaces.
@@ -38193,6 +38608,7 @@ class EosDesigns(EosDesignsRootModel):
                             evpn_l2_multi_domain: bool | None | UndefinedType = Undefined,
                             svis: Svis | UndefinedType = Undefined,
                             l3_interfaces: L3Interfaces | UndefinedType = Undefined,
+                            l3_port_channels: L3PortChannels | UndefinedType = Undefined,
                             loopbacks: Loopbacks | UndefinedType = Undefined,
                             static_routes: StaticRoutes | UndefinedType = Undefined,
                             ipv6_static_routes: Ipv6StaticRoutes | UndefinedType = Undefined,
@@ -38330,6 +38746,7 @@ class EosDesigns(EosDesignsRootModel):
 
 
                                    Subclass of AvdList with `L3InterfacesItem` items.
+                                l3_port_channels: Subclass of AvdIndexedList with `L3PortChannelsItem` items. Primary key is `name` (`str`).
                                 loopbacks:
                                    List of Loopback interfaces.
                                    This will create Loopback interfaces inside the VRF.
@@ -39125,16 +39542,14 @@ class EosDesigns(EosDesignsRootModel):
                 """
                 vrfs: Vrfs
                 """
-                VRFs will only be configured on a node if any of the underlying objects like `svis` or
-                `l3_interfaces` apply to the node.
+                VRFs will only be configured on a node if any of the underlying objects like `svis`, `l3_interfaces`
+                or `l3_port_channels` apply to the node.
 
-                It is recommended to only define a VRF in one Tenant. If the
-                same VRF name is used across multiple tenants and those tenants
-                are accepted by `filter.tenants` on
-                the node, any object set under the duplicate VRFs must either be unique or be an exact match.
-
-                VRF
-                "default" is partially supported under network-services. Currently the supported options for
+                It is recommended to only define a VRF in one Tenant. If
+                the same VRF name is used across multiple tenants and those tenants
+                are accepted by `filter.tenants`
+                on the node, any object set under the duplicate VRFs must either be unique or be an exact match.
+                VRF "default" is partially supported under network-services. Currently the supported options for
                 "default" vrf are route-target,
                 route-distinguisher settings, structured_config, raw_eos_cli in bgp
                 and SVIs are the only supported interface type.
@@ -39313,16 +39728,14 @@ class EosDesigns(EosDesignsRootModel):
                                Subclass of AvdModel.
                             evpn_l2_multi_domain: Explicitly extend all VLANs/VLAN-Aware Bundles inside the tenant to remote EVPN domains.
                             vrfs:
-                               VRFs will only be configured on a node if any of the underlying objects like `svis` or
-                               `l3_interfaces` apply to the node.
+                               VRFs will only be configured on a node if any of the underlying objects like `svis`, `l3_interfaces`
+                               or `l3_port_channels` apply to the node.
 
-                               It is recommended to only define a VRF in one Tenant. If the
-                               same VRF name is used across multiple tenants and those tenants
-                               are accepted by `filter.tenants` on
-                               the node, any object set under the duplicate VRFs must either be unique or be an exact match.
-
-                               VRF
-                               "default" is partially supported under network-services. Currently the supported options for
+                               It is recommended to only define a VRF in one Tenant. If
+                               the same VRF name is used across multiple tenants and those tenants
+                               are accepted by `filter.tenants`
+                               on the node, any object set under the duplicate VRFs must either be unique or be an exact match.
+                               VRF "default" is partially supported under network-services. Currently the supported options for
                                "default" vrf are route-target,
                                route-distinguisher settings, structured_config, raw_eos_cli in bgp
                                and SVIs are the only supported interface type.

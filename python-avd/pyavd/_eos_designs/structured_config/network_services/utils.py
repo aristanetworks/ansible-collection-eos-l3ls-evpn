@@ -8,8 +8,9 @@ from functools import cached_property
 from re import fullmatch as re_fullmatch
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError
-from pyavd._utils import default, get, get_ip_from_ip_prefix
+from pyavd._errors import AristaAvdError, AristaAvdInvalidInputsError, AristaAvdMissingVariableError
+from pyavd._utils import default, get, get_ip_from_ip_prefix, strip_empties_from_dict
+from pyavd.api.interface_descriptions import InterfaceDescriptionData
 from pyavd.j2filters import natural_sort
 
 if TYPE_CHECKING:
@@ -435,3 +436,93 @@ class UtilsMixin(Protocol):
 
         # Default to the specified router ID
         return router_id
+
+    def _get_l3_port_channel_cfg(
+        self: AvdStructuredConfigNetworkServicesProtocol,
+        l3_port_channel: EosDesigns._DynamicKeys.DynamicNetworkServicesItem.NetworkServicesItem.L3PortChannelsItem,
+        node_index: int,
+        vrf_name: str,
+        vrf_ospf_enabled: bool,
+    ) -> dict:
+        """Returns structured_configuration for one L3 Port-Channel."""
+        node_type_in_schema = "l3_port_channels"
+
+        interface = {
+            "name": l3_port_channel.name,
+            "peer": l3_port_channel.peer,
+            "mtu": l3_port_channel.mtu if self.shared_utils.platform_settings.feature_support.per_interface_mtu else None,
+            "shutdown": not l3_port_channel.enabled,
+            "switchport": {"enabled": False if "." not in l3_port_channel.name else None},
+            "eos_cli": l3_port_channel.raw_eos_cli,
+            "flow_tracker": self.shared_utils.get_flow_tracker(l3_port_channel.flow_tracking),
+            "access_group_in": l3_port_channel.ipv4_acl_in if l3_port_channel.ipv4_acl_in else None,
+            "access_group_out": l3_port_channel.ipv4_acl_out if l3_port_channel.ipv4_acl_out else None,
+            "vrf": vrf_name if vrf_name != "default" else None,
+            "peer_type": "l3_port_channel",
+            "peer_interface": l3_port_channel.peer_port_channel if l3_port_channel.peer_port_channel else None,
+        }
+
+        if l3_port_channel.ospf.enabled and vrf_ospf_enabled:
+            interface["ospf_area"] = l3_port_channel.ospf.area
+            interface["ospf_network_point_to_point"] = l3_port_channel.ospf.point_to_point
+            interface["ospf_cost"] = l3_port_channel.ospf.cost
+            ospf_authentication = l3_port_channel.ospf.authentication
+            if ospf_authentication == "simple" and (ospf_simple_auth_key := l3_port_channel.ospf.simple_auth_key) is not None:
+                interface["ospf_authentication"] = ospf_authentication
+                interface["ospf_authentication_key"] = ospf_simple_auth_key
+            elif ospf_authentication == "message-digest" and (ospf_message_digest_keys := l3_port_channel.ospf.message_digest_keys) is not None:
+                ospf_keys = []
+                for ospf_key in ospf_message_digest_keys:
+                    if not (ospf_key.id and ospf_key.key):
+                        continue
+
+                    ospf_keys.append(
+                        {
+                            "id": ospf_key.id,
+                            "hash_algorithm": ospf_key.hash_algorithm,
+                            "key": ospf_key.key,
+                        },
+                    )
+
+                if ospf_keys:
+                    interface["ospf_authentication"] = ospf_authentication
+                    interface["ospf_message_digest_keys"] = ospf_keys
+
+        ip_address = None
+        if l3_port_channel.ip_address:
+            ip_address = l3_port_channel.ip_address
+        if l3_port_channel.ip_addresses:
+            ip_address = l3_port_channel.ip_addresses[node_index]
+        if ip_address:
+            interface["ip_address"] = ip_address
+
+        is_subinterface = "." in l3_port_channel.name
+        if is_subinterface:
+            interface["encapsulation_dot1q"] = {"vlan": default(l3_port_channel.encapsulation_dot1q_vlan, int(l3_port_channel.name.split(".", maxsplit=1)[-1]))}
+            if not ip_address:
+                msg = f"{self.shared_utils.node_type_key_data.key}.nodes[name={self.shared_utils.hostname}].{node_type_in_schema}"
+                msg += f"[name={l3_port_channel.name}].ip_address"
+                raise AristaAvdMissingVariableError(msg)
+
+        interface_description = None
+        if l3_port_channel.description:
+            interface_description = l3_port_channel.description
+        if l3_port_channel.descriptions:
+            interface_description = l3_port_channel.descriptions[node_index]
+        if not interface_description:
+            interface_description = self.shared_utils.interface_descriptions.underlay_port_channel_interface(
+                InterfaceDescriptionData(
+                    shared_utils=self.shared_utils,
+                    interface=l3_port_channel.name,
+                    peer=l3_port_channel.peer,
+                    peer_interface=l3_port_channel.peer_port_channel,
+                ),
+            )
+        interface["description"] = interface_description
+
+        if l3_port_channel.structured_config:
+            self.custom_structured_configs.nested.port_channel_interfaces.obtain(l3_port_channel.name)._deepmerge(
+                l3_port_channel.structured_config, list_merge=self.custom_structured_configs.list_merge_strategy
+            )
+
+        return strip_empties_from_dict(interface)

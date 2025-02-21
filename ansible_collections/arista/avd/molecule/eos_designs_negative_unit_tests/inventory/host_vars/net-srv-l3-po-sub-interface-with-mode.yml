@@ -1,0 +1,46 @@
+---
+type: l3leaf
+l3leaf:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    loopback_ipv4_offset: 8
+    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    virtual_router_mac_address: 00:dc:00:00:00:0a
+  nodes:
+    - name: net-srv-l3-po-sub-interface-with-mode
+      id: 101
+      bgp_as: 101
+
+tenants:
+  - name: L3PO
+    mac_vrf_vni_base: 10000
+    vrfs:
+      - name: TESTING
+        vrf_id: 2
+        l3_port_channels:
+          - name: Port-Channel1111
+            mode: active
+            peer: inet-cloud
+            peer_port_channel: Po1111
+            enabled: true
+            nodes:
+              - net-srv-l3-po-sub-interface-with-mode
+            member_interfaces:
+              - name: Ethernet4
+                peer_interface: Ethernet8
+                peer: inet-cloud
+              - name: Ethernet5
+                peer_interface: Ethernet9
+                peer: inet-cloud
+          - name: Port-Channel1111.100
+            mode: active
+            peer: inet-cloud-sub100
+            peer_port_channel: Po1111.100
+            enabled: true
+            ip_addresses:
+              - 1.1.1.2/29
+            nodes:
+              - net-srv-l3-po-sub-interface-with-mode
+
+expected_error_message: >-
+  L3 Port-Channel sub-interface 'Port-Channel1111.100' has 'mode' set. This is not a valid setting.
