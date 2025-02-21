@@ -147,6 +147,7 @@ class RouterBgpMixin(Protocol):
                     vrf_address_families.add("evpn")
 
                 if vrf_address_families:
+                    bgp_vrf.rd = self.get_vrf_rd(vrf, tenant)
                     # The called function in-place updates the bgp_vrf dict.
                     self._update_router_bgp_vrf_evpn_or_mpls_cfg(bgp_vrf, vrf, vrf_address_families)
 
@@ -233,7 +234,6 @@ class RouterBgpMixin(Protocol):
         vrf_address_families: set[str],
     ) -> None:
         """In-place update EVPN/MPLS part of structured config for *one* VRF under router_bgp.vrfs."""
-        bgp_vrf.rd = self.get_vrf_rd(vrf)
         vrf_rt = self.get_vrf_rt(vrf)
         route_targets = {"import": [], "export": []}
 
@@ -495,7 +495,7 @@ class RouterBgpMixin(Protocol):
         bundle = self._router_bgp_vlan_aware_bundle(
             name=evpn_vlan_bundle.name,
             vlans=vlans,
-            rd=self.get_vlan_aware_bundle_rd(id=evpn_vlan_bundle.id, tenant=tenant, is_vrf=False, rd_override=evpn_vlan_bundle.rd_override),
+            rd=self.get_vlan_aware_bundle_rd(id=evpn_vlan_bundle.id, vrf=None, tenant=tenant, rd_override=evpn_vlan_bundle.rd_override),
             rt=self.get_vlan_aware_bundle_rt(
                 id=evpn_vlan_bundle.id,
                 vni=evpn_vlan_bundle.id,
@@ -585,7 +585,7 @@ class RouterBgpMixin(Protocol):
         return self._router_bgp_vlan_aware_bundle(
             name=vrf.name,
             vlans=svis,
-            rd=self.get_vlan_aware_bundle_rd(id=self.shared_utils.get_vrf_id(vrf), tenant=tenant, is_vrf=True),
+            rd=self.get_vlan_aware_bundle_rd(id=self.shared_utils.get_vrf_id(vrf), vrf=vrf, tenant=tenant),
             rt=self.get_vlan_aware_bundle_rt(id=self.shared_utils.get_vrf_id(vrf), vni=self.shared_utils.get_vrf_vni(vrf), tenant=tenant, is_vrf=True),
             evpn_l2_multi_domain=default(vrf.evpn_l2_multi_domain, tenant.evpn_l2_multi_domain),
             tenant=tenant,
