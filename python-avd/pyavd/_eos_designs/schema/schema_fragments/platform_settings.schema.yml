@@ -113,6 +113,10 @@ keys:
                 Do not advertise reachability to a prefix until that prefix has been installed in hardware.
                 This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.
                 Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.
+            all_active_multihoming:
+              type: bool
+              default: false
+              description: Supports the configuration for the all-active EVPN gateway redundancy model.
         management_interface:
           type: str
           default: Management1
@@ -216,6 +220,8 @@ keys:
           mlag: 900
           non_mlag: 1020
         tcam_profile: vxlan-routing
+        feature_support:
+          all_active_multihoming: true
       - platforms:
           - 7500R
           - 7500R2
@@ -233,6 +239,8 @@ keys:
           mlag: 900
           non_mlag: 1020
         tcam_profile: vxlan-routing
+        feature_support:
+          all_active_multihoming: true
       - platforms:
           - 7358X4
         management_interface: Management1/1

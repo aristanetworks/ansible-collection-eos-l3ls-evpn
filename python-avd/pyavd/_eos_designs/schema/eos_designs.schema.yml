@@ -3354,6 +3354,11 @@ keys:
                 Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.
 
                 '
+            all_active_multihoming:
+              type: bool
+              default: false
+              description: Supports the configuration for the all-active EVPN gateway
+                redundancy model.
         management_interface:
           type: str
           default: Management1
@@ -3456,6 +3461,8 @@ keys:
         mlag: 900
         non_mlag: 1020
       tcam_profile: vxlan-routing
+      feature_support:
+        all_active_multihoming: true
     - platforms:
       - 7500R
       - 7500R2
@@ -3473,6 +3480,8 @@ keys:
         mlag: 900
         non_mlag: 1020
       tcam_profile: vxlan-routing
+      feature_support:
+        all_active_multihoming: true
     - platforms:
       - 7358X4
       management_interface: Management1/1
@@ -8568,6 +8577,42 @@ $defs:
                   inter_domain:
                     type: bool
                     default: true
+              all_active_multihoming:
+                description: Enable Active Active Multihoming architecture for EVPN
+                  Gateways. Not supported with MLAG.
+                type: dict
+                keys:
+                  enabled:
+                    description: Enable Active Active Multihoming resiliency model.
+                    type: bool
+                    default: false
+                  enable_d_path:
+                    description: Enable D-path for use with BGP bestpath selection
+                      algorithm.
+                    type: bool
+                    default: true
+                  domain_identifier:
+                    description: ASN(asplain):local_admin or ASN(asdot):local_admin
+                      notation
+                    type: str
+                    required: true
+                  domain_identifier_remote:
+                    description: ASN(asplain):local_admin or ASN(asdot):local_admin
+                      notation
+                    type: str
+                    required: true
+                  evpn_ethernet_segment:
+                    type: dict
+                    required: true
+                    keys:
+                      identifier:
+                        description: EVPN Ethernet Segment Identifier (Type 1 format)
+                        type: str
+                        required: true
+                      rt_import:
+                        description: Low-order 6 bytes of ES-Import Route Target.
+                        type: str
+                        required: true
           ipvpn_gateway:
             documentation_options:
               table: node-type-evpn-ipvpn-gateway-configuration

@@ -9,24 +9,6 @@ eos_cli: "interface Loopback1002\n  description Loopback created from raw_eos_cl
   \ description Loopback created from raw_eos_cli under platform_settings vEOS-LAB\n\ninterface Loopback1000\n  description Loopback
   created from raw_eos_cli under VRF Common_VRF\n"
 ethernet_interfaces:
-- name: Ethernet5
-  description: MLAG_DC1.POD1.LEAF2A_Ethernet5
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-  peer: DC1.POD1.LEAF2A
-  peer_interface: Ethernet5
-  peer_type: mlag_peer
-- name: Ethernet6
-  description: MLAG_DC1.POD1.LEAF2A_Ethernet6
-  shutdown: false
-  channel_group:
-    id: 5
-    mode: active
-  peer: DC1.POD1.LEAF2A
-  peer_interface: Ethernet6
-  peer_type: mlag_peer
 - name: Ethernet1
   description: P2P_DC1-POD1-SPINE1_Ethernet5
   shutdown: false
@@ -200,7 +182,7 @@ loopback_interfaces:
 - name: Loopback1
   description: VXLAN_TUNNEL_SOURCE
   shutdown: false
-  ip_address: 172.18.110.4/32
+  ip_address: 172.18.110.5/32
 - name: Loopback102
   description: DIAG_VRF_vrf_with_loopbacks_dc1_pod1_only
   shutdown: false
@@ -234,28 +216,10 @@ metadata:
   pod_name: DC1_POD1
   dc_name: DC1
   fabric_name: TWODC_5STAGE_CLOS
-mlag_configuration:
-  domain_id: RACK2_MLAG
-  local_interface: Vlan4094
-  peer_address: 172.20.110.2
-  peer_link: Port-Channel5
-  reload_delay_mlag: '300'
-  reload_delay_non_mlag: '330'
 port_channel_interfaces:
-- name: Port-Channel5
-  description: MLAG_DC1.POD1.LEAF2A_Port-Channel5
-  shutdown: false
-  service_profile: QOS-PROFILE
-  switchport:
-    enabled: true
-    mode: trunk
-    trunk:
-      groups:
-      - MLAG
 - name: Port-Channel3
   description: L2_RACK2_MLAG_Port-Channel1
   shutdown: false
-  mlag: 3
   service_profile: QOS-PROFILE
   switchport:
     enabled: true
@@ -265,7 +229,6 @@ port_channel_interfaces:
 - name: Port-Channel16
   description: PortChannel
   shutdown: false
-  mlag: 16
   service_profile: bar
   switchport:
     enabled: true
@@ -274,7 +237,6 @@ port_channel_interfaces:
 - name: Port-Channel17
   description: Set using structured_config on server adapter port-channel
   shutdown: false
-  mlag: 17
   service_profile: foo
   switchport:
     enabled: true
@@ -283,7 +245,6 @@ port_channel_interfaces:
 - name: Port-Channel18
   description: PortChannel
   shutdown: false
-  mlag: 18
   service_profile: foo
   switchport:
     enabled: true
@@ -299,7 +260,6 @@ port_channel_interfaces:
 - name: Port-Channel19
   description: PortChannel
   shutdown: false
-  mlag: 19
   service_profile: foo
   switchport:
     enabled: true
@@ -313,13 +273,6 @@ port_channel_interfaces:
 
     '
 route_maps:
-- name: RM-MLAG-PEER-IN
-  sequence_numbers:
-  - sequence: 10
-    type: permit
-    description: Make routes learned over MLAG Peer-link less preferred on spines to ensure optimal routing
-    set:
-    - origin incomplete
 - name: RM-EVPN-FILTER-AS65101
   sequence_numbers:
   - sequence: 10
@@ -362,16 +315,9 @@ router_bgp:
   bgp:
     default:
       ipv4_unicast: false
+    bestpath:
+      d_path: true
   peer_groups:
-  - name: MLAG-IPv4-UNDERLAY-PEER
-    type: ipv4
-    remote_as: '65112.100'
-    description: DC1.POD1.LEAF2A
-    next_hop_self: true
-    password: vnEaG8gMeQf3d3cN6PktXQ==
-    send_community: all
-    maximum_routes: 12000
-    route_map_in: RM-MLAG-PEER-IN
   - name: IPv4-UNDERLAY-PEERS
     type: ipv4
     password: AQQvKeimxJu+uGQ/yYvv9w==
@@ -393,10 +339,6 @@ router_bgp:
     send_community: all
     maximum_routes: 0
   neighbors:
-  - ip_address: 172.20.110.2
-    peer_group: MLAG-IPv4-UNDERLAY-PEER
-    peer: DC1.POD1.LEAF2A
-    description: DC1.POD1.LEAF2A_Vlan4094
   - ip_address: 172.17.110.16
     peer_group: IPv4-UNDERLAY-PEERS
     remote_as: '65110.100'
@@ -556,6 +498,8 @@ router_bgp:
 
       '
   address_family_evpn:
+    domain_identifier: '65100:1'
+    domain_identifier_remote: '65200:2'
     neighbor_default:
       next_hop_self_received_evpn_routes:
         enable: true
@@ -568,6 +512,10 @@ router_bgp:
       activate: true
     route:
       import_match_failure_action: discard
+    evpn_ethernet_segment:
+    - domain: all
+      identifier: 0000:0001:0001:0000:0508
+      route_target_import: 00:00:00:00:07:08
   address_family_rtc:
     peer_groups:
     - name: EVPN-OVERLAY-CORE
@@ -576,8 +524,6 @@ router_bgp:
       activate: true
   address_family_ipv4:
     peer_groups:
-    - name: MLAG-IPv4-UNDERLAY-PEER
-      activate: true
     - name: IPv4-UNDERLAY-PEERS
       activate: true
     - name: EVPN-OVERLAY-PEERS
@@ -660,7 +606,6 @@ spanning_tree:
   mst_instances:
   - id: '0'
     priority: 4096
-  no_spanning_tree_vlan: '4094'
 static_routes:
 - vrf: MGMT
   destination_address_prefix: 0.0.0.0/0
@@ -675,11 +620,6 @@ virtual_source_nat_vrfs:
   ip_address: 10.101.101.5
   ipv6_address: 2001:db8:1::3
 vlan_interfaces:
-- name: Vlan4094
-  description: MLAG
-  shutdown: false
-  ip_address: 172.20.110.3/31
-  no_autostate: true
 - name: Vlan110
   description: set from structured_config on svi (was Tenant_A_OP_Zone_1)
   shutdown: false
@@ -749,7 +689,7 @@ vlan_interfaces:
 - name: Vlan4085
   description: L2LEAF_INBAND_MGMT
   shutdown: false
-  ip_address: 172.21.110.3/24
+  ip_address: 172.21.110.2/24
   ip_virtual_router_addresses:
   - 172.21.110.1
   ip_attached_host_route_export:
@@ -761,11 +701,6 @@ vlan_internal_order:
     beginning: 1006
     ending: 1199
 vlans:
-- id: 4094
-  name: MLAG
-  trunk_groups:
-  - MLAG
-  tenant: system
 - id: 110
   name: Tenant_A_OP_Zone_1
   tenant: Tenant_A
@@ -820,7 +755,6 @@ vxlan_interface:
     vxlan:
       source_interface: Loopback1
       udp_port: 4789
-      virtual_router_encapsulation_mac_address: mlag-system-id
       vlans:
       - id: 110
         vni: 10110

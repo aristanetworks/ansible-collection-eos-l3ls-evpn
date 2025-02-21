@@ -250,6 +250,22 @@ class RouterBgpMixin(Protocol):
                         "activate": True,
                     },
                 )
+                if self.shared_utils.node_config.evpn_gateway.all_active_multihoming.enabled is True:
+                    if self.shared_utils.node_config.mlag is True:
+                        msg = "The All Active Multihoming resiliency model does not support MLAG, ensure the mlag key is set to false for the node"
+                        raise AristaAvdError(msg)
+                    if self.shared_utils.platform_settings.feature_support.all_active_multihoming is False:
+                        msg = "The All Active Multihoming resiliency model is not supported by this platform, refer to platform_settings -> feature_support"
+                        raise AristaAvdError(msg)
+                    address_family_evpn["domain_identifier"] = self.shared_utils.node_config.evpn_gateway.all_active_multihoming.domain_identifier
+                    address_family_evpn["domain_identifier_remote"] = self.shared_utils.node_config.evpn_gateway.all_active_multihoming.domain_identifier_remote
+                    address_family_evpn["evpn_ethernet_segment"] = [
+                        {
+                            "domain": "all",
+                            "identifier": self.shared_utils.node_config.evpn_gateway.all_active_multihoming.evpn_ethernet_segment.identifier,
+                            "route_target_import": self.shared_utils.node_config.evpn_gateway.all_active_multihoming.evpn_ethernet_segment.rt_import,
+                        }
+                    ]
 
             if self.shared_utils.node_config.evpn_gateway.evpn_l3.enabled:
                 address_family_evpn["neighbor_default"] = {
@@ -298,7 +314,7 @@ class RouterBgpMixin(Protocol):
                     "import_match_failure_action": "discard",
                 }
 
-        if self.shared_utils.overlay_dpath is True:
+        if self.shared_utils.overlay_dpath is True and self.shared_utils.overlay_ipvpn_gateway is True:
             address_family_evpn["domain_identifier"] = self.shared_utils.node_config.ipvpn_gateway.evpn_domain_id
 
         if self.shared_utils.is_wan_server:
@@ -471,7 +487,7 @@ class RouterBgpMixin(Protocol):
         if peer_groups:
             address_family_vpn_ipvx["peer_groups"] = peer_groups
 
-        if self.shared_utils.overlay_dpath is True:
+        if self.shared_utils.overlay_dpath is True and self.shared_utils.overlay_ipvpn_gateway is True:
             address_family_vpn_ipvx["domain_identifier"] = self.shared_utils.node_config.ipvpn_gateway.ipvpn_domain_id
 
         return address_family_vpn_ipvx

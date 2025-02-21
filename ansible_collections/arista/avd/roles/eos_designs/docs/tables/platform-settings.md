@@ -25,6 +25,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;per_interface_mtu</samp>](## "custom_platform_settings.[].feature_support.per_interface_mtu") | Boolean |  | `True` |  | Support for configuration of per interface MTU for p2p links, MLAG SVIs and Network Services.<br>Effectively this means that all settings regarding interface MTU will be ignored if this is false.<br>Platforms without support for per interface MTU can use a single default interface MTU setting. Set this via "default_interface_mtu"<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bgp_update_wait_install</samp>](## "custom_platform_settings.[].feature_support.bgp_update_wait_install") | Boolean |  | `True` |  | Disables FIB updates and route advertisement when the BGP instance is initiated until the BGP convergence state is reached.<br>Can be overridden by setting "bgp_update_wait_install" host/group_vars.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bgp_update_wait_for_convergence</samp>](## "custom_platform_settings.[].feature_support.bgp_update_wait_for_convergence") | Boolean |  | `True` |  | Do not advertise reachability to a prefix until that prefix has been installed in hardware.<br>This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.<br>Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all_active_multihoming</samp>](## "custom_platform_settings.[].feature_support.all_active_multihoming") | Boolean |  | `False` |  | Supports the configuration for the all-active EVPN gateway redundancy model. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;management_interface</samp>](## "custom_platform_settings.[].management_interface") | String |  | `Management1` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;security_entropy_sources</samp>](## "custom_platform_settings.[].security_entropy_sources") | Dictionary |  |  |  | Entropy source improves the randomness of the numbers used to generate MACsec's cryptographic keys. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hardware</samp>](## "custom_platform_settings.[].security_entropy_sources.hardware") | Boolean |  |  |  | Use a hardware based source. |
@@ -51,6 +52,7 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;per_interface_mtu</samp>](## "platform_settings.[].feature_support.per_interface_mtu") | Boolean |  | `True` |  | Support for configuration of per interface MTU for p2p links, MLAG SVIs and Network Services.<br>Effectively this means that all settings regarding interface MTU will be ignored if this is false.<br>Platforms without support for per interface MTU can use a single default interface MTU setting. Set this via "default_interface_mtu"<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bgp_update_wait_install</samp>](## "platform_settings.[].feature_support.bgp_update_wait_install") | Boolean |  | `True` |  | Disables FIB updates and route advertisement when the BGP instance is initiated until the BGP convergence state is reached.<br>Can be overridden by setting "bgp_update_wait_install" host/group_vars.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;bgp_update_wait_for_convergence</samp>](## "platform_settings.[].feature_support.bgp_update_wait_for_convergence") | Boolean |  | `True` |  | Do not advertise reachability to a prefix until that prefix has been installed in hardware.<br>This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.<br>Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.<br> |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all_active_multihoming</samp>](## "platform_settings.[].feature_support.all_active_multihoming") | Boolean |  | `False` |  | Supports the configuration for the all-active EVPN gateway redundancy model. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;management_interface</samp>](## "platform_settings.[].management_interface") | String |  | `Management1` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;security_entropy_sources</samp>](## "platform_settings.[].security_entropy_sources") | Dictionary |  |  |  | Entropy source improves the randomness of the numbers used to generate MACsec's cryptographic keys. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hardware</samp>](## "platform_settings.[].security_entropy_sources.hardware") | Boolean |  |  |  | Use a hardware based source. |
@@ -112,6 +114,9 @@
           # This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.
           # Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.
           bgp_update_wait_for_convergence: <bool; default=True>
+
+          # Supports the configuration for the all-active EVPN gateway redundancy model.
+          all_active_multihoming: <bool; default=False>
         management_interface: <str; default="Management1">
 
         # Entropy source improves the randomness of the numbers used to generate MACsec's cryptographic keys.
@@ -178,6 +183,9 @@
           # This will eliminate any temporary black holes due to a BGP speaker advertising reachability to a prefix that may not yet be installed into the forwarding plane.
           # Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.
           bgp_update_wait_for_convergence: <bool; default=True>
+
+          # Supports the configuration for the all-active EVPN gateway redundancy model.
+          all_active_multihoming: <bool; default=False>
         management_interface: <str; default="Management1">
 
         # Entropy source improves the randomness of the numbers used to generate MACsec's cryptographic keys.
@@ -278,7 +286,9 @@
             mlag: 900
             non_mlag: 1020
           tcam_profile: vxlan-routing
-        - platforms:
+        - feature_support:
+            all_active_multihoming: true
+          platforms:
           - 7280R3
           reload_delay:
             mlag: 900
@@ -293,7 +303,9 @@
             mlag: 900
             non_mlag: 1020
           tcam_profile: vxlan-routing
-        - management_interface: Management0
+        - feature_support:
+            all_active_multihoming: true
+          management_interface: Management0
           platforms:
           - 7500R3
           - 7800R3
