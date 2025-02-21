@@ -3,9 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd._utils import default, get
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
@@ -20,27 +21,20 @@ class PortChannelInterfacesMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def port_channel_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> list | None:
-        """Return structured config for port_channel_interfaces."""
-        port_channel_interfaces = []
+    @structured_config_contributor
+    def port_channel_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> None:
+        """Set the structured config for port_channel_interfaces."""
         for p2p_link, p2p_link_data in self._filtered_p2p_links:
             if p2p_link_data["port_channel_id"] is None:
                 continue
 
             # Port-Channel interface
-            port_channel_interface = self._get_common_interface_cfg(p2p_link, p2p_link_data)
-            port_channel_interface["description"] = self._p2p_link_port_channel_description(p2p_link_data)
+            port_channel_interface = EosCliConfigGen.PortChannelInterfacesItem()
+            self._get_common_interface_cfg(p2p_link, p2p_link_data, port_channel_interface)
+            port_channel_interface.ptp = self._get_ptp_config_interface(p2p_link,output_type=EosCliConfigGen.PortChannelInterfacesItem.Ptp)
+            port_channel_interface.description = self._p2p_link_port_channel_description(p2p_link_data)
 
-            # Remove None values
-            port_channel_interface = {key: value for key, value in port_channel_interface.items() if value is not None}
-
-            port_channel_interfaces.append(port_channel_interface)
-
-        if port_channel_interfaces:
-            return port_channel_interfaces
-
-        return None
+            self.structured_config.port_channel_interfaces.append(port_channel_interface)
 
     def _p2p_link_port_channel_description(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol, p2p_link_data: dict) -> str:
         return self.shared_utils.interface_descriptions.underlay_port_channel_interface(
