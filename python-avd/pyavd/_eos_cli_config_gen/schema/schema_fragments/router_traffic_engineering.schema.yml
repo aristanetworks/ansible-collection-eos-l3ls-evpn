@@ -95,7 +95,7 @@ keys:
         type: list
         primary_key: number
         unique_keys:
-          - name
+        - name
         items:
           type: dict
           keys:
