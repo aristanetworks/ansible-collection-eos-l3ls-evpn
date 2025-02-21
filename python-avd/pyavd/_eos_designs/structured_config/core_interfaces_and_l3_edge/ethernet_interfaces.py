@@ -3,10 +3,10 @@
 # that can be found in the LICENSE file.
 from __future__ import annotations
 
-from functools import cached_property
 from typing import TYPE_CHECKING, Protocol
 
-from pyavd._utils import append_if_not_duplicate
+from pyavd._eos_cli_config_gen.schema import EosCliConfigGen
+from pyavd._eos_designs.structured_config.structured_config_generator import structured_config_contributor
 from pyavd.api.interface_descriptions import InterfaceDescriptionData
 
 if TYPE_CHECKING:
@@ -20,50 +20,26 @@ class EthernetInterfacesMixin(Protocol):
     Class should only be used as Mixin to a AvdStructuredConfig class.
     """
 
-    @cached_property
-    def ethernet_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> list | None:
-        """Return structured config for ethernet_interfaces."""
-        ethernet_interfaces = []
-
+    @structured_config_contributor
+    def ethernet_interfaces(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol) -> None:
+        """Set the structured config for ethernet_interfaces."""
         for p2p_link, p2p_link_data in self._filtered_p2p_links:
+            ethernet_interface = EosCliConfigGen.EthernetInterfacesItem()
             if p2p_link_data["port_channel_id"] is None:
                 # Ethernet interface
-                ethernet_interface = self._get_common_interface_cfg(p2p_link, p2p_link_data)
-                ethernet_interface["description"] = self._p2p_link_ethernet_description(p2p_link_data)
-                ethernet_interface.update(self._get_ethernet_cfg(p2p_link))
-
-                # Remove None values
-                ethernet_interface = {key: value for key, value in ethernet_interface.items() if value is not None}
-
-                append_if_not_duplicate(
-                    list_of_dicts=ethernet_interfaces,
-                    primary_key="name",
-                    new_dict=ethernet_interface,
-                    context=f"Ethernet Interfaces defined under {self.data_model} p2p_link",
-                    context_keys=["name", "peer", "peer_interface"],
-                )
+                self._get_common_interface_cfg(p2p_link, p2p_link_data, ethernet_interface)
+                ethernet_interface.ptp = self._get_ptp_config_interface(p2p_link, output_type=EosCliConfigGen.EthernetInterfacesItem.Ptp)
+                ethernet_interface.description = self._p2p_link_ethernet_description(p2p_link_data)
+                ethernet_interface.speed = p2p_link.speed
+                self.structured_config.ethernet_interfaces.append(ethernet_interface)
 
             # Port-Channel members
             for member in p2p_link_data["port_channel_members"]:
-                ethernet_interface = self._get_port_channel_member_cfg(p2p_link, p2p_link_data, member)
-                ethernet_interface["description"] = self._port_channel_member_description(p2p_link_data, member)
-                ethernet_interface.update(self._get_ethernet_cfg(p2p_link))
-
-                # Remove None values
-                ethernet_interface = {key: value for key, value in ethernet_interface.items() if value is not None}
-
-                append_if_not_duplicate(
-                    list_of_dicts=ethernet_interfaces,
-                    primary_key="name",
-                    new_dict=ethernet_interface,
-                    context=f"Ethernet Interfaces defined under {self.data_model} p2p_link port-Channel members",
-                    context_keys=["name", "peer", "peer_interface"],
-                )
-
-        if ethernet_interfaces:
-            return ethernet_interfaces
-
-        return None
+                ethernet_interface = EosCliConfigGen.EthernetInterfacesItem()
+                self._get_port_channel_member_cfg(p2p_link, p2p_link_data, member, ethernet_interface)
+                ethernet_interface.description = self._port_channel_member_description(p2p_link_data, member)
+                ethernet_interface.speed = p2p_link.speed
+                self.structured_config.ethernet_interfaces.append(ethernet_interface)
 
     def _p2p_link_ethernet_description(self: AvdStructuredConfigCoreInterfacesAndL3EdgeProtocol, p2p_link_data: dict) -> str:
         return self.shared_utils.interface_descriptions.underlay_ethernet_interface(
