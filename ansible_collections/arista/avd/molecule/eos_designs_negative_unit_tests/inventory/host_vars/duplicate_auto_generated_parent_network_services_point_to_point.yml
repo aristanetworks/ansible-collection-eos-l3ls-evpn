@@ -1,0 +1,72 @@
+---
+# Testing Network Services point-to-point services
+type: pe
+pe:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    virtual_router_mac_address: 00:dc:00:00:00:0a
+  nodes:
+    - name: duplicate_auto_generated_parent_network_services_point_to_point
+      id: 101
+      bgp_as: 101
+      filter:
+        tenants:
+          - TENANT_A
+          - TENANT_B
+
+tenants:
+  - name: TENANT_A
+    mac_vrf_id_base: 10000
+    pseudowire_rt_base: 1000
+    point_to_point_services:
+      # Sub-interface point-to-point with auto generated parent interface
+      - name: TEN_A_ELINE_VLAN_BASE_AUTO_GENERATED_PARENT
+        type: vpws-pseudowire
+        subinterfaces:
+          - number: 42
+        endpoints:
+          - id: 42001
+            nodes:
+              [
+                duplicate_auto_generated_parent_network_services_point_to_point,
+                fake_peer,
+              ]
+            interfaces: [Ethernet7, Ethernet7]
+            port_channel:
+              mode: active
+              short_esi: "0102:DEAD:CAFE"
+          - id: 42002
+            nodes: [fake_node]
+            interfaces: [Ethernet6, Ethernet7]
+            port_channel:
+              mode: active
+      # Conflict on ESI for the same port-channel
+      - name: TEN_A_ELINE_VLAN_BASE_AUTO_GENERATED_PARENT_CONFLICTING
+        type: vpws-pseudowire
+        subinterfaces:
+          # These need to match otherwise ethernet interface detects the duplication
+          - number: 42
+        endpoints:
+          - id: 666001
+            nodes:
+              [
+                duplicate_auto_generated_parent_network_services_point_to_point,
+                fake_peer,
+              ]
+            interfaces: [Ethernet7, Ethernet7]
+            port_channel:
+              mode: active
+              short_esi: "0102:BEEF:F00D"
+          - id: 666002
+            nodes: [fake_node]
+            interfaces: [Ethernet6, Ethernet7]
+            port_channel:
+              mode: active
+
+expected_error_message: >-
+  Found duplicate objects with conflicting data while generating configuration for PortChannelInterfaces.
+  {'name': 'Port-Channel7', 'shutdown': False, 'evpn_ethernet_segment': {'identifier': '0000:0000:0102:BEEF:F00D', 'route_target': '01:02:BE:EF:F0:0D'},
+  'lacp_id': '0102.BEEF.F00D', 'peer_type': 'system', 'switchport': {'enabled': False}}
+  conflicts with {'name': 'Port-Channel7', 'shutdown': False, 'evpn_ethernet_segment': {'identifier': '0000:0000:0102:DEAD:CAFE',
+  'route_target': '01:02:DE:AD:CA:FE'}, 'lacp_id': '0102.DEAD.CAFE', 'peer_type': 'system', 'switchport': {'enabled': False}}.
