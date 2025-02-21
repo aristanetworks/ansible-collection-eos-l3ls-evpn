@@ -79,6 +79,7 @@ jobs:
           gh pr view --repo "${PR_TARGET_REPO}" "${PR_BRANCH}" \
              --json 'number,baseRefName' --jq '"number=\(.number)\nbase_ref=\(.baseRefName)"' \
              >> "${GITHUB_OUTPUT}"
+          echo "pr_branch=${PR_BRANCH}" >> "${GITHUB_OUTPUT}"
 
       - name: SonarQube Scan
         uses: SonarSource/sonarqube-scan-action@v5.0.0
@@ -90,6 +91,6 @@ jobs:
           args: >
             -Dsonar.scm.revision=${{ github.event.workflow_run.head_sha }}
             -Dsonar.pullrequest.key=${{ steps.pr-context.outputs.number }}
-            -Dsonar.pullrequest.branch=${{ github.event.workflow_run.head_branch }}
+            -Dsonar.pullrequest.branch=${{ steps.pr-context.outputs.pr_branch }}
             -Dsonar.pullrequest.base=${{ steps.pr-context.outputs.base_ref }}
             -Dsonar.verbose=${{ secrets.ACTIONS_STEP_DEBUG }}
