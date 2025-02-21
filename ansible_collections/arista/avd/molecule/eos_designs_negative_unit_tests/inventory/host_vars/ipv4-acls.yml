@@ -15,7 +15,7 @@ spine:
           # peer_ip: 172.16.0.1/30 Testing not filling in the peer_ip will raise an error.
 
 ipv4_acls:
-# ip_access_lists:
+  # ip_access_lists:
   - name: TEST-IPV4-ACL-WITH-IP-FIELDS-IN
     entries:
       - sequence: 15
@@ -29,5 +29,5 @@ ipv4_acls:
         destination: interface_ip
 
 expected_error_message: >-
-  Unable to perform substitution of the value 'peer_ip' defined under 'ipv4_acls[0 (name=TEST-IPV4-ACL-WITH-IP-FIELDS-IN)].entries[1].source',
+  Unable to perform substitution of the value 'peer_ip' defined under 'ipv4_acls[name=TEST-IPV4-ACL-WITH-IP-FIELDS-IN].entries[1].source',
   since no substitution value was found for interface 'Ethernet1'. Make sure to set the appropriate fields on the interface.

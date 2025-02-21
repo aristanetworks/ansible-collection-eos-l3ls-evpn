@@ -7,18 +7,18 @@ import pytest
 
 from pyavd._schema.models.input_path import InputPath, PathIndexedListKey
 
-PATH_INDEXED_LIST_KEY_TESTS = [pytest.param((1, "name", "Ethernet1"), "[1 (name=Ethernet1)]", id="Valid Key")]
+PATH_INDEXED_LIST_KEY_TESTS = [pytest.param((1, "name", "Ethernet1"), "[name=Ethernet1]", id="Valid Key")]
 
 INPUT_PATH_TESTS = [
     pytest.param([], "", id="Root Path"),
     pytest.param(
         ["ethernet_interfaces", PathIndexedListKey(0, "name", "Ethernet1")],
-        "ethernet_interfaces[0 (name=Ethernet1)]",
+        "ethernet_interfaces[name=Ethernet1]",
         id="Path with PathIndexedListKey at the end",
     ),
     pytest.param(
         ["ethernet_interfaces", PathIndexedListKey(0, "name", "Ethernet1"), "speed"],
-        "ethernet_interfaces[0 (name=Ethernet1)].speed",
+        "ethernet_interfaces[name=Ethernet1].speed",
         id="Path with PathIndexedListKey",
     ),
     pytest.param(["ethernet_interfaces", "stuff", "blah", "46"], "ethernet_interfaces.stuff.blah.46", id="Only str"),
@@ -30,7 +30,7 @@ INPUT_PATH_PARENT_TESTS = [
     pytest.param(["ethernet_interfaces", PathIndexedListKey(0, "name", "Ethernet1")], "ethernet_interfaces", id="Path with PathIndexedListKey at the end"),
     pytest.param(
         ["ethernet_interfaces", PathIndexedListKey(0, "name", "Ethernet1"), "speed"],
-        "ethernet_interfaces[0 (name=Ethernet1)]",
+        "ethernet_interfaces[name=Ethernet1]",
         id="Path with PathIndexedListKey",
     ),
     pytest.param(["ethernet_interfaces", "stuff", "blah", "46"], "ethernet_interfaces.stuff.blah", id="Only str"),
@@ -40,19 +40,17 @@ INPUT_PATH_PARENT_TESTS = [
 INPUT_PATH_DESCENDANT_TESTS = [
     pytest.param([], ["test"], "test", id="Single Key on root"),
     pytest.param([], ["test", 42], "test[42]", id="Multiple keys on root including int"),
-    pytest.param(
-        ["ethernet_interfaces", PathIndexedListKey(0, "name", "Ethernet1")], ["speed"], "ethernet_interfaces[0 (name=Ethernet1)].speed", id="single key"
-    ),
+    pytest.param(["ethernet_interfaces", PathIndexedListKey(0, "name", "Ethernet1")], ["speed"], "ethernet_interfaces[name=Ethernet1].speed", id="single key"),
     pytest.param(
         ["ethernet_interfaces", PathIndexedListKey(0, "name", "Ethernet1")],
         ["speed", 42],
-        "ethernet_interfaces[0 (name=Ethernet1)].speed[42]",
+        "ethernet_interfaces[name=Ethernet1].speed[42]",
         id="multiple keys with int",
     ),
     pytest.param(
         ["ethernet_interfaces", PathIndexedListKey(0, "name", "Ethernet1")],
         ["speed", 42, "sublist", PathIndexedListKey(666, "example", "blah")],
-        "ethernet_interfaces[0 (name=Ethernet1)].speed[42].sublist[666 (example=blah)]",
+        "ethernet_interfaces[name=Ethernet1].speed[42].sublist[example=blah]",
         id="multiple keys with PathIndexedListKey",
     ),
 ]

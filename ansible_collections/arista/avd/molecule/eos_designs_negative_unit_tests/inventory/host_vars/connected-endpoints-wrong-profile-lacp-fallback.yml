@@ -10,7 +10,11 @@ servers:
   # port-channel with lacp fallback individual and missing profile for lacp fallback
   - name: INDIVIDUAL_1
     adapters:
-      - switches: [connected-endpoints-wrong-profile-lacp-fallback, connected-endpoints-wrong-profile-lacp-fallback]
+      - switches:
+          [
+            connected-endpoints-wrong-profile-lacp-fallback,
+            connected-endpoints-wrong-profile-lacp-fallback,
+          ]
         switch_ports: [Ethernet14, Ethernet15]
         port_channel:
           mode: "active"
@@ -28,4 +32,4 @@ port_profiles:
     native_vlan: 123
 
 expected_error_message: >-
-  Profile 'INDIVIDUAL_TRUNK' applied under 'servers[0 (name=INDIVIDUAL_1)].adapters[0].port_channel.lacp_fallback.individual' does not exist in `port_profiles`.
+  Profile 'INDIVIDUAL_TRUNK' applied under 'servers[name=INDIVIDUAL_1].adapters[0].port_channel.lacp_fallback.individual' does not exist in `port_profiles`.

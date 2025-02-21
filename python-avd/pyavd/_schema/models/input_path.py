@@ -21,7 +21,7 @@ class PathIndexedListKey:
 
     def __str__(self) -> str:
         """String representation."""
-        return f"[{self.index} ({self.primary_key}={self.value})]"
+        return f"[{self.primary_key}={self.value}]"
 
 
 class InputPath:

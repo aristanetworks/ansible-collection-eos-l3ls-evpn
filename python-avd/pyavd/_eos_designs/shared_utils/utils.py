@@ -74,7 +74,10 @@ class UtilsMixin(Protocol):
         port_profile = self.inputs.port_profiles[profile_name]
         if port_profile.parent_profile:
             if port_profile.parent_profile not in self.inputs.port_profiles:
-                msg = f"Profile '{port_profile.parent_profile}' applied under port profile '{port_profile._source}' does not exist in 'port_profiles'."
+                msg = (
+                    f"Profile '{port_profile.parent_profile}' applied under port profile '{port_profile.get_field_source('parent_profile')}' "
+                    "does not exist in 'port_profiles'."
+                )
                 raise AristaAvdInvalidInputsError(msg)
 
             parent_profile = self.inputs.port_profiles[port_profile.parent_profile]

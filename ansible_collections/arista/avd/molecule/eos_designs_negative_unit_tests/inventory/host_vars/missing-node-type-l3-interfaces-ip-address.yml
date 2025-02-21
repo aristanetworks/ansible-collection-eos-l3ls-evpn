@@ -18,4 +18,4 @@ spine:
             - prefix: 0.0.0.0/0
 
 expected_error_message: >-
-  'spine.nodes[0 (name=missing-node-type-l3-interfaces-ip-address)].l3_interfaces[0 (name=Ethernet42)].ip_address' is required but was not found.
+  'spine.nodes[name=missing-node-type-l3-interfaces-ip-address].l3_interfaces[name=Ethernet42].ip_address' is required but was not found.
