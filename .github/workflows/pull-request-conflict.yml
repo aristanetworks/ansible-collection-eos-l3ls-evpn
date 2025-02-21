@@ -5,8 +5,8 @@ name: "PR Conflicts checker"
 
 jobs:
   Conflict_Check:
-    name: 'Check PR status: conflicts and resolution'
-    runs-on: ubuntu-20.04
+    name: "Check PR status: conflicts and resolution"
+    runs-on: ubuntu-latest
     steps:
       - name: Check if PRs are dirty
         uses: eps1lon/actions-label-merge-conflict@releases/2.x

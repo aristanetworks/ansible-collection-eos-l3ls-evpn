@@ -11,6 +11,9 @@ l3leaf:
     loopback_ipv4_pool: 192.168.255.0/24
     vtep_loopback_ipv4_pool: 192.168.254.0/24
     virtual_router_mac_address: 00:dc:00:00:00:0a
+    filter:
+      always_include_vrfs_in_tenants:
+        - TENANT_WITH_VRFS_WITHOUT_SVIS
   nodes:
     - name: RD-RT-ADMIN-SUBFIELD-L3LEAF1
       bgp_as: 65001
@@ -82,3 +85,10 @@ tenants:
             enabled: true
             ip_address_virtual: 10.0.5.1/24
             rd_override: auto
+  - name: TENANT_WITH_VRFS_WITHOUT_SVIS
+    vrfs:
+      - name: TEST2
+        description: VRF with router-id
+        vrf_id: 12
+        bgp:
+          router_id: 10.12.12.12
