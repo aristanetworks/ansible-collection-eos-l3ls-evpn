@@ -415,7 +415,8 @@ jobs:
       - uses: actions/checkout@v4
       - name: "Install Python & Ansible requirements"
         run: |
-          pip install "ansible-core<2.19.0" --upgrade
+          # distlib is required when using manifest
+          pip install "ansible-core<2.19.0" distlib --upgrade
       - name: "Build Ansible collection"
         run: |
           ansible-galaxy collection build -vvv --force ansible_collections/arista/avd
