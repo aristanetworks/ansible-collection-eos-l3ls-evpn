@@ -9199,11 +9199,13 @@ class EosDesigns(EosDesignsRootModel):
         The method for deriving RD Administrator subfield (first part of RD) for VRF services:
         - 'router_id'
         means the IP address of Loopback0.
-        - 'vtep_loopback' means the IP address of the VTEP loopback
-        interface.
+        - 'vrf_router_id' means the Router ID assigned for the BGP in the
+        VRF - falling back to IP address of Loopback0.
+        - 'vtep_loopback' means the IP address of the VTEP
+        loopback interface.
         - 'bgp_as' means the AS number of the device.
-        - 'switch_id' means the 'id' value of the
-        device.
+        - 'switch_id' means the 'id' value
+        of the device.
         - Any <IPv4 Address> without mask.
         - Integer between <0-65535>.
         - Integer between
@@ -9277,11 +9279,13 @@ class EosDesigns(EosDesignsRootModel):
                        The method for deriving RD Administrator subfield (first part of RD) for VRF services:
                        - 'router_id'
                        means the IP address of Loopback0.
-                       - 'vtep_loopback' means the IP address of the VTEP loopback
-                       interface.
+                       - 'vrf_router_id' means the Router ID assigned for the BGP in the
+                       VRF - falling back to IP address of Loopback0.
+                       - 'vtep_loopback' means the IP address of the VTEP
+                       loopback interface.
                        - 'bgp_as' means the AS number of the device.
-                       - 'switch_id' means the 'id' value of the
-                       device.
+                       - 'switch_id' means the 'id' value
+                       of the device.
                        - Any <IPv4 Address> without mask.
                        - Integer between <0-65535>.
                        - Integer between
