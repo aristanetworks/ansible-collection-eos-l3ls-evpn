@@ -91,3 +91,70 @@ keys:
                                     type: int
                                     convert_types:
                                     - "str"
+      flex_algos:
+        type: list
+        primary_key: number
+        unique_keys:
+        - name
+        items:
+          type: dict
+          keys:
+            number:
+              type: int
+              required: true
+              min: 128
+              max: 255
+              description: Flex-algo number, must be unique across all flex-algo definitions.
+              convert_types:
+              - str
+            name:
+              type: str
+              required: true
+              description: Flex-algo name, must be unique across all flex-algo definitions.
+            administrative_group:
+              type: dict
+              keys:
+                include_all:
+                  type: str
+                  description: Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+                  convert_types:
+                  - int
+                include_any:
+                  type: str
+                  description: Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+                  convert_types:
+                  - int
+                exclude:
+                  type: str
+                  description: Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+                  convert_types:
+                  - int
+            metric:
+              type: str
+              description: Metric can be specified as an integer or named type, 0 = igp-metric, 1 = min-delay, 2 = te-metric. Device CLI will show the name regardless.
+              convert_types:
+              - int
+              valid_values:
+              - "0"
+              - "1"
+              - "2"
+              - igp-metric
+              - min-delay
+              - te-metric
+            priority:
+              type: int
+              convert_types:
+              - str
+              min: 0
+              max: 255
+            color:
+              type: int
+              convert_types:
+              - str
+              min: 0
+              max: 4294967295
+            srlg_exclude:
+              type: str
+              description: Comma-separated list of individual SRLG numbers in decimal (0-4294967295), named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 30-34,55,RED
+              convert_types:
+              - int

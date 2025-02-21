@@ -29,6 +29,17 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;label_stack</samp>](## "router_traffic_engineering.segment_routing.policy_endpoints.[].colors.[].path_group.[].segment_list.[].label_stack") | String |  |  |  | Label Stack as string.<br>Example: "100 2000 30"<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weight</samp>](## "router_traffic_engineering.segment_routing.policy_endpoints.[].colors.[].path_group.[].segment_list.[].weight") | Integer |  |  |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;index</samp>](## "router_traffic_engineering.segment_routing.policy_endpoints.[].colors.[].path_group.[].segment_list.[].index") | Integer |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;flex_algos</samp>](## "router_traffic_engineering.flex_algos") | List, items: Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;number</samp>](## "router_traffic_engineering.flex_algos.[].number") | Integer | Required, Unique |  | Min: 128<br>Max: 255 | Flex-algo number, must be unique across all flex-algo definitions. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;name</samp>](## "router_traffic_engineering.flex_algos.[].name") | String | Required |  |  | Flex-algo name, must be unique across all flex-algo definitions. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;administrative_group</samp>](## "router_traffic_engineering.flex_algos.[].administrative_group") | Dictionary |  |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_all</samp>](## "router_traffic_engineering.flex_algos.[].administrative_group.include_all") | String |  |  |  | Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127 |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;include_any</samp>](## "router_traffic_engineering.flex_algos.[].administrative_group.include_any") | String |  |  |  | Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127 |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;exclude</samp>](## "router_traffic_engineering.flex_algos.[].administrative_group.exclude") | String |  |  |  | Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127 |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;metric</samp>](## "router_traffic_engineering.flex_algos.[].metric") | String |  |  | Valid Values:<br>- <code>0</code><br>- <code>1</code><br>- <code>2</code><br>- <code>igp-metric</code><br>- <code>min-delay</code><br>- <code>te-metric</code> | Metric can be specified as an integer or named type, 0 = igp-metric, 1 = min-delay, 2 = te-metric. Device CLI will show the name regardless. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;priority</samp>](## "router_traffic_engineering.flex_algos.[].priority") | Integer |  |  | Min: 0<br>Max: 255 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;color</samp>](## "router_traffic_engineering.flex_algos.[].color") | Integer |  |  | Min: 0<br>Max: 4294967295 |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;srlg_exclude</samp>](## "router_traffic_engineering.flex_algos.[].srlg_exclude") | String |  |  |  | Comma-separated list of individual SRLG numbers in decimal (0-4294967295), named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 30-34,55,RED |
 
 === "YAML"
 
@@ -62,4 +73,29 @@
                       - label_stack: <str>
                         weight: <int>
                         index: <int>
+      flex_algos:
+
+          # Flex-algo number, must be unique across all flex-algo definitions.
+        - number: <int; 128-255; required; unique>
+
+          # Flex-algo name, must be unique across all flex-algo definitions.
+          name: <str; required>
+          administrative_group:
+
+            # Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+            include_all: <str>
+
+            # Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+            include_any: <str>
+
+            # Comma-separated list of individual group numbers in decimal (0-127), hexadecimal, named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 0xA,RED,31-33,127
+            exclude: <str>
+
+          # Metric can be specified as an integer or named type, 0 = igp-metric, 1 = min-delay, 2 = te-metric. Device CLI will show the name regardless.
+          metric: <str; "0" | "1" | "2" | "igp-metric" | "min-delay" | "te-metric">
+          priority: <int; 0-255>
+          color: <int; 0-4294967295>
+
+          # Comma-separated list of individual SRLG numbers in decimal (0-4294967295), named or decimal range (A-B, where value of A must be less than the value of B) formats. Example. 30-34,55,RED
+          srlg_exclude: <str>
     ```
