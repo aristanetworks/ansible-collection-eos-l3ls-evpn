@@ -1,0 +1,275 @@
+---
+- name: "{{ test_id | upper }} Converge - cv_deploy with duplicated devices in inventory and disabled duplication tolerance"
+  hosts: SITE1_FABRIC
+  connection: local
+  gather_facts: false
+  vars:
+    cv_server: www.cv-staging.corp.arista.io
+    cv_token: "{{ lookup('env', 'CVAAS_AAWG_CI') }}"
+    cv_verify_certs: true
+    cv_skip_missing_devices: true
+    eos_config_dir: "{{ playbook_dir }}/intended/configs/test_configs"
+    original_structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_configs"
+    structured_dir: "{{ playbook_dir }}/intended/structured_configs/test_duplicated_devices_configs"
+    intended_tag_device: avd-ci-leaf1
+    intended_tags: "{{ lookup('file', structured_dir ~ '/' ~ intended_tag_device ~ '.yml')| from_yaml }}"
+    test_id: "duplicated-inventory-devices-without-tolerance"
+    cv_common_pattern: "avd-cv-deploy-{{ test_id }}"
+
+  tasks:
+    - name: "{{ test_id | upper }} Banner"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      ansible.builtin.debug:
+        msg:
+          - "######################################################################"
+          - "### STARTING MOLECULE TEST {{ '{:<38}'.format(test_id[:38]) | upper }} ####"
+          - "######################################################################"
+
+    - name: "{{ test_id | upper }} Create target scturtured_config directory if it doesn't exist"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      ansible.builtin.file:
+        path: "{{ structured_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: "{{ test_id | upper }} Remove interesting files inside scturtured_config directory (if they exist)"
+      tags: ["{{ test_id }}"]
+      delegate_to: localhost
+      ansible.builtin.file:
+        path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        state: absent
+
+    - name: "{{ test_id | upper }} Fetch device inventory stats from CV {{ cv_server }} for all targeted devices"
+      tags: ["{{ test_id }}"]
+      delegate_to: localhost
+      ansible.legacy.uri:
+        url: "https://{{ cv_server }}/api/resources/inventory/v1/Device/all"
+        validate_certs: true
+        return_content: true
+        headers:
+          Accept: "application/json"
+          Content-Type: "application/json"
+          Authorization: "Bearer {{ cv_token }}"
+        method: POST
+        body_format: json
+        body:
+          {
+            "partialEqFilter": [
+              {
+                "hostname": "{{ inventory_hostname }}"
+              }
+            ]
+          }
+        timeout: 10
+      register: device_inventory_status_on_cv
+      until: >
+        device_inventory_status_on_cv.status == 200 and (device_inventory_status_on_cv.json.result.value.key.deviceId | default('') | length > 0) and
+        (device_inventory_status_on_cv.json.result.value.systemMacAddress | default('') | length > 0)
+      retries: 10
+      delay: 10
+
+    - name: "{{ test_id | upper }} Process raw device_inventory_status_on_cv variables"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.set_fact:
+        serial_number: "{{ device_inventory_status_on_cv.json.result.value.key.deviceId }}"
+        metadata:
+          system_mac_address: "{{ device_inventory_status_on_cv.json.result.value.systemMacAddress }}"
+
+    - name: "{{ test_id | upper }} Expose new variables set on DUTs"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.debug:
+        msg:
+          - "DEVICE {{ inventory_hostname }} | SERIAL_NUMBER: {{ serial_number }} | SYSTEM_MAC_ADDRESS: {{ metadata.system_mac_address }}"
+
+    - name: "{{ test_id | upper }} Copy content of the original test's structured_config files into new structured_config files"
+      tags: ["{{ test_id }}"]
+      delegate_to: localhost
+      ansible.builtin.copy:
+        src: "{{ original_structured_dir }}/{{ inventory_hostname }}.yml"
+        dest: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        mode: "0644"
+
+    - name: "{{ test_id | upper }} Update content of the structured_config files with new serial_number variable"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.lineinfile:
+        line: "serial_number: {{ hostvars['avd-ci-leaf1'].serial_number if inventory_hostname == 'avd-ci-leaf2' else serial_number }}"
+        path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        create: true
+        mode: "0644"
+        insertbefore: BOF
+      no_log: true
+
+    - name: "{{ test_id | upper }} Read current content of the structured files"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.slurp:
+        src: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+      register: structured_config_file_content
+
+    - name: "{{ test_id | upper }} Update content of the structured_config files with new metadata.system_mac_address variable if metadata is not present"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.lineinfile:
+        line: |-
+          metadata:
+            system_mac_address: {{
+              hostvars['avd-ci-spine1'].metadata.system_mac_address
+              if inventory_hostname == 'avd-ci-spine2' else metadata.system_mac_address
+            }}
+        path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        create: true
+        mode: "0644"
+        insertbefore: BOF
+      no_log: true
+      when: "'metadata:' not in structured_config_file_content.content | b64decode"
+
+    - name: "{{ test_id | upper }} Update metadata in the structured_config files with new metadata.system_mac_address variable if metadata is already present"
+      tags: ["{{ test_id }}"]
+      ansible.builtin.lineinfile:
+        line: |-
+          metadata:
+            system_mac_address: {{
+              hostvars['avd-ci-spine1'].metadata.system_mac_address
+              if inventory_hostname == 'avd-ci-spine2' else metadata.system_mac_address
+            }}
+        path: "{{ structured_dir }}/{{ inventory_hostname }}.yml"
+        regexp: '^metadata:'
+      no_log: true
+      when: "'metadata:' in structured_config_file_content.content | b64decode"
+
+    - name: "{{ test_id | upper }} Generate random string"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      ansible.builtin.set_fact:
+        r: "{{ lookup('password', '/dev/null chars=ascii_lowercase,digits length=4') }}"
+
+    - name: "{{ test_id | upper }} Code block to provision CVP with AVD configuration"
+      tags: ["{{ test_id }}"]
+      run_once: true
+      delegate_to: localhost
+      block:
+        - name: "{{ test_id | upper }} Attempt to provision CVP with AVD configuration containing overlapping devices and disabled tolerance"
+          run_once: true
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-converge"
+            cv_workspace_description: "{{ (cv_common_pattern + '-' + r + '-converge') | upper }}"
+            cv_submit_workspace: false
+            cv_tolerate_duplicated_devices: false
+            cv_register_detailed_results: true
+      rescue:
+        - name: "{{ test_id | upper }} Display CVP result"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        - name: "{{ test_id | upper }} Check and assert CVP returns"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.assert:
+            that:
+              # workspace state
+              - cv_deploy_results.workspace.state != cv_deploy_results.workspace.requested_state
+              # confirm initial overlapping of system_mac_address on avd-ci-spine1 and avd-ci-spine2
+              - >
+                cv_deploy_results.configs | selectattr('device', 'defined') | selectattr('device.hostname', 'equalto', 'avd-ci-spine1') |
+                map(attribute='device.system_mac_address') ==
+                cv_deploy_results.configs | selectattr('device', 'defined') | selectattr('device.hostname', 'equalto', 'avd-ci-spine2') |
+                map(attribute='device.system_mac_address')
+              # confirm lack of initial overlapping of serial_number on avd-ci-spine1 and avd-ci-spine2
+              - >
+                cv_deploy_results.configs | selectattr('device', 'defined') | selectattr('device.hostname', 'equalto', 'avd-ci-spine1') |
+                map(attribute='device.serial_number') !=
+                cv_deploy_results.configs | selectattr('device', 'defined') | selectattr('device.hostname', 'equalto', 'avd-ci-spine2') |
+                map(attribute='device.serial_number')
+              # confirm initial overlapping of serial_number on avd-ci-leaf1 and avd-ci-leaf2
+              - >
+                cv_deploy_results.configs | selectattr('device', 'defined') | selectattr('device.hostname', 'equalto', 'avd-ci-leaf1') |
+                map(attribute='device.serial_number') ==
+                cv_deploy_results.configs | selectattr('device', 'defined') | selectattr('device.hostname', 'equalto', 'avd-ci-leaf2') |
+                map(attribute='device.serial_number')
+              # confirm lack of initial overlapping of system_mac_address on avd-ci-leaf1 and avd-ci-leaf2
+              - >
+                cv_deploy_results.configs | selectattr('device', 'defined') | selectattr('device.hostname', 'equalto', 'avd-ci-leaf1') |
+                map(attribute='device.system_mac_address') !=
+                cv_deploy_results.configs | selectattr('device', 'defined') | selectattr('device.hostname', 'equalto', 'avd-ci-leaf2') |
+                map(attribute='device.system_mac_address')
+              # confirm that cv_deploy has not failed
+              - cv_deploy_results.failed is defined and cv_deploy_results.failed
+              # confirm there are no warnings returned
+              - cv_deploy_results.warnings is defined and cv_deploy_results.warnings == []
+              # confirm there are returned errors
+              - cv_deploy_results.errors is defined and cv_deploy_results.errors != []
+              # confirm that there is a warning regarding overlapping serial_number between avd-ci-leaf1 and avd-ci-leaf2
+              - >
+                cv_deploy_results.errors | select('search', '.*Duplicated devices found in inventory.*duplicated_serial_number.*' +
+                'devices_with_duplicated_serial_number.*avd-ci-leaf1.*avd-ci-leaf2.*duplicated_system_mac_address.*' +
+                'devices_with_duplicated_system_mac_address.*avd-ci-spine1.*avd-ci-spine2.*') | list | length > 0
+
+        - name: "{{ test_id | upper }} Cleanup orphan workspace"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.legacy.uri:
+            url: https://{{ cv_server }}/api/resources/workspace/v1/WorkspaceConfig/some
+            validate_certs: true
+            return_content: true
+            headers:
+              Accept: "application/json"
+              Content-Type: "application/json"
+              Authorization: "Bearer {{ lookup('env', 'CVAAS_AAWG_CI') }}"
+            method: POST
+            body_format: json
+            body:
+              {
+                "values": [
+                  {
+                    "key": {
+                      "workspaceId": "{{ cv_deploy_results.workspace.id }}"
+                    },
+                    "request": "REQUEST_ABANDON",
+                    "requestParams": {
+                      "requestId": "{{ r }}"
+                    }
+                  }
+                ]
+              }
+            force_basic_auth: true
+            timeout: 10
+          register: cvp_abandon_workspace_result
+          until: cvp_abandon_workspace_result.status == 200
+          retries: 3
+          delay: 3
+          ignore_errors: true
+          when: cv_deploy_results.workspace.id is not none and cv_deploy_results.workspace.id | length > 0
+
+        - name: "{{ test_id | upper }}  Cleanup"
+          tags: ["{{ test_id }}"]
+          run_once: true
+          delegate_to: localhost
+          ansible.builtin.import_role:
+            name: arista.avd.cv_deploy
+          vars:
+            cv_workspace_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+            cv_workspace_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+            cv_change_control_name: "{{ cv_common_pattern }}-{{ r }}-cleanup"
+            cv_change_control_description: "{{ cv_common_pattern + '-' + r + '-cleanup' | upper }}"
+            cv_register_detailed_results: true
+            cv_devices: "{{ ansible_play_hosts_all }}"
+            eos_config_dir: "{{ playbook_dir }}/intended/configs/base_configs"
+            structured_dir: "{{ playbook_dir }}/intended/structured_configs/base_configs"
+            cv_submit_workspace_force: true
+            cv_run_change_control: true
+
+        - name: Display CVP result
+          tags: ["{{ test_id }}"]
+          run_once: true
+          ansible.builtin.debug:
+            msg: '{{ cv_deploy_results }}'
+
+        # Clear failed state of failed hosts for next engaged playbook (no impact within running playbook)
+        - name: Reset ansible_play_hosts for next playbook (no impact within running playbook)
+          tags: ["{{ test_id }}"]
+          ansible.builtin.meta: clear_host_errors

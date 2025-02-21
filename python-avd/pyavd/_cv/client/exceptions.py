@@ -84,3 +84,7 @@ class CVMessageSizeExceeded(CVClientException):
     """Maximum GRPC message size"""
     size: int
     """Actual GRPC message size"""
+
+
+class CVDuplicatedDevices(CVClientException):
+    """Device inputs contain duplicated serial_number or system_mac_address."""
