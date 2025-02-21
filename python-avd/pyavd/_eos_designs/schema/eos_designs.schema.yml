@@ -3354,6 +3354,11 @@ keys:
                 Can be overridden by setting "bgp_update_wait_for_convergence" host/group_vars.
 
                 '
+            all_active_multihoming:
+              type: bool
+              default: false
+              description: Supports the configuration for the all-active EVPN gateway
+                redundancy model.
         management_interface:
           type: str
           default: Management1
@@ -3456,6 +3461,8 @@ keys:
         mlag: 900
         non_mlag: 1020
       tcam_profile: vxlan-routing
+      feature_support:
+        all_active_multihoming: true
     - platforms:
       - 7500R
       - 7500R2
@@ -3473,6 +3480,8 @@ keys:
         mlag: 900
         non_mlag: 1020
       tcam_profile: vxlan-routing
+      feature_support:
+        all_active_multihoming: true
     - platforms:
       - 7358X4
       management_interface: Management1/1
@@ -8568,7 +8577,7 @@ $defs:
                   inter_domain:
                     type: bool
                     default: true
-              active_active_multihoming:
+              all_active_multihoming:
                 description: Enable Active Active Multihoming architecture for EVPN
                   Gateways. Not supported with MLAG.
                 type: dict

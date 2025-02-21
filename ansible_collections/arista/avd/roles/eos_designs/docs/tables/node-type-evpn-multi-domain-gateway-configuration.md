@@ -19,14 +19,14 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_l3</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.evpn_l3") | Dictionary |  |  |  | Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.evpn_l3.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inter_domain</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.evpn_l3.inter_domain") | Boolean |  | `True` |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_active_multihoming</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.enabled") | Boolean |  | `False` |  | Enable Active Active Multihoming resiliency model. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.enable_d_path") | Boolean |  | `True` |  | Enable D-path for use with BGP bestpath selection algorithm. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.domain_identifier") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.domain_identifier_remote") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.evpn_ethernet_segment") | Dictionary | Required |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.evpn_ethernet_segment.identifier") | String | Required |  |  | EVPN Ethernet Segment Identifier (Type 1 format) |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt_import</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.active_active_multihoming.evpn_ethernet_segment.rt_import") | String | Required |  |  | Low-order 6 bytes of ES-Import Route Target. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all_active_multihoming</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.all_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.all_active_multihoming.enabled") | Boolean |  | `False` |  | Enable Active Active Multihoming resiliency model. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.all_active_multihoming.enable_d_path") | Boolean |  | `True` |  | Enable D-path for use with BGP bestpath selection algorithm. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.all_active_multihoming.domain_identifier") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.all_active_multihoming.domain_identifier_remote") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.all_active_multihoming.evpn_ethernet_segment") | Dictionary | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.all_active_multihoming.evpn_ethernet_segment.identifier") | String | Required |  |  | EVPN Ethernet Segment Identifier (Type 1 format) |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt_import</samp>](## "<node_type_keys.key>.defaults.evpn_gateway.all_active_multihoming.evpn_ethernet_segment.rt_import") | String | Required |  |  | Low-order 6 bytes of ES-Import Route Target. |
     | [<samp>&nbsp;&nbsp;node_groups</samp>](## "<node_type_keys.key>.node_groups") | List, items: Dictionary |  |  |  | Define variables related to all nodes part of this group. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;group</samp>](## "<node_type_keys.key>.node_groups.[].group") | String | Required, Unique |  |  | The Node Group Name is used for MLAG domain unless set with 'mlag_domain_id'.<br>The Node Group Name is also used for peer description on downstream switches' uplinks.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nodes</samp>](## "<node_type_keys.key>.node_groups.[].nodes") | List, items: Dictionary |  |  |  | Define variables per node. |
@@ -41,14 +41,14 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_l3</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.evpn_l3") | Dictionary |  |  |  | Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.evpn_l3.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inter_domain</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.evpn_l3.inter_domain") | Boolean |  | `True` |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_active_multihoming</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.enabled") | Boolean |  | `False` |  | Enable Active Active Multihoming resiliency model. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.enable_d_path") | Boolean |  | `True` |  | Enable D-path for use with BGP bestpath selection algorithm. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.domain_identifier") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.domain_identifier_remote") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment") | Dictionary | Required |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment.identifier") | String | Required |  |  | EVPN Ethernet Segment Identifier (Type 1 format) |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt_import</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment.rt_import") | String | Required |  |  | Low-order 6 bytes of ES-Import Route Target. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all_active_multihoming</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.all_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.all_active_multihoming.enabled") | Boolean |  | `False` |  | Enable Active Active Multihoming resiliency model. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.all_active_multihoming.enable_d_path") | Boolean |  | `True` |  | Enable D-path for use with BGP bestpath selection algorithm. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.all_active_multihoming.domain_identifier") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.all_active_multihoming.domain_identifier_remote") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.all_active_multihoming.evpn_ethernet_segment") | Dictionary | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.all_active_multihoming.evpn_ethernet_segment.identifier") | String | Required |  |  | EVPN Ethernet Segment Identifier (Type 1 format) |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt_import</samp>](## "<node_type_keys.key>.node_groups.[].nodes.[].evpn_gateway.all_active_multihoming.evpn_ethernet_segment.rt_import") | String | Required |  |  | Low-order 6 bytes of ES-Import Route Target. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_gateway</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway") | Dictionary |  |  |  | Node is acting as EVPN Multi-Domain Gateway.<br>New BGP peer-group is generated between EVPN GWs in different domains or between GWs and Route Servers.<br>Name can be changed under "bgp_peer_groups.evpn_overlay_core" variable.<br>L3 rechability for different EVPN GWs must be already in place, it is recommended to use DCI & L3 Edge if Route Servers and GWs are not defined under the same Ansible inventory.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;remote_peers</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.remote_peers") | List, items: Dictionary |  |  |  | Define remote peers of the EVPN VXLAN Gateway.<br>If the hostname can be found in the inventory, ip_address and BGP ASN will be automatically populated. Manual override takes precedence.<br>If the peer's hostname can not be found in the inventory, ip_address and bgp_as must be defined.<br> |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;hostname</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.remote_peers.[].hostname") | String | Required, Unique |  |  | Hostname of remote EVPN GW server. |
@@ -59,14 +59,14 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_l3</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.evpn_l3") | Dictionary |  |  |  | Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.evpn_l3.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inter_domain</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.evpn_l3.inter_domain") | Boolean |  | `True` |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_active_multihoming</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.enabled") | Boolean |  | `False` |  | Enable Active Active Multihoming resiliency model. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.enable_d_path") | Boolean |  | `True` |  | Enable D-path for use with BGP bestpath selection algorithm. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.domain_identifier") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.domain_identifier_remote") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment") | Dictionary | Required |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment.identifier") | String | Required |  |  | EVPN Ethernet Segment Identifier (Type 1 format) |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt_import</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment.rt_import") | String | Required |  |  | Low-order 6 bytes of ES-Import Route Target. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all_active_multihoming</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.all_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.all_active_multihoming.enabled") | Boolean |  | `False` |  | Enable Active Active Multihoming resiliency model. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.all_active_multihoming.enable_d_path") | Boolean |  | `True` |  | Enable D-path for use with BGP bestpath selection algorithm. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.all_active_multihoming.domain_identifier") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.all_active_multihoming.domain_identifier_remote") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.all_active_multihoming.evpn_ethernet_segment") | Dictionary | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.all_active_multihoming.evpn_ethernet_segment.identifier") | String | Required |  |  | EVPN Ethernet Segment Identifier (Type 1 format) |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt_import</samp>](## "<node_type_keys.key>.node_groups.[].evpn_gateway.all_active_multihoming.evpn_ethernet_segment.rt_import") | String | Required |  |  | Low-order 6 bytes of ES-Import Route Target. |
     | [<samp>&nbsp;&nbsp;nodes</samp>](## "<node_type_keys.key>.nodes") | List, items: Dictionary |  |  |  | Define variables per node. |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;-&nbsp;name</samp>](## "<node_type_keys.key>.nodes.[].name") | String | Required, Unique |  |  | The Node Name is used as "hostname". |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_gateway</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway") | Dictionary |  |  |  | Node is acting as EVPN Multi-Domain Gateway.<br>New BGP peer-group is generated between EVPN GWs in different domains or between GWs and Route Servers.<br>Name can be changed under "bgp_peer_groups.evpn_overlay_core" variable.<br>L3 rechability for different EVPN GWs must be already in place, it is recommended to use DCI & L3 Edge if Route Servers and GWs are not defined under the same Ansible inventory.<br> |
@@ -79,14 +79,14 @@
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_l3</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.evpn_l3") | Dictionary |  |  |  | Enable EVPN Gateway functionality for route-type 5 (IP-PREFIX). |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.evpn_l3.enabled") | Boolean |  | `False` |  |  |
     | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;inter_domain</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.evpn_l3.inter_domain") | Boolean |  | `True` |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;active_active_multihoming</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.enabled") | Boolean |  | `False` |  | Enable Active Active Multihoming resiliency model. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.enable_d_path") | Boolean |  | `True` |  | Enable D-path for use with BGP bestpath selection algorithm. |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.domain_identifier") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.domain_identifier_remote") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment") | Dictionary | Required |  |  |  |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment.identifier") | String | Required |  |  | EVPN Ethernet Segment Identifier (Type 1 format) |
-    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt_import</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.active_active_multihoming.evpn_ethernet_segment.rt_import") | String | Required |  |  | Low-order 6 bytes of ES-Import Route Target. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;all_active_multihoming</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.all_active_multihoming") | Dictionary |  |  |  | Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enabled</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.all_active_multihoming.enabled") | Boolean |  | `False` |  | Enable Active Active Multihoming resiliency model. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;enable_d_path</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.all_active_multihoming.enable_d_path") | Boolean |  | `True` |  | Enable D-path for use with BGP bestpath selection algorithm. |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.all_active_multihoming.domain_identifier") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;domain_identifier_remote</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.all_active_multihoming.domain_identifier_remote") | String | Required |  |  | ASN(asplain):local_admin or ASN(asdot):local_admin notation |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;evpn_ethernet_segment</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.all_active_multihoming.evpn_ethernet_segment") | Dictionary | Required |  |  |  |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;identifier</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.all_active_multihoming.evpn_ethernet_segment.identifier") | String | Required |  |  | EVPN Ethernet Segment Identifier (Type 1 format) |
+    | [<samp>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rt_import</samp>](## "<node_type_keys.key>.nodes.[].evpn_gateway.all_active_multihoming.evpn_ethernet_segment.rt_import") | String | Required |  |  | Low-order 6 bytes of ES-Import Route Target. |
 
 === "YAML"
 
@@ -127,7 +127,7 @@
             inter_domain: <bool; default=True>
 
           # Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG.
-          active_active_multihoming:
+          all_active_multihoming:
 
             # Enable Active Active Multihoming resiliency model.
             enabled: <bool; default=False>
@@ -192,7 +192,7 @@
                   inter_domain: <bool; default=True>
 
                 # Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG.
-                active_active_multihoming:
+                all_active_multihoming:
 
                   # Enable Active Active Multihoming resiliency model.
                   enabled: <bool; default=False>
@@ -244,7 +244,7 @@
               inter_domain: <bool; default=True>
 
             # Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG.
-            active_active_multihoming:
+            all_active_multihoming:
 
               # Enable Active Active Multihoming resiliency model.
               enabled: <bool; default=False>
@@ -302,7 +302,7 @@
               inter_domain: <bool; default=True>
 
             # Enable Active Active Multihoming architecture for EVPN Gateways. Not supported with MLAG.
-            active_active_multihoming:
+            all_active_multihoming:
 
               # Enable Active Active Multihoming resiliency model.
               enabled: <bool; default=False>

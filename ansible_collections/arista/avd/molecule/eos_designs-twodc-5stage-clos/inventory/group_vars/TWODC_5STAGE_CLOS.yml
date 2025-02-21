@@ -96,6 +96,7 @@ platform_settings:
       non_mlag: 330
     feature_support:
       per_interface_mtu: false # Removes mtu command from all interfaces
+      all_active_multihoming: true
 
 custom_structured_configuration_list_merge: 'append'
 

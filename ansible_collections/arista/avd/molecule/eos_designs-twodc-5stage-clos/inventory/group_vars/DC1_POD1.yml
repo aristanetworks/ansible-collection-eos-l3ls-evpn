@@ -112,7 +112,7 @@ l3leaf:
           # uplink_switch_interfaces: [Ethernet4, Ethernet4, Ethernet7, Ethernet7] Test with "use_cv_topology"
           mlag: false
           evpn_gateway:
-            active_active_multihoming:
+            all_active_multihoming:
               enabled: true
               enable_d_path: true
               domain_identifier: "65100:1"
@@ -133,7 +133,7 @@ l3leaf:
           # uplink_switch_interfaces: [Ethernet5, Ethernet5, Ethernet8, Ethernet8] Test with "use_cv_topology"
           mlag: false
           evpn_gateway:
-            active_active_multihoming:
+            all_active_multihoming:
               enabled: true
               enable_d_path: true
               domain_identifier: "65100:1"
