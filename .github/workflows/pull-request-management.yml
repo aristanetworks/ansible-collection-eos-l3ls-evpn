@@ -402,12 +402,36 @@ jobs:
           path: ansible_collections/arista/avd/integration-coverage.xml
 
   # ----------------------------------- #
+  # Build Collection
+  # ----------------------------------- #
+  build_collection:
+    name: Build Ansible collection
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v5
+        with:
+          python-version: |
+            3.12
+      - uses: actions/checkout@v4
+      - name: "Install Python & Ansible requirements"
+        run: |
+          pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
+          ansible-galaxy collection install -r ansible_collections/arista/avd/requirements.yml
+      - name: "Build Ansible collection"
+        run: |
+          make collection-build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: avd-collection
+          path: ./arista-avd-collection.tar.gz
+
+  # ----------------------------------- #
   # Galaxy Importer
   # ----------------------------------- #
   galaxy_importer:
     name: Test galaxy-importer
     runs-on: ubuntu-20.04 # Older version to be compatible with old python
-    needs: [file-changes]
+    needs: [build_collection]
     env:
       GALAXY_IMPORTER_CONFIG: galaxy-importer/galaxy-importer.cfg
     steps:
@@ -419,30 +443,22 @@ jobs:
       - name: "Install Python & Ansible requirements"
         run: |
           pip install "ansible-core<2.19.0" -r .github/requirements-ci-dev.txt --upgrade
-          ansible-galaxy collection install -r ansible_collections/arista/avd/collections.yml
+          ansible-galaxy collection install -r ansible_collections/arista/avd/requirements.yml
+      - uses: actions/download-artifact@v4
+        with:
+          name: avd-collection
       - name: Install galaxy-importer
         # Install the specific version of galaxy-importer used on galaxy.ansible.com
         # The version conflicts with our requirements,
         # so we let the galaxy-importer version resolve remaining requirements.
         run: |
           pip install "galaxy-importer==0.4.26"
-      - name: "Build ansible package"
-        run: |
-          make collection-build
       - name: "Run galaxy-importer checks"
         run: python -m galaxy_importer.main *.tar.gz
-      - name: "Rename collection archive"
-        run: |
-          # Changing name for installation in subsequent steps
-          mv *.tar.gz arista-avd-collection.tar.gz
       - uses: actions/upload-artifact@v4
         with:
           name: importer-logs
           path: ./importer_result.json
-      - uses: actions/upload-artifact@v4
-        with:
-          name: avd-collection
-          path: ./arista-avd-collection.tar.gz
 
   # ----------------------------------- #
   # Ansible Lint
@@ -451,7 +467,7 @@ jobs:
   ansible_lint:
     name: Run ansible-lint test case
     runs-on: ubuntu-latest
-    needs: [galaxy_importer]
+    needs: [build_collection]
     env:
       ANSIBLE_COLLECTIONS_PATH: /home/runner/work/avd/avd
     steps:
@@ -474,7 +490,7 @@ jobs:
       - name: "Run ansible-test units test cases"
         run: |
           mkdir collections
-          tar xvzf arista-avd-collection.tar.gz -C collections
+          tar xvzf arista-avd-*.tar.gz -C collections
           cd collections/
           ansible-lint --force-color --strict -v
 
