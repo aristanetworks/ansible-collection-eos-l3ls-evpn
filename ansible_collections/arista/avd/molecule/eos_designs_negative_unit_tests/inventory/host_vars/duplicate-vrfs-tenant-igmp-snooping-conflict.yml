@@ -48,6 +48,6 @@ tenants:
             ip_address_virtual: 10.0.100.1/24
 
 expected_error_message: >-
-  Found duplicate objects with conflicting data while generating configuration for IGMP snooping for SVIs in VRF 'VRF1'.
+  Found duplicate objects with conflicting data while generating configuration for Vlans.
   {'id': 100, 'querier': {'enabled': True, 'address': '192.168.255.101'}} conflicts with {'id': 100, 'querier':
   {'enabled': False}}.
