@@ -1,0 +1,90 @@
+---
+# Testing Network Services point-to-point services
+type: pe
+pe:
+  defaults:
+    loopback_ipv4_pool: 192.168.255.0/24
+    vtep_loopback_ipv4_pool: 192.168.254.0/24
+    virtual_router_mac_address: 00:dc:00:00:00:0a
+  nodes:
+    - name: network_services_point_to_point
+      id: 101
+      bgp_as: 101
+      filter:
+        tenants:
+          - TENANT_A
+          - TENANT_B
+
+tenants:
+  - name: TENANT_A
+    mac_vrf_id_base: 10000
+    pseudowire_rt_base: 1000
+    point_to_point_services:
+      # Port-based vpws service
+      - name: TEN_A_ELINE_PORT_BASED
+        type: vpws-pseudowire
+        endpoints:
+          - id: 26
+            nodes: [network_services_point_to_point]
+            interfaces: [Ethernet3]
+          - id: 57
+            nodes: [fake_node]
+            interfaces: [Ethernet3]
+        lldp_disable: true
+      # Sub-interface point-to-point with explicitly defined parent interface (cf next entry)
+      - name: TEN_A_ELINE_VLAN_BASE_EXPLICIT_CHILD
+        type: vpws-pseudowire
+        subinterfaces:
+          - number: 1000
+          - number: 1001
+        endpoints:
+          # ESI dual-homed port-channel endpoint with subinterfaces.
+          - id: 30000
+            nodes: [network_services_point_to_point, fake_peer]
+            interfaces: [Ethernet6, Ethernet6]
+            port_channel:
+              mode: active
+              # This is ignored because the parent is explicitly defined
+              # TODO: AVD 6.0.0 decide if it makes sense
+              short_esi: "0102:DEAD:BEEF"
+          # Normal single-homed port-channel endpoint with subinterfaces.
+          - id: 50000
+            nodes: [fake_node]
+            interfaces: [Ethernet4, Ethernet5]
+            port_channel:
+              mode: active
+      - name: TEN_A_ELINE_VLAN_BASE_EXPLICIT_PARENT
+        type: vpws-pseudowire
+        endpoints:
+          # ESI dual-homed port-channel endpoint with subinterfaces.
+          - id: 30000
+            nodes: [network_services_point_to_point, fake_peer]
+            interfaces: [Ethernet6, Ethernet6]
+            port_channel:
+              mode: active
+              short_esi: "0102:0000:CAFE"
+          # Normal single-homed port-channel endpoint with subinterfaces.
+          - id: 50000
+            nodes: [fake_node]
+            interfaces: [Ethernet4, Ethernet5]
+            port_channel:
+              mode: active
+      # Sub-interface point-to-point with auto generated parent interface
+      - name: TEN_A_ELINE_VLAN_BASE_AUTO_GENERATED_PARENT
+        type: vpws-pseudowire
+        subinterfaces:
+          - number: 1000
+        endpoints:
+          # ESI dual-homed port-channel endpoint with subinterfaces.
+          - id: 3000
+            nodes: [network_services_point_to_point, fake_peer]
+            interfaces: [Ethernet7, Ethernet7]
+            port_channel:
+              mode: active
+              short_esi: "0102:BEEF:F00D"
+          # Normal single-homed port-channel endpoint with subinterfaces.
+          - id: 5000
+            nodes: [fake_node]
+            interfaces: [Ethernet6, Ethernet7]
+            port_channel:
+              mode: active
